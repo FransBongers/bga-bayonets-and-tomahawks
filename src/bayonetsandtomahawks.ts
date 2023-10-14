@@ -435,20 +435,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
 
   onLoadingComplete() {
     // debug('Loading complete');
-    // this.cancelLogs(this.gamedatas.canceledNotifIds);
+    this.cancelLogs(this.gamedatas.canceledNotifIds);
   }
-
-  // updatePlayerOrdering() {
-  //   console.log("updatePlayerOrdering", this.playerOrder);
-  //   // (this as any).inherited(arguments);
-  //   this.playerOrder.forEach((playerId: number, index: number) => {
-  //     dojo.place("overall_player_board_" + playerId, "player_boards", index);
-  //   });
-  //   // if (this.gameOptions.wakhanEnabled) {
-  //   //   const wakhanPosition = this.playerOrder.findIndex((id) => id === 1) + 2;
-  //   //   dojo.place(tplWakhanPlayerPanel({name: _('Wakhan')}), 'player_boards', wakhanPosition);
-  //   // }
-  // }
 
   // .########..#######......######..##.....##.########..######..##....##
   // ....##....##.....##....##....##.##.....##.##.......##....##.##...##.

@@ -91,13 +91,13 @@ $gameinfos = array(
 'complexity' => 3,    
 
 // Luck of the game, from 0 (absolutely no luck in this game) to 5 (totally luck driven)
-'luck' => 3,    
+'luck' => 2,    
 
 // Strategy of the game, from 0 (no strategy can be setup) to 5 (totally based on strategy)
-'strategy' => 3,    
+'strategy' => 4,    
 
 // Diplomacy of the game, from 0 (no interaction in this game) to 5 (totally based on interaction and discussion between players)
-'diplomacy' => 3,    
+'diplomacy' => 1,    
 
 // Colors attributed to players
 'player_colors' => array( "ff0000", "008000"),
@@ -118,7 +118,7 @@ $gameinfos = array(
     //  default: 740
     //  maximum possible value: 740 (ie: your game interface should fit with a 740px width (correspond to a 1024px screen)
     //  minimum possible value: 320 (the lowest value you specify, the better the display is on mobile)
-    'min' => 740,
+    'min' => 320,
 
     // Maximum width
     //  default: null (ie: no limit, the game interface is as big as the player's screen allows it).

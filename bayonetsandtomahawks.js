@@ -959,6 +959,7 @@ var BayonetsAndTomahawks = (function () {
         }
     };
     BayonetsAndTomahawks.prototype.onLoadingComplete = function () {
+        this.cancelLogs(this.gamedatas.canceledNotifIds);
     };
     BayonetsAndTomahawks.prototype.actionError = function (actionName) {
         this.framework().showMessage("cannot take ".concat(actionName, " action"), "error");
