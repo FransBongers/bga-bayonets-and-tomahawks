@@ -1,0 +1,23 @@
+{
+  "name": "bayonetsandtomahawks",
+  "version": "1.0.0",
+  "description": "Bayonets and Tomahawks for BGA",
+  "main": "bayonetsandtomahawks.js",
+  "scripts": {
+    "build:ts": "tsc",
+    "build:scss": "sass --no-source-map src/bayonetsandtomahawks.scss bayonetsandtomahawks.css",
+    "watch:ts": "tsc --watch",
+    "watch:scss": "sass --watch src/bayonetsandtomahawks.scss bayonetsandtomahawks.css",
+    "watch": "npm run watch:ts && npm run watch:scss",
+    "build": "npm run build:ts && npm run build:scss"
+  },
+  "author": "Frans Bongers",
+  "license": "MIT",
+  "dependencies": {
+    "bga-animations": "thoun/bga-animations#1.1.0"
+  },
+  "devDependencies": {
+    "sass": "^1.58.3",
+    "typescript": "^4.1.3"
+  }
+}
