@@ -61,7 +61,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       "after"
     );
 
-    dojo.place('<span>Placed with ts</span>','bat_play_area')
+    dojo.place('<span>Placed with ts</span>','bt_play_area')
 
     // const playAreaWidth = document.getElementById('pp_play_area').offsetWidth;
     // console.log('playAreaWidth',playAreaWidth);
@@ -287,8 +287,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     dojo.forEach(this._connections, dojo.disconnect);
     this._connections = [];
 
-    dojo.query(`.${BAT_SELECTABLE}`).removeClass(BAT_SELECTABLE);
-    dojo.query(`.${BAT_SELECTED}`).removeClass(BAT_SELECTED);
+    dojo.query(`.${BT_SELECTABLE}`).removeClass(BT_SELECTABLE);
+    dojo.query(`.${BT_SELECTED}`).removeClass(BT_SELECTED);
   }
 
   public getPlayerId(): number {

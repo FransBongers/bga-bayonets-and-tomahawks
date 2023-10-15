@@ -1,6 +1,6 @@
 /**
  * Class names
  */
-const BAT_SELECTABLE = 'bat_selectable';
-const BAT_SELECTED = 'bat_selected';
+const BT_SELECTABLE = 'bt_selectable';
+const BT_SELECTED = 'bt_selected';
 

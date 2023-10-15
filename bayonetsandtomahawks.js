@@ -777,7 +777,7 @@ var BayonetsAndTomahawks = (function () {
     }
     BayonetsAndTomahawks.prototype.setup = function (gamedatas) {
         dojo.place("<div id='customActions' style='display:inline-block'></div>", $("generalactions"), "after");
-        dojo.place('<span>Placed with ts</span>', 'bat_play_area');
+        dojo.place('<span>Placed with ts</span>', 'bt_play_area');
         this.gamedatas = gamedatas;
         debug("gamedatas", gamedatas);
         this._connections = [];
@@ -871,8 +871,8 @@ var BayonetsAndTomahawks = (function () {
         dojo.empty("customActions");
         dojo.forEach(this._connections, dojo.disconnect);
         this._connections = [];
-        dojo.query(".".concat(BAT_SELECTABLE)).removeClass(BAT_SELECTABLE);
-        dojo.query(".".concat(BAT_SELECTED)).removeClass(BAT_SELECTED);
+        dojo.query(".".concat(BT_SELECTABLE)).removeClass(BT_SELECTABLE);
+        dojo.query(".".concat(BT_SELECTED)).removeClass(BT_SELECTED);
     };
     BayonetsAndTomahawks.prototype.getPlayerId = function () {
         return Number(this.framework().player_id);
@@ -977,8 +977,8 @@ var BayonetsAndTomahawks = (function () {
     };
     return BayonetsAndTomahawks;
 }());
-var BAT_SELECTABLE = 'bat_selectable';
-var BAT_SELECTED = 'bat_selected';
+var BT_SELECTABLE = 'bt_selectable';
+var BT_SELECTED = 'bt_selected';
 define([
     'dojo',
     'dojo/_base/declare',
@@ -1156,7 +1156,7 @@ var BatPlayer = (function () {
 }());
 var tplCardTooltipContainer = function (_a) {
     var card = _a.card, content = _a.content;
-    return "<div class=\"bat_card_tooltip\">\n  <div class=\"bat_card_tooltip_inner_container\">\n    ".concat(content, "\n  </div>\n  ").concat(card, "\n</div>");
+    return "<div class=\"bt_card_tooltip\">\n  <div class=\"bt_card_tooltip_inner_container\">\n    ".concat(content, "\n  </div>\n  ").concat(card, "\n</div>");
 };
 var TooltipManager = (function () {
     function TooltipManager(game) {

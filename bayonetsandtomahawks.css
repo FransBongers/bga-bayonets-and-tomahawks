@@ -13,5 +13,14 @@
  * bayonetsandtomahawks stylesheet
  *
  */
+#bt_map {
+  background-image: url("img/map.webp");
+  background-size: 1294px 2000px;
+  background-repeat: no-repeat;
+  height: 2000px;
+  position: relative;
+  width: 1294px;
+  box-shadow: 1px 1px 5px #000;
+}
 
 /*# sourceMappingURL=bayonetsandtomahawks.css.map */
