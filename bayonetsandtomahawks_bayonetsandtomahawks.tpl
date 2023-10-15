@@ -1,7 +1,7 @@
 {OVERALL_GAME_HEADER}
 
-<div id="bt_play_area">
-  <div id="bt_map"></div>
+<div id="bt_play_area_container">
+  <div id="bt_play_area"></div>
 </div>
 
 <script type="text/javascript">

@@ -26,10 +26,13 @@ declare const playSound;
 class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public gamedatas: BayonetsAndTomahawksGamedatas;
   public animationManager: AnimationManager;
+  public gameMap: GameMap;
   // public gameOptions: BayonetsAndTomahawksGamedatas['gameOptions'];
   public notificationManager: NotificationManager;
   public playerManager: PlayerManager;
   public tooltipManager: TooltipManager;
+  public playAreaScale: number;
+  public pools: Pools;
 
   private _notif_uid_to_log_id = {};
   private _last_notif = null;
@@ -61,7 +64,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       "after"
     );
 
-    dojo.place('<span>Placed with ts</span>','bt_play_area')
+    // dojo.place('<span>Placed with ts</span>','bt_play_area')
 
     // const playAreaWidth = document.getElementById('pp_play_area').offsetWidth;
     // console.log('playAreaWidth',playAreaWidth);
@@ -74,15 +77,22 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     this.activeStates = {};
 
     this.animationManager = new AnimationManager(this, { duration: 500 });
-
+    this.gameMap = new GameMap(this);
+    this.pools = new Pools(this);
     this.tooltipManager = new TooltipManager(this);
     this.playerManager = new PlayerManager(this);
+
+
+    this.updatePlayAreaSize();
+    window.addEventListener("resize", () => {
+      this.updatePlayAreaSize();
+      // this.gameMap.updateGameMapSize();
+    });
 
     if (this.notificationManager != undefined) {
       this.notificationManager.destroy();
     }
     this.notificationManager = new NotificationManager(this);
-
     this.notificationManager.setupNotifications();
 
     // TO CHECK: add tooltips to log here?
@@ -94,6 +104,17 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     // this.setupNotifications();
     this.tooltipManager.setupTooltips();
     debug("Ending game setup");
+  }
+
+  public updatePlayAreaSize() {
+    
+    const playAreaContainer = document.getElementById("bt_play_area_container");
+    this.playAreaScale = Math.min(1, playAreaContainer.offsetWidth / MIN_PLAY_AREA_WIDTH);
+    const playArea = document.getElementById("bt_play_area");
+    playArea.style.transform = `scale(${this.playAreaScale})`;
+    const playAreaHeight = playArea.offsetHeight;
+    console.log('playAreaHeight',playAreaHeight);
+    playAreaContainer.style.height = playAreaHeight * this.playAreaScale + 'px';
   }
 
   //  .####.##....##.########.########.########.....###.....######..########.####..#######..##....##
@@ -446,8 +467,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   // ....##....##.....##....##....##.##.....##.##.......##....##.##...##.
   // ....##.....#######......######..##.....##.########..######..##....##
 
-
-   //....###..........##....###....##.....##
+  //....###..........##....###....##.....##
   //...##.##.........##...##.##....##...##.
   //..##...##........##..##...##....##.##..
   //.##.....##.......##.##.....##....###...

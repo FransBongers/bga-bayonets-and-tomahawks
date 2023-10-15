@@ -22,6 +22,8 @@
     "src/framework.d.ts",
     "src/templates.ts",
     "src/utility.ts",
+    "src/game-map/index.ts",
+    "src/game-map/templates.ts",
     "src/logs/index.ts",
     "src/logs/templates.ts",
     "src/notification-manager/types.d.ts",
@@ -29,6 +31,8 @@
     "src/player-manager/index.ts",
     "src/player-manager/player.ts",
     "src/player-manager/types.d.ts",
+    "src/pools/index.ts",
+    "src/pools/templates.ts",
     "src/states/state.d.ts",
     "src/tooltip-manager/templates.ts",
     "src/tooltip-manager/index.ts"

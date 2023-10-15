@@ -15,7 +15,9 @@ interface BayonetsAndTomahawksGame extends Game {
   addDangerActionButton: (props: AddButtonProps) => void;
   clearInterface: () => void;
   clearPossible: () => void;
+  updatePlayAreaSize: () => void;
   notificationManager: NotificationManager;
+  playAreaScale: number;
   playerManager: PlayerManager;
   tooltipManager: TooltipManager;
 }

@@ -776,15 +776,21 @@ var BayonetsAndTomahawks = (function () {
         console.log("bayonetsandtomahawks constructor");
     }
     BayonetsAndTomahawks.prototype.setup = function (gamedatas) {
+        var _this = this;
         dojo.place("<div id='customActions' style='display:inline-block'></div>", $("generalactions"), "after");
-        dojo.place('<span>Placed with ts</span>', 'bt_play_area');
         this.gamedatas = gamedatas;
         debug("gamedatas", gamedatas);
         this._connections = [];
         this.activeStates = {};
         this.animationManager = new AnimationManager(this, { duration: 500 });
+        this.gameMap = new GameMap(this);
+        this.pools = new Pools(this);
         this.tooltipManager = new TooltipManager(this);
         this.playerManager = new PlayerManager(this);
+        this.updatePlayAreaSize();
+        window.addEventListener("resize", function () {
+            _this.updatePlayAreaSize();
+        });
         if (this.notificationManager != undefined) {
             this.notificationManager.destroy();
         }
@@ -792,6 +798,15 @@ var BayonetsAndTomahawks = (function () {
         this.notificationManager.setupNotifications();
         this.tooltipManager.setupTooltips();
         debug("Ending game setup");
+    };
+    BayonetsAndTomahawks.prototype.updatePlayAreaSize = function () {
+        var playAreaContainer = document.getElementById("bt_play_area_container");
+        this.playAreaScale = Math.min(1, playAreaContainer.offsetWidth / MIN_PLAY_AREA_WIDTH);
+        var playArea = document.getElementById("bt_play_area");
+        playArea.style.transform = "scale(".concat(this.playAreaScale, ")");
+        var playAreaHeight = playArea.offsetHeight;
+        console.log('playAreaHeight', playAreaHeight);
+        playAreaContainer.style.height = playAreaHeight * this.playAreaScale + 'px';
     };
     BayonetsAndTomahawks.prototype.onEnteringState = function (stateName, args) {
         console.log("Entering state: " + stateName, args);
@@ -977,6 +992,8 @@ var BayonetsAndTomahawks = (function () {
     };
     return BayonetsAndTomahawks;
 }());
+var MIN_PLAY_AREA_WIDTH = 1500;
+var DISABLED = 'disabled';
 var BT_SELECTABLE = 'bt_selectable';
 var BT_SELECTED = 'bt_selected';
 define([
@@ -995,6 +1012,81 @@ var debug = isDebug ? console.info.bind(window.console) : function () { };
 var capitalizeFirstLetter = function (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
+var LOCAL_STORAGE_MAP_ZOOM_KEY = "BayonetsAndTomahawks-map-zoom";
+var ZOOM_LEVELS = [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1];
+var MAX_MAP_HEIGHT = 2318;
+var MAX_MAP_WIDTH = 1500;
+var GameMap = (function () {
+    function GameMap(game) {
+        this.game = game;
+        this.zoomLevel =
+            Number(localStorage.getItem(LOCAL_STORAGE_MAP_ZOOM_KEY)) || 1;
+        console.log('localStorage zoomLevel', this.zoomLevel);
+        var gamedatas = game.gamedatas;
+        this.setupGameMap({ gamedatas: gamedatas });
+    }
+    GameMap.prototype.updateGameMap = function (_a) {
+        var gamedatas = _a.gamedatas;
+    };
+    GameMap.prototype.setupGameMap = function (_a) {
+        var gamedatas = _a.gamedatas;
+        document
+            .getElementById("bt_play_area")
+            .insertAdjacentHTML("afterbegin", tplGameMap());
+        this.updateGameMapSize();
+        this.setupZoomButtons();
+    };
+    GameMap.prototype.setupZoomButtons = function () {
+        var _this = this;
+        dojo.connect($("bt_game_map_zoom_out_button"), "onclick", this, function () {
+            return _this.zoom({ type: "out" });
+        });
+        dojo.connect($("bt_game_map_zoom_in_button"), "onclick", this, function () {
+            return _this.zoom({ type: "in" });
+        });
+        this.checkZoomButtonClasses();
+    };
+    GameMap.prototype.clearInterface = function () { };
+    GameMap.prototype.getCurrentZoomIndex = function () {
+        console.log('zoomLevel', this.zoomLevel);
+        return ZOOM_LEVELS.indexOf(Number(localStorage.getItem(LOCAL_STORAGE_MAP_ZOOM_KEY)) || 1);
+    };
+    GameMap.prototype.checkZoomButtonClasses = function () {
+        var zoomInButton = $("bt_game_map_zoom_in_button");
+        var zoomOutButton = $("bt_game_map_zoom_out_button");
+        zoomInButton.classList.remove(DISABLED);
+        zoomOutButton.classList.remove(DISABLED);
+        if (this.zoomLevel === ZOOM_LEVELS[0]) {
+            zoomOutButton.classList.add(DISABLED);
+        }
+        else if (this.zoomLevel === ZOOM_LEVELS[ZOOM_LEVELS.length - 1]) {
+            zoomInButton.classList.add(DISABLED);
+        }
+    };
+    GameMap.prototype.updateGameMapSize = function () {
+        var map = document.getElementById("bt_game_map");
+        map.style.transform = "scale(".concat(this.zoomLevel, ")");
+        var mapContainer = document.getElementById('bt_game_map_containter');
+        mapContainer.style.width = "".concat(this.zoomLevel * MAX_MAP_WIDTH, "px");
+        mapContainer.style.height = "".concat(this.zoomLevel * MAX_MAP_HEIGHT + 56, "px");
+    };
+    GameMap.prototype.zoom = function (_a) {
+        var type = _a.type;
+        var currentZoomIndex = this.getCurrentZoomIndex();
+        if (type === "in" && currentZoomIndex !== ZOOM_LEVELS.length - 1) {
+            this.zoomLevel = ZOOM_LEVELS[currentZoomIndex + 1];
+        }
+        else if (type === "out" && currentZoomIndex > 0) {
+            this.zoomLevel = ZOOM_LEVELS[currentZoomIndex - 1];
+        }
+        this.updateGameMapSize();
+        this.checkZoomButtonClasses();
+        this.game.updatePlayAreaSize();
+        localStorage.setItem(LOCAL_STORAGE_MAP_ZOOM_KEY, this.zoomLevel + "");
+    };
+    return GameMap;
+}());
+var tplGameMap = function () { return "\n<div id=\"bt_game_map_containter\">\n  <div class=\"bt_game_map_zoom_buttons\">\n    <button id=\"bt_game_map_zoom_out_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-out-icon\" style=\"margin-bottom: -5px;\"></button>\n    <button id=\"bt_game_map_zoom_in_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-in-icon\" style=\"margin-bottom: -5px;\"></button>\n  </div>\n  <div id=\"bt_game_map\"></div>\n</div>"; };
 var LOG_TOKEN_BOLD_TEXT = 'boldText';
 var LOG_TOKEN_NEW_LINE = 'newLine';
 var LOG_TOKEN_PLAYER_NAME = 'playerName';
@@ -1154,6 +1246,31 @@ var BatPlayer = (function () {
     };
     return BatPlayer;
 }());
+var Pools = (function () {
+    function Pools(game) {
+        this.game = game;
+        var gamedatas = game.gamedatas;
+        this.setupPools({ gamedatas: gamedatas });
+    }
+    Pools.prototype.updatePools = function (_a) {
+        var gamedatas = _a.gamedatas;
+    };
+    Pools.prototype.setupPools = function (_a) {
+        var gamedatas = _a.gamedatas;
+        document
+            .getElementById("bt_play_area")
+            .insertAdjacentHTML("beforeend", tplPoolsContainer());
+    };
+    Pools.prototype.clearInterface = function () { };
+    return Pools;
+}());
+var tplPoolsContainer = function () {
+    return "\n  <div id=\"bt_pools_container\">\n    ".concat(tplPool({ type: 'french' }), "\n    ").concat(tplPool({ type: 'indian' }), "\n    ").concat(tplPool({ type: 'british' }), "\n  </div>");
+};
+var tplPool = function (_a) {
+    var type = _a.type;
+    return "<div id=\"bt_pool_".concat(type, "\"></div>");
+};
 var tplCardTooltipContainer = function (_a) {
     var card = _a.card, content = _a.content;
     return "<div class=\"bt_card_tooltip\">\n  <div class=\"bt_card_tooltip_inner_container\">\n    ".concat(content, "\n  </div>\n  ").concat(card, "\n</div>");
