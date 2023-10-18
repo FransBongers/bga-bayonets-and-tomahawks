@@ -350,7 +350,7 @@ var BgaZone = (function () {
                             this.setItemCoords({ node: element });
                             return [4, this.animationManager.play(new BgaSlideAnimation({
                                     element: element,
-                                    transitionTimingFunction: 'linear',
+                                    transitionTimingFunction: "linear",
                                     fromRect: fromRect,
                                     zIndex: zIndex,
                                     duration: duration,
@@ -370,16 +370,16 @@ var BgaZone = (function () {
         this.containerId = containerId;
         this.containerElement = document.getElementById(containerId);
         this.items = [];
-        this.setPattern(config.pattern || 'grid');
+        this.setPattern(config.pattern || "grid");
         this.autoWidth = false;
         this.autoHeight = true;
         this.customPattern = config.customPattern;
         if (!this.containerElement) {
-            console.error('containerElement null');
+            console.error("containerElement null");
             return;
         }
-        if (getComputedStyle(this.containerElement).position !== 'absolute') {
-            this.containerElement.style.position = 'relative';
+        if (getComputedStyle(this.containerElement).position !== "absolute") {
+            this.containerElement.style.position = "relative";
         }
     }
     BgaZone.prototype.getContainerId = function () {
@@ -424,23 +424,25 @@ var BgaZone = (function () {
         });
     };
     BgaZone.prototype.moveToZone = function (_a) {
-        var elements = _a.elements, classesToAdd = _a.classesToAdd, classesToRemove = _a.classesToRemove, _b = _a.duration, duration = _b === void 0 ? 500 : _b, zIndex = _a.zIndex, elementsToRemove = _a.elementsToRemove;
+        var input = _a.items, classesToAdd = _a.classesToAdd, classesToRemove = _a.classesToRemove, _b = _a.animationSettings, animationSettings = _b === void 0 ? {} : _b, inputItemsToRemove = _a.itemsToRemove;
         return __awaiter(this, void 0, void 0, function () {
-            var items, itemsToRemove, animations;
+            var items, itemsToRemove, animations, duration, zIndex;
             var _this = this;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        items = Array.isArray(elements) ? elements : [elements];
-                        if (elementsToRemove) {
-                            itemsToRemove = Array.isArray(elementsToRemove.elements) ? elementsToRemove.elements : [elementsToRemove.elements];
+                        items = Array.isArray(input) ? input : [input];
+                        if (inputItemsToRemove) {
+                            itemsToRemove = Array.isArray(inputItemsToRemove.elements)
+                                ? inputItemsToRemove.elements
+                                : [inputItemsToRemove.elements];
                             itemsToRemove.forEach(function (id) {
                                 var index = _this.items.findIndex(function (item) { return item.id === id; });
                                 if (index < 0) {
                                     return;
                                 }
                                 _this.items.splice(index, 1);
-                                if (elementsToRemove.destroy) {
+                                if (inputItemsToRemove.destroy) {
                                     var element = $(id);
                                     element && element.remove();
                                 }
@@ -453,24 +455,33 @@ var BgaZone = (function () {
                                 weight: weight,
                             });
                         });
-                        debug('items after push', this.items);
                         this.sortItems();
                         animations = [];
+                        duration = animationSettings.duration, zIndex = animationSettings.zIndex;
                         items.forEach(function (item) {
                             var element = document.getElementById(item.id);
                             if (!element) {
-                                console.error('newElement null');
+                                console.error("newElement null");
                                 return;
                             }
                             var fromRect = element.getBoundingClientRect();
                             var attachTo = document.getElementById(_this.containerId);
                             attachTo.appendChild(element);
-                            animations.push(_this.animateMoveToZone({ element: element, classesToAdd: classesToAdd, classesToRemove: classesToRemove, zIndex: zIndex, duration: duration, fromRect: fromRect }));
+                            animations.push(_this.animateMoveToZone({
+                                element: element,
+                                classesToAdd: classesToAdd,
+                                classesToRemove: classesToRemove,
+                                zIndex: zIndex,
+                                duration: duration,
+                                fromRect: fromRect,
+                            }));
                         });
                         return [4, Promise.all(__spreadArray(__spreadArray([], this.getUpdateAnimations(items.map(function (_a) {
                                 var id = _a.id;
                                 return id;
-                            })).map(function (anim) { return _this.animationManager.play(anim); }), true), animations, true))];
+                            })).map(function (anim) {
+                                return _this.animationManager.play(anim);
+                            }), true), animations, true))];
                     case 1:
                         _c.sent();
                         return [2];
@@ -483,16 +494,17 @@ var BgaZone = (function () {
         var index = this.items.findIndex(function (item) { return item.id === node.id; });
         var coords = this.itemToCoords({ index: index });
         var top = coords.y, left = coords.x;
-        node.style.position = 'absolute';
+        node.style.position = "absolute";
         node.style.top = "".concat(top, "px");
         node.style.left = "".concat(left, "px");
     };
-    BgaZone.prototype.placeInZone = function (input) {
+    BgaZone.prototype.placeInZone = function (_a) {
+        var input = _a.items, _b = _a.animationSettings, animationSettings = _b === void 0 ? {} : _b;
         return __awaiter(this, void 0, void 0, function () {
-            var inputItems, animations;
+            var inputItems, duration, animations;
             var _this = this;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         inputItems = Array.isArray(input) ? input : [input];
                         inputItems.forEach(function (_a) {
@@ -500,23 +512,20 @@ var BgaZone = (function () {
                             _this.items.push({ id: id, weight: weight });
                         });
                         this.sortItems();
+                        duration = animationSettings.duration;
                         animations = [];
                         inputItems.forEach(function (_a) {
                             var _b;
-                            var element = _a.element, id = _a.id, from = _a.from, zIndex = _a.zIndex, duration = _a.duration;
+                            var element = _a.element, id = _a.id, from = _a.from, zIndex = _a.zIndex;
                             var node = dojo.place(element, _this.containerId);
-                            if (_this.containerId === 'pp_punjab_armies') {
-                                console.log('element', element);
-                                console.log('node', node);
-                            }
-                            node.style.position = 'absolute';
+                            node.style.position = "absolute";
                             node.style.zIndex = "".concat(zIndex || 0);
                             _this.setItemCoords({ node: node });
                             if (from) {
                                 var fromRect = (_b = $(from)) === null || _b === void 0 ? void 0 : _b.getBoundingClientRect();
                                 animations.push(new BgaSlideAnimation({
                                     element: node,
-                                    transitionTimingFunction: 'linear',
+                                    transitionTimingFunction: "linear",
                                     fromRect: fromRect,
                                     duration: duration,
                                 }));
@@ -527,14 +536,15 @@ var BgaZone = (function () {
                                 return id;
                             })), true), animations, true))];
                     case 1:
-                        _a.sent();
+                        _c.sent();
                         return [2];
                 }
             });
         });
     };
-    BgaZone.prototype.setupItems = function (input) {
+    BgaZone.prototype.setupItems = function (_a) {
         var _this = this;
+        var input = _a.items;
         var inputItems = Array.isArray(input) ? input : [input];
         inputItems.forEach(function (_a) {
             var id = _a.id, weight = _a.weight;
@@ -544,8 +554,7 @@ var BgaZone = (function () {
         inputItems.forEach(function (_a) {
             var element = _a.element, zIndex = _a.zIndex;
             var node = dojo.place(element, _this.containerId);
-            node.style.position = 'absolute';
-            node.style.zIndex = "".concat(zIndex || 0);
+            node.style.position = "absolute";
         });
         this.getUpdateAnimations();
     };
@@ -574,7 +583,7 @@ var BgaZone = (function () {
                     element.style.left = "".concat(left, "px");
                     animations.push(new BgaSlideAnimation({ element: element, fromRect: fromRect }));
                 }
-                if (_this.containerId === 'pp_kabul_transcaspia_border') {
+                if (_this.containerId === "pp_kabul_transcaspia_border") {
                     console.log(item.id, index, left, top_1, width, height);
                 }
                 containerWidth = Math.max(containerWidth, left + width);
@@ -602,26 +611,28 @@ var BgaZone = (function () {
             itemCount: itemCount,
         };
         switch (this.pattern) {
-            case 'grid':
+            case "grid":
                 return this.itemToCoordsGrid(props);
-            case 'ellipticalFit':
+            case "ellipticalFit":
                 return this.itemToCoordsEllipticalFit(props);
-            case 'verticalFit':
+            case "verticalFit":
                 return this.itemToCoordsVerticalFit(props);
-            case 'horizontalFit':
+            case "horizontalFit":
                 return this.itemToCoordsHorizontalFit(props);
-            case 'custom':
-                var custom = this.customPattern ? this.customPattern(props) : { x: 0, y: 0, w: 0, h: 0 };
+            case "custom":
+                var custom = this.customPattern
+                    ? this.customPattern(props)
+                    : { x: 0, y: 0, w: 0, h: 0 };
                 return custom;
         }
     };
     BgaZone.prototype.itemToCoordsGrid = function (_a) {
         var e = _a.index, t = _a.containerWidth;
         var i = Math.max(1, Math.floor(t / (this.itemWidth + this.itemGap))), n = Math.floor(e / i), o = {};
-        o['y'] = n * (this.itemHeight + this.itemGap);
-        o['x'] = (e - n * i) * (this.itemWidth + this.itemGap);
-        o['w'] = this.itemWidth;
-        o['h'] = this.itemHeight;
+        o["y"] = n * (this.itemHeight + this.itemGap);
+        o["x"] = (e - n * i) * (this.itemWidth + this.itemGap);
+        o["w"] = this.itemWidth;
+        o["h"] = this.itemHeight;
         return o;
     };
     BgaZone.prototype.itemToCoordsEllipticalFit = function (_a) {
@@ -630,66 +641,68 @@ var BgaZone = (function () {
             w: this.itemWidth,
             h: this.itemHeight,
         };
-        r['w'] = this.itemWidth;
-        r['h'] = this.itemHeight;
+        r["w"] = this.itemWidth;
+        r["h"] = this.itemHeight;
         var l = n - (e + 1);
         if (l <= 4) {
             var c = r.w, d = (r.h * a) / o, h = s + l * ((2 * s) / 5);
-            r['x'] = o + c * Math.cos(h) - r.w / 2;
-            r['y'] = a + d * Math.sin(h) - r.h / 2;
+            r["x"] = o + c * Math.cos(h) - r.w / 2;
+            r["y"] = a + d * Math.sin(h) - r.h / 2;
         }
         else if (l > 4) {
-            (c = 2 * r.w), (d = (2 * r.h * a) / o), (h = s - s / 2 + (l - 4) * ((2 * s) / Math.max(10, n - 5)));
-            r['x'] = o + c * Math.cos(h) - r.w / 2;
-            r['y'] = a + d * Math.sin(h) - r.h / 2;
+            (c = 2 * r.w),
+                (d = (2 * r.h * a) / o),
+                (h = s - s / 2 + (l - 4) * ((2 * s) / Math.max(10, n - 5)));
+            r["x"] = o + c * Math.cos(h) - r.w / 2;
+            r["y"] = a + d * Math.sin(h) - r.h / 2;
         }
         return r;
     };
     BgaZone.prototype.itemToCoordsHorizontalFit = function (_a) {
         var e = _a.index, t = _a.containerWidth, i = _a.containerHeight, n = _a.itemCount;
         var o = {};
-        o['w'] = this.itemWidth;
-        o['h'] = this.itemHeight;
+        o["w"] = this.itemWidth;
+        o["h"] = this.itemHeight;
         var a = n * this.itemWidth;
         if (a <= t)
             var s = this.itemWidth, r = (t - a) / 2;
         else
             (s = (t - this.itemWidth) / (n - 1)), (r = 0);
-        o['x'] = Math.round(e * s + r);
-        o['y'] = 0;
+        o["x"] = Math.round(e * s + r);
+        o["y"] = 0;
         return o;
     };
     BgaZone.prototype.itemToCoordsVerticalFit = function (_a) {
         var e = _a.index, i = _a.containerHeight, n = _a.itemCount;
         var o = {};
-        o['w'] = this.itemWidth;
-        o['h'] = this.itemHeight;
+        o["w"] = this.itemWidth;
+        o["h"] = this.itemHeight;
         var a = n * this.itemHeight;
         if (a <= i)
             var s = this.itemHeight, r = (i - a) / 2;
         else
             (s = (i - this.itemHeight) / (n - 1)), (r = 0);
-        o['y'] = Math.round(e * s + r);
-        o['x'] = 0;
+        o["y"] = Math.round(e * s + r);
+        o["x"] = 0;
         return o;
     };
     BgaZone.prototype.setPattern = function (pattern) {
         switch (pattern) {
-            case 'grid':
+            case "grid":
                 this.autoHeight = true;
                 this.pattern = pattern;
                 break;
-            case 'verticalFit':
-            case 'horizontalFit':
-            case 'ellipticalFit':
+            case "verticalFit":
+            case "horizontalFit":
+            case "ellipticalFit":
                 this.autoHeight = false;
                 this.pattern = pattern;
                 break;
-            case 'custom':
+            case "custom":
                 this.pattern = pattern;
                 break;
             default:
-                console.error('zone::setPattern: unknow pattern: ' + pattern);
+                console.error("zone::setPattern: unknow pattern: " + pattern);
         }
     };
     BgaZone.prototype.sortItems = function () {
@@ -726,7 +739,9 @@ var BgaZone = (function () {
                             animations.push(_this.animateRemoveTo({ element: element, fromRect: fromRect, destroy: destroy }));
                         });
                         this.sortItems();
-                        return [4, Promise.all(__spreadArray(__spreadArray([], this.getUpdateAnimations().map(function (anim) { return _this.animationManager.play(anim); }), true), animations, true))];
+                        return [4, Promise.all(__spreadArray(__spreadArray([], this.getUpdateAnimations().map(function (anim) {
+                                return _this.animationManager.play(anim);
+                            }), true), animations, true))];
                     case 1:
                         _a.sent();
                         return [2];
@@ -760,7 +775,7 @@ var BgaZone = (function () {
         return this.items.length;
     };
     BgaZone.prototype.pxNumber = function (px) {
-        if ((px || '').endsWith('px')) {
+        if ((px || "").endsWith("px")) {
             return Number(px.slice(0, -2));
         }
         else {
@@ -805,6 +820,7 @@ var BayonetsAndTomahawks = (function () {
         var playArea = document.getElementById("bt_play_area");
         playArea.style.transform = "scale(".concat(this.playAreaScale, ")");
         var playAreaHeight = playArea.offsetHeight;
+        playArea.style.width = (playAreaContainer.offsetWidth / this.playAreaScale) + 'px';
         console.log('playAreaHeight', playAreaHeight);
         playAreaContainer.style.height = playAreaHeight * this.playAreaScale + 'px';
     };
@@ -1086,7 +1102,7 @@ var GameMap = (function () {
     };
     return GameMap;
 }());
-var tplGameMap = function () { return "\n<div id=\"bt_game_map_containter\">\n  <div class=\"bt_game_map_zoom_buttons\">\n    <button id=\"bt_game_map_zoom_out_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-out-icon\" style=\"margin-bottom: -5px;\"></button>\n    <button id=\"bt_game_map_zoom_in_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-in-icon\" style=\"margin-bottom: -5px;\"></button>\n  </div>\n  <div id=\"bt_game_map\"></div>\n</div>"; };
+var tplGameMap = function () { return "\n<div id=\"bt_game_map_containter\">\n  <div class=\"bt_game_map_zoom_buttons\">\n    <button id=\"bt_game_map_zoom_out_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-out-icon\" style=\"margin-bottom: -5px;\"></button>\n    <button id=\"bt_game_map_zoom_in_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-in-icon\" style=\"margin-bottom: -5px;\"></button>\n  </div>\n  <div id=\"bt_game_map\">\n    <div class=\"bt_marker\" data-marker-type=\"victory_point\"></div>\n    <div class=\"bt_token\" data-faction=\"french\" data-unit-type=\"bastion\"></div>\n    <div class=\"bt_token\" data-faction=\"indian\" data-unit-type=\"micmac\"></div>\n  </div>\n</div>"; };
 var LOG_TOKEN_BOLD_TEXT = 'boldText';
 var LOG_TOKEN_NEW_LINE = 'newLine';
 var LOG_TOKEN_PLAYER_NAME = 'playerName';
@@ -1269,7 +1285,7 @@ var tplPoolsContainer = function () {
 };
 var tplPool = function (_a) {
     var type = _a.type;
-    return "<div id=\"bt_pool_".concat(type, "\"></div>");
+    return "<div id=\"bt_pool_".concat(type, "\" class=\"bt_unit_pool\">\n  <div class=\"bt_token\" data-faction=\"french\" data-unit-type=\"pouchot\"></div>\n  </div>");
 };
 var tplCardTooltipContainer = function (_a) {
     var card = _a.card, content = _a.content;

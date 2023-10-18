@@ -6,13 +6,16 @@ class BgaZone {
   private containerId: string;
   private containerElement: HTMLElement;
   private items: BgaZoneItem[];
-  private pattern: BgaZoneConfig['pattern'];
+  private pattern: BgaZoneConfig["pattern"];
   private autoHeight: boolean;
   private autoWidth: boolean;
-  private customPattern: (props: BgaZoneItemToCoordsProps) => OriginalZoneItemToCoordsResult;
+  private customPattern: (
+    props: BgaZoneItemToCoordsProps
+  ) => OriginalZoneItemToCoordsResult;
 
   constructor(config: BgaZoneConfig) {
-    const { animationManager, itemGap, itemHeight, itemWidth, containerId } = config;
+    const { animationManager, itemGap, itemHeight, itemWidth, containerId } =
+      config;
     this.animationManager = animationManager;
     this.itemGap = itemGap || 0;
     this.itemHeight = itemHeight;
@@ -20,21 +23,25 @@ class BgaZone {
     this.containerId = containerId;
     this.containerElement = document.getElementById(containerId);
     this.items = [];
-    this.setPattern(config.pattern || 'grid');
+    this.setPattern(config.pattern || "grid");
     this.autoWidth = false;
     this.autoHeight = true;
     this.customPattern = config.customPattern;
 
     if (!this.containerElement) {
-      console.error('containerElement null');
+      console.error("containerElement null");
       return;
     }
 
-    if (getComputedStyle(this.containerElement).position !== 'absolute') {
-      this.containerElement.style.position = 'relative';
+    if (getComputedStyle(this.containerElement).position !== "absolute") {
+      this.containerElement.style.position = "relative";
       // dojo.style(this.containerId, 'position', 'relative');
       // this.containerElement.style.position = 'relative';
     }
+    // TODO: results in issue with zIndex. Check why
+    // window.addEventListener("resize", () => {
+    //   this.updateDisplay();
+    // });
   }
 
   public getContainerId(): string {
@@ -47,7 +54,13 @@ class BgaZone {
    * @param destroy destroy element after removing. Defaults to false
    * @returns
    */
-  public async remove({ input, destroy = false }: { input: string | string[]; destroy?: boolean }) {
+  public async remove({
+    input,
+    destroy = false,
+  }: {
+    input: string | string[];
+    destroy?: boolean;
+  }) {
     const itemsToRemove = Array.isArray(input) ? input : [input];
 
     itemsToRemove.forEach((id) => {
@@ -65,7 +78,9 @@ class BgaZone {
     return this.updateDisplay();
   }
 
-  public async removeAll({ destroy }: { destroy: boolean } = { destroy: false }) {
+  public async removeAll(
+    { destroy }: { destroy: boolean } = { destroy: false }
+  ) {
     if (destroy) {
       this.items.forEach((item) => {
         const { id } = item;
@@ -83,24 +98,31 @@ class BgaZone {
    * @returns
    */
   public async moveToZone({
-    elements,
+    items: input,
     classesToAdd,
     classesToRemove,
-    duration = 500,
-    zIndex,
-    elementsToRemove,
+    animationSettings = {
+      // TODO: remove this default here?
+      // duration: 500,
+    },
+    itemsToRemove: inputItemsToRemove,
   }: {
-    elements: BgaZoneItem | BgaZoneItem[];
+    items: BgaZoneItem | BgaZoneItem[];
     classesToAdd?: string[];
     classesToRemove?: string[];
-    duration?: number;
-    zIndex?: number;
-    elementsToRemove?: { elements: string | string[]; destroy?: boolean };
-  }) {
-    const items = Array.isArray(elements) ? elements : [elements];
 
-    if (elementsToRemove) {
-      const itemsToRemove = Array.isArray(elementsToRemove.elements) ? elementsToRemove.elements : [elementsToRemove.elements];
+    itemsToRemove?: { elements: string | string[]; destroy?: boolean };
+    animationSettings?: {
+      duration?: number;
+      zIndex?: number;
+    };
+  }) {
+    const items = Array.isArray(input) ? input : [input];
+
+    if (inputItemsToRemove) {
+      const itemsToRemove = Array.isArray(inputItemsToRemove.elements)
+        ? inputItemsToRemove.elements
+        : [inputItemsToRemove.elements];
 
       itemsToRemove.forEach((id) => {
         const index = this.items.findIndex((item) => item.id === id);
@@ -108,7 +130,7 @@ class BgaZone {
           return;
         }
         this.items.splice(index, 1);
-        if (elementsToRemove.destroy) {
+        if (inputItemsToRemove.destroy) {
           const element = $(id);
           element && element.remove();
         }
@@ -127,24 +149,36 @@ class BgaZone {
         weight,
       });
     });
-    debug('items after push',this.items);
+
     this.sortItems();
 
     const animations: Promise<void>[] = [];
+    const { duration, zIndex } = animationSettings;
     items.forEach((item) => {
       const element = document.getElementById(item.id);
       if (!element) {
-        console.error('newElement null');
+        console.error("newElement null");
         return;
       }
       const fromRect = element.getBoundingClientRect();
       const attachTo = document.getElementById(this.containerId);
       attachTo.appendChild(element);
 
-      animations.push(this.animateMoveToZone({ element, classesToAdd, classesToRemove, zIndex, duration, fromRect }));
+      animations.push(
+        this.animateMoveToZone({
+          element,
+          classesToAdd,
+          classesToRemove,
+          zIndex,
+          duration,
+          fromRect,
+        })
+      );
     });
     await Promise.all([
-      ...this.getUpdateAnimations(items.map(({ id }) => id)).map((anim) => this.animationManager.play(anim)),
+      ...this.getUpdateAnimations(items.map(({ id }) => id)).map((anim) =>
+        this.animationManager.play(anim)
+      ),
       ...animations,
     ]);
   }
@@ -175,7 +209,7 @@ class BgaZone {
     await this.animationManager.play(
       new BgaSlideAnimation<BgaAnimationWithOriginSettings>({
         element: element,
-        transitionTimingFunction: 'linear', // 'ease-in-out',
+        transitionTimingFunction: "linear", // 'ease-in-out',
         fromRect,
         zIndex,
         duration,
@@ -187,12 +221,20 @@ class BgaZone {
     const index = this.items.findIndex((item) => item.id === node.id) as number;
     const coords = this.itemToCoords({ index });
     const { y: top, x: left } = coords;
-    node.style.position = 'absolute';
+    node.style.position = "absolute";
     node.style.top = `${top}px`;
     node.style.left = `${left}px`;
   }
 
-  public async placeInZone(input: BgaZonePlaceItem | BgaZonePlaceItem[]): Promise<void> {
+  public async placeInZone({
+    items: input,
+    animationSettings = {},
+  }: {
+    items: BgaZonePlaceItem | BgaZonePlaceItem[];
+    animationSettings?: {
+      duration?: number;
+    };
+  }): Promise<void> {
     const inputItems = Array.isArray(input) ? input : [input];
 
     inputItems.forEach(({ id, weight }) => {
@@ -200,18 +242,14 @@ class BgaZone {
     });
 
     this.sortItems();
-
+    const { duration } = animationSettings;
     const animations: BgaAnimation<BgaAnimationSettings>[] = [];
-    inputItems.forEach(({ element, id, from, zIndex, duration }) => {
+    inputItems.forEach(({ element, id, from, zIndex }) => {
       const node = dojo.place(element, this.containerId);
-      if (this.containerId === 'pp_punjab_armies') {
-        console.log('element',element);
-        console.log('node',node);
-      }
       // const index = this.items.findIndex((item) => item.id === id) as number;
 
       // const { top, left } = this.itemToCoords({ index });
-      node.style.position = 'absolute';
+      node.style.position = "absolute";
       node.style.zIndex = `${zIndex || 0}`;
       this.setItemCoords({ node });
       // node.style.top = top;
@@ -221,20 +259,27 @@ class BgaZone {
         animations.push(
           new BgaSlideAnimation<BgaAnimationWithOriginSettings>({
             element: node,
-            transitionTimingFunction: 'linear', //'ease-in-out', // 'ease-out', 'linear'
+            transitionTimingFunction: "linear", //'ease-in-out', // 'ease-out', 'linear'
             fromRect,
             duration,
           })
         );
       }
     });
-    await this.animationManager.playParallel([...this.getUpdateAnimations(inputItems.map(({ id }) => id)), ...animations]);
+    await this.animationManager.playParallel([
+      ...this.getUpdateAnimations(inputItems.map(({ id }) => id)),
+      ...animations,
+    ]);
   }
 
   /**
    * Sync function to place elements during setup
    */
-  public setupItems(input: BgaZoneSetupItem | BgaZoneSetupItem[]): void {
+  public setupItems({
+    items: input,
+  }: {
+    items: BgaZoneSetupItem | BgaZoneSetupItem[];
+  }): void {
     const inputItems = Array.isArray(input) ? input : [input];
 
     inputItems.forEach(({ id, weight }) => {
@@ -245,8 +290,8 @@ class BgaZone {
 
     inputItems.forEach(({ element, zIndex }) => {
       const node = dojo.place(element, this.containerId);
-      node.style.position = 'absolute';
-      node.style.zIndex = `${zIndex || 0}`;
+      node.style.position = "absolute";
+      // node.style.zIndex = `${zIndex || 0}`;
     });
 
     // Using below function sets coords and container width/height.
@@ -258,7 +303,9 @@ class BgaZone {
     return await this.animationManager.playParallel(this.getUpdateAnimations());
   }
 
-  public getUpdateAnimations(skip?: string[]): BgaSlideAnimation<BgaAnimationWithOriginSettings>[] {
+  public getUpdateAnimations(
+    skip?: string[]
+  ): BgaSlideAnimation<BgaAnimationWithOriginSettings>[] {
     const animations: BgaSlideAnimation<BgaAnimationWithOriginSettings>[] = [];
     let containerHeight = 0;
     let containerWidth = 0;
@@ -269,7 +316,12 @@ class BgaZone {
 
       if (element) {
         // const { top, left, containerHeight: containerHeightCalc } = this.itemToCoords({ index });
-        const { x: left, y: top, w: width, h: height } = this.itemToCoords({ index });
+        const {
+          x: left,
+          y: top,
+          w: width,
+          h: height,
+        } = this.itemToCoords({ index });
 
         if (!(skip || []).includes(item.id)) {
           element.style.top = `${top}px`;
@@ -277,7 +329,7 @@ class BgaZone {
 
           animations.push(new BgaSlideAnimation({ element, fromRect }));
         }
-        if (this.containerId === 'pp_kabul_transcaspia_border') {
+        if (this.containerId === "pp_kabul_transcaspia_border") {
           console.log(item.id, index, left, top, width, height);
         }
         containerWidth = Math.max(containerWidth, left + width);
@@ -300,7 +352,11 @@ class BgaZone {
     return animations;
   }
 
-  private itemToCoords({ index }: { index: number }): OriginalZoneItemToCoordsResult {
+  private itemToCoords({
+    index,
+  }: {
+    index: number;
+  }): OriginalZoneItemToCoordsResult {
     const boundingClientRect = this.containerElement.getBoundingClientRect();
     const containerWidth = boundingClientRect.width;
     const containerHeight = boundingClientRect.height;
@@ -313,28 +369,33 @@ class BgaZone {
     };
 
     switch (this.pattern) {
-      case 'grid':
+      case "grid":
         return this.itemToCoordsGrid(props);
-      case 'ellipticalFit':
+      case "ellipticalFit":
         return this.itemToCoordsEllipticalFit(props);
-      case 'verticalFit':
+      case "verticalFit":
         return this.itemToCoordsVerticalFit(props);
-      case 'horizontalFit':
+      case "horizontalFit":
         return this.itemToCoordsHorizontalFit(props);
-      case 'custom':
-        const custom = this.customPattern ? this.customPattern(props) : { x: 0, y: 0, w: 0, h: 0 };
+      case "custom":
+        const custom = this.customPattern
+          ? this.customPattern(props)
+          : { x: 0, y: 0, w: 0, h: 0 };
         return custom;
     }
   }
 
-  private itemToCoordsGrid({ index: e, containerWidth: t }: BgaZoneItemToCoordsProps): OriginalZoneItemToCoordsResult {
+  private itemToCoordsGrid({
+    index: e,
+    containerWidth: t,
+  }: BgaZoneItemToCoordsProps): OriginalZoneItemToCoordsResult {
     var i = Math.max(1, Math.floor(t / (this.itemWidth + this.itemGap))),
       n = Math.floor(e / i),
       o = {};
-    o['y'] = n * (this.itemHeight + this.itemGap);
-    o['x'] = (e - n * i) * (this.itemWidth + this.itemGap);
-    o['w'] = this.itemWidth;
-    o['h'] = this.itemHeight;
+    o["y"] = n * (this.itemHeight + this.itemGap);
+    o["x"] = (e - n * i) * (this.itemWidth + this.itemGap);
+    o["w"] = this.itemWidth;
+    o["h"] = this.itemHeight;
     return o as OriginalZoneItemToCoordsResult;
   }
 
@@ -363,19 +424,21 @@ class BgaZone {
         w: this.itemWidth,
         h: this.itemHeight,
       };
-    r['w'] = this.itemWidth;
-    r['h'] = this.itemHeight;
+    r["w"] = this.itemWidth;
+    r["h"] = this.itemHeight;
     var l = n - (e + 1);
     if (l <= 4) {
       var c = r.w,
         d = (r.h * a) / o,
         h = s + l * ((2 * s) / 5);
-      r['x'] = o + c * Math.cos(h) - r.w / 2;
-      r['y'] = a + d * Math.sin(h) - r.h / 2;
+      r["x"] = o + c * Math.cos(h) - r.w / 2;
+      r["y"] = a + d * Math.sin(h) - r.h / 2;
     } else if (l > 4) {
-      (c = 2 * r.w), (d = (2 * r.h * a) / o), (h = s - s / 2 + (l - 4) * ((2 * s) / Math.max(10, n - 5)));
-      r['x'] = o + c * Math.cos(h) - r.w / 2;
-      r['y'] = a + d * Math.sin(h) - r.h / 2;
+      (c = 2 * r.w),
+        (d = (2 * r.h * a) / o),
+        (h = s - s / 2 + (l - 4) * ((2 * s) / Math.max(10, n - 5)));
+      r["x"] = o + c * Math.cos(h) - r.w / 2;
+      r["y"] = a + d * Math.sin(h) - r.h / 2;
     }
     return r as OriginalZoneItemToCoordsResult;
   }
@@ -387,15 +450,15 @@ class BgaZone {
     itemCount: n,
   }: BgaZoneItemToCoordsProps): OriginalZoneItemToCoordsResult {
     var o = {};
-    o['w'] = this.itemWidth;
-    o['h'] = this.itemHeight;
+    o["w"] = this.itemWidth;
+    o["h"] = this.itemHeight;
     var a = n * this.itemWidth;
     if (a <= t)
       var s = this.itemWidth,
         r = (t - a) / 2;
     else (s = (t - this.itemWidth) / (n - 1)), (r = 0);
-    o['x'] = Math.round(e * s + r);
-    o['y'] = 0;
+    o["x"] = Math.round(e * s + r);
+    o["y"] = 0;
     return o as OriginalZoneItemToCoordsResult;
   }
 
@@ -406,36 +469,36 @@ class BgaZone {
     itemCount: n,
   }: BgaZoneItemToCoordsProps): OriginalZoneItemToCoordsResult {
     var o = {};
-    o['w'] = this.itemWidth;
-    o['h'] = this.itemHeight;
+    o["w"] = this.itemWidth;
+    o["h"] = this.itemHeight;
     var a = n * this.itemHeight;
     if (a <= i)
       var s = this.itemHeight,
         r = (i - a) / 2;
     else (s = (i - this.itemHeight) / (n - 1)), (r = 0);
-    o['y'] = Math.round(e * s + r);
-    o['x'] = 0;
+    o["y"] = Math.round(e * s + r);
+    o["x"] = 0;
     return o as OriginalZoneItemToCoordsResult;
   }
 
-  public setPattern(pattern: BgaZone['pattern']) {
+  public setPattern(pattern: BgaZone["pattern"]) {
     switch (pattern) {
-      case 'grid':
+      case "grid":
         // case "diagonal":
         this.autoHeight = true;
         this.pattern = pattern;
         break;
-      case 'verticalFit':
-      case 'horizontalFit':
-      case 'ellipticalFit':
+      case "verticalFit":
+      case "horizontalFit":
+      case "ellipticalFit":
         this.autoHeight = false;
         this.pattern = pattern;
         break;
-      case 'custom':
+      case "custom":
         this.pattern = pattern;
         break;
       default:
-        console.error('zone::setPattern: unknow pattern: ' + pattern);
+        console.error("zone::setPattern: unknow pattern: " + pattern);
     }
   }
 
@@ -475,11 +538,24 @@ class BgaZone {
       animations.push(this.animateRemoveTo({ element, fromRect, destroy }));
     });
     this.sortItems();
-    await Promise.all([...this.getUpdateAnimations().map((anim) => this.animationManager.play(anim)), ...animations]);
+    await Promise.all([
+      ...this.getUpdateAnimations().map((anim) =>
+        this.animationManager.play(anim)
+      ),
+      ...animations,
+    ]);
     // await this.animationManager.playParallel([...this.getUpdateAnimations(), ...animations]);
   }
 
-  private async animateRemoveTo({ element, fromRect, destroy }: { element: HTMLElement; fromRect: DOMRect; destroy?: boolean }) {
+  private async animateRemoveTo({
+    element,
+    fromRect,
+    destroy,
+  }: {
+    element: HTMLElement;
+    fromRect: DOMRect;
+    destroy?: boolean;
+  }) {
     await this.animationManager.play(
       new BgaSlideAnimation<BgaAnimationWithOriginSettings>({
         element,
@@ -500,7 +576,7 @@ class BgaZone {
   }
 
   private pxNumber(px?: string): number {
-    if ((px || '').endsWith('px')) {
+    if ((px || "").endsWith("px")) {
       return Number(px.slice(0, -2));
     } else {
       return 0;

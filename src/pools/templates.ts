@@ -8,6 +8,8 @@ const tplPoolsContainer = () => {
 }
 
 const tplPool = ({ type }: { type: string }): string => {
-  return `<div id="bt_pool_${type}"></div>`;
+  return `<div id="bt_pool_${type}" class="bt_unit_pool">
+  <div class="bt_token" data-faction="french" data-unit-type="pouchot"></div>
+  </div>`;
 };
 

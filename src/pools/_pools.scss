@@ -1,0 +1,14 @@
+#bt_pools_container {
+  background-color: blue;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 4px;
+}
+
+.bt_unit_pool {
+  min-height: 52px;
+  min-width: 100px;
+  background-color: yellow;
+  margin: 4px;
+}

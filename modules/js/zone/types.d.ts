@@ -19,7 +19,6 @@ interface BgaZonePlaceItem {
   element: string;
   from?: string;
   zIndex?: number;
-  duration?: number;
 }
 
 interface BgaZoneSetupItem {

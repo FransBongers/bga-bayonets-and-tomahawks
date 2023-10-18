@@ -113,6 +113,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     const playArea = document.getElementById("bt_play_area");
     playArea.style.transform = `scale(${this.playAreaScale})`;
     const playAreaHeight = playArea.offsetHeight;
+    playArea.style.width = (playAreaContainer.offsetWidth / this.playAreaScale) + 'px';
     console.log('playAreaHeight',playAreaHeight);
     playAreaContainer.style.height = playAreaHeight * this.playAreaScale + 'px';
   }
