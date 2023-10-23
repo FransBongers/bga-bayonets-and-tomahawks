@@ -34,12 +34,14 @@ spl_autoload_register($swdNamespaceAutoload, true, true);
 
 require_once(APP_GAMEMODULE_PATH . 'module/table/table.game.php');
 
-
+use BayonetsAndTomahawks\Scenario;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Preferences;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Log;
 use BayonetsAndTomahawks\Managers\Players;
+use BayonetsAndTomahawks\Managers\Spaces;
+use BayonetsAndTomahawks\Managers\Units;
 
 class bayonetsandtomahawks extends Table
 {
@@ -48,6 +50,7 @@ class bayonetsandtomahawks extends Table
     use BayonetsAndTomahawks\States\PlayerActionTrait;
 
     // Declare objects from material.inc.php to remove IntelliSense errors
+    public $spaces;
 
     public static $instance = null;
     function __construct()
@@ -96,6 +99,10 @@ class bayonetsandtomahawks extends Table
         Preferences::setupNewGame($players, $options);
         Players::setupNewGame($players, $options);
         Stats::checkExistence();
+        Spaces::setupNewGameDefaults();
+
+        Scenario::loadId('1');
+        Scenario::setup();
 
         $this->setGameStateInitialValue('logging', false);
 
@@ -114,6 +121,11 @@ class bayonetsandtomahawks extends Table
         $data = [
             'canceledNotifIds' => Log::getCanceledNotifIds(),
             'players' => Players::getUiData($pId),
+            'staticData' => [
+                'units' => Units::getStaticUiData(),
+            ],
+            'spaces' => Spaces::getUiData(),
+            'units' => Units::getUiData(),
         ];
 
         return $data;

@@ -11,6 +11,31 @@ const ST_CHANGE_ACTIVE_PLAYER_NAME = 'changeActivePlayer';
 const ST_END_GAME = 99;
 const ST_END_GAME_NAME = 'gameEnd';
 
+/*
+ * Units types
+ */
+const LIGHT = 'light';
+
+/**
+ * Units classes
+ */
+const LANGIS = 'langis';
+
+/**
+ * Factions
+ */
+const FRENCH = 'french';
+
+/**
+ * Spaces
+ */
+const CHIGNECTOU = 'Chignectou';
+const LOUISBOURG = 'Louisbourg';
+
+const SPACES = [
+  CHIGNECTOU,
+  LOUISBOURG
+];
 
 /**
  * Log tokens
@@ -25,3 +50,10 @@ const LOG_TOKEN_PLAYER_NAME = 'playerName';
  */
 
 const DISPATCH_TRANSITION = 'dispatchTransition';
+
+/**
+ * Unit to class name map
+ */
+const UNIT_CLASSES = [
+  LANGIS => 'Langis',
+];

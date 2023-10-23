@@ -152,10 +152,16 @@ class Pieces extends DB_Manager
     }
 
     if (is_array($location)) {
-      $location = implode('_', $location);
+      $delim = '_';
+      foreach ($location as $l) {
+        if (strpos($l, '%') !== false) {
+          $delim = '\\_';
+        }
+      }
+      $location = implode($delim, $location);
     }
 
-    $extra = $like ? '%' : '';
+    $extra = $like ? '%\\\\' : '';
     if (preg_match("/^[A-Za-z0-9${extra}-][A-Za-z_0-9${extra}-]*$/", $location) == 0) {
       throw new \BgaVisibleSystemException(
         "Class Pieces: location must be alphanum and underscore non empty string '$location'"
@@ -228,6 +234,13 @@ class Pieces extends DB_Manager
   public static function getAll()
   {
     return self::getSelectQuery()->get();
+  }
+
+  public static function getAllOrdered()
+  {
+    return self::getSelectQuery()
+      ->orderBy([static::$prefix . 'state', 'ASC'])
+      ->get();
   }
 
   /**
@@ -557,7 +570,11 @@ class Pieces extends DB_Manager
         }
 
         foreach (static::$customFields as $field) {
-          $data[] = $info[$field] ?? null;
+          if (isset($info[$field]) && is_array($info[$field])) {
+            $data[] = \json_encode($info[$field]);
+          } else {
+            $data[] = $info[$field] ?? null;
+          }
         }
 
         $values[] = $data;
