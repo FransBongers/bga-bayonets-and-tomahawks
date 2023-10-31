@@ -43,10 +43,8 @@ CREATE TABLE IF NOT EXISTS `units` (
 
 CREATE TABLE IF NOT EXISTS `spaces` (
   `space_id` varchar(100)  NOT NULL,
-  `space_location` varchar(32) NOT NULL,
-  `space_state` int(10) DEFAULT 0,
   `control` VARCHAR(255) NOT NULL,
-  `extra_datas` JSON NULL,
+  -- `extra_data` JSON NULL,
   PRIMARY KEY (`space_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

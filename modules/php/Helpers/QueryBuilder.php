@@ -1,6 +1,8 @@
 <?php
 namespace BayonetsAndTomahawks\Helpers;
 
+use BayonetsAndTomahawks\Core\Notifications;
+
 class QueryBuilder extends \APP_DbObject
 {
   private $table,
@@ -69,7 +71,7 @@ class QueryBuilder extends \APP_DbObject
         "SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{$this->table}';"
       );
     }
-
+    // Notifications::log('rom',$rom);
     $ids = [];
     $vals = [];
     foreach ($rows as $row) {
@@ -79,7 +81,7 @@ class QueryBuilder extends \APP_DbObject
       }
       $vals[] = '(' . implode(',', $rowValues) . ')';
       $ids[] =
-        $rom[$this->primary] ?? ($this->insertPrimaryIndex === false ? $startingId++ : $row[$this->insertPrimaryIndex]);
+        $row[$this->primary] ?? ($this->insertPrimaryIndex === false ? $startingId++ : $row[$this->insertPrimaryIndex]);
     }
 
     $this->sql .= implode(',', $vals);

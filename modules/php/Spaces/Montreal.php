@@ -1,15 +1,15 @@
 <?php
 namespace BayonetsAndTomahawks\Spaces;
 
-class Louisbourg extends \BayonetsAndTomahawks\Models\Space
+class Montreal extends \BayonetsAndTomahawks\Models\Space
 {
   public function __construct($row)
   {
     parent::__construct($row);
-    $this->id = LOUISBOURG;
-    $this->battlePriority = 13;
+    $this->id = MONTREAL;
+    $this->battlePriority = 122;
     $this->defaultControl = FRENCH;
-    $this->name = clienttranslate('LOUISBOURG');
+    $this->name = clienttranslate('MONTRÉAL');
     $this->victorySpace = true;
   }
 }

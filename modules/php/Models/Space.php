@@ -13,19 +13,18 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   protected $primary = 'space_id';
   protected $attributes = [
     'id' => ['space_id', 'int'],
-    'location' => 'space_location',
-    'state' => ['space_state', 'int'],
     'control' => ['control', 'str'],
-    'extraDatas' => ['extra_datas', 'obj'],
+    // 'extraData' => ['extra_data', 'obj'],
   ];
-  protected $staticAttributes = ['name', 'isVictorySpace'];
+  protected $staticAttributes = ['battlePriority', 'name', 'victorySpace', 'defaultControl'];
 
   protected $id = null;
+  protected $battlePriority;
   protected $control = null;
+  protected $defaultControl;
   protected $faction = null;
-  protected $location = null;
   protected $name = null;
-  protected $isVictorySpace = false;
+  protected $victorySpace = false;
 
   public function __construct($row)
   {
@@ -39,8 +38,9 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     return [
       'id' => $this->id,
       'control' => $this->control,
-      'isVictorySpace' => $this->isVictorySpace,
-      'name' =>$this->name,
+      'defaultControl' => $this->defaultControl,
+      'name' => $this->name,
+      'victorySpace' => $this->victorySpace,
     ];
   }
 }

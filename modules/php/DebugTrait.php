@@ -19,7 +19,8 @@ trait DebugTrait
   function test()
   {
     // Spaces::setupNewGame();
-    Notifications::log('uiData', Spaces::getUiData());
+    // Notifications::log('uiData', Spaces::getUiData());
+    Notifications::log('all', Spaces::getAll()->toArray()[0]->getId());
     // $this->debugLoadScenario('1');
     // Notifications::log('units',Units::getAll());
   }
