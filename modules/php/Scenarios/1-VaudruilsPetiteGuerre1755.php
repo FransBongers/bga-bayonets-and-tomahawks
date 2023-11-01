@@ -68,14 +68,86 @@ $scenarios[1] = [
         OUTAOUAIS,
       ]
     ],
-    // Frans Setup
+    // French Setup
     CHIGNECTOU => [
       'id' => CHIGNECTOU,
       'units' => [
         BEAUSEJOUR,
         LANGIS,
       ]
-    ]
+    ],
+    LOUISBOURG => [
+      'id' => LOUISBOURG,
+      'units' => [
+        BASTION,
+        BASTION,
+      ]
+    ],
+    POINTE_SAINTE_ANNE => [
+      'id' => POINTE_SAINTE_ANNE,
+      'units' => [
+        BOISHEBERT,
+      ]
+    ],
+    QUEBEC => [
+      'id' => QUEBEC,
+      'units' => [
+        RIGAUD,
+        CANADIENS,
+        CANADIENS,
+        CANONNIERS_BOMBARDIERS,
+        CANONNIERS_BOMBARDIERS,
+        BASTION,
+        BASTION,
+      ]
+    ],
+    TICONDEROGA => [
+      'id' => TICONDEROGA,
+      'units' => [
+        SAINT_FREDERIC,
+      ]
+    ],
+    MONTREAL => [
+      'id' => MONTREAL,
+      'units' => [
+        BEAUJEU_LACORNE,
+        BEAUJEU_LACORNE,
+      ]
+    ],
+    NIAGARA => [
+      'id' => NIAGARA,
+      'units' => [
+        LERY,
+      ]
+    ],
+    FORKS_OF_THE_OHIO => [
+      'id' => FORKS_OF_THE_OHIO,
+      'units' => [
+        LIGNERY_VILIIERS,
+        LIGNERY_VILIIERS,
+        DUQUESNE,
+      ]
+    ],
+    LES_ILLINOIS => [
+      'id' => LES_ILLINOIS,
+      'units' => [
+        AUBRY_BELESTRE,
+        AUBRY_BELESTRE,
+      ]
+    ],
+    LE_DETROIT => [
+      'id' => LE_DETROIT,
+      'units' => [
+        LANGLADE,
+      ]
+    ],
+    // British
+    HALIFAX => [
+      'id' => HALIFAX,
+      'units' => [
+        GOREHAM,
+      ]
+    ],
   ],
   'supply' => [
     'neutralIndian' => [
@@ -84,6 +156,11 @@ $scenarios[1] = [
       IROQUOIS,
       CHEROKEE,
       CHEROKEE,
+    ],
+    'french' => [
+      POUCHOT,
+      CARILLON,
+      CANONNIERS_BOMBARDIERS,
     ]
   ]
 ];

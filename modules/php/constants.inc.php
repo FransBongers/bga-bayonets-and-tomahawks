@@ -14,6 +14,10 @@ const ST_END_GAME_NAME = 'gameEnd';
 /*
  * Units types
  */
+const ARTILLERY = 'artillery';
+const BASTION_UNIT_TYPE = 'bastion';
+const BRIGADE = 'brigade';
+const COMMANDER = 'commander';
 const FORT = 'fort';
 const LIGHT = 'light';
 
@@ -230,10 +234,24 @@ const DISPATCH_TRANSITION = 'dispatchTransition';
  * Counters
  */
 // British
-
+const GOREHAM = 'Goreham';
 // French
+const AUBRY_BELESTRE = 'AubryBelestre';
+const BASTION = 'Bastion';
+const BEAUJEU_LACORNE = 'BeaujeuLacorne';
 const BEAUSEJOUR = 'Beausejour';
+const BOISHEBERT = 'Boishebert';
+const CANADIENS = 'Canadiens';
+const CANONNIERS_BOMBARDIERS = 'CanonniersBombardiers';
+const CARILLON = 'Carillon';
+const DUQUESNE = 'Duquesne';
 const LANGIS = 'Langis';
+const LANGLADE = 'Langlade';
+const LERY = 'Lery';
+const LIGNERY_VILIIERS = 'LigneryVilliers';
+const POUCHOT = 'Pouchot';
+const RIGAUD = 'Rigaud';
+const SAINT_FREDERIC = 'SaintFrederic';
 // Indian
 const ABENAKI = 'Abenaki';
 const CHAOUANON = 'Chaouanon';
