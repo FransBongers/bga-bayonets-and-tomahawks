@@ -1,11 +1,11 @@
 <?php
 namespace BayonetsAndTomahawks\Models;
 
-class BastionModel extends AbstractUnit
+class Fleet extends AbstractUnit
 {
   public function __construct($row)
   {
-    $this->type = BASTION_UNIT_TYPE;
+    $this->type = FLEET;
     parent::__construct($row);
   }
 

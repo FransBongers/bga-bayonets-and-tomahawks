@@ -1,6 +1,5 @@
 <?php
 namespace BayonetsAndTomahawks\Models;
-// use M44\Board;
 
 class Light extends AbstractUnit
 {
