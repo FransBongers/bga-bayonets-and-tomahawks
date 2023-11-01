@@ -13,22 +13,20 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
   protected static $table = 'units';
   protected static $prefix = 'unit_';
   protected static $customFields = [
-    'class',
-    'extra_datas',
+    'counter_id',
+    'extra_data',
   ];
+  protected static $autoremovePrefix = false;
   protected static $autoreshuffle = false;
   protected static function cast($row)
   {
     Notifications::log('cast',$row);
-    $row['unit_id'] = $row['id'];
-    $row['unit_location'] = $row['location'];
-
-    return self::getInstance($row['class'], $row);
+    return self::getInstance($row['counter_id'], $row);
   }
 
-  public function getInstance($class, $row = null)
+  public function getInstance($counterId, $row = null)
   {
-    $className = '\BayonetsAndTomahawks\Units\\' . UNIT_CLASSES[$class];
+    $className = '\BayonetsAndTomahawks\Units\\' . $counterId;
     return new $className($row);
   }
 
@@ -45,11 +43,14 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
    */
   public static function getStaticUiData()
   {
+    $units = self::getAll()->toArray();
+    
     $data = [];
-    foreach (UNIT_CLASSES as $identifier => $className) {
-      $className = '\BayonetsAndTomahawks\Units\\' . $className;
+    foreach ($units as $index => $unit) {
+      $counterId = $unit->getCounterId();
+      $className = '\BayonetsAndTomahawks\Units\\' . $counterId;
       $unit = new $className(null);
-      $data[$unit->getClass()] = $unit->getStaticUiData();
+      $data[$unit->getCounterId()] = $unit->getStaticUiData();
     }
     return $data;
   }
@@ -93,10 +94,10 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
         // $info = self::getInstance($unit);
         $data = [
           'location' => $location['id'],
-          'class' => $unit,
+          'counter_id' => $unit,
           // 'type' => $unit,
         ];
-        $data['extra_datas'] = ['properties' => []];
+        $data['extra_data'] = ['properties' => []];
         $units[] = $data;
 
       }

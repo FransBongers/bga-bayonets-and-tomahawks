@@ -1,5 +1,5 @@
 <?php
-namespace BayonetsAndTomahawks\Units;
+namespace BayonetsAndTomahawks\Models;
 
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Units;
@@ -11,21 +11,22 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   protected $attributes = [
     'id' => ['unit_id', 'int'],
     'location' => ['unit_location', 'str'],
-    'extraDatas' => ['extra_datas', 'obj'],
+    'counterId' => ['counter_id', 'str'],
+    'extraData' => ['extra_data', 'obj'],
   ];
 
   protected $id = null;
+  protected $counterId;
   protected $faction = null;
   protected $location = null;
   protected $datas = null;
-
+  
   /*
-   * STATIC INFORMATIONS
+   * STATIC DATA
    */
-  protected $staticAttributes = ['class', 'type', 'name', 'faction'];
-  protected $class = null;
+  protected $staticAttributes = ['counterId', 'counterText', 'faction', 'type'];
   protected $type = null;
-  protected $name = null;
+  protected $counterText = null;
 
   /*
    * UNIT PROPERTIES
@@ -54,7 +55,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   {
     return [
       'id' => $this->id,
-      'class' => $this->class,
+      'counterId' => $this->counterId,
       'location' => $this->location,
     ];
   }
@@ -62,14 +63,14 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   public function getStaticUiData()
   {
     $t = array_merge($this->staticAttributes, $this->properties);
-    $datas = [];
+    $data = [];
     foreach ($t as $prop) {
       if (isset($this->$prop)) {
-        $datas[$prop] = $this->$prop;
+        $data[$prop] = $this->$prop;
       }
     }
 
-    return $datas;
+    return $data;
   }
 
   // ..######...########.########.########.########.########...######.

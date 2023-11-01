@@ -99,7 +99,7 @@ class bayonetsandtomahawks extends Table
         Preferences::setupNewGame($players, $options);
         Players::setupNewGame($players, $options);
         Stats::checkExistence();
-        // Spaces::setupNewGameDefaults();
+        Spaces::setupNewGame($players, $options);
 
         Scenario::loadId('1');
         Scenario::setup();
@@ -125,6 +125,7 @@ class bayonetsandtomahawks extends Table
                 'units' => Units::getStaticUiData(),
             ],
             // 'spaces' => Spaces::getUiData(),
+            'spaces' => Spaces::getAll(),
             'units' => Units::getUiData(),
         ];
 

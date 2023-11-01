@@ -14,12 +14,8 @@ const ST_END_GAME_NAME = 'gameEnd';
 /*
  * Units types
  */
+const FORT = 'fort';
 const LIGHT = 'light';
-
-/**
- * Units classes
- */
-const LANGIS = 'langis';
 
 /**
  * Factions / control
@@ -201,6 +197,7 @@ const SPACES = [
   SACHENDAGA,
   SARANAC,
   SAUGINK,
+  SHAMOKIN,
   ST_GEORGE,
   TACONNET,
   TADOUSSAC,
@@ -230,8 +227,23 @@ const LOG_TOKEN_PLAYER_NAME = 'playerName';
 const DISPATCH_TRANSITION = 'dispatchTransition';
 
 /**
- * Unit to class name map
+ * Counters
  */
-const UNIT_CLASSES = [
-  LANGIS => 'Langis',
-];
+// British
+
+// French
+const BEAUSEJOUR = 'Beausejour';
+const LANGIS = 'Langis';
+// Indian
+const ABENAKI = 'Abenaki';
+const CHAOUANON = 'Chaouanon';
+const CHEROKEE = 'Cherokee';
+const DELAWARE = 'Delaware';
+const IROQUOIS = 'Iroquois';
+const KAHNAWAKE = 'Kahnawake';
+const MALECITE = 'Malecite';
+const MICMAC = 'Micmac';
+const MINGO = 'Mingo';
+const MISSISSAGUE = 'Mississague';
+const OUTAOUAIS = 'Outaouais';
+const SENECA = 'Seneca';

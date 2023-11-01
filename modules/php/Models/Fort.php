@@ -1,12 +1,12 @@
 <?php
-namespace BayonetsAndTomahawks\Units;
+namespace BayonetsAndTomahawks\Models;
 // use M44\Board;
 
-class Light extends AbstractUnit
+class Fort extends AbstractUnit
 {
   public function __construct($row)
   {
-    $this->type = LIGHT;
+    $this->type = FORT;
     parent::__construct($row);
   }
 

@@ -6,7 +6,7 @@ class Assunepachla extends \BayonetsAndTomahawks\Models\Space
   public function __construct($row)
   {
     parent::__construct($row);
-    $this->id = SAUGINK;
+    $this->id = ASSUNEPACHLA;
     $this->battlePriority = 232;
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Assunepachla');

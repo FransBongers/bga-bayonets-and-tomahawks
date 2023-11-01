@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS `units` (
   `unit_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `unit_location` varchar(32) NOT NULL,
   `unit_state` int(10) DEFAULT 0,
-  `class` VARCHAR(255) NOT NULL,
-  `extra_datas` JSON NULL,
+  `counter_id` VARCHAR(255) NOT NULL,
+  `extra_data` JSON NULL,
   PRIMARY KEY (`unit_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

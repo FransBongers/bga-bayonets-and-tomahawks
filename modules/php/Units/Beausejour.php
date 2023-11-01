@@ -1,13 +1,13 @@
 <?php
 namespace BayonetsAndTomahawks\Units;
 
-class Langis extends \BayonetsAndTomahawks\Models\Light
+class Beausejour extends \BayonetsAndTomahawks\Models\Fort
 {
   public function __construct($row)
   {
     parent::__construct($row);
-    $this->counterId = LANGIS;
-    $this->counterText = clienttranslate('Langis');
+    $this->counterId = BEAUSEJOUR;
+    $this->counterText = clienttranslate('Beauséjour');
     $this->faction = FRENCH;
   }
 }
