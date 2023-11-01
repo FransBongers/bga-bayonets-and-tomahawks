@@ -37,6 +37,7 @@ const ANNAPOLIS_ROYAL = 'AnnapolisRoyal';
 const ASSUNEPACHLA = 'Assunepachla';
 const BAYE_DE_CATARACOUY = 'BayeDeCataracouy';
 const BEVERLEY = 'Beverley';
+const BOSTON = 'Boston';
 const CAPE_SABLE = 'CapeSable';
 const CARLISLE = 'Carlisle';
 const CAWICHNOWANE = 'Cawichnowane';
@@ -85,6 +86,7 @@ const MONTREAL = 'Montreal';
 const MOZODEBINEBESEK = 'Mozodebinebesek';
 const MTAN = 'Mtan';
 const NAMASKONKIK = 'Namaskonkik';
+const NEW_YORK = 'NewYork';
 const NEWFOUNDLAND = 'Newfoundland';
 const NIAGARA = 'Niagara';
 const NIHANAWATE = 'Nihanawate';
@@ -234,7 +236,16 @@ const DISPATCH_TRANSITION = 'dispatchTransition';
  * Counters
  */
 // British
+const ANNE = 'Anne';
+const B_35TH_NEW_YORK_COMPANIES = 'B35thNewYorkCompanies';
+const B_40TH_45TH_47TH = 'B40th45th47th';
+const B_50TH_51ST = 'B50th51st';
 const GOREHAM = 'Goreham';
+const JOHNSON = 'Johnson';
+const ONTARIO = 'Ontario';
+const ROGERS = 'Rogers';
+const ROYAL_ARTILLERY = 'RoyalArtillery';
+const WASHINGTON = 'Washington';
 // French
 const AUBRY_BELESTRE = 'AubryBelestre';
 const BASTION = 'Bastion';
@@ -263,5 +274,6 @@ const MALECITE = 'Malecite';
 const MICMAC = 'Micmac';
 const MINGO = 'Mingo';
 const MISSISSAGUE = 'Mississague';
+const MOHAWK = 'Mohawk';
 const OUTAOUAIS = 'Outaouais';
 const SENECA = 'Seneca';

@@ -146,6 +146,57 @@ $scenarios[1] = [
       'id' => HALIFAX,
       'units' => [
         GOREHAM,
+        B_40TH_45TH_47TH,
+        ROYAL_ARTILLERY
+      ]
+    ],
+    ANNAPOLIS_ROYAL => [
+      'id' => ANNAPOLIS_ROYAL,
+      'units' => [
+        ANNE,
+      ]
+    ],
+    RUMFORD => [
+      'id' => RUMFORD,
+      'units' => [
+        ROGERS,
+      ]
+    ],
+    BOSTON => [
+      'id' => BOSTON,
+      'units' => [
+        B_50TH_51ST,
+        ROYAL_ARTILLERY,
+      ]
+    ],
+    ALBANY => [
+      'id' => ALBANY,
+      'units' => [
+        MOHAWK,
+      ]
+    ],
+    NEW_YORK => [
+      'id' => NEW_YORK,
+      'units' => [
+        B_35TH_NEW_YORK_COMPANIES
+      ]
+    ],
+    CHARLES_TOWN => [
+      'id' => CHARLES_TOWN,
+      'units' => [
+        JOHNSON
+      ]
+    ],
+    OSWEGO => [
+      'id' => OSWEGO,
+      'units' => [
+        ONTARIO
+      ]
+    ],
+    WILLS_CREEK => [
+      'id' => WILLS_CREEK,
+      'units' => [
+        WASHINGTON
       ]
     ],
   ],
