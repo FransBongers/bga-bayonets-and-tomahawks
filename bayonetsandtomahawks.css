@@ -57,9 +57,8 @@
 
 .bt_space {
   position: absolute;
-  background-color: yellow;
-  width: 32px;
-  height: 32px;
+  width: 52px;
+  height: 52px;
 }
 
 #bt_pools_container {
@@ -77,19 +76,1782 @@
   margin: 4px;
 }
 
-.bt_token[data-faction=british] {
+.bt_token {
+  width: 52px;
+  height: 52px;
+  position: absolute;
+  z-index: 1;
+}
+
+.bt_token[data-counter-id=Abenaki] {
+  background-position-x: 0%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_ind.webp");
+  background-size: 500% 300%;
+}
+
+.bt_token[data-counter-id=Chaouanon] {
+  background-position-x: 25%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_ind.webp");
+  background-size: 500% 300%;
+}
+
+.bt_token[data-counter-id=Cherokee_french] {
+  background-position-x: 50%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_ind.webp");
+  background-size: 500% 300%;
+}
+
+.bt_token[data-counter-id=Cherokee_british] {
+  background-position-x: 75%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_ind.webp");
+  background-size: 500% 300%;
+}
+
+.bt_token[data-counter-id=Delaware] {
+  background-position-x: 100%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_ind.webp");
+  background-size: 500% 300%;
+}
+
+.bt_token[data-counter-id=Iroquois_french] {
+  background-position-x: 0%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_ind.webp");
+  background-size: 500% 300%;
+}
+
+.bt_token[data-counter-id=Iroquois_british] {
+  background-position-x: 25%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_ind.webp");
+  background-size: 500% 300%;
+}
+
+.bt_token[data-counter-id=Kahnawake] {
+  background-position-x: 50%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_ind.webp");
+  background-size: 500% 300%;
+}
+
+.bt_token[data-counter-id=Malecite] {
+  background-position-x: 75%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_ind.webp");
+  background-size: 500% 300%;
+}
+
+.bt_token[data-counter-id=Micmac] {
+  background-position-x: 100%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_ind.webp");
+  background-size: 500% 300%;
+}
+
+.bt_token[data-counter-id=Mingo] {
+  background-position-x: 0%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_ind.webp");
+  background-size: 500% 300%;
+}
+
+.bt_token[data-counter-id=Mississague] {
+  background-position-x: 25%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_ind.webp");
+  background-size: 500% 300%;
+}
+
+.bt_token[data-counter-id=Mohawk] {
+  background-position-x: 50%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_ind.webp");
+  background-size: 500% 300%;
+}
+
+.bt_token[data-counter-id=Outaouais] {
+  background-position-x: 75%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_ind.webp");
+  background-size: 500% 300%;
+}
+
+.bt_token[data-counter-id=Seneca] {
+  background-position-x: 100%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_ind.webp");
+  background-size: 500% 300%;
+}
+
+.bt_token[data-counter-id=B15th58th_reduced] {
+  background-position-x: 0%;
+  background-position-y: 0%;
   background-image: url("img/unit_tokens_bri.webp");
   background-size: 1200% 1100%;
 }
 
-.bt_token[data-faction=french] {
+.bt_token[data-counter-id=B15th58th] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B22nd28th_reduced] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B22nd28th] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B27th55th_reduced] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B27th55th] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B35thNewYorkCompanies_reduced] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B35thNewYorkCompanies] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B40th45th47th_reduced] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B40th45th47th] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B43rd46th_reduced] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B43rd46th] {
+  background-position-x: 100%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B44th48th_reduced] {
+  background-position-x: 0%;
+  background-position-y: 10%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B44th48th] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 10%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B50th51st_reduced] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 10%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B50th51st] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 10%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B61st63rd_reduced] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 10%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B61st63rd] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 10%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B94th95th_reduced] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 10%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B94th95th] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 10%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=RoyalArtillery_reduced] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 10%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=RoyalArtillery] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 10%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Bradstreet] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 10%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Forbes] {
+  background-position-x: 100%;
+  background-position-y: 10%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Howe] {
+  background-position-x: 0%;
+  background-position-y: 20%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=BritishCommander] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 20%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Wolfe] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 20%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=NewEngland_reduced] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 20%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=NewEngland] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 20%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=NYorkNJ_reduced] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 20%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id="NYorkNJ,"] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 20%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=PennDel_reduced] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 20%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=PennDel] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 20%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=VirginiaS_reduced] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 20%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=VirginiaS] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 20%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Boscawen_reduced] {
+  background-position-x: 100%;
+  background-position-y: 20%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Boscawen] {
+  background-position-x: 0%;
+  background-position-y: 30%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Colvill_reduced] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 30%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Colvill] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 30%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Durell_reduced] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 30%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Durell] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 30%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Hardy_reduced] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 30%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Hardy] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 30%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Holburne_reduced] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 30%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Holburne] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 30%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Holmes_reduced] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 30%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Holmes] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 30%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=RoyalNavy_reduced] {
+  background-position-x: 100%;
+  background-position-y: 30%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=RoyalNavy] {
+  background-position-x: 0%;
+  background-position-y: 40%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Saunders_reduced] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 40%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Saunders] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 40%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Anne_reduced] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 40%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Anne] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 40%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Augusta_reduced] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 40%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Augusta] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 40%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Bedford_reduced] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 40%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Bedford] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 40%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=CrownPoint_reduced] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 40%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=CrownPoint] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 40%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Cumberland_reduced] {
+  background-position-x: 100%;
+  background-position-y: 40%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Cumberland] {
+  background-position-x: 0%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Edward_reduced] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Edward] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Frederick_reduced] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Frederick] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Herkimer_reduced] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Herkimer] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Johnson_reduced] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Johnson] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Ligonier_reduced] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Ligonier] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Ontario_reduced] {
+  background-position-x: 100%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Ontario] {
+  background-position-x: 0%;
+  background-position-y: 60%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Pitt_reduced] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 60%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Pitt] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 60%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Pownall_reduced] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 60%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Pownall] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 60%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Stanwix_reduced] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 60%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Stanwix] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 60%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Ticonderoga_reduced] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 60%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Ticonderoga] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 60%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=WilliamHenry_reduced] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 60%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=WilliamHenry] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 60%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Campbell_reduced] {
+  background-position-x: 100%;
+  background-position-y: 60%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Campbell] {
+  background-position-x: 0%;
+  background-position-y: 70%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Fraser_reduced] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 70%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Fraser] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 70%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Montgomery_reduced] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 70%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Montgomery] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 70%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=RoyalHighland_reduced] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 70%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=RoyalHighland] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 70%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=HowardsBuffsKingsOwn_reduced] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 70%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=HowardsBuffsKingsOwn] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 70%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Armstrong_reduced] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 70%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Armstrong] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 70%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Dunn_reduced] {
+  background-position-x: 100%;
+  background-position-y: 70%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Dunn] {
+  background-position-x: 0%;
+  background-position-y: 80%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Goreham_reduced] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 80%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Goreham] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 80%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Putnam_reduced] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 80%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Putnam] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 80%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Rogers_reduced] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 80%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Rogers] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 80%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Washington_reduced] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 80%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Washington] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 80%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Gage_reduced] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 80%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Gage] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 80%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Howe_reduced] {
+  background-position-x: 100%;
+  background-position-y: 80%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Howe] {
+  background-position-x: 0%;
+  background-position-y: 90%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Morgan_reduced] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 90%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Morgan] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 90%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Scott_reduced] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 90%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=Scott] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 90%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B2ndRoyalAmerican_reduced] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 90%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B2ndRoyalAmerican] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 90%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B1stRoyalAmerican_reduced] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 90%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=B1stRoyalAmerican] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 90%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=RoyalScots17th_reduced] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 90%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=RoyalScots17th] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 90%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token[data-counter-id=CanonniersBombardiers_reduced] {
+  background-position-x: 0%;
+  background-position-y: 0%;
   background-image: url("img/unit_tokens_fre.webp");
   background-size: 1200% 700%;
 }
 
-.bt_token[data-faction=indian] {
-  background-image: url("img/unit_tokens_ind.webp");
-  background-size: 500% 300%;
+.bt_token[data-counter-id=CanonniersBombardiers] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=AngoumoisBeauvoisis_reduced] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=AngoumoisBeauvoisis] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=ArtoisBourgogne_reduced] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=ArtoisBourgogne] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Bastion_reduced] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Bastion] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=BearnGuyenne_reduced] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=BearnGuyenne] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Berry_reduced] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Berry] {
+  background-position-x: 100%;
+  background-position-y: 0%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=BoulonnoisRoyalBarrois_reduced] {
+  background-position-x: 0%;
+  background-position-y: 16.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=BoulonnoisRoyalBarrois] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 16.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=CLevis] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 16.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Montcalm] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 16.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=FrenchCommander] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 16.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Pouchot] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 16.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Rigaud] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 16.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=VolontEtrangersCambis_reduced] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 16.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=VolontEtrangersCambis] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 16.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Canadiens_reduced] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 16.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Canadiens] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 16.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Beauffremont_reduced] {
+  background-position-x: 100%;
+  background-position-y: 16.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Beauffremont] {
+  background-position-x: 0%;
+  background-position-y: 33.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=DeLIsle_reduced] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 33.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=DeLIsle] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 33.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=DeLaMotte_reduced] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 33.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=DeLaMotte] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 33.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=MarineRoyale_reduced] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 33.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=MarineRoyale] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 33.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=FoixQuercy_reduced] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 33.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=FoixQuercy] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 33.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Beausejour_reduced] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 33.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Beausejour] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 33.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Carillon_reduced] {
+  background-position-x: 100%;
+  background-position-y: 33.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Carillon] {
+  background-position-x: 0%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Duquesne_reduced] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Duquesne] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Frontenac_reduced] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Frontenac] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=JacquesCartier_reduced] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=JacquesCartier] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=FLevis_reduced] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=FLevis] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Massiac_reduced] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Massiac] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Niagara_reduced] {
+  background-position-x: 100%;
+  background-position-y: 50%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Niagara] {
+  background-position-x: 0%;
+  background-position-y: 66.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=SaintFrederic_reduced] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 66.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=SaintFrederic] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 66.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Aubry_reduced] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 66.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Aubry] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 66.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Beaujeu_reduced] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 66.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Beaujeu] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 66.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Belestre_reduced] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 66.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Belestre] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 66.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Boishebert_reduced] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 66.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Boishebert] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 66.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Lacorne_reduced] {
+  background-position-x: 100%;
+  background-position-y: 66.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Lacorne] {
+  background-position-x: 0%;
+  background-position-y: 83.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Langis_reduced] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 83.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Langis] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 83.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Langlade_reduced] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 83.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Langlade] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 83.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Lery_reduced] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 83.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Lery] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 83.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Lignery_reduced] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 83.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Lignery] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 83.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Villiers_reduced] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 83.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=Villiers] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 83.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=LaSarreRoyalRoussillon_reduced] {
+  background-position-x: 100%;
+  background-position-y: 83.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=LaSarreRoyalRoussillon] {
+  background-position-x: 0%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=LanguedocLaReine_reduced] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=LanguedocLaReine] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=DeLaMarine_reduced] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=DeLaMarine] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 100%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 0%;
+  background-position-y: 116.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 116.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 116.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 116.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 116.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 116.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 116.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 116.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 116.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 116.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 116.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 100%;
+  background-position-y: 116.6666666667%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 0%;
+  background-position-y: 133.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 133.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 133.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 133.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 133.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 133.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 133.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 133.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 133.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 133.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 133.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 100%;
+  background-position-y: 133.3333333333%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 0%;
+  background-position-y: 150%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 150%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 150%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 150%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 150%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 150%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 150%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 150%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 150%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 150%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
+}
+
+.bt_token[data-counter-id=""] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 150%;
+  background-image: url("img/unit_tokens_fre.webp");
+  background-size: 1200% 700%;
 }
 
 .bt_token[data-unit-type=bastion] {
@@ -110,12 +1872,6 @@
   top: 469px;
   left: 700px;
   filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
-}
-
-.bt_token {
-  width: 52px;
-  height: 52px;
-  position: absolute;
 }
 
 .bt_marker {

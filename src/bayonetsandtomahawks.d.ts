@@ -32,10 +32,24 @@ interface BTSpace {
   left?: number;
 }
 
+interface BTUnit {
+  id: number;
+  counterId: string;
+  location: string;
+}
+
 interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   canceledNotifIds: string[];
   players: Record<number, BgaPlayer>;
-  spaces: BTSpace[]
+  staticData: {
+    units: {
+      [counterId: string]: {
+        faction: 'british' | 'french' | 'indian';
+      }
+    }
+  };
+  spaces: BTSpace[];
+  units: BTUnit[];
 }
 
 interface BayonetsAndTomahawksPlayerData extends BgaPlayer {

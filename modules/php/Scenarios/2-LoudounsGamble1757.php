@@ -5,7 +5,7 @@ namespace BayonetsAndTomahawks\Scenarios;
 $scenarios[2] = [
   'meta_data' => [
     'scenario_id' => '2',
-    'name' => clienttranslate("Vaudreuil's Petite Guerre 1755"),
+    'name' => clienttranslate("Loudoun's Gamble 1757"),
   ],
   'locations' => [
     // Indian Setup

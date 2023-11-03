@@ -1,0 +1,312 @@
+@use 'sass:math';
+@use "sass:map";
+
+// .bt_token[data-faction=british] {
+//   background-image: url('img/unit_tokens_bri.webp');
+//   background-size: 1200% 1100%
+// }
+
+// .bt_token[data-faction=french] {
+//   background-image: url('img/unit_tokens_fre.webp');
+//   background-size: 1200% 700%;
+// }
+
+// .bt_token[data-faction=indian] {
+//   background-image: url('img/unit_tokens_ind.webp');
+//   background-size: 500% 300%;
+// }
+
+.bt_token {
+  width: 52px;
+  height: 52px;
+  position: absolute;
+  z-index: 1;
+}
+
+$indian-units: (
+  1: 'Abenaki',
+  2: 'Chaouanon',
+  3: 'Cherokee_french',
+  4: 'Cherokee_british',
+  5: 'Delaware',
+  6: 'Iroquois_french',
+  7: 'Iroquois_british',
+  8: 'Kahnawake',
+  9: 'Malecite',
+  10: 'Micmac',
+  11: 'Mingo',
+  12: 'Mississague',
+  13: 'Mohawk',
+  14: 'Outaouais',
+  15: 'Seneca',
+);
+
+@for $i from 1 through 15 {
+  .bt_token[data-counter-id="#{map.get($indian-units,$i)}"] {
+    background-position-x: math.div((($i - 1) % 5 * 100%), 4);
+    background-position-y: math.div(math.floor(calc(($i - 1) / 5)) * 100%, 2);
+    background-image: url('img/unit_tokens_ind.webp');
+    background-size: 500% 300%;
+  }
+}
+
+$british-units: (
+  1: 'B15th58th_reduced',
+  2: 'B15th58th',
+  3: 'B22nd28th_reduced',
+  4: 'B22nd28th',
+  5: 'B27th55th_reduced',
+  6: 'B27th55th',
+  7: 'B35thNewYorkCompanies_reduced',
+  8: 'B35thNewYorkCompanies',
+  9: 'B40th45th47th_reduced',
+  10: 'B40th45th47th',
+  11: 'B43rd46th_reduced',
+  12: 'B43rd46th',
+  13: 'B44th48th_reduced',
+  14: 'B44th48th',
+  15: 'B50th51st_reduced',
+  16: 'B50th51st',
+  17: 'B61st63rd_reduced',
+  18: 'B61st63rd',
+  19: 'B94th95th_reduced',
+  20: 'B94th95th',
+  21: 'RoyalArtillery_reduced',
+  22: 'RoyalArtillery',
+  23: 'Bradstreet',
+  24: 'Forbes',
+  25: 'Howe',
+  26: 'BritishCommander',
+  27: 'Wolfe',
+  28: 'NewEngland_reduced',
+  29: 'NewEngland',
+  30: 'NYorkNJ_reduced',
+  31: 'NYorkNJ,',
+  32: 'PennDel_reduced',
+  33: 'PennDel',
+  34: 'VirginiaS_reduced',
+  35: 'VirginiaS',
+  36: 'Boscawen_reduced',
+  37: 'Boscawen',
+  38: 'Colvill_reduced',
+  39: 'Colvill',
+  40: 'Durell_reduced',
+  41: 'Durell',
+  42: 'Hardy_reduced',
+  43: 'Hardy',
+  44: 'Holburne_reduced',
+  45: 'Holburne',
+  46: 'Holmes_reduced',
+  47: 'Holmes',
+  48: 'RoyalNavy_reduced',
+  49: 'RoyalNavy',
+  50: 'Saunders_reduced',
+  51: 'Saunders',
+  52: 'Anne_reduced',
+  53: 'Anne',
+  54: 'Augusta_reduced',
+  55: 'Augusta',
+  56: 'Bedford_reduced',
+  57: 'Bedford',
+  58: 'CrownPoint_reduced',
+  59: 'CrownPoint',
+  60: 'Cumberland_reduced',
+  61: 'Cumberland',
+  62: 'Edward_reduced',
+  63: 'Edward',
+  64: 'Frederick_reduced',
+  65: 'Frederick',
+  66: 'Herkimer_reduced',
+  67: 'Herkimer',
+  68: 'Johnson_reduced',
+  69: 'Johnson',
+  70: 'Ligonier_reduced',
+  71: 'Ligonier',
+  72: 'Ontario_reduced',
+  73: 'Ontario',
+  74: 'Pitt_reduced',
+  75: 'Pitt',
+  76: 'Pownall_reduced',
+  77: 'Pownall',
+  78: 'Stanwix_reduced',
+  79: 'Stanwix',
+  80: 'Ticonderoga_reduced',
+  81: 'Ticonderoga',
+  82: 'WilliamHenry_reduced',
+  83: 'WilliamHenry',
+  84: 'Campbell_reduced',
+  85: 'Campbell',
+  86: 'Fraser_reduced',
+  87: 'Fraser',
+  88: 'Montgomery_reduced',
+  89: 'Montgomery',
+  90: 'RoyalHighland_reduced',
+  91: 'RoyalHighland',
+  92: 'HowardsBuffsKingsOwn_reduced',
+  93: 'HowardsBuffsKingsOwn',
+  94: 'Armstrong_reduced',
+  95: 'Armstrong',
+  96: 'Dunn_reduced',
+  97: 'Dunn',
+  98: 'Goreham_reduced',
+  99: 'Goreham',
+  100: 'Putnam_reduced',
+  101: 'Putnam',
+  102: 'Rogers_reduced',
+  103: 'Rogers',
+  104: 'Washington_reduced',
+  105: 'Washington',
+  106: 'Gage_reduced',
+  107: 'Gage',
+  108: 'Howe_reduced',
+  109: 'Howe',
+  110: 'Morgan_reduced',
+  111: 'Morgan',
+  112: 'Scott_reduced',
+  113: 'Scott',
+  114: 'B2ndRoyalAmerican_reduced',
+  115: 'B2ndRoyalAmerican',
+  116: 'B1stRoyalAmerican_reduced',
+  117: 'B1stRoyalAmerican',
+  118: 'RoyalScots17th_reduced',
+  119: 'RoyalScots17th'
+);
+
+@for $i from 1 through 119 {
+  .bt_token[data-counter-id="#{map.get($british-units,$i)}"] {
+    background-position-x: math.div((($i - 1) % 12 * 100%), 11);
+    background-position-y: math.div(math.floor(calc(($i - 1) / 12)) * 100%, 10);
+    background-image: url('img/unit_tokens_bri.webp');
+    background-size: 1200% 1100%
+  }
+}
+
+$french-units: (
+  1: 'CanonniersBombardiers_reduced',
+  2: 'CanonniersBombardiers',
+  3: 'AngoumoisBeauvoisis_reduced',
+  4: 'AngoumoisBeauvoisis',
+  5: 'ArtoisBourgogne_reduced',
+  6: 'ArtoisBourgogne',
+  7: 'Bastion_reduced',
+  8: 'Bastion',
+  9: 'BearnGuyenne_reduced',
+  10: 'BearnGuyenne',
+  11: 'Berry_reduced',
+  12: 'Berry',
+  13: 'BoulonnoisRoyalBarrois_reduced',
+  14: 'BoulonnoisRoyalBarrois',
+  15: 'CLevis',
+  16: 'Montcalm',
+  17: 'FrenchCommander',
+  18: 'Pouchot',
+  19: 'Rigaud',
+  20: 'VolontEtrangersCambis_reduced',
+  21: 'VolontEtrangersCambis',
+  22: 'Canadiens_reduced',
+  23: 'Canadiens',
+  24: 'Beauffremont_reduced',
+  25: 'Beauffremont',
+  26: 'DeLIsle_reduced',
+  27: 'DeLIsle',
+  28: 'DeLaMotte_reduced',
+  29: 'DeLaMotte',
+  30: 'MarineRoyale_reduced',
+  31: 'MarineRoyale',
+  32: 'FoixQuercy_reduced',
+  33: 'FoixQuercy',
+  34: 'Beausejour_reduced',
+  35: 'Beausejour',
+  36: 'Carillon_reduced',
+  37: 'Carillon',
+  38: 'Duquesne_reduced',
+  39: 'Duquesne',
+  40: 'Frontenac_reduced',
+  41: 'Frontenac',
+  42: 'JacquesCartier_reduced',
+  43: 'JacquesCartier',
+  44: 'FLevis_reduced',
+  45: 'FLevis',
+  46: 'Massiac_reduced',
+  47: 'Massiac',
+  48: 'Niagara_reduced',
+  49: 'Niagara',
+  50: 'SaintFrederic_reduced',
+  51: 'SaintFrederic',
+  52: 'Aubry_reduced',
+  53: 'Aubry',
+  54: 'Beaujeu_reduced',
+  55: 'Beaujeu',
+  56: 'Belestre_reduced',
+  57: 'Belestre',
+  58: 'Boishebert_reduced',
+  59: 'Boishebert',
+  60: 'Lacorne_reduced',
+  61: 'Lacorne',
+  62: 'Langis_reduced',
+  63: 'Langis',
+  64: 'Langlade_reduced',
+  65: 'Langlade',
+  66: 'Lery_reduced',
+  67: 'Lery',
+  68: 'Lignery_reduced',
+  69: 'Lignery',
+  70: 'Villiers_reduced',
+  71: 'Villiers',
+  72: 'LaSarreRoyalRoussillon_reduced',
+  73: 'LaSarreRoyalRoussillon',
+  74: 'LanguedocLaReine_reduced',
+  75: 'LanguedocLaReine',
+  76: 'DeLaMarine_reduced',
+  77: 'DeLaMarine'
+);
+
+@for $i from 1 through 119 {
+  .bt_token[data-counter-id="#{map.get($french-units,$i)}"] {
+    background-position-x: math.div((($i - 1) % 12 * 100%), 11);
+    background-position-y: math.div(math.floor(calc(($i - 1) / 12)) * 100%, 6);
+    background-image: url('img/unit_tokens_fre.webp');
+    background-size: 1200% 700%;
+  }
+}
+
+// OLD
+
+.bt_token[data-unit-type=bastion] {
+  background-position-x: math.div(7, 11) * 100%;
+  background-position-y: math.div(0, 6) * 100%;
+  top: 290px;
+  left: 992px;
+}
+
+.bt_token[data-unit-type=pouchot] {
+  background-position-x: math.div(5, 11) * 100%;
+  background-position-y: math.div(1, 6) * 100%;
+}
+
+.bt_token[data-unit-type=micmac] {
+  background-position-x: math.div(4, 4) * 100%;
+  background-position-y: math.div(1, 2) * 100%;
+  top: 469px;
+  left: 700px;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+}
+
+.bt_marker {
+  background-image: url('img/markers_2.webp');
+  width: 37px;
+  height: 37px;
+  background-size: 800% 600%;
+  position: absolute;
+}
+
+.bt_marker[data-marker-type=victory_point] {
+  background-position-x: math.div(5, 7) * 100%;
+  background-position-y: math.div(3, 5) * 100%;
+  top: 26px;
+  left: 570px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #f5f5f5 #d8d8d8 #d8d8d8 #f5f5f5;
+  box-shadow: 0 0 0 1px #707070;
+}

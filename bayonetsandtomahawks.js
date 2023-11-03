@@ -1041,6 +1041,20 @@ var GameMap = (function () {
         var gamedatas = game.gamedatas;
         this.setupGameMap({ gamedatas: gamedatas });
     }
+    GameMap.prototype.setupUnits = function (_a) {
+        var gamedatas = _a.gamedatas;
+        gamedatas.spaces.forEach(function (space) {
+            var unit = gamedatas.units.find(function (unit) { return unit.location === space.id; });
+            if (!unit) {
+                return;
+            }
+            var node = document.querySelectorAll(".bt_space[data-space-id=\"".concat(space.id, "\"]"));
+            if (node.length === 0) {
+                return;
+            }
+            node[0].insertAdjacentHTML("afterbegin", tplUnit({ faction: gamedatas.staticData.units[unit.counterId].faction, counterId: unit.counterId }));
+        });
+    };
     GameMap.prototype.updateGameMap = function (_a) {
         var gamedatas = _a.gamedatas;
     };
@@ -1051,6 +1065,7 @@ var GameMap = (function () {
             .insertAdjacentHTML("afterbegin", tplGameMap({ gamedatas: gamedatas }));
         this.updateGameMapSize();
         this.setupZoomButtons();
+        this.setupUnits({ gamedatas: gamedatas });
     };
     GameMap.prototype.setupZoomButtons = function () {
         var _this = this;
@@ -1102,17 +1117,21 @@ var GameMap = (function () {
     };
     return GameMap;
 }());
+var tplUnit = function (_a) {
+    var faction = _a.faction, counterId = _a.counterId;
+    return "\n  <div class=\"bt_token\" data-faction=\"".concat(faction, "\" data-counter-id=\"").concat(counterId, "\"></div>\n");
+};
 var tplSpaces = function (_a) {
     var spaces = _a.spaces;
     var filteredSpaces = spaces.filter(function (space) { return space.top && space.left; });
-    var mappedSpaces = filteredSpaces.map(function (space) { return "<div data-space-id=\"".concat(space.id, "\" class=\"bt_space\" style=\"top: ").concat(space.top - 16, "px; left: ").concat(space.left - 16, "px;\"></div>"); });
+    var mappedSpaces = filteredSpaces.map(function (space) { return "<div data-space-id=\"".concat(space.id, "\" class=\"bt_space\" style=\"top: ").concat(space.top - 26, "px; left: ").concat(space.left - 26, "px;\"></div>"); });
     var result = mappedSpaces.join('');
     return result;
 };
 var tplGameMap = function (_a) {
     var gamedatas = _a.gamedatas;
     var spaces = gamedatas.spaces;
-    return "\n<div id=\"bt_game_map_containter\">\n  <div class=\"bt_game_map_zoom_buttons\">\n    <button id=\"bt_game_map_zoom_out_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-out-icon\" style=\"margin-bottom: -5px;\"></button>\n    <button id=\"bt_game_map_zoom_in_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-in-icon\" style=\"margin-bottom: -5px;\"></button>\n  </div>\n  <div id=\"bt_game_map\">\n    <div class=\"bt_marker\" data-marker-type=\"victory_point\"></div>\n    ".concat(tplSpaces({ spaces: spaces }), "\n\n  </div>\n</div>");
+    return "\n<div id=\"bt_game_map_containter\">\n  <div class=\"bt_game_map_zoom_buttons\">\n    <button id=\"bt_game_map_zoom_out_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-out-icon\" style=\"margin-bottom: -5px;\"></button>\n    <button id=\"bt_game_map_zoom_in_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-in-icon\" style=\"margin-bottom: -5px;\"></button>\n  </div>\n  <div id=\"bt_game_map\">\n    <div class=\"bt_marker\" data-marker-type=\"victory_point\"></div>\n    ".concat(tplSpaces({ spaces: spaces }), "\n  </div>\n</div>");
 };
 var LOG_TOKEN_BOLD_TEXT = 'boldText';
 var LOG_TOKEN_NEW_LINE = 'newLine';

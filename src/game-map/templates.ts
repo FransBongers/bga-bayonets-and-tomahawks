@@ -1,6 +1,10 @@
+const tplUnit = ({faction, counterId}: {faction: 'british' | 'french' | 'indian'; counterId: string;}) => `
+  <div class="bt_token" data-faction="${faction}" data-counter-id="${counterId}"></div>
+`
+
 const tplSpaces = ({spaces}: {spaces: BayonetsAndTomahawksGamedatas['spaces']}): string => {
   const filteredSpaces = spaces.filter((space) => space.top && space.left );
-  const mappedSpaces = filteredSpaces.map((space) => `<div data-space-id="${space.id}" class="bt_space" style="top: ${space.top - 16}px; left: ${space.left - 16}px;"></div>`);
+  const mappedSpaces = filteredSpaces.map((space) => `<div data-space-id="${space.id}" class="bt_space" style="top: ${space.top - 26}px; left: ${space.left - 26}px;"></div>`);
   const result = mappedSpaces.join('');
   return result;
 }
@@ -21,7 +25,6 @@ const tplGameMap = ({
   <div id="bt_game_map">
     <div class="bt_marker" data-marker-type="victory_point"></div>
     ${ tplSpaces({spaces}) }
-
   </div>
 </div>`;
 };

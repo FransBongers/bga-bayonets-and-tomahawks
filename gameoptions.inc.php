@@ -28,6 +28,20 @@ namespace BayonetsAndTomahawks;
 
 require_once 'modules/php/gameoptions.inc.php';
 
-$game_options = [];
+$game_options = [
+  OPTION_SCENARIO => [
+    'name' => totranslate('Scenario'),
+    'values' => [
+      OPTION_SCENARIO_1 => [
+        'name' => totranslate("Vaudreil's Petite Guerre 1755"),
+        'tmdisplay' => totranslate("Vaudreil's Petite Guerre 1755"),
+      ],
+      OPTION_SCENARIO_2 => [
+        'name' => totranslate("Loudoun's Gamble 1757"),
+        'tmdisplay' => totranslate("Loudoun's Gamble 1757"),
+      ]
+    ],
+  ]
+];
 
 $game_preferences = [];

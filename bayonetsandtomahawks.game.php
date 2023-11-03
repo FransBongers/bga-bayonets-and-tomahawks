@@ -43,6 +43,8 @@ use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Units;
 
+use const BayonetsAndTomahawks\OPTION_SCENARIO;
+
 class bayonetsandtomahawks extends Table
 {
     use BayonetsAndTomahawks\DebugTrait;
@@ -100,8 +102,8 @@ class bayonetsandtomahawks extends Table
         Players::setupNewGame($players, $options);
         Stats::checkExistence();
         Spaces::setupNewGame($players, $options);
-
-        Scenario::loadId('2');
+        Globals::setTest($options);
+        Scenario::loadId($options[OPTION_SCENARIO]);
         Scenario::setup();
 
         $this->setGameStateInitialValue('logging', false);

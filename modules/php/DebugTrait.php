@@ -18,7 +18,7 @@ trait DebugTrait
 
   function test()
   {
-    Notifications::log('space', Spaces::getUiData());
+    Notifications::log('test', Globals::getTest());
     // Notifications::log('static', Units::getStaticUiData());
     // Notifications::log('ui', Units::getUiData());
     // Spaces::setupNewGame();
