@@ -59,7 +59,7 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
   {
     return self::getAll()->map(function ($unit) {
       return $unit->jsonSerialize();
-    });
+    })->toArray();
   }
 
   // ..######..########.########.########.########.########...######.
@@ -80,12 +80,12 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
     self::DB()
       ->delete()
       ->run();
-    $locations = $scenario['locations'];
+    
     $units = [];
-    Notifications::log('locations',$locations);
 
+    // Units in locations
+    $locations = $scenario['locations'];
     foreach ($locations as &$location) {
-      Notifications::log('location',$location);
       
       if (!isset($location['units'])) {
         continue;
@@ -94,6 +94,27 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
         // $info = self::getInstance($unit);
         $data = [
           'location' => $location['id'],
+          'counter_id' => $unit,
+          // 'type' => $unit,
+        ];
+        $data['extra_data'] = ['properties' => []];
+        $units[] = $data;
+
+      }
+    }
+
+    // Units in pools
+    $pools = $scenario['pools'];
+    foreach ($pools as $poolId => $pool) {
+      Notifications::log('pool',$pool);
+      
+      if (!isset($pool['units'])) {
+        continue;
+      }
+      foreach ($pool['units'] as &$unit) {
+        // $info = self::getInstance($unit);
+        $data = [
+          'location' => $poolId,
           'counter_id' => $unit,
           // 'type' => $unit,
         ];

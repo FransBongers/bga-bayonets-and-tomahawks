@@ -11,5 +11,7 @@ class PointeSainteAnne extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Pointe Sainte Anne');
     $this->victorySpace = false;
+    $this->top = 651;
+    $this-> left = 770.5;
   }
 }

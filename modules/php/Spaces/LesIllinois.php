@@ -11,5 +11,7 @@ class LesIllinois extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = FRENCH;
     $this->name = clienttranslate('LES ILLINOIS');
     $this->victorySpace = true;
+    $this->top = 2248;
+    $this-> left = 597;
   }
 }

@@ -11,5 +11,7 @@ class LaPresentation extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('La Présentation');
     $this->victorySpace = false;
+    $this->top = 1371.5;
+    $this-> left = 286;
   }
 }

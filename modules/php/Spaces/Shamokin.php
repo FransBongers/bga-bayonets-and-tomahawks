@@ -11,5 +11,7 @@ class Shamokin extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Shamokin');
     $this->victorySpace = false;
+    $this->top = 1828;
+    $this-> left = 813.5;
   }
 }

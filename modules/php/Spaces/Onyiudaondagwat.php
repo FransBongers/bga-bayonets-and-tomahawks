@@ -11,5 +11,7 @@ class Onyiudaondagwat extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Onyiudaondagwat');
     $this->victorySpace = false;
+    $this->top = 1620;
+    $this-> left = 416.5;
   }
 }

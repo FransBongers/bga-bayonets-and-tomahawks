@@ -11,5 +11,7 @@ class NumberFour extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Number Four');
     $this->victorySpace = false;
+    $this->top = 1168;
+    $this-> left = 794;
   }
 }

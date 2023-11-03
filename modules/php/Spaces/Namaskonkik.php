@@ -11,5 +11,7 @@ class Namaskonkik extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Namaskonkik');
     $this->victorySpace = false;
+    $this->top = 864.5;
+    $this-> left = 586.5;
   }
 }

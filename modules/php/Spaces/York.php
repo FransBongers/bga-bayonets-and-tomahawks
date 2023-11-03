@@ -11,5 +11,7 @@ class York extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = BRITISH;
     $this->name = clienttranslate('YORK');
     $this->victorySpace = true;
+    $this->top = 1050;
+    $this-> left = 969.5;
   }
 }

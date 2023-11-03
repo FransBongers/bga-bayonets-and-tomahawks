@@ -11,5 +11,7 @@ class Mekekasink extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Mekekasink');
     $this->victorySpace = false;
+    $this->top = 2077;
+    $this-> left = 806;
   }
 }

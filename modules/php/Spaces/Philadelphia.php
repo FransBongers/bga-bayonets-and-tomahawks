@@ -1,17 +1,17 @@
 <?php
 namespace BayonetsAndTomahawks\Spaces;
 
-class Boston extends \BayonetsAndTomahawks\Models\Space
+class Philadelphia extends \BayonetsAndTomahawks\Models\Space
 {
   public function __construct($row)
   {
     parent::__construct($row);
-    $this->id = BOSTON;
+    $this->id = PHILADELPHIA;
     $this->battlePriority = 999;
     $this->defaultControl = BRITISH;
-    $this->name = clienttranslate('Boston');
+    $this->name = clienttranslate('Philadelphia');
     $this->victorySpace = false;
-    $this->top = 1174;
-    $this-> left = 1096;
+    $this->top = 1834;
+    $this-> left = 1077;
   }
 }

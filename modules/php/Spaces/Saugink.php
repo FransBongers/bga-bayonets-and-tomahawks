@@ -11,5 +11,7 @@ class Saugink extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Saugink');
     $this->victorySpace = false;
+    $this->top = 1894;
+    $this-> left = 78.5;
   }
 }

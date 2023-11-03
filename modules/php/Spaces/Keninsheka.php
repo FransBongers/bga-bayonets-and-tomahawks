@@ -11,5 +11,7 @@ class Keninsheka extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Keninsheka');
     $this->victorySpace = false;
+    $this->top = 2161;
+    $this-> left = 759;
   }
 }

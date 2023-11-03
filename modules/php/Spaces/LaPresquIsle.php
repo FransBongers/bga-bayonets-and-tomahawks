@@ -11,5 +11,7 @@ class LaPresquIsle extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate("La Presqu'Isle");
     $this->victorySpace = false;
+    $this->top = 1874;
+    $this-> left = 468;
   }
 }

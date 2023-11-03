@@ -11,5 +11,7 @@ class AnnapolisRoyal extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = BRITISH;
     $this->name = clienttranslate('ANNAPOLIS ROYAL');
     $this->victorySpace = true;
+    $this->top = 664;
+    $this-> left = 972.5;
   }
 }

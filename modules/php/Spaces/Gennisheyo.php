@@ -11,5 +11,7 @@ class Gennisheyo extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Gennisheyo');
     $this->victorySpace = false;
+    $this->top = 1680;
+    $this-> left = 491;
   }
 }

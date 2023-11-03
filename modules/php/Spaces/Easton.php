@@ -11,5 +11,7 @@ class Easton extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Easton');
     $this->victorySpace = false;
+    $this->top = 1780;
+    $this-> left = 937.5;
   }
 }

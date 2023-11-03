@@ -13,5 +13,7 @@ class Chignectou extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = FRENCH;
     $this->name = clienttranslate('CHIGNECTOU');
     $this->victorySpace = true;
+    $this->top = 570;
+    $this-> left = 891;
   }
 }

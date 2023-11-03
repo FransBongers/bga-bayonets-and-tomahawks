@@ -11,5 +11,7 @@ class Winchester extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Winchester');
     $this->victorySpace = false;
+    $this->top = 2005;
+    $this-> left = 1016;
   }
 }

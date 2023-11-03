@@ -11,5 +11,7 @@ class Saranac extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Saranac');
     $this->victorySpace = false;
+    $this->top = 1233.5;
+    $this-> left = 437;
   }
 }

@@ -16,7 +16,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     'control' => ['control', 'str'],
     // 'extraData' => ['extra_data', 'obj'],
   ];
-  protected $staticAttributes = ['battlePriority', 'name', 'victorySpace', 'defaultControl'];
+  protected $staticAttributes = ['battlePriority', 'name', 'victorySpace', 'defaultControl', 'top', 'left'];
 
   protected $id = null;
   protected $battlePriority;
@@ -25,6 +25,8 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   protected $faction = null;
   protected $name = null;
   protected $victorySpace = false;
+  protected $top = 0;
+  protected $left = 0;
 
   public function __construct($row)
   {
@@ -41,6 +43,8 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
       'defaultControl' => $this->defaultControl,
       'name' => $this->name,
       'victorySpace' => $this->victorySpace,
+      'top' => $this->top,
+      'left' => $this->left,
     ];
   }
 }

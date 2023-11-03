@@ -11,5 +11,7 @@ class Taconnet extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Taconnet');
     $this->victorySpace = false;
+    $this->top = 884.5;
+    $this-> left = 792;
   }
 }

@@ -11,5 +11,7 @@ class Nihanawate extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Nihanawate');
     $this->victorySpace = false;
+    $this->top = 1324.5;
+    $this-> left = 421;
   }
 }

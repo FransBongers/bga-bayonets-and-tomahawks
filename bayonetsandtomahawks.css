@@ -55,6 +55,13 @@
   height: 56px;
 }
 
+.bt_space {
+  position: absolute;
+  background-color: yellow;
+  width: 16px;
+  height: 16px;
+}
+
 #bt_pools_container {
   background-color: blue;
   display: flex;

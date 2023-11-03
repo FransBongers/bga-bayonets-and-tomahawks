@@ -11,5 +11,7 @@ class Matawaskiyak extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Matawaskiyak');
     $this->victorySpace = false;
+    $this->top = 638.5;
+    $this-> left = 493;
   }
 }

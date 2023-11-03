@@ -6,7 +6,7 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Units;
-
+use BayonetsAndTomahawks\Models\Space;
 
 trait DebugTrait
 {
@@ -18,8 +18,9 @@ trait DebugTrait
 
   function test()
   {
-    Notifications::log('static', Units::getStaticUiData());
-    Notifications::log('ui', Units::getUiData());
+    Notifications::log('space', Spaces::getUiData());
+    // Notifications::log('static', Units::getStaticUiData());
+    // Notifications::log('ui', Units::getUiData());
     // Spaces::setupNewGame();
     // Notifications::log('uiData', Spaces::getUiData());
     // Notifications::log('all', Spaces::getAll()->toArray()[0]->getId());

@@ -11,5 +11,7 @@ class Halifax extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = BRITISH;
     $this->name = clienttranslate('HALIFAX');
     $this->victorySpace = true;
+    $this->top = 570;
+    $this-> left = 1085;
   }
 }

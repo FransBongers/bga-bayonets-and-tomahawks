@@ -11,5 +11,7 @@ class Louisbourg extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = FRENCH;
     $this->name = clienttranslate('LOUISBOURG');
     $this->victorySpace = true;
+    $this->top = 317;
+    $this-> left = 1141.5;
   }
 }

@@ -11,5 +11,7 @@ class Diiohage extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Diiohage');
     $this->victorySpace = false;
+    $this->top = 2003;
+    $this-> left = 494;
   }
 }

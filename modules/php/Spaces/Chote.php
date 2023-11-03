@@ -11,5 +11,7 @@ class Chote extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = INDIAN;
     $this->name = clienttranslate('Chote');
     $this->victorySpace = false;
+    $this->top = 2203;
+    $this-> left = 954;
   }
 }

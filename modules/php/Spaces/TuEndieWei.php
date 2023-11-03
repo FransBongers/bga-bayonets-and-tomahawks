@@ -11,5 +11,7 @@ class TuEndieWei extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Tu-Endie-Wei');
     $this->victorySpace = false;
+    $this->top = 2120;
+    $this-> left = 571;
   }
 }

@@ -11,5 +11,7 @@ class NinetySix extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Ninety Six');
     $this->victorySpace = false;
+    $this->top = 2216;
+    $this-> left = 1193.5;
   }
 }

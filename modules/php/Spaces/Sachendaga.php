@@ -11,5 +11,7 @@ class Sachendaga extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate("Sachenda'ga");
     $this->victorySpace = false;
+    $this->top = 1331.5;
+    $this-> left = 536.5;
   }
 }

@@ -11,5 +11,7 @@ class CapeSable extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('CapeSable');
     $this->victorySpace = false;
+    $this->top = 738;
+    $this-> left = 1092;
   }
 }

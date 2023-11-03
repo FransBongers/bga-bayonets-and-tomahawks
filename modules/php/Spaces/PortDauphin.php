@@ -11,5 +11,7 @@ class PortDauphin extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Port Dauphin');
     $this->victorySpace = false;
+    $this->top = 240;
+    $this-> left = 1009.5;
   }
 }

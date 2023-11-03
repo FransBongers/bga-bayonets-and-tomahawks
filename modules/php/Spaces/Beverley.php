@@ -11,5 +11,7 @@ class Beverley extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Beverley');
     $this->victorySpace = false;
+    $this->top = 2106;
+    $this-> left = 1049;
   }
 }

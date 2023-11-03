@@ -11,5 +11,7 @@ class RiviereOuabache extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Rivière Ouabache');
     $this->victorySpace = false;
+    $this->top = 2233;
+    $this-> left = 432.5;
   }
 }

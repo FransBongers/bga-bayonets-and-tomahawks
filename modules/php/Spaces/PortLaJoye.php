@@ -11,5 +11,7 @@ class PortLaJoye extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Port la Joye');
     $this->victorySpace = false;
+    $this->top = 475;
+    $this-> left = 911.5;
   }
 }

@@ -39,7 +39,7 @@ class GameMap {
   setupGameMap({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
     document
       .getElementById("bt_play_area")
-      .insertAdjacentHTML("afterbegin", tplGameMap());
+      .insertAdjacentHTML("afterbegin", tplGameMap({gamedatas}));
     this.updateGameMapSize();
     this.setupZoomButtons();
   }

@@ -31,9 +31,28 @@ const INDIAN = 'indian';
 const NEUTRAL = 'neutral';
 
 /**
+ * Pools
+ */
+const POOL_FLEETS = 'poolFleets';
+const POOL_BRITISH_COMMANDERS = 'poolBritishCommanders';
+const POOL_BRITISH_LIGHT = 'poolBritishLight';
+const POOL_BRITISH_ARTILLERY = 'poolBritishArtillery';
+const POOL_BRITISH_FORTS = 'poolBritishForts';
+const POOL_BRITISH_METROPOLITAN_VOW = 'poolBritishMetropolitanVoW';
+const POOL_BRITISH_COLONIAL_VOW = 'poolBritishColonialVoW';
+
+const POOL_FRENCH_COMMANDERS = 'poolFrenchCommanders';
+const POOL_FRENCH_LIGHT = 'poolFrenchLight';
+const POOL_FRENCH_ARTILLERY = 'poolFrenchArtillery';
+const POOL_FRENCH_FORTS = 'poolFrenchForts';
+const POOL_FRENCH_METROPOLITAN_VOW = 'poolFrenchMetropolitanVoW';
+
+const POOL_NEUTRAL_INDIANS = 'poolNeutralIndians';
+/**
  * Spaces
  */
 const ALBANY = 'Albany';
+const ALEXANDRIA = 'Alexandria';
 const ANNAPOLIS_ROYAL = 'AnnapolisRoyal';
 const ASSUNEPACHLA = 'Assunepachla';
 const BAYE_DE_CATARACOUY = 'BayeDeCataracouy';
@@ -87,6 +106,7 @@ const MONTREAL = 'Montreal';
 const MOZODEBINEBESEK = 'Mozodebinebesek';
 const MTAN = 'Mtan';
 const NAMASKONKIK = 'Namaskonkik';
+const NEW_LONDON = 'NewLondon';
 const NEW_YORK = 'NewYork';
 const NEWFOUNDLAND = 'Newfoundland';
 const NIAGARA = 'Niagara'; // doubles with unit
@@ -100,6 +120,7 @@ const ONYIUDAONDAGWAT = 'Onyiudaondagwat';
 const OQUAGA = 'Oquaga';
 const OSWEGO = 'Oswego';
 const OUENTIRONK = 'Ouentironk';
+const PHILADELPHIA = 'Philadelphia';
 const POINTE_SAINTE_ANNE = 'PointeSainteAnne';
 const PORT_DAUPHIN = 'PortDauphin';
 const PORT_LA_JOYE = 'PortLaJoye';
@@ -128,10 +149,12 @@ const ZAWAKWTEGOK = 'Zawakwtegok';
 
 const SPACES = [
   ALBANY,
+  ALEXANDRIA,
   ANNAPOLIS_ROYAL,
   ASSUNEPACHLA,
   BAYE_DE_CATARACOUY,
   BEVERLEY,
+  BOSTON,
   CAPE_SABLE,
   CARLISLE,
   CAWICHNOWANE,
@@ -180,6 +203,8 @@ const SPACES = [
   MOZODEBINEBESEK,
   MTAN,
   NAMASKONKIK,
+  NEW_LONDON,
+  NEW_YORK,
   NEWFOUNDLAND,
   NIAGARA,
   NIHANAWATE,
@@ -192,6 +217,7 @@ const SPACES = [
   OQUAGA,
   OSWEGO,
   OUENTIRONK,
+  PHILADELPHIA,
   POINTE_SAINTE_ANNE,
   PORT_DAUPHIN,
   PORT_LA_JOYE,

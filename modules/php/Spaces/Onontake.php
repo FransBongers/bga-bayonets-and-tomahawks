@@ -11,5 +11,7 @@ class Onontake extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = INDIAN;
     $this->name = clienttranslate('Onontake');
     $this->victorySpace = false;
+    $this->top = 1632.5;
+    $this-> left = 580;
   }
 }

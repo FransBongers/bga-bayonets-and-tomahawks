@@ -11,5 +11,7 @@ class Loyalhanna extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Loyalhanna');
     $this->victorySpace = false;
+    $this->top = 1997.5;
+    $this-> left = 740.5;
   }
 }

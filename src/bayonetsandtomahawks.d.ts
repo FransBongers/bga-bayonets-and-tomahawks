@@ -22,9 +22,20 @@ interface BayonetsAndTomahawksGame extends Game {
   tooltipManager: TooltipManager;
 }
 
+interface BTSpace {
+  id: string;
+  control: string;
+  defaultControl: string;
+  name: string;
+  victorySpace: boolean;
+  top?: number;
+  left?: number;
+}
+
 interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   canceledNotifIds: string[];
   players: Record<number, BgaPlayer>;
+  spaces: BTSpace[]
 }
 
 interface BayonetsAndTomahawksPlayerData extends BgaPlayer {

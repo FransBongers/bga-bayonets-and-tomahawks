@@ -11,5 +11,7 @@ class Zawakwtegok extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Zawakwtegok');
     $this->victorySpace = false;
+    $this->top = 994.5;
+    $this-> left = 812;
   }
 }

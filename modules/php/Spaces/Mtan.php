@@ -11,5 +11,7 @@ class Mtan extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate("Mta'n");
     $this->victorySpace = false;
+    $this->top = 455.5;
+    $this-> left = 385.5;
   }
 }

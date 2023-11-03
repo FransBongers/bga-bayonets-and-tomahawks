@@ -11,5 +11,7 @@ class Montreal extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = FRENCH;
     $this->name = clienttranslate('MONTRÉAL');
     $this->victorySpace = true;
+    $this->top = 1168.5;
+    $this-> left = 322;
   }
 }

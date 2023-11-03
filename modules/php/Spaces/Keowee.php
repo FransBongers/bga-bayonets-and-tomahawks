@@ -11,5 +11,7 @@ class Keowee extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = INDIAN;
     $this->name = clienttranslate('Keowee');
     $this->victorySpace = false;
+    $this->top = 2224;
+    $this-> left = 1065.5;
   }
 }

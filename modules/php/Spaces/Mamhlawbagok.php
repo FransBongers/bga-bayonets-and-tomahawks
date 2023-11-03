@@ -11,5 +11,7 @@ class Mamhlawbagok extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Mamhlawbagok');
     $this->victorySpace = false;
+    $this->top = 1012.5;
+    $this-> left = 550.5;
   }
 }

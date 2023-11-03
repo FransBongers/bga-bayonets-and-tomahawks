@@ -11,5 +11,7 @@ class NewYork extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = BRITISH;
     $this->name = clienttranslate('New York');
     $this->victorySpace = false;
+    $this->top = 1637;
+    $this-> left = 1052;
   }
 }

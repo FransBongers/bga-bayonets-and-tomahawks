@@ -11,5 +11,7 @@ class Northfield extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = BRITISH;
     $this->name = clienttranslate('NORTHFIELD');
     $this->victorySpace = true;
+    $this->top = 1286;
+    $this-> left = 897;
   }
 }

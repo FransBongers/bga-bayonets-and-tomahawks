@@ -125,7 +125,7 @@ class bayonetsandtomahawks extends Table
                 'units' => Units::getStaticUiData(),
             ],
             // 'spaces' => Spaces::getUiData(),
-            'spaces' => Spaces::getAll(),
+            'spaces' => Spaces::getUiData(),
             'units' => Units::getUiData(),
         ];
 

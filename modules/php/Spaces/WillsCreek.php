@@ -11,5 +11,7 @@ class WillsCreek extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Wills Creek');
     $this->victorySpace = false;
+    $this->top = 2061;
+    $this-> left = 913;
   }
 }

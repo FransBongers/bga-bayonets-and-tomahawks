@@ -11,5 +11,7 @@ class Matschedash extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Matschedash');
     $this->victorySpace = false;
+    $this->top = 1796;
+    $this-> left = 126;
   }
 }

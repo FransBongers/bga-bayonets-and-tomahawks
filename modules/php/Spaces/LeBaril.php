@@ -11,5 +11,7 @@ class LeBaril extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Le Baril');
     $this->victorySpace = false;
+    $this->top = 2134;
+    $this-> left = 458;
   }
 }

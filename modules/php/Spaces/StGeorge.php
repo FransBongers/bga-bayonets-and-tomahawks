@@ -11,5 +11,7 @@ class StGeorge extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('St. George');
     $this->victorySpace = false;
+    $this->top = 868.5;
+    $this-> left = 935;
   }
 }

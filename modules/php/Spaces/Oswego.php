@@ -11,5 +11,7 @@ class Oswego extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = BRITISH;
     $this->name = clienttranslate('OSWEGO');
     $this->victorySpace = true;
+    $this->top = 1541;
+    $this-> left = 473.5;
   }
 }

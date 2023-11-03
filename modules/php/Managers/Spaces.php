@@ -81,12 +81,12 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\DB_Manager
     return $spaces;
   }
 
-  // public static function getUiData()
-  // {
-  //   return self::getAll()->map(function ($space) {
-  //     return $space->jsonSerialize();
-  //   });
-  // }
+  public static function getUiData()
+  {
+    return self::getAll()->map(function ($space) {
+      return $space->jsonSerialize();
+    })->toArray();
+  }
 
   // public static function setupNewGame($players, $options)
   // public static function setupNewGameDefaults()

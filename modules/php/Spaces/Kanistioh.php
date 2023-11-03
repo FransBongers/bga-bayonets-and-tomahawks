@@ -11,5 +11,7 @@ class Kanistioh extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = INDIAN;
     $this->name = clienttranslate('Kanistioh');
     $this->victorySpace = false;
+    $this->top = 1785;
+    $this-> left = 530;
   }
 }

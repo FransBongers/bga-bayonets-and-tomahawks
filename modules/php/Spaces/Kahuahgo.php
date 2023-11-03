@@ -11,5 +11,7 @@ class Kahuahgo extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Kahuahgo');
     $this->victorySpace = false;
+    $this->top = 1420;
+    $this-> left = 494;
   }
 }

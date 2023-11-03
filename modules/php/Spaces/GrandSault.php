@@ -11,5 +11,7 @@ class GrandSault extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Grand Sault');
     $this->victorySpace = false;
+    $this->top = 645;
+    $this-> left = 650;
   }
 }

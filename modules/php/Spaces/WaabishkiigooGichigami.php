@@ -11,5 +11,7 @@ class WaabishkiigooGichigami extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Waabishkiigoo Gichigami');
     $this->victorySpace = false;
+    $this->top = 1966;
+    $this-> left = 311;
   }
 }

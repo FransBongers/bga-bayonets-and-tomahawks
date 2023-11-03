@@ -11,5 +11,7 @@ class Ouentironk extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Ouentironk');
     $this->victorySpace = false;
+    $this->top = 1697;
+    $this-> left = 142;
   }
 }

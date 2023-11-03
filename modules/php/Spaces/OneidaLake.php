@@ -11,5 +11,7 @@ class OneidaLake extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Oneida Lake');
     $this->victorySpace = false;
+    $this->top = 1520;
+    $this-> left = 599.5;
   }
 }

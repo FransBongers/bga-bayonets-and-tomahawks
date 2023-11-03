@@ -11,5 +11,7 @@ class Cawichnowane extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Cawichnowane');
     $this->victorySpace = false;
+    $this->top = 1800;
+    $this-> left = 638;
   }
 }

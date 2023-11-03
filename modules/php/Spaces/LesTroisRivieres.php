@@ -11,5 +11,7 @@ class LesTroisRivieres extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Les Trois Rivières');
     $this->victorySpace = false;
+    $this->top = 1009.5;
+    $this-> left = 369.5;
   }
 }

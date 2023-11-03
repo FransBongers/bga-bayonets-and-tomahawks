@@ -9,7 +9,9 @@ class Mozodebinebesek extends \BayonetsAndTomahawks\Models\Space
     $this->id = MOZODEBINEBESEK;
     $this->battlePriority = 74;
     $this->defaultControl = NEUTRAL;
-    $this->name = clienttranslate('Môzodebinebesek');
+    $this->name = clienttranslate('Mozôdebinebesek');
     $this->victorySpace = false;
+    $this->top = 792;
+    $this-> left = 661;
   }
 }

@@ -11,5 +11,7 @@ class Kithanink extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Kithanink');
     $this->victorySpace = false;
+    $this->top = 1923;
+    $this-> left = 605;
   }
 }

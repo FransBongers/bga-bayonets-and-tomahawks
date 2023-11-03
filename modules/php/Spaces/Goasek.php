@@ -11,5 +11,7 @@ class Goasek extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Goasek');
     $this->victorySpace = false;
+    $this->top = 1058;
+    $this-> left = 666;
   }
 }

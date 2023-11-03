@@ -11,5 +11,7 @@ class Kadesquit extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Kadesquit');
     $this->victorySpace = false;
+    $this->top = 748;
+    $this-> left = 813.5;
   }
 }

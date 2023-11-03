@@ -1,5 +1,5 @@
 #bt_game_map {
-  background-image: url('img/map.webp');
+  background-image: url("img/map.webp");
   background-size: 1500px 2318px;
   background-repeat: no-repeat;
   // grid-column: 1 / span 1;
@@ -20,6 +20,14 @@
   // background-color: yellow;
 }
 
+.bt_space {
+  position: absolute;
+  background-color: yellow;
+  width: 16px;
+  height: 16px;
+  // opacity: 0.5;
+}
+
 // #bt_location {
 //   position: absolute;
 //   background-color: yellow;
@@ -28,4 +36,3 @@
 //   top: 124px;
 //   left: 285px;
 // }
-

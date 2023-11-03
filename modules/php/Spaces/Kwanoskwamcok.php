@@ -11,5 +11,7 @@ class Kwanoskwamcok extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Kwanoskwamcok');
     $this->victorySpace = false;
+    $this->top = 754;
+    $this-> left = 926.5;
   }
 }

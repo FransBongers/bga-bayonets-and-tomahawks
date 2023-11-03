@@ -11,5 +11,7 @@ class Miramichy extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = FRENCH;
     $this->name = clienttranslate('Miramichy');
     $this->victorySpace = true;
+    $this->top = 501;
+    $this-> left = 725.5;
   }
 }

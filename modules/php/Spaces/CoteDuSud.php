@@ -11,5 +11,7 @@ class CoteDuSud extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Côte du Sud');
     $this->victorySpace = false;
+    $this->top = 740;
+    $this-> left = 459;
   }
 }

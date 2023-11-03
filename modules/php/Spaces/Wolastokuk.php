@@ -11,5 +11,7 @@ class Wolastokuk extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Wolastokuk');
     $this->victorySpace = false;
+    $this->top = 732;
+    $this-> left = 579;
   }
 }

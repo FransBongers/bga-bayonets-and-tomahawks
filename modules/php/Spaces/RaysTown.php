@@ -11,5 +11,7 @@ class RaysTown extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('RaysTown');
     $this->victorySpace = false;
+    $this->top = 1970.5;
+    $this-> left = 852;
   }
 }

@@ -11,5 +11,7 @@ class CoteDeBeaupre extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Côte de Beaupré');
     $this->victorySpace = false;
+    $this->top = 734;
+    $this-> left = 360.5;
   }
 }

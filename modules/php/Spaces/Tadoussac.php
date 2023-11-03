@@ -11,5 +11,7 @@ class Tadoussac extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Tadoussac');
     $this->victorySpace = false;
+    $this->top = 634;
+    $this-> left = 280.5;
   }
 }

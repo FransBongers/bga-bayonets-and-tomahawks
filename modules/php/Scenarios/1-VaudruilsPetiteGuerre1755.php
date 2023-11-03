@@ -2,9 +2,12 @@
 
 namespace BayonetsAndTomahawks\Scenarios;
 
+use BayonetsAndTomahawks\Units\NYorkNJ;
+
 $scenarios[1] = [
   'meta_data' => [
     'scenario_id' => '1',
+    'name' => clienttranslate("Vaudreil's Petite Guerre 1755"),
   ],
   'locations' => [
     // Indian Setup
@@ -110,8 +113,8 @@ $scenarios[1] = [
     MONTREAL => [
       'id' => MONTREAL,
       'units' => [
-        BEAUJEU_LACORNE,
-        BEAUJEU_LACORNE,
+        BEAUJEU,
+        LACORNE,
       ]
     ],
     NIAGARA => [
@@ -123,16 +126,16 @@ $scenarios[1] = [
     FORKS_OF_THE_OHIO => [
       'id' => FORKS_OF_THE_OHIO,
       'units' => [
-        LIGNERY_VILIIERS,
-        LIGNERY_VILIIERS,
+        LIGNERY,
+        VILIIERS,
         DUQUESNE,
       ]
     ],
     LES_ILLINOIS => [
       'id' => LES_ILLINOIS,
       'units' => [
-        AUBRY_BELESTRE,
-        AUBRY_BELESTRE,
+        AUBRY,
+        BELESTRE,
       ]
     ],
     LE_DETROIT => [
@@ -200,18 +203,107 @@ $scenarios[1] = [
       ]
     ],
   ],
-  'supply' => [
-    'neutralIndian' => [
-      IROQUOIS,
-      IROQUOIS,
-      IROQUOIS,
-      CHEROKEE,
-      CHEROKEE,
+  'pools' => [
+    POOL_NEUTRAL_INDIANS => [
+      'units' => [
+        IROQUOIS,
+        IROQUOIS,
+        IROQUOIS,
+        CHEROKEE,
+        CHEROKEE,
+      ]
     ],
-    'french' => [
-      POUCHOT,
-      CARILLON,
-      CANONNIERS_BOMBARDIERS,
+    POOL_FLEETS => [
+      'units' => [
+        BOSCAWEN,
+        DURELL,
+        HOLBURNE,
+        ROYAL_NAVY,
+        DE_LA_MOTTE,
+        MARINE_ROYALE,
+      ]
+    ],
+    POOL_BRITISH_COMMANDERS => [
+      'units' => [
+        BRADSTREET,
+      ]
+    ],
+    POOL_BRITISH_LIGHT => [
+      // Light colonial
+      ARMSTRONG,
+      PUTNAM,
+    ],
+    POOL_BRITISH_ARTILLERY => [
+      ROYAL_ARTILLERY,
+      ROYAL_ARTILLERY,
+      ROYAL_ARTILLERY,
+      ROYAL_ARTILLERY,
+    ],
+    POOL_BRITISH_FORTS => [
+      AUGUSTA,
+      BEDFORD,
+      CROWN_POINT,
+      CUMBERLAND,
+      EDWARD,
+      FREDERICK,
+      HERKIMER,
+      LIGONIER,
+      PITT,
+      POWNALL,
+      STANWIX,
+      TICONDEROGA,
+      WILLIAM_HENRY,
+    ],
+    POOL_BRITISH_METROPOLITAN_VOW => [
+      'units' => [
+        B_1ST_ROYAL_AMERICAN,
+        B_44TH_48TH,
+        ROYAL_HIGHLAND,
+      ],
+      'vow' => []
+    ],
+    POOL_BRITISH_COLONIAL_VOW => [
+      'units' => [
+        NEW_ENGLAND,
+        NEW_ENGLAND,
+        NEW_ENGLAND,
+        NEW_ENGLAND,
+        NEW_ENGLAND,
+        NYORK_NJ,
+        NYORK_NJ,
+        VIRGINIA_S,
+        VIRGINIA_S,
+      ],
+      'vow' => []
+    ],
+    POOL_FRENCH_COMMANDERS => [
+      'units' => [
+        POUCHOT,
+      ]
+    ],
+    POOL_FRENCH_FORTS => [
+      'units' => [
+        CARILLON,
+        FRONTENAC,
+        JACQUES_CARTIER,
+        F_LEVIS,
+        MASSIAC,
+        NIAGARA,
+      ]
+    ],
+    POOL_FRENCH_ARTILLERY => [
+      'units' => [
+        CANONNIERS_BOMBARDIERS,
+      ]
+    ],
+    POOL_FRENCH_METROPOLITAN_VOW => [
+      'units' => [
+        BEARN_GUYENNE,
+        ARTOIS_BOURGOGNE,
+        DE_LA_MARINE,
+        LANGUEDOC_LA_REINE,
+      ],
+      'vow' => []
     ]
   ]
 ];

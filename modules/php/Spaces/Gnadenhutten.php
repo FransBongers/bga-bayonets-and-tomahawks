@@ -11,5 +11,7 @@ class Gnadenhutten extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Gnadenhütten');
     $this->victorySpace = false;
+    $this->top = 1739;
+    $this-> left = 773.5;
   }
 }

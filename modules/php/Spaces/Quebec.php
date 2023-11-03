@@ -11,5 +11,7 @@ class Quebec extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = FRENCH;
     $this->name = clienttranslate('QUÉBEC');
     $this->victorySpace = true;
+    $this->top = 863.5;
+    $this-> left = 428.5;
   }
 }

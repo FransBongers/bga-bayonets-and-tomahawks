@@ -11,5 +11,7 @@ class Mikazawitegok extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Mikazawitegok');
     $this->victorySpace = false;
+    $this->top = 1260;
+    $this-> left = 741;
   }
 }

@@ -11,5 +11,7 @@ class RiviereRistigouche extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->name = clienttranslate('Rivière Ristigouche');
     $this->victorySpace = false;
+    $this->top = 484;
+    $this-> left = 533.5;
   }
 }

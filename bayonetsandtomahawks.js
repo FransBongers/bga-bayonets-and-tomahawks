@@ -1048,7 +1048,7 @@ var GameMap = (function () {
         var gamedatas = _a.gamedatas;
         document
             .getElementById("bt_play_area")
-            .insertAdjacentHTML("afterbegin", tplGameMap());
+            .insertAdjacentHTML("afterbegin", tplGameMap({ gamedatas: gamedatas }));
         this.updateGameMapSize();
         this.setupZoomButtons();
     };
@@ -1102,7 +1102,19 @@ var GameMap = (function () {
     };
     return GameMap;
 }());
-var tplGameMap = function () { return "\n<div id=\"bt_game_map_containter\">\n  <div class=\"bt_game_map_zoom_buttons\">\n    <button id=\"bt_game_map_zoom_out_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-out-icon\" style=\"margin-bottom: -5px;\"></button>\n    <button id=\"bt_game_map_zoom_in_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-in-icon\" style=\"margin-bottom: -5px;\"></button>\n  </div>\n  <div id=\"bt_game_map\">\n    <div class=\"bt_marker\" data-marker-type=\"victory_point\"></div>\n    <div class=\"bt_token\" data-faction=\"french\" data-unit-type=\"bastion\"></div>\n    <div class=\"bt_token\" data-faction=\"indian\" data-unit-type=\"micmac\"></div>\n  </div>\n</div>"; };
+var tplSpaces = function (_a) {
+    var spaces = _a.spaces;
+    var filteredSpaces = spaces.filter(function (space) { return space.top && space.left; });
+    var mappedSpaces = filteredSpaces.map(function (space) { return "<div data-space-id=\"".concat(space.id, "\" class=\"bt_space\" style=\"top: ").concat(space.top - 8, "px; left: ").concat(space.left - 8, "px;\"></div>"); });
+    var result = mappedSpaces.join('');
+    console.log('tplSpaces', result);
+    return result;
+};
+var tplGameMap = function (_a) {
+    var gamedatas = _a.gamedatas;
+    var spaces = gamedatas.spaces;
+    return "\n<div id=\"bt_game_map_containter\">\n  <div class=\"bt_game_map_zoom_buttons\">\n    <button id=\"bt_game_map_zoom_out_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-out-icon\" style=\"margin-bottom: -5px;\"></button>\n    <button id=\"bt_game_map_zoom_in_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-in-icon\" style=\"margin-bottom: -5px;\"></button>\n  </div>\n  <div id=\"bt_game_map\">\n    <div class=\"bt_marker\" data-marker-type=\"victory_point\"></div>\n    ".concat(tplSpaces({ spaces: spaces }), "\n\n  </div>\n</div>");
+};
 var LOG_TOKEN_BOLD_TEXT = 'boldText';
 var LOG_TOKEN_NEW_LINE = 'newLine';
 var LOG_TOKEN_PLAYER_NAME = 'playerName';
