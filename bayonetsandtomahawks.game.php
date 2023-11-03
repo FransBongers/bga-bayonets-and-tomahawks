@@ -101,7 +101,7 @@ class bayonetsandtomahawks extends Table
         Stats::checkExistence();
         Spaces::setupNewGame($players, $options);
 
-        Scenario::loadId('1');
+        Scenario::loadId('2');
         Scenario::setup();
 
         $this->setGameStateInitialValue('logging', false);

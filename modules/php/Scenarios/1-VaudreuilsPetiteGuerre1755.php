@@ -2,8 +2,6 @@
 
 namespace BayonetsAndTomahawks\Scenarios;
 
-use BayonetsAndTomahawks\Units\NYorkNJ;
-
 $scenarios[1] = [
   'meta_data' => [
     'scenario_id' => '1',
@@ -127,7 +125,7 @@ $scenarios[1] = [
       'id' => FORKS_OF_THE_OHIO,
       'units' => [
         LIGNERY,
-        VILIIERS,
+        VILLIERS,
         DUQUESNE,
       ]
     ],

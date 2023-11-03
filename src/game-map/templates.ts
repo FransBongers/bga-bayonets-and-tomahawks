@@ -1,8 +1,7 @@
 const tplSpaces = ({spaces}: {spaces: BayonetsAndTomahawksGamedatas['spaces']}): string => {
   const filteredSpaces = spaces.filter((space) => space.top && space.left );
-  const mappedSpaces = filteredSpaces.map((space) => `<div data-space-id="${space.id}" class="bt_space" style="top: ${space.top - 8}px; left: ${space.left - 8}px;"></div>`);
+  const mappedSpaces = filteredSpaces.map((space) => `<div data-space-id="${space.id}" class="bt_space" style="top: ${space.top - 16}px; left: ${space.left - 16}px;"></div>`);
   const result = mappedSpaces.join('');
-  console.log('tplSpaces',result);
   return result;
 }
 

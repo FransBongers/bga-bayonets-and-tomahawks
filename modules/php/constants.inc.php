@@ -362,7 +362,7 @@ const MONTCALM = 'Montcalm';
 const POUCHOT = 'Pouchot';
 const RIGAUD = 'Rigaud';
 const SAINT_FREDERIC = 'SaintFrederic';
-const VILIIERS = 'Villiers';
+const VILLIERS = 'Villiers';
 const VOLONT_ETRANGERS_CAMBIS = 'VolontEtrangersCambis';
 // Indian
 const ABENAKI = 'Abenaki';

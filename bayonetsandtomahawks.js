@@ -1105,9 +1105,8 @@ var GameMap = (function () {
 var tplSpaces = function (_a) {
     var spaces = _a.spaces;
     var filteredSpaces = spaces.filter(function (space) { return space.top && space.left; });
-    var mappedSpaces = filteredSpaces.map(function (space) { return "<div data-space-id=\"".concat(space.id, "\" class=\"bt_space\" style=\"top: ").concat(space.top - 8, "px; left: ").concat(space.left - 8, "px;\"></div>"); });
+    var mappedSpaces = filteredSpaces.map(function (space) { return "<div data-space-id=\"".concat(space.id, "\" class=\"bt_space\" style=\"top: ").concat(space.top - 16, "px; left: ").concat(space.left - 16, "px;\"></div>"); });
     var result = mappedSpaces.join('');
-    console.log('tplSpaces', result);
     return result;
 };
 var tplGameMap = function (_a) {
