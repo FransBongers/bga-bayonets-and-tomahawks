@@ -227,30 +227,36 @@ $scenarios[1] = [
       ]
     ],
     POOL_BRITISH_LIGHT => [
-      // Light colonial
-      ARMSTRONG,
-      PUTNAM,
+      'units' => [
+        // Light colonial
+        ARMSTRONG,
+        PUTNAM,
+      ]
     ],
     POOL_BRITISH_ARTILLERY => [
-      ROYAL_ARTILLERY,
-      ROYAL_ARTILLERY,
-      ROYAL_ARTILLERY,
-      ROYAL_ARTILLERY,
+      'units' => [
+        ROYAL_ARTILLERY,
+        ROYAL_ARTILLERY,
+        ROYAL_ARTILLERY,
+        ROYAL_ARTILLERY,
+      ]
     ],
     POOL_BRITISH_FORTS => [
-      AUGUSTA,
-      BEDFORD,
-      CROWN_POINT,
-      CUMBERLAND,
-      EDWARD,
-      FREDERICK,
-      HERKIMER,
-      LIGONIER,
-      PITT,
-      POWNALL,
-      STANWIX,
-      TICONDEROGA,
-      WILLIAM_HENRY,
+      'units' => [
+        AUGUSTA,
+        BEDFORD,
+        CROWN_POINT,
+        CUMBERLAND,
+        EDWARD,
+        FREDERICK,
+        HERKIMER,
+        LIGONIER,
+        PITT,
+        POWNALL,
+        STANWIX,
+        TICONDEROGA,
+        WILLIAM_HENRY,
+      ]
     ],
     POOL_BRITISH_METROPOLITAN_VOW => [
       'units' => [

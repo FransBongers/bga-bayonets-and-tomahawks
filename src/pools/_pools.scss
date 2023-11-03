@@ -1,14 +1,27 @@
 #bt_pools_container {
-  background-color: blue;
+  // background-color: blue;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
   padding: 4px;
+  flex-grow: 1;
+}
+
+.bt_unit_pool_container {
+  min-height: 52px;
+  min-width: 100px;
+  max-width: 400px;
+  background-color: ivory;
+  padding: 4px;
+  margin: 4px;
 }
 
 .bt_unit_pool {
-  min-height: 52px;
-  min-width: 100px;
-  background-color: yellow;
-  margin: 4px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.bt_unit_pool_section_title {
+  margin-top: 8px;
 }

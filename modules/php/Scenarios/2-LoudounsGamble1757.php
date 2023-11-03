@@ -230,8 +230,7 @@ $scenarios[2] = [
     // TODO
     'willsCreekPath' => [
       'id' => 'willsCreekPath',
-      'units' => [
-      ],
+      'units' => [],
       'tokens' => [
         'road'
       ]
@@ -262,38 +261,45 @@ $scenarios[2] = [
     ],
     POOL_BRITISH_COMMANDERS => [
       'units' => [
-        HOWE,
+        C_HOWE,
         WOLFE,
       ]
     ],
     POOL_BRITISH_LIGHT => [
-      // Light colonial
-      DUNN,
-      PUTNAM,
-      // Light
-      GAGE,
-      HOWE,
-      MORGAN,
-      SCOTT,
+      'units' => [
+        // Light colonial
+        DUNN,
+        PUTNAM,
+        // Light
+        GAGE,
+        L_HOWE,
+        MORGAN,
+        SCOTT,
+      ]
     ],
     POOL_BRITISH_ARTILLERY => [
-      ROYAL_ARTILLERY,
-      ROYAL_ARTILLERY,
-      ROYAL_ARTILLERY,
-      ROYAL_ARTILLERY,
+      'units' => [
+        ROYAL_ARTILLERY,
+        ROYAL_ARTILLERY,
+        ROYAL_ARTILLERY,
+        ROYAL_ARTILLERY,
+      ]
+
     ],
     POOL_BRITISH_FORTS => [
-      BEDFORD,
-      CROWN_POINT,
-      EDWARD,
-      FREDERICK,
-      HERKIMER,
-      LIGONIER,
-      ONTARIO,
-      PITT,
-      POWNALL,
-      STANWIX,
-      TICONDEROGA,
+      'units' => [
+        BEDFORD,
+        CROWN_POINT,
+        EDWARD,
+        FREDERICK,
+        HERKIMER,
+        LIGONIER,
+        ONTARIO,
+        PITT,
+        POWNALL,
+        STANWIX,
+        TICONDEROGA,
+      ]
     ],
     POOL_BRITISH_METROPOLITAN_VOW => [
       'units' => [

@@ -1012,6 +1012,34 @@ var MIN_PLAY_AREA_WIDTH = 1500;
 var DISABLED = 'disabled';
 var BT_SELECTABLE = 'bt_selectable';
 var BT_SELECTED = 'bt_selected';
+var POOL_FLEETS = 'poolFleets';
+var POOL_BRITISH_COMMANDERS = 'poolBritishCommanders';
+var POOL_BRITISH_LIGHT = 'poolBritishLight';
+var POOL_BRITISH_ARTILLERY = 'poolBritishArtillery';
+var POOL_BRITISH_FORTS = 'poolBritishForts';
+var POOL_BRITISH_METROPOLITAN_VOW = 'poolBritishMetropolitanVoW';
+var POOL_BRITISH_COLONIAL_VOW = 'poolBritishColonialVoW';
+var POOL_FRENCH_COMMANDERS = 'poolFrenchCommanders';
+var POOL_FRENCH_LIGHT = 'poolFrenchLight';
+var POOL_FRENCH_ARTILLERY = 'poolFrenchArtillery';
+var POOL_FRENCH_FORTS = 'poolFrenchForts';
+var POOL_FRENCH_METROPOLITAN_VOW = 'poolFrenchMetropolitanVoW';
+var POOL_NEUTRAL_INDIANS = 'poolNeutralIndians';
+var POOLS = [
+    POOL_FLEETS,
+    POOL_BRITISH_COMMANDERS,
+    POOL_BRITISH_LIGHT,
+    POOL_BRITISH_ARTILLERY,
+    POOL_BRITISH_FORTS,
+    POOL_BRITISH_METROPOLITAN_VOW,
+    POOL_BRITISH_COLONIAL_VOW,
+    POOL_FRENCH_COMMANDERS,
+    POOL_FRENCH_LIGHT,
+    POOL_FRENCH_ARTILLERY,
+    POOL_FRENCH_FORTS,
+    POOL_FRENCH_METROPOLITAN_VOW,
+    POOL_NEUTRAL_INDIANS,
+];
 define([
     'dojo',
     'dojo/_base/declare',
@@ -1118,8 +1146,8 @@ var GameMap = (function () {
     return GameMap;
 }());
 var tplUnit = function (_a) {
-    var faction = _a.faction, counterId = _a.counterId;
-    return "\n  <div class=\"bt_token\" data-faction=\"".concat(faction, "\" data-counter-id=\"").concat(counterId, "\"></div>\n");
+    var faction = _a.faction, counterId = _a.counterId, style = _a.style;
+    return "\n  <div class=\"bt_token\" data-counter-id=\"".concat(counterId, "\"").concat(style ? " style=\"".concat(style, "\"") : '', "></div>\n");
 };
 var tplSpaces = function (_a) {
     var spaces = _a.spaces;
@@ -1298,6 +1326,23 @@ var Pools = (function () {
         var gamedatas = game.gamedatas;
         this.setupPools({ gamedatas: gamedatas });
     }
+    Pools.prototype.setupUnits = function (_a) {
+        var gamedatas = _a.gamedatas;
+        POOLS.forEach(function (pool) {
+            var units = gamedatas.units.filter(function (unit) { return unit.location === pool; });
+            console.log('units ' + pool, units);
+            if (units.length === 0) {
+                return;
+            }
+            var node = document.querySelectorAll("[data-pool-id=\"".concat(pool, "\"]"));
+            if (node.length === 0) {
+                return;
+            }
+            units.forEach(function (unit) {
+                node[0].insertAdjacentHTML('beforeend', tplUnit({ counterId: unit.counterId, style: 'position: relative;' }));
+            });
+        });
+    };
     Pools.prototype.updatePools = function (_a) {
         var gamedatas = _a.gamedatas;
     };
@@ -1306,16 +1351,21 @@ var Pools = (function () {
         document
             .getElementById("bt_play_area")
             .insertAdjacentHTML("beforeend", tplPoolsContainer());
+        this.setupUnits({ gamedatas: gamedatas });
     };
     Pools.prototype.clearInterface = function () { };
     return Pools;
 }());
 var tplPoolsContainer = function () {
-    return "\n  <div id=\"bt_pools_container\">\n    ".concat(tplPool({ type: 'french' }), "\n    ").concat(tplPool({ type: 'indian' }), "\n    ").concat(tplPool({ type: 'british' }), "\n  </div>");
+    return "\n  <div id=\"bt_pools_container\">\n    ".concat(tplPoolFleets(), "\n    ").concat(tplPoolNeutralIndians(), "\n    ").concat(tplPoolBritish(), "\n    ").concat(tplPoolFrench(), "\n  </div>");
 };
+var tplPoolFleets = function () { return "\n<div id=\"bt_pool_fleets\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Fleets'), "</span></div>\n  <div data-pool-id=\"poolFleets\" class=\"bt_unit_pool\"></div>\n</div>"); };
+var tplPoolNeutralIndians = function () { return "\n<div id=\"bt_pool_neutralIndians\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Neutral Indians'), "</span></div>\n  <div data-pool-id=\"poolNeutralIndians\" class=\"bt_unit_pool\"></div>\n</div>"); };
+var tplPoolBritish = function () { return "\n<div id=\"bt_pool_british\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('British'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Commanders'), "</span></div>\n    <div data-pool-id=\"poolBritishCommanders\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Light'), "</span></div>\n    <div data-pool-id=\"poolBritishLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Artillery'), "</span></div>\n    <div data-pool-id=\"poolBritishArtillery\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Forts'), "</span></div>\n    <div data-pool-id=\"poolBritishForts\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Metropolitan Brigades & VoW'), "</span></div>\n    <div data-pool-id=\"poolBritishMetropolitanVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial Brigades & VoW'), "</span></div>\n    <div data-pool-id=\"poolBritishColonialVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
+var tplPoolFrench = function () { return "\n<div id=\"bt_pool_french\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('French'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Commanders'), "</span></div>\n    <div data-pool-id=\"poolFrenchCommanders\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Light'), "</span></div>\n    <div data-pool-id=\"poolFrenchLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Artillery'), "</span></div>\n    <div data-pool-id=\"poolFrenchArtillery\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Forts'), "</span></div>\n    <div data-pool-id=\"poolFrenchForts\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Metropolitan Brigades & VoW'), "</span></div>\n    <div data-pool-id=\"poolFrenchMetropolitanVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
 var tplPool = function (_a) {
     var type = _a.type;
-    return "<div id=\"bt_pool_".concat(type, "\" class=\"bt_unit_pool\">\n  <div class=\"bt_token\" data-faction=\"french\" data-unit-type=\"pouchot\"></div>\n  </div>");
+    return "<div id=\"bt_pool_".concat(type, "\" class=\"bt_unit_pool\">\n  </div>");
 };
 var tplCardTooltipContainer = function (_a) {
     var card = _a.card, content = _a.content;

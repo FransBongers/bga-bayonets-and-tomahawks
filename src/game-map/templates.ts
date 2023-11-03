@@ -1,5 +1,5 @@
-const tplUnit = ({faction, counterId}: {faction: 'british' | 'french' | 'indian'; counterId: string;}) => `
-  <div class="bt_token" data-faction="${faction}" data-counter-id="${counterId}"></div>
+const tplUnit = ({faction, counterId, style}: {faction?: 'british' | 'french' | 'indian'; counterId: string; style?: string;}) => `
+  <div class="bt_token" data-counter-id="${counterId}"${style ? ` style="${style}"` : '' }></div>
 `
 
 const tplSpaces = ({spaces}: {spaces: BayonetsAndTomahawksGamedatas['spaces']}): string => {

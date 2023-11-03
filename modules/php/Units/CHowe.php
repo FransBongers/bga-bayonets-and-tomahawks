@@ -1,12 +1,12 @@
 <?php
 namespace BayonetsAndTomahawks\Units;
 
-class Howe extends \BayonetsAndTomahawks\Models\Commander
+class CHowe extends \BayonetsAndTomahawks\Models\Commander
 {
   public function __construct($row)
   {
     parent::__construct($row);
-    $this->counterId = HOWE;
+    $this->counterId = C_HOWE;
     $this->counterText = clienttranslate('Howe');
     $this->faction = BRITISH;
   }

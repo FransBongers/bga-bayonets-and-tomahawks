@@ -62,18 +62,30 @@
 }
 
 #bt_pools_container {
-  background-color: blue;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
   padding: 4px;
+  flex-grow: 1;
+}
+
+.bt_unit_pool_container {
+  min-height: 52px;
+  min-width: 100px;
+  max-width: 400px;
+  background-color: ivory;
+  padding: 4px;
+  margin: 4px;
 }
 
 .bt_unit_pool {
-  min-height: 52px;
-  min-width: 100px;
-  background-color: yellow;
-  margin: 4px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.bt_unit_pool_section_title {
+  margin-top: 8px;
 }
 
 .bt_token {
@@ -97,7 +109,7 @@
   background-size: 500% 300%;
 }
 
-.bt_token[data-counter-id=Cherokee_french] {
+.bt_token[data-counter-id=Cherokee] {
   background-position-x: 50%;
   background-position-y: 0%;
   background-image: url("img/unit_tokens_ind.webp");
@@ -118,7 +130,7 @@
   background-size: 500% 300%;
 }
 
-.bt_token[data-counter-id=Iroquois_french] {
+.bt_token[data-counter-id=Iroquois] {
   background-position-x: 0%;
   background-position-y: 50%;
   background-image: url("img/unit_tokens_ind.webp");
@@ -356,7 +368,7 @@
   background-size: 1200% 1100%;
 }
 
-.bt_token[data-counter-id=Howe] {
+.bt_token[data-counter-id=CHowe] {
   background-position-x: 0%;
   background-position-y: 20%;
   background-image: url("img/unit_tokens_bri.webp");
@@ -398,7 +410,7 @@
   background-size: 1200% 1100%;
 }
 
-.bt_token[data-counter-id="NYorkNJ,"] {
+.bt_token[data-counter-id=NYorkNJ] {
   background-position-x: 54.5454545455%;
   background-position-y: 20%;
   background-image: url("img/unit_tokens_bri.webp");
@@ -937,14 +949,14 @@
   background-size: 1200% 1100%;
 }
 
-.bt_token[data-counter-id=Howe_reduced] {
+.bt_token[data-counter-id=LHowe_reduced] {
   background-position-x: 100%;
   background-position-y: 80%;
   background-image: url("img/unit_tokens_bri.webp");
   background-size: 1200% 1100%;
 }
 
-.bt_token[data-counter-id=Howe] {
+.bt_token[data-counter-id=LHowe] {
   background-position-x: 0%;
   background-position-y: 90%;
   background-image: url("img/unit_tokens_bri.webp");
