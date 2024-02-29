@@ -82,7 +82,6 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     this.tooltipManager = new TooltipManager(this);
     this.playerManager = new PlayerManager(this);
 
-
     this.updatePlayAreaSize();
     window.addEventListener("resize", () => {
       this.updatePlayAreaSize();
@@ -107,15 +106,18 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   }
 
   public updatePlayAreaSize() {
-    
     const playAreaContainer = document.getElementById("bt_play_area_container");
-    this.playAreaScale = Math.min(1, playAreaContainer.offsetWidth / MIN_PLAY_AREA_WIDTH);
+    this.playAreaScale = Math.min(
+      1,
+      playAreaContainer.offsetWidth / MIN_PLAY_AREA_WIDTH
+    );
     const playArea = document.getElementById("bt_play_area");
     playArea.style.transform = `scale(${this.playAreaScale})`;
     const playAreaHeight = playArea.offsetHeight;
-    playArea.style.width = (playAreaContainer.offsetWidth / this.playAreaScale) + 'px';
-    console.log('playAreaHeight',playAreaHeight);
-    playAreaContainer.style.height = playAreaHeight * this.playAreaScale + 'px';
+    playArea.style.width =
+      playAreaContainer.offsetWidth / this.playAreaScale + "px";
+    console.log("playAreaHeight", playAreaHeight);
+    playAreaContainer.style.height = playAreaHeight * this.playAreaScale + "px";
   }
 
   //  .####.##....##.########.########.########.....###.....######..########.####..#######..##....##
@@ -139,6 +141,18 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       this.activeStates[stateName]
     ) {
       this.activeStates[stateName].onEnteringState(args.args);
+    }
+    if (this.framework().isCurrentPlayerActive()) {
+      this.addPrimaryActionButton({
+        id: "pass_button",
+        text: _("Pass"),
+        callback: () => this.takeAction({ action: "passTurn" }),
+      });
+      this.addDangerActionButton({
+        id: "end_game_button",
+        text: _("End game"),
+        callback: () => this.takeAction({ action: "endGame" }),
+      });
     }
   }
 

@@ -820,15 +820,29 @@ var BayonetsAndTomahawks = (function () {
         var playArea = document.getElementById("bt_play_area");
         playArea.style.transform = "scale(".concat(this.playAreaScale, ")");
         var playAreaHeight = playArea.offsetHeight;
-        playArea.style.width = (playAreaContainer.offsetWidth / this.playAreaScale) + 'px';
-        console.log('playAreaHeight', playAreaHeight);
-        playAreaContainer.style.height = playAreaHeight * this.playAreaScale + 'px';
+        playArea.style.width =
+            playAreaContainer.offsetWidth / this.playAreaScale + "px";
+        console.log("playAreaHeight", playAreaHeight);
+        playAreaContainer.style.height = playAreaHeight * this.playAreaScale + "px";
     };
     BayonetsAndTomahawks.prototype.onEnteringState = function (stateName, args) {
+        var _this = this;
         console.log("Entering state: " + stateName, args);
         if (this.framework().isCurrentPlayerActive() &&
             this.activeStates[stateName]) {
             this.activeStates[stateName].onEnteringState(args.args);
+        }
+        if (this.framework().isCurrentPlayerActive()) {
+            this.addPrimaryActionButton({
+                id: "pass_button",
+                text: _("Pass"),
+                callback: function () { return _this.takeAction({ action: "passTurn" }); },
+            });
+            this.addDangerActionButton({
+                id: "end_game_button",
+                text: _("End game"),
+                callback: function () { return _this.takeAction({ action: "endGame" }); },
+            });
         }
     };
     BayonetsAndTomahawks.prototype.onLeavingState = function (stateName) {

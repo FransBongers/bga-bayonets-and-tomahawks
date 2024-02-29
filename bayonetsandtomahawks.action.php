@@ -47,4 +47,18 @@ class action_bayonetsandtomahawks extends APP_GameAction
     $result = $this->game->restart();
     self::ajaxResponse();
   }
+
+  public function passTurn()
+  {
+    self::setAjaxMode();
+    $result = $this->game->passTurn();
+    self::ajaxResponse();
+  }
+
+  public function endGame()
+  {
+    self::setAjaxMode();
+    $result = $this->game->endGame();
+    self::ajaxResponse();
+  }
 }

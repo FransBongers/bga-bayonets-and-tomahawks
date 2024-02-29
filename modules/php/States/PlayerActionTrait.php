@@ -9,6 +9,7 @@ use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Helpers\Log;
 use BayonetsAndTomahawks\Managers\ActionStack;
+use BayonetsAndTomahawks\Managers\Players;
 
 
 trait PlayerActionTrait
@@ -92,6 +93,22 @@ trait PlayerActionTrait
     // Notifications::smallRefreshHand($player);
 
     $this->gamestate->jumpToState(Globals::getLogState());
+  }
+
+  function passTurn()
+  {
+    // Notifications::log('passTurn',[]);
+    self::checkAction('passTurn');
+    Notifications::message(clienttranslate('${player_name} passes'),['player' => Players::get()]);
+
+    $this->nextState('playerTurn', Players::getNextId(Players::get()->getId()));
+  }
+
+  function endGame()
+  {
+    self::checkAction('endGame');
+    Notifications::message(clienttranslate('${player_name} ends the game'),['player' => Players::get()]);
+    $this->nextState('endGame');
   }
 
   // .##.....##.########.####.##.......####.########.##....##
