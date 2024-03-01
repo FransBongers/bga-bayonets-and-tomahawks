@@ -1,30 +1,30 @@
 #bt_game_map {
   background-image: url("img/map.webp");
-  background-size: 1500px 2318px;
+  // background-size: 1500px 2318px;
+  background-size: calc(var(--leftColumnScale) * 1500px) calc(var(--leftColumnScale) * 2318px);
   background-repeat: no-repeat;
   // grid-column: 1 / span 1;
   // grid-row: span 1;
   position: relative;
-  height: 2318px;
-  width: 1500px;
+  // height: 2318px;
+  // width: 1500px;
+  height: calc(var(--leftColumnScale) * 2318px);
+  width: calc(var(--leftColumnScale) * 1500px);
   // box-shadow: rgb(0 0 0) 2px 2px 8px;
   box-shadow: 1px 1px 5px #000;
-  transform-origin: top left;
-}
-
-.bt_game_map_zoom_buttons {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 56px;
-  // background-color: yellow;
+  // transform-origin: top left;
+  --btMapScale: var(--leftColumnScale);
+  --btTokenScale: var(--leftColumnScale);
 }
 
 .bt_space {
   position: absolute;
+  border-radius: 50%;
   // background-color: yellow;
-  width: 52px;
-  height: 52px;
+  // width: 52px;
+  // height: 52px;
+  height: calc(var(--btMapScale) * 52px);
+  width: calc(var(--btMapScale) * 52px);
   // opacity: 0.5;
 }
 

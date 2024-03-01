@@ -784,46 +784,424 @@ var BgaZone = (function () {
     };
     return BgaZone;
 }());
+var BgaAnimation = (function () {
+    function BgaAnimation(animationFunction, settings) {
+        this.animationFunction = animationFunction;
+        this.settings = settings;
+        this.played = null;
+        this.result = null;
+        this.playWhenNoAnimation = false;
+    }
+    return BgaAnimation;
+}());
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+function attachWithAnimation(animationManager, animation) {
+    var _a;
+    var settings = animation.settings;
+    var element = settings.animation.settings.element;
+    var fromRect = element.getBoundingClientRect();
+    settings.animation.settings.fromRect = fromRect;
+    settings.attachElement.appendChild(element);
+    (_a = settings.afterAttach) === null || _a === void 0 ? void 0 : _a.call(settings, element, settings.attachElement);
+    return animationManager.play(settings.animation);
+}
+var BgaAttachWithAnimation = (function (_super) {
+    __extends(BgaAttachWithAnimation, _super);
+    function BgaAttachWithAnimation(settings) {
+        var _this = _super.call(this, attachWithAnimation, settings) || this;
+        _this.playWhenNoAnimation = true;
+        return _this;
+    }
+    return BgaAttachWithAnimation;
+}(BgaAnimation));
+function cumulatedAnimations(animationManager, animation) {
+    return animationManager.playSequence(animation.settings.animations);
+}
+var BgaCumulatedAnimation = (function (_super) {
+    __extends(BgaCumulatedAnimation, _super);
+    function BgaCumulatedAnimation(settings) {
+        var _this = _super.call(this, cumulatedAnimations, settings) || this;
+        _this.playWhenNoAnimation = true;
+        return _this;
+    }
+    return BgaCumulatedAnimation;
+}(BgaAnimation));
+function showScreenCenterAnimation(animationManager, animation) {
+    var promise = new Promise(function (success) {
+        var _a, _b, _c, _d;
+        var settings = animation.settings;
+        var element = settings.element;
+        var elementBR = element.getBoundingClientRect();
+        var xCenter = (elementBR.left + elementBR.right) / 2;
+        var yCenter = (elementBR.top + elementBR.bottom) / 2;
+        var x = xCenter - (window.innerWidth / 2);
+        var y = yCenter - (window.innerHeight / 2);
+        var duration = (_a = settings === null || settings === void 0 ? void 0 : settings.duration) !== null && _a !== void 0 ? _a : 500;
+        var originalZIndex = element.style.zIndex;
+        var originalTransition = element.style.transition;
+        var transitionTimingFunction = (_b = settings.transitionTimingFunction) !== null && _b !== void 0 ? _b : 'linear';
+        element.style.zIndex = "".concat((_c = settings === null || settings === void 0 ? void 0 : settings.zIndex) !== null && _c !== void 0 ? _c : 10);
+        var timeoutId = null;
+        var cleanOnTransitionEnd = function () {
+            element.style.zIndex = originalZIndex;
+            element.style.transition = originalTransition;
+            success();
+            element.removeEventListener('transitioncancel', cleanOnTransitionEnd);
+            element.removeEventListener('transitionend', cleanOnTransitionEnd);
+            document.removeEventListener('visibilitychange', cleanOnTransitionEnd);
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+        };
+        var cleanOnTransitionCancel = function () {
+            var _a;
+            element.style.transition = "";
+            element.offsetHeight;
+            element.style.transform = (_a = settings === null || settings === void 0 ? void 0 : settings.finalTransform) !== null && _a !== void 0 ? _a : null;
+            element.offsetHeight;
+            cleanOnTransitionEnd();
+        };
+        element.addEventListener('transitioncancel', cleanOnTransitionEnd);
+        element.addEventListener('transitionend', cleanOnTransitionEnd);
+        document.addEventListener('visibilitychange', cleanOnTransitionCancel);
+        element.offsetHeight;
+        element.style.transition = "transform ".concat(duration, "ms ").concat(transitionTimingFunction);
+        element.offsetHeight;
+        element.style.transform = "translate(".concat(-x, "px, ").concat(-y, "px) rotate(").concat((_d = settings === null || settings === void 0 ? void 0 : settings.rotationDelta) !== null && _d !== void 0 ? _d : 0, "deg)");
+        timeoutId = setTimeout(cleanOnTransitionEnd, duration + 100);
+    });
+    return promise;
+}
+var BgaShowScreenCenterAnimation = (function (_super) {
+    __extends(BgaShowScreenCenterAnimation, _super);
+    function BgaShowScreenCenterAnimation(settings) {
+        return _super.call(this, showScreenCenterAnimation, settings) || this;
+    }
+    return BgaShowScreenCenterAnimation;
+}(BgaAnimation));
+function slideToAnimation(animationManager, animation) {
+    var promise = new Promise(function (success) {
+        var _a, _b, _c, _d, _e;
+        var settings = animation.settings;
+        var element = settings.element;
+        var _f = getDeltaCoordinates(element, settings), x = _f.x, y = _f.y;
+        var duration = (_a = settings === null || settings === void 0 ? void 0 : settings.duration) !== null && _a !== void 0 ? _a : 500;
+        var originalZIndex = element.style.zIndex;
+        var originalTransition = element.style.transition;
+        var transitionTimingFunction = (_b = settings.transitionTimingFunction) !== null && _b !== void 0 ? _b : 'linear';
+        element.style.zIndex = "".concat((_c = settings === null || settings === void 0 ? void 0 : settings.zIndex) !== null && _c !== void 0 ? _c : 10);
+        var timeoutId = null;
+        var cleanOnTransitionEnd = function () {
+            element.style.zIndex = originalZIndex;
+            element.style.transition = originalTransition;
+            success();
+            element.removeEventListener('transitioncancel', cleanOnTransitionEnd);
+            element.removeEventListener('transitionend', cleanOnTransitionEnd);
+            document.removeEventListener('visibilitychange', cleanOnTransitionEnd);
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+        };
+        var cleanOnTransitionCancel = function () {
+            var _a;
+            element.style.transition = "";
+            element.offsetHeight;
+            element.style.transform = (_a = settings === null || settings === void 0 ? void 0 : settings.finalTransform) !== null && _a !== void 0 ? _a : null;
+            element.offsetHeight;
+            cleanOnTransitionEnd();
+        };
+        element.addEventListener('transitioncancel', cleanOnTransitionEnd);
+        element.addEventListener('transitionend', cleanOnTransitionEnd);
+        document.addEventListener('visibilitychange', cleanOnTransitionCancel);
+        element.offsetHeight;
+        element.style.transition = "transform ".concat(duration, "ms ").concat(transitionTimingFunction);
+        element.offsetHeight;
+        element.style.transform = "translate(".concat(-x, "px, ").concat(-y, "px) rotate(").concat((_d = settings === null || settings === void 0 ? void 0 : settings.rotationDelta) !== null && _d !== void 0 ? _d : 0, "deg) scale(").concat((_e = settings.scale) !== null && _e !== void 0 ? _e : 1, ")");
+        timeoutId = setTimeout(cleanOnTransitionEnd, duration + 100);
+    });
+    return promise;
+}
+var BgaSlideToAnimation = (function (_super) {
+    __extends(BgaSlideToAnimation, _super);
+    function BgaSlideToAnimation(settings) {
+        return _super.call(this, slideToAnimation, settings) || this;
+    }
+    return BgaSlideToAnimation;
+}(BgaAnimation));
+function slideAnimation(animationManager, animation) {
+    var promise = new Promise(function (success) {
+        var _a, _b, _c, _d, _e;
+        var settings = animation.settings;
+        var element = settings.element;
+        var _f = getDeltaCoordinates(element, settings), x = _f.x, y = _f.y;
+        var duration = (_a = settings.duration) !== null && _a !== void 0 ? _a : 500;
+        var originalZIndex = element.style.zIndex;
+        var originalTransition = element.style.transition;
+        var transitionTimingFunction = (_b = settings.transitionTimingFunction) !== null && _b !== void 0 ? _b : 'linear';
+        element.style.zIndex = "".concat((_c = settings === null || settings === void 0 ? void 0 : settings.zIndex) !== null && _c !== void 0 ? _c : 10);
+        element.style.transition = null;
+        element.offsetHeight;
+        element.style.transform = "translate(".concat(-x, "px, ").concat(-y, "px) rotate(").concat((_d = settings === null || settings === void 0 ? void 0 : settings.rotationDelta) !== null && _d !== void 0 ? _d : 0, "deg)");
+        var timeoutId = null;
+        var cleanOnTransitionEnd = function () {
+            element.style.zIndex = originalZIndex;
+            element.style.transition = originalTransition;
+            success();
+            element.removeEventListener('transitioncancel', cleanOnTransitionEnd);
+            element.removeEventListener('transitionend', cleanOnTransitionEnd);
+            document.removeEventListener('visibilitychange', cleanOnTransitionEnd);
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+        };
+        var cleanOnTransitionCancel = function () {
+            var _a;
+            element.style.transition = "";
+            element.offsetHeight;
+            element.style.transform = (_a = settings === null || settings === void 0 ? void 0 : settings.finalTransform) !== null && _a !== void 0 ? _a : null;
+            element.offsetHeight;
+            cleanOnTransitionEnd();
+        };
+        element.addEventListener('transitioncancel', cleanOnTransitionCancel);
+        element.addEventListener('transitionend', cleanOnTransitionEnd);
+        document.addEventListener('visibilitychange', cleanOnTransitionCancel);
+        element.offsetHeight;
+        element.style.transition = "transform ".concat(duration, "ms ").concat(transitionTimingFunction);
+        element.offsetHeight;
+        element.style.transform = (_e = settings === null || settings === void 0 ? void 0 : settings.finalTransform) !== null && _e !== void 0 ? _e : null;
+        timeoutId = setTimeout(cleanOnTransitionEnd, duration + 100);
+    });
+    return promise;
+}
+var BgaSlideAnimation = (function (_super) {
+    __extends(BgaSlideAnimation, _super);
+    function BgaSlideAnimation(settings) {
+        return _super.call(this, slideAnimation, settings) || this;
+    }
+    return BgaSlideAnimation;
+}(BgaAnimation));
+function pauseAnimation(animationManager, animation) {
+    var promise = new Promise(function (success) {
+        var _a;
+        var settings = animation.settings;
+        var duration = (_a = settings === null || settings === void 0 ? void 0 : settings.duration) !== null && _a !== void 0 ? _a : 500;
+        setTimeout(function () { return success(); }, duration);
+    });
+    return promise;
+}
+var BgaPauseAnimation = (function (_super) {
+    __extends(BgaPauseAnimation, _super);
+    function BgaPauseAnimation(settings) {
+        return _super.call(this, pauseAnimation, settings) || this;
+    }
+    return BgaPauseAnimation;
+}(BgaAnimation));
+function shouldAnimate(settings) {
+    var _a;
+    return document.visibilityState !== 'hidden' && !((_a = settings === null || settings === void 0 ? void 0 : settings.game) === null || _a === void 0 ? void 0 : _a.instantaneousMode);
+}
+function getDeltaCoordinates(element, settings) {
+    var _a;
+    if (!settings.fromDelta && !settings.fromRect && !settings.fromElement) {
+        throw new Error("[bga-animation] fromDelta, fromRect or fromElement need to be set");
+    }
+    var x = 0;
+    var y = 0;
+    if (settings.fromDelta) {
+        x = settings.fromDelta.x;
+        y = settings.fromDelta.y;
+    }
+    else {
+        var originBR = (_a = settings.fromRect) !== null && _a !== void 0 ? _a : settings.fromElement.getBoundingClientRect();
+        var originalTransform = element.style.transform;
+        element.style.transform = '';
+        var destinationBR = element.getBoundingClientRect();
+        element.style.transform = originalTransform;
+        x = (destinationBR.left + destinationBR.right) / 2 - (originBR.left + originBR.right) / 2;
+        y = (destinationBR.top + destinationBR.bottom) / 2 - (originBR.top + originBR.bottom) / 2;
+    }
+    if (settings.scale) {
+        x /= settings.scale;
+        y /= settings.scale;
+    }
+    return { x: x, y: y };
+}
+function logAnimation(animationManager, animation) {
+    var settings = animation.settings;
+    var element = settings.element;
+    if (element) {
+        console.log(animation, settings, element, element.getBoundingClientRect(), element.style.transform);
+    }
+    else {
+        console.log(animation, settings);
+    }
+    return Promise.resolve(false);
+}
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var AnimationManager = (function () {
+    function AnimationManager(game, settings) {
+        this.game = game;
+        this.settings = settings;
+        this.zoomManager = settings === null || settings === void 0 ? void 0 : settings.zoomManager;
+        if (!game) {
+            throw new Error('You must set your game as the first parameter of AnimationManager');
+        }
+    }
+    AnimationManager.prototype.getZoomManager = function () {
+        return this.zoomManager;
+    };
+    AnimationManager.prototype.setZoomManager = function (zoomManager) {
+        this.zoomManager = zoomManager;
+    };
+    AnimationManager.prototype.getSettings = function () {
+        return this.settings;
+    };
+    AnimationManager.prototype.animationsActive = function () {
+        return document.visibilityState !== 'hidden' && !this.game.instantaneousMode;
+    };
+    AnimationManager.prototype.play = function (animation) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
+        return __awaiter(this, void 0, void 0, function () {
+            var settings, _r;
+            return __generator(this, function (_s) {
+                switch (_s.label) {
+                    case 0:
+                        animation.played = animation.playWhenNoAnimation || this.animationsActive();
+                        if (!animation.played) return [3, 2];
+                        settings = animation.settings;
+                        (_a = settings.animationStart) === null || _a === void 0 ? void 0 : _a.call(settings, animation);
+                        (_b = settings.element) === null || _b === void 0 ? void 0 : _b.classList.add((_c = settings.animationClass) !== null && _c !== void 0 ? _c : 'bga-animations_animated');
+                        animation.settings = __assign(__assign({}, animation.settings), { duration: (_g = (_e = (_d = animation.settings) === null || _d === void 0 ? void 0 : _d.duration) !== null && _e !== void 0 ? _e : (_f = this.settings) === null || _f === void 0 ? void 0 : _f.duration) !== null && _g !== void 0 ? _g : 500, scale: (_l = (_j = (_h = animation.settings) === null || _h === void 0 ? void 0 : _h.scale) !== null && _j !== void 0 ? _j : (_k = this.zoomManager) === null || _k === void 0 ? void 0 : _k.zoom) !== null && _l !== void 0 ? _l : undefined });
+                        _r = animation;
+                        return [4, animation.animationFunction(this, animation)];
+                    case 1:
+                        _r.result = _s.sent();
+                        (_o = (_m = animation.settings).animationEnd) === null || _o === void 0 ? void 0 : _o.call(_m, animation);
+                        (_p = settings.element) === null || _p === void 0 ? void 0 : _p.classList.remove((_q = settings.animationClass) !== null && _q !== void 0 ? _q : 'bga-animations_animated');
+                        return [3, 3];
+                    case 2: return [2, Promise.resolve(animation)];
+                    case 3: return [2];
+                }
+            });
+        });
+    };
+    AnimationManager.prototype.playParallel = function (animations) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2, Promise.all(animations.map(function (animation) { return _this.play(animation); }))];
+            });
+        });
+    };
+    AnimationManager.prototype.playSequence = function (animations) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result, others;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!animations.length) return [3, 3];
+                        return [4, this.play(animations[0])];
+                    case 1:
+                        result = _a.sent();
+                        return [4, this.playSequence(animations.slice(1))];
+                    case 2:
+                        others = _a.sent();
+                        return [2, __spreadArray([result], others, true)];
+                    case 3: return [2, Promise.resolve([])];
+                }
+            });
+        });
+    };
+    AnimationManager.prototype.playWithDelay = function (animations, delay) {
+        return __awaiter(this, void 0, void 0, function () {
+            var promise;
+            var _this = this;
+            return __generator(this, function (_a) {
+                promise = new Promise(function (success) {
+                    var promises = [];
+                    var _loop_1 = function (i) {
+                        setTimeout(function () {
+                            promises.push(_this.play(animations[i]));
+                            if (i == animations.length - 1) {
+                                Promise.all(promises).then(function (result) {
+                                    success(result);
+                                });
+                            }
+                        }, i * delay);
+                    };
+                    for (var i = 0; i < animations.length; i++) {
+                        _loop_1(i);
+                    }
+                });
+                return [2, promise];
+            });
+        });
+    };
+    AnimationManager.prototype.attachWithAnimation = function (animation, attachElement) {
+        var attachWithAnimation = new BgaAttachWithAnimation({
+            animation: animation,
+            attachElement: attachElement
+        });
+        return this.play(attachWithAnimation);
+    };
+    return AnimationManager;
+}());
 var BayonetsAndTomahawks = (function () {
     function BayonetsAndTomahawks() {
+        this.tooltipsToMap = [];
+        this._helpMode = false;
         this._notif_uid_to_log_id = {};
+        this._notif_uid_to_mobile_log_id = {};
         this._last_notif = null;
+        this._last_tooltip_id = 0;
+        this._selectableNodes = [];
         console.log("bayonetsandtomahawks constructor");
     }
     BayonetsAndTomahawks.prototype.setup = function (gamedatas) {
-        var _this = this;
         dojo.place("<div id='customActions' style='display:inline-block'></div>", $("generalactions"), "after");
         this.gamedatas = gamedatas;
         debug("gamedatas", gamedatas);
         this._connections = [];
         this.activeStates = {};
-        this.animationManager = new AnimationManager(this, { duration: 500 });
+        this.infoPanel = new InfoPanel(this);
+        this.settings = new Settings(this);
+        this.animationManager = new AnimationManager(this, {
+            duration: this.settings.get({ id: PREF_SHOW_ANIMATIONS }) === DISABLED
+                ? 0
+                : 2100 - this.settings.get({ id: PREF_ANIMATION_SPEED }),
+        });
         this.gameMap = new GameMap(this);
         this.pools = new Pools(this);
-        this.tooltipManager = new TooltipManager(this);
-        this.playerManager = new PlayerManager(this);
-        this.updatePlayAreaSize();
-        window.addEventListener("resize", function () {
-            _this.updatePlayAreaSize();
-        });
         if (this.notificationManager != undefined) {
             this.notificationManager.destroy();
         }
         this.notificationManager = new NotificationManager(this);
         this.notificationManager.setupNotifications();
-        this.tooltipManager.setupTooltips();
         debug("Ending game setup");
-    };
-    BayonetsAndTomahawks.prototype.updatePlayAreaSize = function () {
-        var playAreaContainer = document.getElementById("bt_play_area_container");
-        this.playAreaScale = Math.min(1, playAreaContainer.offsetWidth / MIN_PLAY_AREA_WIDTH);
-        var playArea = document.getElementById("bt_play_area");
-        playArea.style.transform = "scale(".concat(this.playAreaScale, ")");
-        var playAreaHeight = playArea.offsetHeight;
-        playArea.style.width =
-            playAreaContainer.offsetWidth / this.playAreaScale + "px";
-        console.log("playAreaHeight", playAreaHeight);
-        playAreaContainer.style.height = playAreaHeight * this.playAreaScale + "px";
     };
     BayonetsAndTomahawks.prototype.onEnteringState = function (stateName, args) {
         var _this = this;
@@ -937,6 +1315,65 @@ var BayonetsAndTomahawks = (function () {
         this.gamedatas.gamestate.descriptionmyturn = this.format_string_recursive(_(text), args);
         this.framework().updatePageTitle();
     };
+    BayonetsAndTomahawks.prototype.connect = function (node, action, callback) {
+        this._connections.push(dojo.connect($(node), action, callback));
+    };
+    BayonetsAndTomahawks.prototype.onClick = function (node, callback, temporary) {
+        var _this = this;
+        if (temporary === void 0) { temporary = true; }
+        var safeCallback = function (evt) {
+            evt.stopPropagation();
+            if (_this.framework().isInterfaceLocked()) {
+                return false;
+            }
+            if (_this._helpMode) {
+                return false;
+            }
+            callback(evt);
+        };
+        if (temporary) {
+            this.connect($(node), "click", safeCallback);
+            dojo.removeClass(node, "unselectable");
+            dojo.addClass(node, "selectable");
+            this._selectableNodes.push(node);
+        }
+        else {
+            dojo.connect($(node), "click", safeCallback);
+        }
+    };
+    BayonetsAndTomahawks.prototype.updateLayout = function () {
+        if (!this.settings) {
+            return;
+        }
+        $("play_area_container").setAttribute("data-two-columns", this.settings.get({ id: "twoColumnsLayout" }));
+        var ROOT = document.documentElement;
+        var WIDTH = $("play_area_container").getBoundingClientRect()["width"] - 8;
+        var LEFT_COLUMN = 1500;
+        var RIGHT_COLUMN = 1500;
+        if (this.settings.get({ id: "twoColumnsLayout" }) === PREF_ENABLED) {
+            WIDTH = WIDTH - 8;
+            var size = Number(this.settings.get({ id: "columnSizes" }));
+            var proportions = [size, 100 - size];
+            var LEFT_SIZE = (proportions[0] * WIDTH) / 100;
+            var leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
+            ROOT.style.setProperty("--leftColumnScale", "".concat(leftColumnScale));
+            var RIGHT_SIZE = (proportions[1] * WIDTH) / 100;
+            var rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
+            ROOT.style.setProperty("--rightColumnScale", "".concat(rightColumnScale));
+            $("play_area_container").style.gridTemplateColumns = "".concat(LEFT_SIZE, "px ").concat(RIGHT_SIZE, "px");
+        }
+        else {
+            var LEFT_SIZE = WIDTH;
+            var leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
+            ROOT.style.setProperty("--leftColumnScale", "".concat(leftColumnScale));
+            var RIGHT_SIZE = WIDTH;
+            var rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
+            ROOT.style.setProperty("--leftColumnScale", "".concat(rightColumnScale));
+        }
+    };
+    BayonetsAndTomahawks.prototype.onScreenWidthChange = function () {
+        this.updateLayout();
+    };
     BayonetsAndTomahawks.prototype.format_string_recursive = function (log, args) {
         var _this = this;
         try {
@@ -1006,6 +1443,47 @@ var BayonetsAndTomahawks = (function () {
     BayonetsAndTomahawks.prototype.onLoadingComplete = function () {
         this.cancelLogs(this.gamedatas.canceledNotifIds);
     };
+    BayonetsAndTomahawks.prototype.updatePlayerOrdering = function () {
+        this.framework().inherited(arguments);
+        var container = document.getElementById("player_boards");
+        var infoPanel = document.getElementById("info_panel");
+        if (!container) {
+            return;
+        }
+        container.insertAdjacentElement("afterbegin", infoPanel);
+    };
+    BayonetsAndTomahawks.prototype.setAlwaysFixTopActions = function (alwaysFixed, maximum) {
+        if (alwaysFixed === void 0) { alwaysFixed = true; }
+        if (maximum === void 0) { maximum = 30; }
+        this.alwaysFixTopActions = alwaysFixed;
+        this.alwaysFixTopActionsMaximum = maximum;
+        this.adaptStatusBar();
+    };
+    BayonetsAndTomahawks.prototype.adaptStatusBar = function () {
+        this.inherited(arguments);
+        if (this.alwaysFixTopActions) {
+            var afterTitleElem = document.getElementById("after-page-title");
+            var titleElem = document.getElementById("page-title");
+            var zoom = getComputedStyle(titleElem).zoom;
+            if (!zoom) {
+                zoom = 1;
+            }
+            var titleRect = afterTitleElem.getBoundingClientRect();
+            if (titleRect.top < 0 &&
+                titleElem.offsetHeight <
+                    (window.innerHeight * this.alwaysFixTopActionsMaximum) / 100) {
+                var afterTitleRect = afterTitleElem.getBoundingClientRect();
+                titleElem.classList.add("fixed-page-title");
+                titleElem.style.width = (afterTitleRect.width - 10) / zoom + "px";
+                afterTitleElem.style.height = titleRect.height + "px";
+            }
+            else {
+                titleElem.classList.remove("fixed-page-title");
+                titleElem.style.width = "auto";
+                afterTitleElem.style.height = "0px";
+            }
+        }
+    };
     BayonetsAndTomahawks.prototype.actionError = function (actionName) {
         this.framework().showMessage("cannot take ".concat(actionName, " action"), "error");
     };
@@ -1026,6 +1504,11 @@ var MIN_PLAY_AREA_WIDTH = 1500;
 var DISABLED = 'disabled';
 var BT_SELECTABLE = 'bt_selectable';
 var BT_SELECTED = 'bt_selected';
+var PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY = 'confirmEndOfTurnPlayerSwitchOnly';
+var PREF_SHOW_ANIMATIONS = 'showAnimations';
+var PREF_ANIMATION_SPEED = 'animationSpeed';
+var PREF_DISABLED = 'disabled';
+var PREF_ENABLED = 'enabled';
 var POOL_FLEETS = 'poolFleets';
 var POOL_BRITISH_COMMANDERS = 'poolBritishCommanders';
 var POOL_BRITISH_LIGHT = 'poolBritishLight';
@@ -1057,12 +1540,15 @@ var POOLS = [
 define([
     'dojo',
     'dojo/_base/declare',
+    g_gamethemeurl + 'modules/js/vendor/nouislider.min.js',
     'dojo/fx',
     'dojox/fx/ext-dojo/complex',
     'ebg/core/gamegui',
     'ebg/counter',
-    g_gamethemeurl + "modules/js/bga-animations.js",
-], function (dojo, declare) {
+], function (dojo, declare, noUiSliderDefined) {
+    if (noUiSliderDefined) {
+        noUiSlider = noUiSliderDefined;
+    }
     return declare('bgagame.bayonetsandtomahawks', ebg.core.gamegui, new BayonetsAndTomahawks());
 });
 var isDebug = window.location.host == 'studio.boardgamearena.com' || window.location.hash.indexOf('debug') > -1;
@@ -1070,16 +1556,9 @@ var debug = isDebug ? console.info.bind(window.console) : function () { };
 var capitalizeFirstLetter = function (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
-var LOCAL_STORAGE_MAP_ZOOM_KEY = "BayonetsAndTomahawks-map-zoom";
-var ZOOM_LEVELS = [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1];
-var MAX_MAP_HEIGHT = 2318;
-var MAX_MAP_WIDTH = 1500;
 var GameMap = (function () {
     function GameMap(game) {
         this.game = game;
-        this.zoomLevel =
-            Number(localStorage.getItem(LOCAL_STORAGE_MAP_ZOOM_KEY)) || 1;
-        console.log('localStorage zoomLevel', this.zoomLevel);
         var gamedatas = game.gamedatas;
         this.setupGameMap({ gamedatas: gamedatas });
     }
@@ -1103,60 +1582,11 @@ var GameMap = (function () {
     GameMap.prototype.setupGameMap = function (_a) {
         var gamedatas = _a.gamedatas;
         document
-            .getElementById("bt_play_area")
+            .getElementById("play_area_container")
             .insertAdjacentHTML("afterbegin", tplGameMap({ gamedatas: gamedatas }));
-        this.updateGameMapSize();
-        this.setupZoomButtons();
         this.setupUnits({ gamedatas: gamedatas });
     };
-    GameMap.prototype.setupZoomButtons = function () {
-        var _this = this;
-        dojo.connect($("bt_game_map_zoom_out_button"), "onclick", this, function () {
-            return _this.zoom({ type: "out" });
-        });
-        dojo.connect($("bt_game_map_zoom_in_button"), "onclick", this, function () {
-            return _this.zoom({ type: "in" });
-        });
-        this.checkZoomButtonClasses();
-    };
     GameMap.prototype.clearInterface = function () { };
-    GameMap.prototype.getCurrentZoomIndex = function () {
-        console.log('zoomLevel', this.zoomLevel);
-        return ZOOM_LEVELS.indexOf(Number(localStorage.getItem(LOCAL_STORAGE_MAP_ZOOM_KEY)) || 1);
-    };
-    GameMap.prototype.checkZoomButtonClasses = function () {
-        var zoomInButton = $("bt_game_map_zoom_in_button");
-        var zoomOutButton = $("bt_game_map_zoom_out_button");
-        zoomInButton.classList.remove(DISABLED);
-        zoomOutButton.classList.remove(DISABLED);
-        if (this.zoomLevel === ZOOM_LEVELS[0]) {
-            zoomOutButton.classList.add(DISABLED);
-        }
-        else if (this.zoomLevel === ZOOM_LEVELS[ZOOM_LEVELS.length - 1]) {
-            zoomInButton.classList.add(DISABLED);
-        }
-    };
-    GameMap.prototype.updateGameMapSize = function () {
-        var map = document.getElementById("bt_game_map");
-        map.style.transform = "scale(".concat(this.zoomLevel, ")");
-        var mapContainer = document.getElementById('bt_game_map_containter');
-        mapContainer.style.width = "".concat(this.zoomLevel * MAX_MAP_WIDTH, "px");
-        mapContainer.style.height = "".concat(this.zoomLevel * MAX_MAP_HEIGHT + 56, "px");
-    };
-    GameMap.prototype.zoom = function (_a) {
-        var type = _a.type;
-        var currentZoomIndex = this.getCurrentZoomIndex();
-        if (type === "in" && currentZoomIndex !== ZOOM_LEVELS.length - 1) {
-            this.zoomLevel = ZOOM_LEVELS[currentZoomIndex + 1];
-        }
-        else if (type === "out" && currentZoomIndex > 0) {
-            this.zoomLevel = ZOOM_LEVELS[currentZoomIndex - 1];
-        }
-        this.updateGameMapSize();
-        this.checkZoomButtonClasses();
-        this.game.updatePlayAreaSize();
-        localStorage.setItem(LOCAL_STORAGE_MAP_ZOOM_KEY, this.zoomLevel + "");
-    };
     return GameMap;
 }());
 var tplUnit = function (_a) {
@@ -1166,15 +1596,36 @@ var tplUnit = function (_a) {
 var tplSpaces = function (_a) {
     var spaces = _a.spaces;
     var filteredSpaces = spaces.filter(function (space) { return space.top && space.left; });
-    var mappedSpaces = filteredSpaces.map(function (space) { return "<div data-space-id=\"".concat(space.id, "\" class=\"bt_space\" style=\"top: ").concat(space.top - 26, "px; left: ").concat(space.left - 26, "px;\"></div>"); });
+    var mappedSpaces = filteredSpaces.map(function (space) { return "<div data-space-id=\"".concat(space.id, "\" class=\"bt_space\" style=\"top: calc(var(--btMapScale) * ").concat(space.top - 26, "px); left: calc(var(--btMapScale) * ").concat(space.left - 26, "px);\"></div>"); });
     var result = mappedSpaces.join('');
     return result;
 };
 var tplGameMap = function (_a) {
     var gamedatas = _a.gamedatas;
     var spaces = gamedatas.spaces;
-    return "\n<div id=\"bt_game_map_containter\">\n  <div class=\"bt_game_map_zoom_buttons\">\n    <button id=\"bt_game_map_zoom_out_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-out-icon\" style=\"margin-bottom: -5px;\"></button>\n    <button id=\"bt_game_map_zoom_in_button\" type=\"button\" class=\"bga-zoom-button bga-zoom-in-icon\" style=\"margin-bottom: -5px;\"></button>\n  </div>\n  <div id=\"bt_game_map\">\n    <div class=\"bt_marker\" data-marker-type=\"victory_point\"></div>\n    ".concat(tplSpaces({ spaces: spaces }), "\n  </div>\n</div>");
+    return "\n  <div id=\"bt_game_map\">\n    <div class=\"bt_marker\" data-marker-type=\"victory_point\"></div>\n    ".concat(tplSpaces({ spaces: spaces }), "\n  </div>");
 };
+var InfoPanel = (function () {
+    function InfoPanel(game) {
+        this.game = game;
+        var gamedatas = game.gamedatas;
+        this.setup({ gamedatas: gamedatas });
+    }
+    InfoPanel.prototype.clearInterface = function () { };
+    InfoPanel.prototype.updateInterface = function (_a) {
+        var gamedatas = _a.gamedatas;
+    };
+    InfoPanel.prototype.setup = function (_a) {
+        var gamedatas = _a.gamedatas;
+        var node = document.getElementById("player_boards");
+        if (!node) {
+            return;
+        }
+        node.insertAdjacentHTML("afterbegin", tplInfoPanel());
+    };
+    return InfoPanel;
+}());
+var tplInfoPanel = function () { return "<div class='player-board' id=\"info_panel\"></div>"; };
 var LOG_TOKEN_BOLD_TEXT = 'boldText';
 var LOG_TOKEN_NEW_LINE = 'newLine';
 var LOG_TOKEN_PLAYER_NAME = 'playerName';
@@ -1202,17 +1653,6 @@ var tlpLogTokenBoldText = function (_a) {
 var tplLogTokenPlayerName = function (_a) {
     var name = _a.name, color = _a.color;
     return "<span class=\"playername\" style=\"color:#".concat(color, ";\">").concat(name, "</span>");
-};
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
 };
 var NotificationManager = (function () {
     function NotificationManager(game) {
@@ -1363,7 +1803,7 @@ var Pools = (function () {
     Pools.prototype.setupPools = function (_a) {
         var gamedatas = _a.gamedatas;
         document
-            .getElementById("bt_play_area")
+            .getElementById("play_area_container")
             .insertAdjacentHTML("beforeend", tplPoolsContainer());
         this.setupUnits({ gamedatas: gamedatas });
     };
@@ -1380,6 +1820,357 @@ var tplPoolFrench = function () { return "\n<div id=\"bt_pool_french\" class=\"b
 var tplPool = function (_a) {
     var type = _a.type;
     return "<div id=\"bt_pool_".concat(type, "\" class=\"bt_unit_pool\">\n  </div>");
+};
+var getSettingsConfig = function () {
+    var _a;
+    return ({
+        layout: {
+            id: "layout",
+            config: {
+                twoColumnsLayout: {
+                    id: "twoColumnsLayout",
+                    onChangeInSetup: true,
+                    defaultValue: "disabled",
+                    label: _("Two column layout"),
+                    type: "select",
+                    options: [
+                        {
+                            label: _("Enabled"),
+                            value: "enabled",
+                        },
+                        {
+                            label: _("Disabled (single column)"),
+                            value: "disabled",
+                        },
+                    ],
+                },
+                columnSizes: {
+                    id: "columnSizes",
+                    onChangeInSetup: true,
+                    label: _("Column sizes"),
+                    defaultValue: 50,
+                    visibleCondition: {
+                        id: "twoColumnsLayout",
+                        values: [PREF_ENABLED],
+                    },
+                    sliderConfig: {
+                        step: 5,
+                        padding: 0,
+                        range: {
+                            min: 30,
+                            max: 70,
+                        },
+                    },
+                    type: "slider",
+                },
+            },
+        },
+        gameplay: {
+            id: "gameplay",
+            config: (_a = {},
+                _a[PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY] = {
+                    id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+                    onChangeInSetup: false,
+                    defaultValue: DISABLED,
+                    label: _("Confirm end of turn and player switch only"),
+                    type: "select",
+                    options: [
+                        {
+                            label: _("Enabled"),
+                            value: PREF_ENABLED,
+                        },
+                        {
+                            label: _("Disabled (confirm every move)"),
+                            value: PREF_DISABLED,
+                        },
+                    ],
+                },
+                _a[PREF_SHOW_ANIMATIONS] = {
+                    id: PREF_SHOW_ANIMATIONS,
+                    onChangeInSetup: false,
+                    defaultValue: PREF_ENABLED,
+                    label: _("Show animations"),
+                    type: "select",
+                    options: [
+                        {
+                            label: _("Enabled"),
+                            value: PREF_ENABLED,
+                        },
+                        {
+                            label: _("Disabled"),
+                            value: PREF_DISABLED,
+                        },
+                    ],
+                },
+                _a[PREF_ANIMATION_SPEED] = {
+                    id: PREF_ANIMATION_SPEED,
+                    onChangeInSetup: false,
+                    label: _("Animation speed"),
+                    defaultValue: 1600,
+                    visibleCondition: {
+                        id: PREF_SHOW_ANIMATIONS,
+                        values: [PREF_ENABLED],
+                    },
+                    sliderConfig: {
+                        step: 100,
+                        padding: 0,
+                        range: {
+                            min: 100,
+                            max: 2000,
+                        },
+                    },
+                    type: "slider",
+                },
+                _a),
+        },
+    });
+};
+var Settings = (function () {
+    function Settings(game) {
+        this.settings = {};
+        this.selectedTab = "layout";
+        this.tabs = [
+            {
+                id: "layout",
+                name: _("Layout"),
+            },
+            {
+                id: "gameplay",
+                name: _("Gameplay"),
+            },
+        ];
+        this.game = game;
+        var gamedatas = game.gamedatas;
+        this.setup({ gamedatas: gamedatas });
+    }
+    Settings.prototype.clearInterface = function () { };
+    Settings.prototype.updateInterface = function (_a) {
+        var gamedatas = _a.gamedatas;
+    };
+    Settings.prototype.addButton = function (_a) {
+        var gamedatas = _a.gamedatas;
+        var configPanel = document.getElementById("info_panel");
+        if (configPanel) {
+            configPanel.insertAdjacentHTML("beforeend", tplSettingsButton());
+        }
+    };
+    Settings.prototype.setupModal = function (_a) {
+        var gamedatas = _a.gamedatas;
+        this.modal = new Modal("settings_modal", {
+            class: "settings_modal",
+            closeIcon: "fa-times",
+            titleTpl: '<h2 id="popin_${id}_title" class="${class}_title">${title}</h2>',
+            title: _("Settings"),
+            contents: tplSettingsModalContent({
+                tabs: this.tabs,
+            }),
+            closeAction: "hide",
+            verticalAlign: "flex-start",
+            breakpoint: 740,
+        });
+    };
+    Settings.prototype.setup = function (_a) {
+        var _this = this;
+        var gamedatas = _a.gamedatas;
+        this.addButton({ gamedatas: gamedatas });
+        this.setupModal({ gamedatas: gamedatas });
+        this.setupModalContent();
+        this.changeTab({ id: this.selectedTab });
+        dojo.connect($("show_settings"), "onclick", function () { return _this.open(); });
+        this.tabs.forEach(function (_a) {
+            var id = _a.id;
+            dojo.connect($("settings_modal_tab_".concat(id)), "onclick", function () {
+                return _this.changeTab({ id: id });
+            });
+        });
+    };
+    Settings.prototype.setupModalContent = function () {
+        var _this = this;
+        var config = getSettingsConfig();
+        var node = document.getElementById("setting_modal_content");
+        if (!node) {
+            return;
+        }
+        Object.entries(config).forEach(function (_a) {
+            var tabId = _a[0], tabConfig = _a[1];
+            node.insertAdjacentHTML("beforeend", tplSettingsModalTabContent({ id: tabId }));
+            var tabContentNode = document.getElementById("settings_modal_tab_content_".concat(tabId));
+            if (!tabContentNode) {
+                return;
+            }
+            Object.values(tabConfig.config).forEach(function (setting) {
+                var id = setting.id, type = setting.type, defaultValue = setting.defaultValue, visibleCondition = setting.visibleCondition;
+                var localValue = localStorage.getItem(_this.getLocalStorageKey({ id: id }));
+                _this.settings[id] = localValue || defaultValue;
+                var methodName = _this.getMethodName({ id: id });
+                if (setting.onChangeInSetup && localValue && _this[methodName]) {
+                    _this[methodName](localValue);
+                }
+                if (setting.type === "select") {
+                    var visible = !visibleCondition ||
+                        (visibleCondition &&
+                            visibleCondition.values.includes(_this.settings[visibleCondition.id]));
+                    tabContentNode.insertAdjacentHTML("beforeend", tplPlayerPrefenceSelectRow({
+                        setting: setting,
+                        currentValue: _this.settings[setting.id],
+                        visible: visible,
+                    }));
+                    var controlId_1 = "setting_".concat(setting.id);
+                    $(controlId_1).addEventListener("change", function () {
+                        var value = $(controlId_1).value;
+                        _this.changeSetting({ id: setting.id, value: value });
+                    });
+                }
+                else if (setting.type === "slider") {
+                    var visible = !visibleCondition ||
+                        (visibleCondition &&
+                            visibleCondition.values.includes(_this.settings[visibleCondition.id]));
+                    tabContentNode.insertAdjacentHTML("beforeend", tplPlayerPrefenceSliderRow({
+                        id: setting.id,
+                        label: setting.label,
+                        visible: visible,
+                    }));
+                    var sliderConfig = __assign(__assign({}, setting.sliderConfig), { start: _this.settings[setting.id] });
+                    noUiSlider.create($("setting_" + setting.id), sliderConfig);
+                    $("setting_" + setting.id).noUiSlider.on("slide", function (arg) {
+                        return _this.changeSetting({ id: setting.id, value: arg[0] });
+                    });
+                }
+            });
+        });
+    };
+    Settings.prototype.changeSetting = function (_a) {
+        var id = _a.id, value = _a.value;
+        var suffix = this.getSuffix({ id: id });
+        this.settings[id] = value;
+        localStorage.setItem(this.getLocalStorageKey({ id: id }), value);
+        var methodName = this.getMethodName({ id: id });
+        if (this[methodName]) {
+            this[methodName](value);
+        }
+    };
+    Settings.prototype.onChangeTwoColumnsLayoutSetting = function (value) {
+        this.checkColumnSizesVisisble();
+        var node = document.getElementById("play_area_container");
+        if (node) {
+            node.setAttribute("data-two-columns", value);
+        }
+        this.game.updateLayout();
+    };
+    Settings.prototype.onChangeColumnSizesSetting = function (value) {
+        this.game.updateLayout();
+    };
+    Settings.prototype.onChangeCardSizeInLogSetting = function (value) {
+        var ROOT = document.documentElement;
+        ROOT.style.setProperty("--logCardScale", "".concat(Number(value) / 100));
+    };
+    Settings.prototype.onChangeAnimationSpeedSetting = function (value) {
+        var duration = 2100 - value;
+        debug("onChangeAnimationSpeedSetting", duration);
+        this.game.animationManager.getSettings().duration = duration;
+    };
+    Settings.prototype.onChangeShowAnimationsSetting = function (value) {
+        if (value === PREF_ENABLED) {
+            this.game.animationManager.getSettings().duration = Number(this.settings[PREF_ANIMATION_SPEED]);
+        }
+        else {
+            this.game.animationManager.getSettings().duration = 0;
+        }
+        this.checkAnmimationSpeedVisisble();
+    };
+    Settings.prototype.changeTab = function (_a) {
+        var id = _a.id;
+        var currentTab = document.getElementById("settings_modal_tab_".concat(this.selectedTab));
+        var currentTabContent = document.getElementById("settings_modal_tab_content_".concat(this.selectedTab));
+        currentTab.removeAttribute("data-state");
+        if (currentTabContent) {
+            currentTabContent.style.display = "none";
+        }
+        this.selectedTab = id;
+        var tab = document.getElementById("settings_modal_tab_".concat(id));
+        var tabContent = document.getElementById("settings_modal_tab_content_".concat(this.selectedTab));
+        tab.setAttribute("data-state", "selected");
+        if (tabContent) {
+            tabContent.style.display = "";
+        }
+    };
+    Settings.prototype.checkAnmimationSpeedVisisble = function () {
+        var sliderNode = document.getElementById("setting_row_animationSpeed");
+        if (!sliderNode) {
+            return;
+        }
+        if (this.settings[PREF_SHOW_ANIMATIONS] === PREF_ENABLED) {
+            sliderNode.style.display = "";
+        }
+        else {
+            sliderNode.style.display = "none";
+        }
+    };
+    Settings.prototype.checkColumnSizesVisisble = function () {
+        var sliderNode = document.getElementById("setting_row_columnSizes");
+        if (!sliderNode) {
+            return;
+        }
+        if (this.settings["twoColumnsLayout"] === PREF_ENABLED) {
+            sliderNode.style.display = "";
+        }
+        else {
+            sliderNode.style.display = "none";
+        }
+    };
+    Settings.prototype.getMethodName = function (_a) {
+        var id = _a.id;
+        return "onChange".concat(this.getSuffix({ id: id }), "Setting");
+    };
+    Settings.prototype.get = function (_a) {
+        var id = _a.id;
+        return this.settings[id] || null;
+    };
+    Settings.prototype.getSuffix = function (_a) {
+        var id = _a.id;
+        return id.charAt(0).toUpperCase() + id.slice(1);
+    };
+    Settings.prototype.getLocalStorageKey = function (_a) {
+        var id = _a.id;
+        return "".concat(this.game.framework().game_name, "-").concat(this.getSuffix({ id: id }));
+    };
+    Settings.prototype.open = function () {
+        this.modal.show();
+    };
+    return Settings;
+}());
+var tplSettingsButton = function () {
+    return "<div id=\"show_settings\">\n  <svg  xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 640 512\">\n    <g>\n      <path class=\"fa-secondary\" fill=\"currentColor\" d=\"M638.41 387a12.34 12.34 0 0 0-12.2-10.3h-16.5a86.33 86.33 0 0 0-15.9-27.4L602 335a12.42 12.42 0 0 0-2.8-15.7 110.5 110.5 0 0 0-32.1-18.6 12.36 12.36 0 0 0-15.1 5.4l-8.2 14.3a88.86 88.86 0 0 0-31.7 0l-8.2-14.3a12.36 12.36 0 0 0-15.1-5.4 111.83 111.83 0 0 0-32.1 18.6 12.3 12.3 0 0 0-2.8 15.7l8.2 14.3a86.33 86.33 0 0 0-15.9 27.4h-16.5a12.43 12.43 0 0 0-12.2 10.4 112.66 112.66 0 0 0 0 37.1 12.34 12.34 0 0 0 12.2 10.3h16.5a86.33 86.33 0 0 0 15.9 27.4l-8.2 14.3a12.42 12.42 0 0 0 2.8 15.7 110.5 110.5 0 0 0 32.1 18.6 12.36 12.36 0 0 0 15.1-5.4l8.2-14.3a88.86 88.86 0 0 0 31.7 0l8.2 14.3a12.36 12.36 0 0 0 15.1 5.4 111.83 111.83 0 0 0 32.1-18.6 12.3 12.3 0 0 0 2.8-15.7l-8.2-14.3a86.33 86.33 0 0 0 15.9-27.4h16.5a12.43 12.43 0 0 0 12.2-10.4 112.66 112.66 0 0 0 .01-37.1zm-136.8 44.9c-29.6-38.5 14.3-82.4 52.8-52.8 29.59 38.49-14.3 82.39-52.8 52.79zm136.8-343.8a12.34 12.34 0 0 0-12.2-10.3h-16.5a86.33 86.33 0 0 0-15.9-27.4l8.2-14.3a12.42 12.42 0 0 0-2.8-15.7 110.5 110.5 0 0 0-32.1-18.6A12.36 12.36 0 0 0 552 7.19l-8.2 14.3a88.86 88.86 0 0 0-31.7 0l-8.2-14.3a12.36 12.36 0 0 0-15.1-5.4 111.83 111.83 0 0 0-32.1 18.6 12.3 12.3 0 0 0-2.8 15.7l8.2 14.3a86.33 86.33 0 0 0-15.9 27.4h-16.5a12.43 12.43 0 0 0-12.2 10.4 112.66 112.66 0 0 0 0 37.1 12.34 12.34 0 0 0 12.2 10.3h16.5a86.33 86.33 0 0 0 15.9 27.4l-8.2 14.3a12.42 12.42 0 0 0 2.8 15.7 110.5 110.5 0 0 0 32.1 18.6 12.36 12.36 0 0 0 15.1-5.4l8.2-14.3a88.86 88.86 0 0 0 31.7 0l8.2 14.3a12.36 12.36 0 0 0 15.1 5.4 111.83 111.83 0 0 0 32.1-18.6 12.3 12.3 0 0 0 2.8-15.7l-8.2-14.3a86.33 86.33 0 0 0 15.9-27.4h16.5a12.43 12.43 0 0 0 12.2-10.4 112.66 112.66 0 0 0 .01-37.1zm-136.8 45c-29.6-38.5 14.3-82.5 52.8-52.8 29.59 38.49-14.3 82.39-52.8 52.79z\" opacity=\"0.4\"></path>\n      <path class=\"fa-primary\" fill=\"currentColor\" d=\"M420 303.79L386.31 287a173.78 173.78 0 0 0 0-63.5l33.7-16.8c10.1-5.9 14-18.2 10-29.1-8.9-24.2-25.9-46.4-42.1-65.8a23.93 23.93 0 0 0-30.3-5.3l-29.1 16.8a173.66 173.66 0 0 0-54.9-31.7V58a24 24 0 0 0-20-23.6 228.06 228.06 0 0 0-76 .1A23.82 23.82 0 0 0 158 58v33.7a171.78 171.78 0 0 0-54.9 31.7L74 106.59a23.91 23.91 0 0 0-30.3 5.3c-16.2 19.4-33.3 41.6-42.2 65.8a23.84 23.84 0 0 0 10.5 29l33.3 16.9a173.24 173.24 0 0 0 0 63.4L12 303.79a24.13 24.13 0 0 0-10.5 29.1c8.9 24.1 26 46.3 42.2 65.7a23.93 23.93 0 0 0 30.3 5.3l29.1-16.7a173.66 173.66 0 0 0 54.9 31.7v33.6a24 24 0 0 0 20 23.6 224.88 224.88 0 0 0 75.9 0 23.93 23.93 0 0 0 19.7-23.6v-33.6a171.78 171.78 0 0 0 54.9-31.7l29.1 16.8a23.91 23.91 0 0 0 30.3-5.3c16.2-19.4 33.7-41.6 42.6-65.8a24 24 0 0 0-10.5-29.1zm-151.3 4.3c-77 59.2-164.9-28.7-105.7-105.7 77-59.2 164.91 28.7 105.71 105.7z\"></path>\n    </g>\n  </svg>\n</div>";
+};
+var tplPlayerPrefenceSelectRow = function (_a) {
+    var setting = _a.setting, currentValue = _a.currentValue, _b = _a.visible, visible = _b === void 0 ? true : _b;
+    var values = setting.options
+        .map(function (option) {
+        return "<option value='".concat(option.value, "' ").concat(option.value === currentValue ? 'selected="selected"' : "", ">").concat(_(option.label), "</option>");
+    })
+        .join("");
+    return "\n    <div id=\"setting_row_".concat(setting.id, "\" class=\"player_preference_row\"").concat(!visible ? " style=\"display: none;\"" : '', ">\n      <div class=\"player_preference_row_label\">").concat(_(setting.label), "</div>\n      <div class=\"player_preference_row_value\">\n        <select id=\"setting_").concat(setting.id, "\" class=\"\" style=\"display: block;\">\n        ").concat(values, "\n        </select>\n      </div>\n    </div>\n  ");
+};
+var tplSettingsModalTabContent = function (_a) {
+    var id = _a.id;
+    return "\n  <div id=\"settings_modal_tab_content_".concat(id, "\" style=\"display: none;\"></div>");
+};
+var tplSettingsModalTab = function (_a) {
+    var id = _a.id, name = _a.name;
+    return "\n  <div id=\"settings_modal_tab_".concat(id, "\" class=\"settings_modal_tab\">\n    <span>").concat(_(name), "</span>\n  </div>");
+};
+var tplSettingsModalContent = function (_a) {
+    var tabs = _a.tabs;
+    return "<div id=\"setting_modal_content\">\n    <div class=\"settings_modal_tabs\">\n  ".concat(tabs
+        .map(function (_a) {
+        var id = _a.id, name = _a.name;
+        return tplSettingsModalTab({ id: id, name: name });
+    })
+        .join(""), "\n    </div>\n  </div>");
+};
+var tplPlayerPrefenceSliderRow = function (_a) {
+    var label = _a.label, id = _a.id, _b = _a.visible, visible = _b === void 0 ? true : _b;
+    return "\n  <div id=\"setting_row_".concat(id, "\" class=\"player_preference_row\"").concat(!visible ? " style=\"display: none;\"" : '', ">\n    <div class=\"player_preference_row_label\">").concat(_(label), "</div>\n    <div class=\"player_preference_row_value slider\">\n      <div id=\"setting_").concat(id, "\"></div>\n    </div>\n  </div>\n  ");
 };
 var tplCardTooltipContainer = function (_a) {
     var card = _a.card, content = _a.content;

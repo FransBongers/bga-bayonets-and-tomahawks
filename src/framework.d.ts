@@ -30,13 +30,16 @@ interface Framework {
   ) => void;
   attachToNewParent: (mobile_obj: string | Element, target_obj: string | Element) => void;
   checkAction: (action: string) => boolean;
+  dontPreloadImage: (filename: string) => void;
   format_block: (jstpl: string, args: Record<string, unknown>) => string;
   game_name: string;
   isCurrentPlayerActive: () => boolean;
+  isInterfaceLocked: () => boolean; // Where does this come from? Cannot see with console.log but returns value
   isLoadingComplete: boolean;
   inherited(args: any); // TODO: check what this does?
+  next_log_id: string; // actually a number?
   notifqueue: {
-    next_log_id: string;
+    next_log_id: string; // actually a number?
     setSynchronous: (notifId: string, waitMilliSeconds: number) => void;
     onSynchronousNotificationEnd: () => void;
   };

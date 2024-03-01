@@ -16,17 +16,38 @@
 @use "sass:math";
 @use 'base';
 @use 'game-map/gamemap';
+@use "info-panel/infoPanel";
 @use 'pools/pools';
 @use 'counters';
+@use "settings/settingsModal";
+@use "nouislider";
 
 html {
   background: url("") rgb(192, 192, 192);
 }
 
-#bt_play_area {  
-  transform-origin: top left;
-  // height: fit-content;
+#play_area_container {  
+  padding: 4px;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 8px;
+}
+
+/* make space between buttons on touch devices */
+@media (hover: none) {
+  #page-title .action-button.bgabutton, #page-title .bgabutton {
+    margin-bottom: 8px;
+    margin-top: 8px;
+  }
+}
+
+#play_area_container[data-two-columns="disabled"] {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: column;
+  align-items: center;
+}
+
+/* Hide the "You may note something for next time..." popup that would appear. */
+#turnBasedNotesIncent {
+  display: none;
 }

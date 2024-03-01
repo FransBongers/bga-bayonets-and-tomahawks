@@ -39,34 +39,38 @@
 
 #bt_game_map {
   background-image: url("img/map.webp");
-  background-size: 1500px 2318px;
+  background-size: calc(var(--leftColumnScale) * 1500px) calc(var(--leftColumnScale) * 2318px);
   background-repeat: no-repeat;
   position: relative;
-  height: 2318px;
-  width: 1500px;
+  height: calc(var(--leftColumnScale) * 2318px);
+  width: calc(var(--leftColumnScale) * 1500px);
   box-shadow: 1px 1px 5px #000;
-  transform-origin: top left;
-}
-
-.bt_game_map_zoom_buttons {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 56px;
+  --btMapScale: var(--leftColumnScale);
+  --btTokenScale: var(--leftColumnScale);
 }
 
 .bt_space {
   position: absolute;
-  width: 52px;
-  height: 52px;
+  border-radius: 50%;
+  height: calc(var(--btMapScale) * 52px);
+  width: calc(var(--btMapScale) * 52px);
+}
+
+#info_panel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
 }
 
 #bt_pools_container {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  padding: 4px;
+  gap: 8px;
   flex-grow: 1;
+  --btPoolScale: var(--rightColumnScale);
+  --btTokenScale: 1;
 }
 
 .bt_unit_pool_container {
@@ -75,7 +79,7 @@
   max-width: 400px;
   background-color: ivory;
   padding: 4px;
-  margin: 4px;
+  box-shadow: 1px 1px 5px #000;
 }
 
 .bt_unit_pool {
@@ -89,8 +93,8 @@
 }
 
 .bt_token {
-  width: 52px;
-  height: 52px;
+  height: calc(var(--btTokenScale) * 52px);
+  width: calc(var(--btTokenScale) * 52px);
   position: absolute;
   z-index: 1;
 }
@@ -1866,30 +1870,10 @@
   background-size: 1200% 700%;
 }
 
-.bt_token[data-unit-type=bastion] {
-  background-position-x: 63.6363636364%;
-  background-position-y: 0%;
-  top: 290px;
-  left: 992px;
-}
-
-.bt_token[data-unit-type=pouchot] {
-  background-position-x: 45.4545454545%;
-  background-position-y: 16.6666666667%;
-}
-
-.bt_token[data-unit-type=micmac] {
-  background-position-x: 100%;
-  background-position-y: 50%;
-  top: 469px;
-  left: 700px;
-  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
-}
-
 .bt_marker {
   background-image: url("img/markers_2.webp");
-  width: 37px;
-  height: 37px;
+  height: calc(var(--btMapScale) * 37px);
+  width: calc(var(--btMapScale) * 37px);
   background-size: 800% 600%;
   position: absolute;
 }
@@ -1897,23 +1881,497 @@
 .bt_marker[data-marker-type=victory_point] {
   background-position-x: 71.4285714286%;
   background-position-y: 60%;
-  top: 26px;
-  left: 570px;
+  top: calc(var(--btMapScale) * 26px);
+  left: calc(var(--btMapScale) * 570px);
   border-width: 2px;
   border-style: solid;
   border-color: #f5f5f5 #d8d8d8 #d8d8d8 #f5f5f5;
   box-shadow: 0 0 0 1px #707070;
 }
 
+#show_settings {
+  height: 40px;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+#show_settings:hover {
+  color: grey;
+}
+#show_settings svg {
+  width: auto;
+  height: 40px;
+}
+
+#show_settings .fa-primary {
+  transform-origin: 216px 255px;
+  transition: transform 1s;
+}
+#show_settings:hover .fa-primary {
+  transform: rotate(180deg);
+}
+
+#popin_settings_modal_underlay {
+  background-color: #000 !important;
+}
+
+.settings_modal {
+  background-color: white;
+  background-size: cover;
+  border-radius: 8px;
+  box-shadow: rgb(0, 0, 0) 1px 1px 5px;
+  border: 1px solid black;
+  position: fixed;
+  top: 15vh;
+  min-width: 600px;
+}
+.settings_modal .settings_modal_closeicon {
+  background-color: #a47a77;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  font-size: 90%;
+  color: white !important;
+  border: 1px solid #dfbda8;
+  cursor: pointer;
+}
+.settings_modal .settings_modal_closeicon:hover {
+  text-decoration: none;
+  color: #ccc !important;
+  transform: scale(1.1);
+}
+.settings_modal .settings_modal_closeicon i {
+  margin-top: -2px;
+}
+.settings_modal h2 {
+  text-align: center;
+  font-size: large;
+  font-weight: bold;
+  margin: 0px;
+  padding: 7px 0px;
+  border-bottom: 1px solid black;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: rgba(248, 248, 248, 0.5);
+}
+.settings_modal #setting_modal_content {
+  min-height: 300px;
+}
+.settings_modal #setting_modal_content .settings_modal_tabs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+.settings_modal #setting_modal_content .settings_modal_tabs .settings_modal_tab {
+  flex-grow: 1;
+  width: 50%;
+  background-color: rgba(30, 20, 17, 0.5);
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
+  border-radius: 1px solid black;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.settings_modal #setting_modal_content .settings_modal_tabs .settings_modal_tab span {
+  font-weight: bold;
+  font-size: large;
+  text-align: center;
+}
+.settings_modal #setting_modal_content .settings_modal_tabs .settings_modal_tab:first-child {
+  border-left: none;
+}
+.settings_modal #setting_modal_content .settings_modal_tabs .settings_modal_tab:last-child {
+  border-right: none;
+}
+.settings_modal #setting_modal_content .settings_modal_tabs .settings_modal_tab[data-state=selected] {
+  background-color: transparent;
+  border-bottom: none;
+  cursor: auto;
+}
+.settings_modal #setting_modal_content .player_preference_row {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 4px;
+  margin-top: 4px;
+}
+.settings_modal #setting_modal_content .player_preference_row .player_preference_row_label {
+  flex-grow: 1;
+  text-align: center;
+  align-self: center;
+  font-weight: 400;
+}
+.settings_modal #setting_modal_content .player_preference_row .player_preference_row_value {
+  box-sizing: border-box;
+  padding: 8px 20px;
+  width: 250px;
+}
+.settings_modal #setting_modal_content .player_preference_row .player_preference_row_value select {
+  width: 100%;
+}
+.settings_modal .reserve {
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/*! nouislider - 14.6.0 - 6/27/2020 */
+.noUi-target, .noUi-target * {
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -ms-touch-action: none;
+  touch-action: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.noUi-target {
+  position: relative;
+}
+
+.noUi-base, .noUi-connects {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.noUi-connects {
+  overflow: hidden;
+  z-index: 0;
+}
+
+.noUi-connect, .noUi-origin {
+  will-change: transform;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  -ms-transform-origin: 0 0;
+  -webkit-transform-origin: 0 0;
+  -webkit-transform-style: preserve-3d;
+  transform-origin: 0 0;
+  transform-style: flat;
+}
+
+.noUi-connect {
+  height: 100%;
+  width: 100%;
+}
+
+.noUi-origin {
+  height: 10%;
+  width: 10%;
+}
+
+.noUi-txt-dir-rtl.noUi-horizontal .noUi-origin {
+  left: 0;
+  right: auto;
+}
+
+.noUi-vertical .noUi-origin {
+  width: 0;
+}
+
+.noUi-horizontal .noUi-origin {
+  height: 0;
+}
+
+.noUi-handle {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  position: absolute;
+}
+
+.noUi-touch-area {
+  height: 100%;
+  width: 100%;
+}
+
+.noUi-state-tap .noUi-connect, .noUi-state-tap .noUi-origin {
+  -webkit-transition: transform 0.3s;
+  transition: transform 0.3s;
+}
+
+.noUi-state-drag * {
+  cursor: inherit !important;
+}
+
+.noUi-horizontal {
+  height: 18px;
+}
+
+.noUi-horizontal .noUi-handle {
+  width: 34px;
+  height: 28px;
+  right: -17px;
+  top: -6px;
+}
+
+.noUi-vertical {
+  width: 18px;
+}
+
+.noUi-vertical .noUi-handle {
+  width: 28px;
+  height: 34px;
+  right: -6px;
+  top: -17px;
+}
+
+.noUi-txt-dir-rtl.noUi-horizontal .noUi-handle {
+  left: -17px;
+  right: auto;
+}
+
+.noUi-target {
+  background: #FAFAFA;
+  border-radius: 4px;
+  border: 1px solid #D3D3D3;
+  box-shadow: inset 0 1px 1px #F0F0F0, 0 3px 6px -5px #BBB;
+}
+
+.noUi-connects {
+  border-radius: 3px;
+}
+
+.noUi-connect {
+  background: #3FB8AF;
+}
+
+.noUi-draggable {
+  cursor: ew-resize;
+}
+
+.noUi-vertical .noUi-draggable {
+  cursor: ns-resize;
+}
+
+.noUi-handle {
+  border: 1px solid #D9D9D9;
+  border-radius: 3px;
+  background: #FFF;
+  cursor: default;
+  box-shadow: inset 0 0 1px #FFF, inset 0 1px 7px #EBEBEB, 0 3px 6px -3px #BBB;
+}
+
+.noUi-active {
+  box-shadow: inset 0 0 1px #FFF, inset 0 1px 7px #DDD, 0 3px 6px -3px #BBB;
+}
+
+.noUi-handle:after, .noUi-handle:before {
+  content: "";
+  display: block;
+  position: absolute;
+  height: 14px;
+  width: 1px;
+  background: #E8E7E6;
+  left: 14px;
+  top: 6px;
+}
+
+.noUi-handle:after {
+  left: 17px;
+}
+
+.noUi-vertical .noUi-handle:after, .noUi-vertical .noUi-handle:before {
+  width: 14px;
+  height: 1px;
+  left: 6px;
+  top: 14px;
+}
+
+.noUi-vertical .noUi-handle:after {
+  top: 17px;
+}
+
+[disabled] .noUi-connect {
+  background: #B8B8B8;
+}
+
+[disabled] .noUi-handle, [disabled].noUi-handle, [disabled].noUi-target {
+  cursor: not-allowed;
+}
+
+.noUi-pips, .noUi-pips * {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.noUi-pips {
+  position: absolute;
+  color: #999;
+}
+
+.noUi-value {
+  position: absolute;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.noUi-value-sub {
+  color: #ccc;
+  font-size: 10px;
+}
+
+.noUi-marker {
+  position: absolute;
+  background: #CCC;
+}
+
+.noUi-marker-sub {
+  background: #AAA;
+}
+
+.noUi-marker-large {
+  background: #AAA;
+}
+
+.noUi-pips-horizontal {
+  padding: 10px 0;
+  height: 80px;
+  top: 100%;
+  left: 0;
+  width: 100%;
+}
+
+.noUi-value-horizontal {
+  -webkit-transform: translate(-50%, 50%);
+  transform: translate(-50%, 50%);
+}
+
+.noUi-rtl .noUi-value-horizontal {
+  -webkit-transform: translate(50%, 50%);
+  transform: translate(50%, 50%);
+}
+
+.noUi-marker-horizontal.noUi-marker {
+  margin-left: -1px;
+  width: 2px;
+  height: 5px;
+}
+
+.noUi-marker-horizontal.noUi-marker-sub {
+  height: 10px;
+}
+
+.noUi-marker-horizontal.noUi-marker-large {
+  height: 15px;
+}
+
+.noUi-pips-vertical {
+  padding: 0 10px;
+  height: 100%;
+  top: 0;
+  left: 100%;
+}
+
+.noUi-value-vertical {
+  -webkit-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  padding-left: 25px;
+}
+
+.noUi-rtl .noUi-value-vertical {
+  -webkit-transform: translate(0, 50%);
+  transform: translate(0, 50%);
+}
+
+.noUi-marker-vertical.noUi-marker {
+  width: 5px;
+  height: 2px;
+  margin-top: -1px;
+}
+
+.noUi-marker-vertical.noUi-marker-sub {
+  width: 10px;
+}
+
+.noUi-marker-vertical.noUi-marker-large {
+  width: 15px;
+}
+
+.noUi-tooltip {
+  display: block;
+  position: absolute;
+  border: 1px solid #D9D9D9;
+  border-radius: 3px;
+  background: #fff;
+  color: #000;
+  padding: 5px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.noUi-horizontal .noUi-tooltip {
+  -webkit-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
+  left: 50%;
+  bottom: 120%;
+}
+
+.noUi-vertical .noUi-tooltip {
+  -webkit-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  top: 50%;
+  right: 120%;
+}
+
+.noUi-horizontal .noUi-origin > .noUi-tooltip {
+  -webkit-transform: translate(50%, 0);
+  transform: translate(50%, 0);
+  left: auto;
+  bottom: 10px;
+}
+
+.noUi-vertical .noUi-origin > .noUi-tooltip {
+  -webkit-transform: translate(0, -18px);
+  transform: translate(0, -18px);
+  top: auto;
+  right: 28px;
+}
+
 html {
   background: url("") rgb(192, 192, 192);
 }
 
-#bt_play_area {
-  transform-origin: top left;
+#play_area_container {
+  padding: 4px;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 8px;
+}
+
+/* make space between buttons on touch devices */
+@media (hover: none) {
+  #page-title .action-button.bgabutton, #page-title .bgabutton {
+    margin-bottom: 8px;
+    margin-top: 8px;
+  }
+}
+#play_area_container[data-two-columns=disabled] {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: column;
+  align-items: center;
+}
+
+/* Hide the "You may note something for next time..." popup that would appear. */
+#turnBasedNotesIncent {
+  display: none;
 }
 
 /*# sourceMappingURL=bayonetsandtomahawks.css.map */

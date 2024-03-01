@@ -15,17 +15,32 @@
  *
  */
 
-// declare const define; // TODO: check if we comment here or in bga-animations module?
+declare const define; // TODO: check if we comment here or in bga-animations module?
 declare const ebg;
 declare const $;
 declare const dojo: Dojo;
 declare const _: (stringToTranslate: string) => string;
 declare const g_gamethemeurl;
 declare const playSound;
+declare var noUiSlider;
 
 class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public gamedatas: BayonetsAndTomahawksGamedatas;
   public animationManager: AnimationManager;
+  public infoPanel: InfoPanel;
+  public settings: Settings;
+  // Boiler plate
+  private alwaysFixTopActions: boolean;
+  private alwaysFixTopActionsMaximum: number;
+  public tooltipsToMap: [tooltipId: number, card_id: string][] = [];
+  private _helpMode = false; // Use to implement help mode
+  private _notif_uid_to_log_id = {};
+  private _notif_uid_to_mobile_log_id = {};
+  private _last_notif = null;
+  public _last_tooltip_id = 0;
+  private _selectableNodes = []; // TODO: use to keep track of selectable classed?
+  public _connections: unknown[];
+
   public gameMap: GameMap;
   // public gameOptions: BayonetsAndTomahawksGamedatas['gameOptions'];
   public notificationManager: NotificationManager;
@@ -33,10 +48,6 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public tooltipManager: TooltipManager;
   public playAreaScale: number;
   public pools: Pools;
-
-  private _notif_uid_to_log_id = {};
-  private _last_notif = null;
-  public _connections: unknown[];
 
   public activeStates: {};
 
@@ -63,11 +74,9 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       $("generalactions"),
       "after"
     );
+    // this.setAlwaysFixTopActions();
+    // this.setupDontPreloadImages();
 
-    // dojo.place('<span>Placed with ts</span>','bt_play_area')
-
-    // const playAreaWidth = document.getElementById('pp_play_area').offsetWidth;
-    // console.log('playAreaWidth',playAreaWidth);
     this.gamedatas = gamedatas;
     // this.gameOptions = gamedatas.gameOptions;
     debug("gamedatas", gamedatas);
@@ -76,17 +85,26 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     // Will store all data for active player and gets refreshed with entering player actions state
     this.activeStates = {};
 
-    this.animationManager = new AnimationManager(this, { duration: 500 });
+    this.infoPanel = new InfoPanel(this);
+    this.settings = new Settings(this);
+
+    this.animationManager = new AnimationManager(this, {
+      duration:
+        this.settings.get({ id: PREF_SHOW_ANIMATIONS }) === DISABLED
+          ? 0
+          : 2100 - (this.settings.get({ id: PREF_ANIMATION_SPEED }) as number),
+    });
+
     this.gameMap = new GameMap(this);
     this.pools = new Pools(this);
-    this.tooltipManager = new TooltipManager(this);
-    this.playerManager = new PlayerManager(this);
+    // this.tooltipManager = new TooltipManager(this);
+    // this.playerManager = new PlayerManager(this);
 
-    this.updatePlayAreaSize();
-    window.addEventListener("resize", () => {
-      this.updatePlayAreaSize();
-      // this.gameMap.updateGameMapSize();
-    });
+    // this.updatePlayAreaSize();
+    // window.addEventListener("resize", () => {
+    //   this.updatePlayAreaSize();
+    //   // this.gameMap.updateGameMapSize();
+    // });
 
     if (this.notificationManager != undefined) {
       this.notificationManager.destroy();
@@ -101,24 +119,24 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     //   this.tooltipManager.checkLogTooltip(this._last_notif);
     // });
     // this.setupNotifications();
-    this.tooltipManager.setupTooltips();
+    // this.tooltipManager.setupTooltips();
     debug("Ending game setup");
   }
 
-  public updatePlayAreaSize() {
-    const playAreaContainer = document.getElementById("bt_play_area_container");
-    this.playAreaScale = Math.min(
-      1,
-      playAreaContainer.offsetWidth / MIN_PLAY_AREA_WIDTH
-    );
-    const playArea = document.getElementById("bt_play_area");
-    playArea.style.transform = `scale(${this.playAreaScale})`;
-    const playAreaHeight = playArea.offsetHeight;
-    playArea.style.width =
-      playAreaContainer.offsetWidth / this.playAreaScale + "px";
-    console.log("playAreaHeight", playAreaHeight);
-    playAreaContainer.style.height = playAreaHeight * this.playAreaScale + "px";
-  }
+  // public updatePlayAreaSize() {
+  //   const playAreaContainer = document.getElementById("bt_play_area_container");
+  //   this.playAreaScale = Math.min(
+  //     1,
+  //     playAreaContainer.offsetWidth / MIN_PLAY_AREA_WIDTH
+  //   );
+  //   const playArea = document.getElementById("bt_play_area");
+  //   playArea.style.transform = `scale(${this.playAreaScale})`;
+  //   const playAreaHeight = playArea.offsetHeight;
+  //   playArea.style.width =
+  //     playAreaContainer.offsetWidth / this.playAreaScale + "px";
+  //   console.log("playAreaHeight", playAreaHeight);
+  //   playAreaContainer.style.height = playAreaHeight * this.playAreaScale + "px";
+  // }
 
   //  .####.##....##.########.########.########.....###.....######..########.####..#######..##....##
   //  ..##..###...##....##....##.......##.....##...##.##...##....##....##.....##..##.....##.###...##
@@ -360,6 +378,91 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     );
     this.framework().updatePageTitle();
   }
+  // .########...#######..####.##.......########.########.
+  // .##.....##.##.....##..##..##.......##.......##.....##
+  // .##.....##.##.....##..##..##.......##.......##.....##
+  // .########..##.....##..##..##.......######...########.
+  // .##.....##.##.....##..##..##.......##.......##...##..
+  // .##.....##.##.....##..##..##.......##.......##....##.
+  // .########...#######..####.########.########.##.....##
+
+  // .########..##..........###....########.########
+  // .##.....##.##.........##.##......##....##......
+  // .##.....##.##........##...##.....##....##......
+  // .########..##.......##.....##....##....######..
+  // .##........##.......#########....##....##......
+  // .##........##.......##.....##....##....##......
+  // .##........########.##.....##....##....########
+
+  /*
+   * Custom connect that keep track of all the connections
+   *  and wrap clicks to make it work with help mode
+   */
+  connect(node: HTMLElement, action: string, callback: Function) {
+    this._connections.push(dojo.connect($(node), action, callback));
+  }
+
+  onClick(node: HTMLElement, callback: Function, temporary = true) {
+    let safeCallback = (evt) => {
+      evt.stopPropagation();
+      if (this.framework().isInterfaceLocked()) {
+        return false;
+      }
+      if (this._helpMode) {
+        return false;
+      }
+      callback(evt);
+    };
+
+    if (temporary) {
+      this.connect($(node), "click", safeCallback);
+      dojo.removeClass(node, "unselectable"); // replace with pr_selectable / pr_selected
+      dojo.addClass(node, "selectable");
+      this._selectableNodes.push(node);
+    } else {
+      dojo.connect($(node), "click", safeCallback);
+    }
+  }
+
+  public updateLayout() {
+    if (!this.settings) {
+      return;
+    }
+
+    $("play_area_container").setAttribute(
+      "data-two-columns",
+      this.settings.get({ id: "twoColumnsLayout" })
+    );
+
+    const ROOT = document.documentElement;
+    let WIDTH = $("play_area_container").getBoundingClientRect()["width"] - 8;
+    const LEFT_COLUMN = 1500;
+    const RIGHT_COLUMN = 1500;
+
+    if (this.settings.get({ id: "twoColumnsLayout" }) === PREF_ENABLED) {
+      WIDTH = WIDTH - 8; // grid gap
+      const size = Number(this.settings.get({ id: "columnSizes" }));
+      const proportions = [size, 100 - size];
+      const LEFT_SIZE = (proportions[0] * WIDTH) / 100;
+      const leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
+      ROOT.style.setProperty("--leftColumnScale", `${leftColumnScale}`);
+
+      const RIGHT_SIZE = (proportions[1] * WIDTH) / 100;
+      const rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
+      ROOT.style.setProperty("--rightColumnScale", `${rightColumnScale}`);
+
+      $(
+        "play_area_container"
+      ).style.gridTemplateColumns = `${LEFT_SIZE}px ${RIGHT_SIZE}px`;
+    } else {
+      const LEFT_SIZE = WIDTH;
+      const leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
+      ROOT.style.setProperty("--leftColumnScale", `${leftColumnScale}`);
+      const RIGHT_SIZE = WIDTH;
+      const rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
+      ROOT.style.setProperty("--leftColumnScale", `${rightColumnScale}`);
+    }
+  }
 
   // .########.########.....###....##.....##.########.##......##..#######..########..##....##
   // .##.......##.....##...##.##...###...###.##.......##..##..##.##.....##.##.....##.##...##.
@@ -376,6 +479,13 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   // .##.....##..##...##..##.......##...##...##...##....##..##.....##.##.............##
   // .##.....##...##.##...##.......##....##..##....##...##..##.....##.##.......##....##
   // ..#######.....###....########.##.....##.##.....##.####.########..########..######.
+
+  /*
+   * Remove non standard zoom property
+   */
+  onScreenWidthChange() {
+    this.updateLayout();
+  }
 
   /* @Override */
   format_string_recursive(log: string, args: Record<string, unknown>): string {
@@ -472,6 +582,53 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   onLoadingComplete() {
     // debug('Loading complete');
     this.cancelLogs(this.gamedatas.canceledNotifIds);
+  }
+
+  /* @Override */
+  updatePlayerOrdering() {
+    this.framework().inherited(arguments);
+
+    const container = document.getElementById("player_boards");
+    const infoPanel = document.getElementById("info_panel");
+    if (!container) {
+      return;
+    }
+    container.insertAdjacentElement("afterbegin", infoPanel);
+  }
+
+  setAlwaysFixTopActions(alwaysFixed = true, maximum = 30) {
+    this.alwaysFixTopActions = alwaysFixed;
+    this.alwaysFixTopActionsMaximum = maximum;
+    this.adaptStatusBar();
+  }
+
+  adaptStatusBar() {
+    (this as any).inherited(arguments);
+
+    if (this.alwaysFixTopActions) {
+      const afterTitleElem = document.getElementById("after-page-title");
+      const titleElem = document.getElementById("page-title");
+      let zoom = (getComputedStyle(titleElem) as any).zoom;
+      if (!zoom) {
+        zoom = 1;
+      }
+
+      const titleRect = afterTitleElem.getBoundingClientRect();
+      if (
+        titleRect.top < 0 &&
+        titleElem.offsetHeight <
+          (window.innerHeight * this.alwaysFixTopActionsMaximum) / 100
+      ) {
+        const afterTitleRect = afterTitleElem.getBoundingClientRect();
+        titleElem.classList.add("fixed-page-title");
+        titleElem.style.width = (afterTitleRect.width - 10) / zoom + "px";
+        afterTitleElem.style.height = titleRect.height + "px";
+      } else {
+        titleElem.classList.remove("fixed-page-title");
+        titleElem.style.width = "auto";
+        afterTitleElem.style.height = "0px";
+      }
+    }
   }
 
   // .########..#######......######..##.....##.########..######..##....##

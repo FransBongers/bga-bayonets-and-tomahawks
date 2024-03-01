@@ -3,8 +3,11 @@
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  padding: 4px;
+  // padding: 4px;
+  gap: 8px;
   flex-grow: 1;
+  --btPoolScale: var(--rightColumnScale);
+  --btTokenScale: 1;//var(--btPoolScale);
 }
 
 .bt_unit_pool_container {
@@ -13,7 +16,8 @@
   max-width: 400px;
   background-color: ivory;
   padding: 4px;
-  margin: 4px;
+  // margin: 4px;
+  box-shadow: 1px 1px 5px #000;
 }
 
 .bt_unit_pool {
