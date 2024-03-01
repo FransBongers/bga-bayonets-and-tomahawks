@@ -1,8 +1,6 @@
 <?php
 namespace BayonetsAndTomahawks\Helpers;
 
-use BayonetsAndTomahawks\Core\Notifications;
-
 class QueryBuilder extends \APP_DbObject
 {
   private $table,
@@ -71,7 +69,7 @@ class QueryBuilder extends \APP_DbObject
         "SELECT `AUTO_INCREMENT` FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{$this->table}';"
       );
     }
-    // Notifications::log('rom',$rom);
+
     $ids = [];
     $vals = [];
     foreach ($rows as $row) {
@@ -387,9 +385,9 @@ class QueryBuilder extends \APP_DbObject
   }
 
   // Syntaxic sugar
-  public function wherePlayer($pId)
+  public function wherePlayer($playerId)
   {
-    return $pId == null ? $this : $this->where('player_id', $pId);
+    return $playerId == null ? $this : $this->where('player_id', $playerId);
   }
 
   /*

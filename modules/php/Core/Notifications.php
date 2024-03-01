@@ -4,9 +4,21 @@ namespace BayonetsAndTomahawks\Core;
 
 class Notifications
 {
-  /*************************
-   **** GENERIC METHODS ****
-   *************************/
+  // .########...#######..####.##.......########.########.
+  // .##.....##.##.....##..##..##.......##.......##.....##
+  // .##.....##.##.....##..##..##.......##.......##.....##
+  // .########..##.....##..##..##.......######...########.
+  // .##.....##.##.....##..##..##.......##.......##...##..
+  // .##.....##.##.....##..##..##.......##.......##....##.
+  // .########...#######..####.########.########.##.....##
+
+  // .########..##..........###....########.########
+  // .##.....##.##.........##.##......##....##......
+  // .##.....##.##........##...##.....##....##......
+  // .########..##.......##.....##....##....######..
+  // .##........##.......#########....##....##......
+  // .##........##.......##.....##....##....##......
+  // .##........########.##.....##....##....########
   protected static function notifyAll($name, $msg, $data)
   {
     self::updateArgs($data);
@@ -15,9 +27,9 @@ class Notifications
 
   protected static function notify($player, $name, $msg, $data)
   {
-    $pId = is_int($player) ? $player : $player->getId();
+    $playerId = is_int($player) ? $player : $player->getId();
     self::updateArgs($data);
-    Game::get()->notifyPlayer($pId, $name, $msg, $data);
+    Game::get()->notifyPlayer($playerId, $name, $msg, $data);
   }
 
   public static function message($txt, $args = [])
@@ -27,41 +39,35 @@ class Notifications
 
   public static function messageTo($player, $txt, $args = [])
   {
-    $pId = is_int($player) ? $player : $player->getId();
-    self::notify($pId, 'message', $txt, $args);
+    $playerId = is_int($player) ? $player : $player->getId();
+    self::notify($playerId, 'message', $txt, $args);
   }
 
-  public static function refreshInterface($data)
+  // TODO: check how to handle this in game log
+  public static function newUndoableStep($player, $stepId)
   {
-    self::notifyAll('refreshInterface', '', $data);
+    self::notify($player, 'newUndoableStep', clienttranslate('Undo to here'), [
+      'stepId' => $stepId,
+      'preserve' => ['stepId'],
+    ]);
   }
-
-  public static function smallRefreshInterface($data)
-  {
-    self::notifyAll('smallRefreshInterface', '', $data);
-  }
-
-  // public static function smallRefreshHand($player)
-  // {
-  //   $playerDatas = $player->jsonSerialize($player->getId());
-  //   if (Globals::getOpenHands()) {
-  //     self::notifyAll('smallRefreshHand', '', [
-  //       'playerId' => $player->getId(),
-  //       'hand' => $playerDatas['hand'],
-  //     ]);
-  //   } else {
-  //     self::notify($player, 'smallRefreshHand', '', [
-  //       'playerId' => $player->getId(),
-  //       'hand' => $playerDatas['hand'],
-  //     ]);
-  //   }
-  // }
 
   public static function clearTurn($player, $notifIds)
   {
-    self::notifyAll('clearTurn', clienttranslate('${tkn_playerName} restarts his turn'), [
+    self::notifyAll('clearTurn', clienttranslate('${tkn_playerName} restarts their turn'), [
       'player' => $player,
       'notifIds' => $notifIds,
+    ]);
+  }
+
+  public static function refreshHand($player, $hand)
+  {
+    // foreach ($hand as &$card) {
+    //   $card = self::filterCardDatas($card);
+    // }
+    self::notify($player, 'refreshHand', '', [
+      'player' => $player,
+      'hand' => $hand,
     ]);
   }
 
@@ -72,8 +78,11 @@ class Notifications
       // Add data here that needs to be refreshed
     ];
 
+    unset($datas['staticData']);
+
     self::notifyAll('refreshUI', '', [
-      'datas' => $fDatas,
+      // 'datas' => $fDatas,
+      'datas' => $datas,
     ]);
   }
 
@@ -90,15 +99,22 @@ class Notifications
     ]);
   }
 
-  /*************************
-   **** GAME METHODS ****
-   *************************/
+  // .##.....##.########..########.....###....########.########
+  // .##.....##.##.....##.##.....##...##.##......##....##......
+  // .##.....##.##.....##.##.....##..##...##.....##....##......
+  // .##.....##.########..##.....##.##.....##....##....######..
+  // .##.....##.##........##.....##.#########....##....##......
+  // .##.....##.##........##.....##.##.....##....##....##......
+  // ..#######..##........########..##.....##....##....########
 
+  // ....###....########...######....######.
+  // ...##.##...##.....##.##....##..##....##
+  // ..##...##..##.....##.##........##......
+  // .##.....##.########..##...####..######.
+  // .#########.##...##...##....##........##
+  // .##.....##.##....##..##....##..##....##
+  // .##.....##.##.....##..######....######.
 
-
-  /*********************
-   **** UPDATE ARGS ****
-   *********************/
   /*
    * Automatically adds some standard field about player and/or card
    */
@@ -110,23 +126,22 @@ class Notifications
       $args['playerId'] = $args['player']->getId();
       unset($args['player']);
     }
-    // if (isset($args['card'])) {
-    //   $c = isset($args['card']) ? $args['card'] : $args['task'];
-    //
-    //   $args['value'] = $c['value'];
-    //   $args['value_symbol'] = $c['value']; // The substitution will be done in JS format_string_recursive function
-    //   $args['color'] = $c['color'];
-    //   $args['color_symbol'] = $c['color']; // The substitution will be done in JS format_string_recursive function
-    // }
-
-    // if (isset($args['task'])) {
-    //   $c = $args['task'];
-    //   $args['task_desc'] = $c->getText();
-    //   $args['i18n'][] = 'task_desc';
-    //
-    //   if (isset($args['player_id'])) {
-    //     $args['task'] = $args['task']->jsonSerialize($args['task']->getPId() == $args['player_id']);
-    //   }
-    // }
   }
+
+  // ..######......###....##.....##.########
+  // .##....##....##.##...###...###.##......
+  // .##.........##...##..####.####.##......
+  // .##...####.##.....##.##.###.##.######..
+  // .##....##..#########.##.....##.##......
+  // .##....##..##.....##.##.....##.##......
+  // ..######...##.....##.##.....##.########
+
+  // .##.....##.########.########.##.....##..#######..########...######.
+  // .###...###.##..........##....##.....##.##.....##.##.....##.##....##
+  // .####.####.##..........##....##.....##.##.....##.##.....##.##......
+  // .##.###.##.######......##....#########.##.....##.##.....##..######.
+  // .##.....##.##..........##....##.....##.##.....##.##.....##.......##
+  // .##.....##.##..........##....##.....##.##.....##.##.....##.##....##
+  // .##.....##.########....##....##.....##..#######..########...######.
+
 }

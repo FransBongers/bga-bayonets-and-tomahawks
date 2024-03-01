@@ -3,6 +3,10 @@
 namespace BayonetsAndTomahawks\Managers;
 
 use BayonetsAndTomahawks\Core\Game;
+use BayonetsAndTomahawks\Core\Globals;
+use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\PlayersExtra;
 
 /*
  * Players manager : allows to easily access players ...
@@ -20,6 +24,7 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
 
   public static function setupNewGame($players, $options)
   {
+    // Globals::setPlayers($players);
     // Create players
     $gameInfos = Game::get()->getGameinfos();
     $colors = $gameInfos['player_colors'];
@@ -34,15 +39,16 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
     ]);
 
     $values = [];
-    foreach ($players as $pId => $player) {
+    foreach ($players as $playerId => $player) {
       $color = array_shift($colors);
-      $values[] = [$pId, $color, $player['player_canal'], $player['player_name'], $player['player_avatar'],0];
+      $values[] = [$playerId, $color, $player['player_canal'], $player['player_name'], $player['player_avatar'], 0];
     }
 
     $query->values($values);
 
-    Game::get()->reattributeColorsBasedOnPreferences($players, $gameInfos['player_colors']);
+    // Game::get()->reattributeColorsBasedOnPreferences($players, $gameInfos['player_colors']);
     Game::get()->reloadPlayersBasicInfos();
+    // PlayersExtra::setupNewGame();
   }
 
   public static function getActiveId()
@@ -64,49 +70,35 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
   /*
    * get : returns the Player object for the given player ID
    */
-  public static function get($pId = null)
+  public static function get($playerId = null)
   {
-    $pId = $pId ?: self::getActiveId();
+    $playerId = $playerId ?: self::getActiveId();
     return self::DB()
-      ->where($pId)
+      ->where($playerId)
       ->getSingle();
   }
 
-  /*
-   * Workaroud function since db calls from Player model don't seem to be logged
-   * TODO: check if we can handle it from Player model
-   */
-  // public static function incRupees($pId, $increment)
-  // {
-  //   $value = self::get($pId)->getRupees() + $increment;
-  //   return self::DB()->update(['rupees' => $value], $pId);
-  // }
-
-  public static function incScore($pId, $increment)
+  public static function incScore($playerId, $increment)
   {
-    $value = self::get($pId)->getScore() + $increment;
-    return self::DB()->update(['player_score' => $value], $pId);
+    $value = self::get($playerId)->getScore() + $increment;
+    return self::DB()->update(['player_score' => $value], $playerId);
   }
 
-  public static function setPlayerScoreAux($pId, $value)
+  public static function setPlayerScoreAux($playerId, $value)
   {
-    return self::DB()->update(['player_score_aux' => $value], $pId);
+    return self::DB()->update(['player_score_aux' => $value], $playerId);
   }
 
-  public static function setPlayerScore($pId, $value)
+  public static function setPlayerScore($playerId, $value)
   {
-    return self::DB()->update(['player_score' => $value], $pId);
+    return self::DB()->update(['player_score' => $value], $playerId);
   }
 
-  // public static function setLoyalty($pId, $coalition)
-  // {
-  //   return self::DB()->update(['loyalty' => $coalition], $pId);
-  // }
 
-  public function getMany($pIds)
+  public function getMany($playerIds)
   {
     $players = self::DB()
-      ->whereIn($pIds)
+      ->whereIn($playerIds)
       ->get();
     return $players;
   }
@@ -123,20 +115,20 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
 
   public function getNextId($player)
   {
-    $pId = is_int($player) ? $player : $player->getId();
+    $playerId = is_int($player) ? $player : $player->getId();
 
     $table = Game::get()->getNextPlayerTable();
-    return (int) $table[$pId];
+    return (int) $table[$playerId];
   }
 
   public function getPrevId($player)
   {
-    $pId = is_int($player) ? $player : $player->getId();
+    $playerId = is_int($player) ? $player : $player->getId();
 
     $table = Game::get()->getPrevPlayerTable();
-    $pId = (int) $table[$pId];
+    $playerId = (int) $table[$playerId];
 
-    return $pId;
+    return $playerId;
   }
 
   /*
@@ -150,11 +142,38 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
   /*
    * getUiData : get all ui data of all players
    */
-  public static function getUiData($pId)
+  public static function getUiData($playerId)
   {
-    return self::getAll()->map(function ($player) use ($pId) {
-      return $player->jsonSerialize($pId);
+    return self::getAll()->map(function ($player) use ($playerId) {
+      return $player->jsonSerialize($playerId);
     });
+  }
+
+  public static function getPlayerOrder()
+  {
+    $players = self::getAll()->toArray();
+    usort($players, function ($a, $b) {
+      return $a->getNo() - $b->getNo();
+    });
+    $playerOrder = array_map(function ($player) {
+      return $player->getId();
+    }, $players);
+    return $playerOrder;
+  }
+
+  /*
+   * Get current turn order according to first player variable
+   */
+  public function getTurnOrder($firstPlayer = null)
+  {
+    $players = self::getAll()->toArray();
+    usort($players, function ($a, $b) {
+      return $a->getNo() - $b->getNo();
+    });
+    $playerOrder = array_map(function ($player) {
+      return $player->getId();
+    }, $players);
+    return $playerOrder;
   }
 
   /**
@@ -162,8 +181,8 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
    */
   public function activeNext()
   {
-    $pId = self::getActiveId();
-    $nextPlayer = self::getNextId((int) $pId);
+    $playerId = self::getActiveId();
+    $nextPlayer = self::getNextId((int) $playerId);
 
     Game::get()->gamestate->changeActivePlayer($nextPlayer);
     return $nextPlayer;
@@ -172,8 +191,8 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
   /**
    * This allow to change active player
    */
-  public function changeActive($pId)
+  public function changeActive($playerId)
   {
-    Game::get()->gamestate->changeActivePlayer($pId);
+    Game::get()->gamestate->changeActivePlayer($playerId);
   }
 }

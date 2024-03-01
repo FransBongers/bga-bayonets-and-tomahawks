@@ -34,12 +34,16 @@ spl_autoload_register($swdNamespaceAutoload, true, true);
 
 require_once(APP_GAMEMODULE_PATH . 'module/table/table.game.php');
 
-use BayonetsAndTomahawks\Scenario;
+// Generic
+use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Preferences;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Log;
 use BayonetsAndTomahawks\Managers\Players;
+
+// Game specific
+use BayonetsAndTomahawks\Scenario;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Units;
 
@@ -48,8 +52,8 @@ use const BayonetsAndTomahawks\OPTION_SCENARIO;
 class bayonetsandtomahawks extends Table
 {
     use BayonetsAndTomahawks\DebugTrait;
-    use BayonetsAndTomahawks\States\DispatchActionTrait;
-    use BayonetsAndTomahawks\States\PlayerActionTrait;
+    use BayonetsAndTomahawks\States\EngineTrait;
+    use BayonetsAndTomahawks\States\TurnTrait;
 
     // Declare objects from material.inc.php to remove IntelliSense errors
     public $spaces;
@@ -68,6 +72,7 @@ class bayonetsandtomahawks extends Table
         self::initGameStateLabels(array(
             'logging' => 10,
         ));
+        Engine::boot();
         Stats::checkExistence();
     }
 
@@ -101,10 +106,10 @@ class bayonetsandtomahawks extends Table
         Preferences::setupNewGame($players, $options);
         Players::setupNewGame($players, $options);
         Stats::checkExistence();
-        Spaces::setupNewGame($players, $options);
+        // Spaces::setupNewGame($players, $options);
         Globals::setTest($options);
-        Scenario::loadId($options[OPTION_SCENARIO]);
-        Scenario::setup();
+        // Scenario::loadId($options[OPTION_SCENARIO]);
+        // Scenario::setup();
 
         $this->setGameStateInitialValue('logging', false);
 
@@ -116,7 +121,7 @@ class bayonetsandtomahawks extends Table
     /*
         getAllDatas: 
     */
-    protected function getAllDatas($pId = null)
+    public function getAllDatas($pId = null)
     {
         $pId = $pId ?? Players::getCurrentId();
 
@@ -147,59 +152,82 @@ class bayonetsandtomahawks extends Table
         return self::$instance;
     }
 
-    /**
-     * Generic state to handle change of active player in the middle of a transition
-     */
-    function stChangeActivePlayer()
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+    ////////////   Custom Turn Order   ////////////
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+    public function initCustomTurnOrder($key, $order, $callback, $endCallback, $loop = false, $autoNext = true, $args = [])
     {
-        $t = Globals::getChangeActivePlayer();
-        $this->gamestate->changeActivePlayer($t['pId']);
-        $this->gamestate->jumpToState($t['st']);
+        $turnOrders = Globals::getCustomTurnOrders();
+        $turnOrders[$key] = [
+            'order' => $order ?? Players::getTurnOrder(),
+            'index' => -1,
+            'callback' => $callback,
+            'args' => $args, // Useful mostly for auto card listeners
+            'endCallback' => $endCallback,
+            'loop' => $loop,
+        ];
+        Globals::setCustomTurnOrders($turnOrders);
+
+        if ($autoNext) {
+            $this->nextPlayerCustomOrder($key);
+        }
     }
 
-    /**
-     * $pId can be either playerId or player
-     */
-    function changeActivePlayerAndJumpTo($pId, $state)
+    public function initCustomDefaultTurnOrder($key, $callback, $endCallback, $loop = false, $autoNext = true)
     {
-        // Should probably always clear logs here?
-        if (Globals::getLogState() == -1) {
-            Globals::setLogState($state);
-            // Globals::setActionCount(0);
-            Log::clearAll();
-        }
-
-        Globals::setChangeActivePlayer([
-            'pId' => is_int($pId) ? $pId : $pId->getId(),
-            'st' => $state,
-        ]);
-        $this->gamestate->jumpToState(ST_CHANGE_ACTIVE_PLAYER);
+        $this->initCustomTurnOrder($key, null, $callback, $endCallback, $loop, $autoNext);
     }
 
-    /**
-     * $pId can be either playerId or player
-     */
-    function nextState($transition, $pId = null)
+    public function nextPlayerCustomOrder($key)
     {
-        // gets current game state to check if it is game or player gamestate
-        $state = $this->gamestate->state(true, false, true);
-        $st = $state['transitions'][$transition];
-
-        if (Globals::getLogState() == -1) {
-            Globals::setLogState($st);
-            Log::clearAll();
+        $turnOrders = Globals::getCustomTurnOrders();
+        if (!isset($turnOrders[$key])) {
+            throw new BgaVisibleSystemException('Asking for the next player of a custom turn order not initialized : ' . $key);
         }
 
-        $pId = is_null($pId) || is_int($pId) ? $pId : $pId->getId();
-        if (is_null($pId) || $pId == $this->getActivePlayerId()) {
-            $this->gamestate->nextState($transition);
+        // Increase index and save
+        $o = $turnOrders[$key];
+        $i = $o['index'] + 1;
+        if ($i == count($o['order']) && $o['loop']) {
+            $i = 0;
+        }
+        $turnOrders[$key]['index'] = $i;
+        Globals::setCustomTurnOrders($turnOrders);
+
+        if ($i < count($o['order'])) {
+            $this->gamestate->jumpToState(ST_GENERIC_NEXT_PLAYER);
+            $this->gamestate->changeActivePlayer($o['order'][$i]);
+            $this->jumpToOrCall($o['callback'], $o['args']);
         } else {
-            if ($state['type'] == 'game') {
-                $this->gamestate->changeActivePlayer($pId);
-                $this->gamestate->nextState($transition);
-            } else {
-                $this->changeActivePlayerAndJumpTo($pId, $st);
-            }
+            $this->endCustomOrder($key);
+        }
+    }
+
+    public function endCustomOrder($key)
+    {
+        $turnOrders = Globals::getCustomTurnOrders();
+        if (!isset($turnOrders[$key])) {
+            throw new BgaVisibleSystemException('Asking for ending a custom turn order not initialized : ' . $key);
+        }
+
+        $o = $turnOrders[$key];
+        $turnOrders[$key]['index'] = count($o['order']);
+        Globals::setCustomTurnOrders($turnOrders);
+        $callback = $o['endCallback'];
+        $this->jumpToOrCall($callback);
+    }
+
+    public function jumpToOrCall($mixed, $args = [])
+    {
+        if (is_int($mixed) && array_key_exists($mixed, $this->gamestate->states)) {
+            $this->gamestate->jumpToState($mixed);
+        } elseif (method_exists($this, $mixed)) {
+            $method = $mixed;
+            $this->$method($args);
+        } else {
+            throw new BgaVisibleSystemException('Failing to jumpToOrCall  : ' . $mixed);
         }
     }
 
@@ -244,28 +272,24 @@ class bayonetsandtomahawks extends Table
         you must _never_ use getCurrentPlayerId() or getCurrentPlayerName(), otherwise it will fail with a "Not logged" error message. 
     */
 
-    function zombieTurn($state, $active_player)
+    public function zombieTurn($state, $activePlayer)
     {
-        $statename = $state['name'];
-
-        if ($state['type'] === "activeplayer") {
-            switch ($statename) {
-                default:
-                    $this->gamestate->nextState("zombiePass");
-                    break;
+        $stateName = $state['name'];
+        if ($state['type'] == 'activeplayer') {
+            if ($stateName == 'confirmTurn') {
+                $this->actConfirmTurn(true);
+            } else if ($stateName == 'confirmPartialTurn') {
+                $this->actConfirmPartialTurn(true);
             }
-
-            return;
+            // Clear all node of player
+            else if (Engine::getNextUnresolved() != null) {
+                Engine::clearZombieNodes($activePlayer);
+                Engine::proceed();
+            } else {
+                // TODO: check if we need this
+                $this->gamestate->nextState('zombiePass');
+            }
         }
-
-        if ($state['type'] === "multipleactiveplayer") {
-            // Make sure player is in a non blocking status for role turn
-            $this->gamestate->setPlayerNonMultiactive($active_player, '');
-
-            return;
-        }
-
-        throw new feException("Zombie mode not supported at this game state: " . $statename);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////:

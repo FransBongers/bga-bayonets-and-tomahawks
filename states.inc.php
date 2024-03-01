@@ -61,9 +61,13 @@ $machinestates = array(
         "description" => "",
         "type" => "manager",
         "action" => "stGameSetup",
-        "transitions" => ["" => 2]
+        "transitions" => ["" => ST_BEFORE_START_OF_TURN]
     ],
 
+    ST_GENERIC_NEXT_PLAYER => [
+        'name' => 'genericNextPlayer',
+        'type' => 'game',
+    ],
     // Note: ID=2 => your first state
 
     2 => array(
@@ -78,14 +82,84 @@ $machinestates = array(
         ]
     ),
 
-    // Generic state to change player
-    ST_CHANGE_ACTIVE_PLAYER => [
-        'name' => ST_CHANGE_ACTIVE_PLAYER_NAME,
+    // .########.##.....##.########..##....##
+    // ....##....##.....##.##.....##.###...##
+    // ....##....##.....##.##.....##.####..##
+    // ....##....##.....##.########..##.##.##
+    // ....##....##.....##.##...##...##..####
+    // ....##....##.....##.##....##..##...###
+    // ....##.....#######..##.....##.##....##
+
+    ST_BEFORE_START_OF_TURN => [
+        'name' => 'beforeStartOfTurn',
         'description' => '',
-        'descriptionmyturn' => '',
         'type' => 'game',
-        'action' => 'stChangeActivePlayer',
+        'action' => 'stBeforeStartOfTurn',
     ],
+
+    ST_TURNACTION => [
+        'name' => 'turnAction',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stTurnAction',
+        'transitions' => [
+            'done' => ST_CLEANUP,
+        ],
+        'updateGameProgression' => true,
+    ],
+
+    // .########.##....##..######...####.##....##.########
+    // .##.......###...##.##....##...##..###...##.##......
+    // .##.......####..##.##.........##..####..##.##......
+    // .######...##.##.##.##...####..##..##.##.##.######..
+    // .##.......##..####.##....##...##..##..####.##......
+    // .##.......##...###.##....##...##..##...###.##......
+    // .########.##....##..######...####.##....##.########
+    ST_RESOLVE_STACK => [
+        'name' => 'resolveStack',
+        'type' => 'game',
+        'action' => 'stResolveStack',
+        'transitions' => [],
+    ],
+
+    ST_CONFIRM_TURN => [
+        'name' => 'confirmTurn',
+        'description' => clienttranslate('${actplayer} must confirm or restart their turn'),
+        'descriptionmyturn' => clienttranslate('${you} must confirm or restart your turn'),
+        'type' => 'activeplayer',
+        'args' => 'argsConfirmTurn',
+        'action' => 'stConfirmTurn',
+        'possibleactions' => ['actConfirmTurn', 'actRestart'],
+        'transitions' => [
+            // 'breakStart' => ST_BREAK_MULTIACTIVE
+        ],
+    ],
+
+    ST_CONFIRM_PARTIAL_TURN => [
+        'name' => 'confirmPartialTurn',
+        'description' => clienttranslate('${actplayer} must confirm the switch of player'),
+        'descriptionmyturn' => clienttranslate('${you} must confirm the switch of player. You will not be able to restart turn'),
+        'type' => 'activeplayer',
+        'args' => 'argsConfirmTurn',
+        // 'action' => 'stConfirmPartialTurn',
+        'possibleactions' => ['actConfirmPartialTurn', 'actRestart'],
+    ],
+
+    // .########.##....##.########......#######..########
+    // .##.......###...##.##.....##....##.....##.##......
+    // .##.......####..##.##.....##....##.....##.##......
+    // .######...##.##.##.##.....##....##.....##.######..
+    // .##.......##..####.##.....##....##.....##.##......
+    // .##.......##...###.##.....##....##.....##.##......
+    // .########.##....##.########......#######..##......
+
+    // ..######......###....##.....##.########
+    // .##....##....##.##...###...###.##......
+    // .##.........##...##..####.####.##......
+    // .##...####.##.....##.##.###.##.######..
+    // .##....##..#########.##.....##.##......
+    // .##....##..##.....##.##.....##.##......
+    // ..######...##.....##.##.....##.########
 
     // Final state.
     // Please do not modify (and do not overload action/args methods).
@@ -95,6 +169,33 @@ $machinestates = array(
         "type" => "manager",
         "action" => "stGameEnd",
         "args" => "argGameEnd"
-    ]
+    ],
 
+    // ....###....########..#######..##.....##.####..######.
+    // ...##.##......##....##.....##.###...###..##..##....##
+    // ..##...##.....##....##.....##.####.####..##..##......
+    // .##.....##....##....##.....##.##.###.##..##..##......
+    // .#########....##....##.....##.##.....##..##..##......
+    // .##.....##....##....##.....##.##.....##..##..##....##
+    // .##.....##....##.....#######..##.....##.####..######.
+
+    // ....###.....######..########.####..#######..##....##..######.
+    // ...##.##...##....##....##.....##..##.....##.###...##.##....##
+    // ..##...##..##..........##.....##..##.....##.####..##.##......
+    // .##.....##.##..........##.....##..##.....##.##.##.##..######.
+    // .#########.##..........##.....##..##.....##.##..####.......##
+    // .##.....##.##....##....##.....##..##.....##.##...###.##....##
+    // .##.....##..######.....##....####..#######..##....##..######.
+
+
+    ST_PLAYER_ACTION => [
+        'name' => 'playerAction',
+        'description' => clienttranslate('${actplayer} may perform actions'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        // 'transitions' => [],
+        'possibleactions' => ['actPlayerAction', 'actPassOptionalAction', 'actRestart'],
+    ],
 );
