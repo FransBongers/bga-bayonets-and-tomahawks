@@ -26,28 +26,32 @@ declare var noUiSlider;
 
 class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public gamedatas: BayonetsAndTomahawksGamedatas;
+
+  // Default
   public animationManager: AnimationManager;
   public infoPanel: InfoPanel;
   public settings: Settings;
-  // Boiler plate
-  private alwaysFixTopActions: boolean;
-  private alwaysFixTopActionsMaximum: number;
-  public tooltipsToMap: [tooltipId: number, card_id: string][] = [];
-  private _helpMode = false; // Use to implement help mode
-  private _notif_uid_to_log_id = {};
-  private _notif_uid_to_mobile_log_id = {};
-  private _last_notif = null;
-  public _last_tooltip_id = 0;
-  private _selectableNodes = []; // TODO: use to keep track of selectable classed?
-  public _connections: unknown[];
-
-  public gameMap: GameMap;
   // public gameOptions: BayonetsAndTomahawksGamedatas['gameOptions'];
   public notificationManager: NotificationManager;
   public playerManager: PlayerManager;
   public tooltipManager: TooltipManager;
-  public playAreaScale: number;
+
+  // Boiler plate
+  private alwaysFixTopActions: boolean;
+  private alwaysFixTopActionsMaximum: number;
+  public tooltipsToMap: [tooltipId: number, card_id: string][] = [];
+  public _connections: unknown[];
+  private _helpMode = false; // Use to implement help mode
+  private _last_notif = null;
+  public _last_tooltip_id = 0;
+  private _notif_uid_to_log_id = {};
+  private _notif_uid_to_mobile_log_id = {};
+  private _selectableNodes = []; // TODO: use to keep track of selectable classed?
+
+  // Game specific
+  public gameMap: GameMap;
   public pools: Pools;
+  // public playAreaScale: number;
 
   public activeStates: {};
 
@@ -55,18 +59,13 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     console.log("bayonetsandtomahawks constructor");
   }
 
-  /*
-    setup:
-    
-    This method must set up the game user interface according to current game situation specified
-    in parameters.
-    
-    The method is called each time the game interface is displayed to a player, ie:
-    _ when the game starts
-    _ when a player refreshes the game page (F5)
-    
-    "gamedatas" argument contains all datas retrieved by your "getAllDatas" PHP method.
-  */
+  // ..######..########.########.##.....##.########.
+  // .##....##.##..........##....##.....##.##.....##
+  // .##.......##..........##....##.....##.##.....##
+  // ..######..######......##....##.....##.########.
+  // .......##.##..........##....##.....##.##.......
+  // .##....##.##..........##....##.....##.##.......
+  // ..######..########....##.....#######..##.......
   public setup(gamedatas: BayonetsAndTomahawksGamedatas) {
     // Create a new div for buttons to avoid BGA auto clearing it
     dojo.place(
@@ -74,14 +73,15 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       $("generalactions"),
       "after"
     );
-    // this.setAlwaysFixTopActions();
-    // this.setupDontPreloadImages();
+    this.setAlwaysFixTopActions();
+    this.setupDontPreloadImages();
 
     this.gamedatas = gamedatas;
     // this.gameOptions = gamedatas.gameOptions;
     debug("gamedatas", gamedatas);
 
     this._connections = [];
+
     // Will store all data for active player and gets refreshed with entering player actions state
     this.activeStates = {};
 
@@ -97,14 +97,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
 
     this.gameMap = new GameMap(this);
     this.pools = new Pools(this);
-    // this.tooltipManager = new TooltipManager(this);
-    // this.playerManager = new PlayerManager(this);
-
-    // this.updatePlayAreaSize();
-    // window.addEventListener("resize", () => {
-    //   this.updatePlayAreaSize();
-    //   // this.gameMap.updateGameMapSize();
-    // });
+    this.tooltipManager = new TooltipManager(this);
+    this.playerManager = new PlayerManager(this);
 
     if (this.notificationManager != undefined) {
       this.notificationManager.destroy();
@@ -112,31 +106,15 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     this.notificationManager = new NotificationManager(this);
     this.notificationManager.setupNotifications();
 
-    // TO CHECK: add tooltips to log here?
-    // dojo.connect(this.framework().notifqueue, 'addToLog', () => {
-    //   this.checkLogCancel(this._last_notif == null ? null : this._last_notif.msg.uid);
-    //   this.addLogClass();
-    //   this.tooltipManager.checkLogTooltip(this._last_notif);
-    // });
-    // this.setupNotifications();
-    // this.tooltipManager.setupTooltips();
+    this.tooltipManager.setupTooltips();
     debug("Ending game setup");
   }
 
-  // public updatePlayAreaSize() {
-  //   const playAreaContainer = document.getElementById("bt_play_area_container");
-  //   this.playAreaScale = Math.min(
-  //     1,
-  //     playAreaContainer.offsetWidth / MIN_PLAY_AREA_WIDTH
-  //   );
-  //   const playArea = document.getElementById("bt_play_area");
-  //   playArea.style.transform = `scale(${this.playAreaScale})`;
-  //   const playAreaHeight = playArea.offsetHeight;
-  //   playArea.style.width =
-  //     playAreaContainer.offsetWidth / this.playAreaScale + "px";
-  //   console.log("playAreaHeight", playAreaHeight);
-  //   playAreaContainer.style.height = playAreaHeight * this.playAreaScale + "px";
-  // }
+  /**
+   * Example:
+   * this.framework().dontPreloadImage("background_balcony.webp");
+   */
+  setupDontPreloadImages() {}
 
   //  .####.##....##.########.########.########.....###.....######..########.####..#######..##....##
   //  ..##..###...##....##....##.......##.....##...##.##...##....##....##.....##..##.....##.###...##
@@ -160,16 +138,35 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     ) {
       this.activeStates[stateName].onEnteringState(args.args);
     }
-    if (this.framework().isCurrentPlayerActive()) {
-      this.addPrimaryActionButton({
-        id: "pass_button",
-        text: _("Pass"),
-        callback: () => this.takeAction({ action: "passTurn" }),
-      });
-      this.addDangerActionButton({
-        id: "end_game_button",
-        text: _("End game"),
-        callback: () => this.takeAction({ action: "endGame" }),
+    // if (this.framework().isCurrentPlayerActive()) {
+    //   this.addPrimaryActionButton({
+    //     id: "pass_button",
+    //     text: _("Pass"),
+    //     callback: () => this.takeAction({ action: "passTurn" }),
+    //   });
+    //   this.addDangerActionButton({
+    //     id: "end_game_button",
+    //     text: _("End game"),
+    //     callback: () => this.takeAction({ action: "endGame" }),
+    //   });
+    // }
+
+    // Undo last steps
+    if (args.args && args.args.previousSteps) {
+      args.args.previousSteps.forEach((stepId: number) => {
+        let logEntry = $("logs").querySelector(
+          `.log.notif_newUndoableStep[data-step="${stepId}"]`
+        );
+        if (logEntry) {
+          this.onClick(logEntry, () => this.undoToStep({ stepId }));
+        }
+
+        logEntry = document.querySelector(
+          `.chatwindowlogs_zone .log.notif_newUndoableStep[data-step="${stepId}"]`
+        );
+        if (logEntry) {
+          this.onClick(logEntry, () => this.undoToStep({ stepId }));
+        }
       });
     }
   }
@@ -178,7 +175,6 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   //                 You can use this method to perform some user interface changes at this moment.
   //
   public onLeavingState(stateName: string) {
-    console.log("Leaving state: " + stateName);
     this.clearPossible();
   }
 
@@ -240,12 +236,28 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     });
   }
 
-  addUndoButton() {
-    this.addDangerActionButton({
-      id: "undo_btn",
-      text: _("Undo"),
-      callback: () => this.takeAction({ action: "restart" }),
+  addConfirmButton({ callback }: { callback: Function | string }) {
+    this.addPrimaryActionButton({
+      id: "confirm_btn",
+      text: _("Confirm"),
+      callback,
     });
+  }
+
+  addPassButton({
+    optionalAction,
+    text,
+  }: {
+    optionalAction: boolean;
+    text?: string;
+  }) {
+    if (optionalAction) {
+      this.addSecondaryActionButton({
+        id: "pass_btn",
+        text: text ? _(text) : _("Pass"),
+        callback: () => this.takeAction({ action: "actPassOptionalAction" }),
+      });
+    }
   }
 
   addPrimaryActionButton({
@@ -329,6 +341,33 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     }
   }
 
+  addUndoButtons({ previousSteps, previousEngineChoices }: CommonArgs) {
+    const lastStep = Math.max(0, ...previousSteps);
+    if (lastStep > 0) {
+      // this.addDangerActionButton('btnUndoLastStep', _('Undo last step'), () => this.undoToStep(lastStep), 'restartAction');
+      this.addDangerActionButton({
+        id: "undo_last_step_btn",
+        text: _("Undo last step"),
+        callback: () =>
+          this.takeAction({
+            action: "actUndoToStep",
+            args: {
+              stepId: lastStep,
+            },
+            checkAction: "actRestart",
+          }),
+      });
+    }
+
+    if (previousEngineChoices > 0) {
+      this.addDangerActionButton({
+        id: "restart_btn",
+        text: _("Restart turn"),
+        callback: () => this.takeAction({ action: "actRestart" }),
+      });
+    }
+  }
+
   public clearInterface() {
     console.log("clear interface");
     this.playerManager.clearInterface();
@@ -378,6 +417,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     );
     this.framework().updatePageTitle();
   }
+
   // .########...#######..####.##.......########.########.
   // .##.....##.##.....##..##..##.......##.......##.....##
   // .##.....##.##.....##..##..##.......##.......##.....##
@@ -422,6 +462,19 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     } else {
       dojo.connect($(node), "click", safeCallback);
     }
+  }
+
+  undoToStep({ stepId }: { stepId: string | number }) {
+    // this.stopActionTimer();
+    // this.framework().checkAction("actRestart");
+    // this.takeAction('actUndoToStep', args: { stepId });
+    this.takeAction({
+      action: "actUndoToStep",
+      args: {
+        stepId,
+      },
+      checkAction: "actRestart",
+    });
   }
 
   public updateLayout() {
@@ -480,6 +533,39 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   // .##.....##...##.##...##.......##....##..##....##...##..##.....##.##.......##....##
   // ..#######.....###....########.##.....##.##.....##.####.########..########..######.
 
+  /**
+   * Apparently onAdding<notif id>ToLog is called with every notification
+   */
+  onAddingNewUndoableStepToLog(notif: {
+    logId: number;
+    mobileLogId: number;
+    msg: Notif<{
+      preserve: string;
+      processed: boolean;
+      stepId: number | string;
+    }>;
+  }) {
+    if (!$(`log_${notif.logId}`)) return;
+    let stepId = notif.msg.args.stepId;
+    $(`log_${notif.logId}`).dataset.step = stepId;
+    if ($(`dockedlog_${notif.mobileLogId}`))
+      $(`dockedlog_${notif.mobileLogId}`).dataset.step = stepId;
+
+    if (
+      (
+        this.gamedatas.gamestate as ActiveGamestate<{
+          previousSteps?: number[];
+        }>
+      ).args.previousSteps?.includes(Number(stepId))
+    ) {
+      this.onClick($(`log_${notif.logId}`), () => this.undoToStep({ stepId }));
+      if ($(`dockedlog_${notif.mobileLogId}`))
+        this.onClick($(`dockedlog_${notif.mobileLogId}`), () =>
+          this.undoToStep({ stepId })
+        );
+    }
+  }
+
   /*
    * Remove non standard zoom property
    */
@@ -503,13 +589,6 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
             });
           }
         });
-
-        // TODO: check below code. Looks like improved way for text shadows (source ticket to ride)
-        // ['you', 'actplayer', 'player_name'].forEach((field) => {
-        //   if (typeof args[field] === 'string' && args[field].indexOf('#ffed00;') !== -1 && args[field].indexOf('text-shadow') === -1) {
-        //     args[field] = args[field].replace('#ffed00;', '#ffed00; text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black;');
-        //   }
-        // });
       }
     } catch (e) {
       console.error(log, args, "Exception thrown", e.stack);
@@ -524,10 +603,13 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   onPlaceLogOnChannel(msg: Notif<unknown>) {
     // console.log('msg', msg);
     const currentLogId = this.framework().notifqueue.next_log_id;
+    const currentMobileLogId = this.framework().next_log_id;
     const res = this.framework().inherited(arguments);
     this._notif_uid_to_log_id[msg.uid] = currentLogId;
+    this._notif_uid_to_mobile_log_id[msg.uid] = currentMobileLogId;
     this._last_notif = {
       logId: currentLogId,
+      mobileLogId: currentMobileLogId,
       msg,
     };
     // console.log('_notif_uid_to_log_id', this._notif_uid_to_log_id);
@@ -538,7 +620,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
    * cancelLogs:
    *   strikes all log messages related to the given array of notif ids
    */
-  checkLogCancel(notifId) {
+  checkLogCancel(notifId: string) {
     if (
       this.gamedatas.canceledNotifIds != null &&
       this.gamedatas.canceledNotifIds.includes(notifId)
@@ -553,20 +635,53 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
         let logId = this._notif_uid_to_log_id[uid];
         if ($("log_" + logId)) dojo.addClass("log_" + logId, "cancel");
       }
+      if (this._notif_uid_to_mobile_log_id.hasOwnProperty(uid)) {
+        let mobileLogId = this._notif_uid_to_mobile_log_id[uid];
+        if ($("dockedlog_" + mobileLogId))
+          dojo.addClass("dockedlog_" + mobileLogId, "cancel");
+      }
     });
   }
 
   addLogClass() {
-    if (this._last_notif == null) return;
+    if (this._last_notif == null) {
+      return;
+    }
 
     let notif = this._last_notif;
-    if ($("log_" + notif.logId)) {
-      let type = notif.msg.type;
-      if (type == "history_history") type = notif.msg.args.originalType;
-
-      dojo.addClass("log_" + notif.logId, "notif_" + type);
+    let type = notif.msg.type;
+    if (type == "history_history") {
+      type = notif.msg.args.originalType;
     }
+
+    if ($("log_" + notif.logId)) {
+      dojo.addClass("log_" + notif.logId, "notif_" + type);
+
+      var methodName =
+        "onAdding" + type.charAt(0).toUpperCase() + type.slice(1) + "ToLog";
+      this[methodName]?.(notif);
+    }
+    if ($("dockedlog_" + notif.mobileLogId)) {
+      dojo.addClass("dockedlog_" + notif.mobileLogId, "notif_" + type);
+    }
+
+    // while (this.tooltipsToMap.length) {
+    //   const tooltipToMap = this.tooltipsToMap.pop();
+    //   if (!tooltipToMap || !tooltipToMap[1]) {
+    //     console.error("error tooltipToMap", tooltipToMap);
+    //   } else {
+    //     this.addLogTooltip({
+    //       tooltipId: tooltipToMap[0],
+    //       cardId: tooltipToMap[1],
+    //     });
+    //   }
+    // }
   }
+
+    // cardId will be PRENXXXX for tableau cards and full id for empire card / victory card
+    addLogTooltip({ tooltipId, cardId }: { tooltipId: number; cardId: string }) {
+
+    }
 
   /*
    * [Undocumented] Override BGA framework functions to call onLoadingComplete when loading is done
@@ -582,6 +697,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   onLoadingComplete() {
     // debug('Loading complete');
     this.cancelLogs(this.gamedatas.canceledNotifIds);
+    this.updateLayout();
+    // this.inherited(arguments);
   }
 
   /* @Override */
@@ -656,17 +773,22 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
    */
   takeAction({
     action,
-    data = {},
+    args = {},
+    checkAction,
   }: {
     action: string;
-    data?: Record<string, unknown>;
+    args?: Record<string, unknown>;
+    checkAction?: string;
   }) {
-    console.log(`takeAction ${action}`, data);
-    if (!this.framework().checkAction(action)) {
+    if (!this.framework().checkAction(checkAction ? checkAction : action)) {
       this.actionError(action);
       return;
     }
-    data.lock = true;
+    const data = {
+      lock: true,
+      args: JSON.stringify(args),
+    };
+    // data.
     const gameName = this.framework().game_name;
     this.framework().ajaxcall(
       `/${gameName}/${gameName}/${action}.html`,

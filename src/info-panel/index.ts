@@ -18,7 +18,7 @@ class InfoPanel {
 
   clearInterface() {}
 
-  updateInterface({ gamedatas }: { gamedatas: BayonetsAndTomahawksGame }) {}
+  updateInterface({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {}
 
   // ..######..########.########.##.....##.########.
   // .##....##.##..........##....##.....##.##.....##
@@ -29,7 +29,7 @@ class InfoPanel {
   // ..######..########....##.....#######..##.......
 
   // Setup functions
-  setup({ gamedatas }: { gamedatas: BayonetsAndTomahawksGame }) {
+  setup({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
     const node = document.getElementById("player_boards");
     if (!node) {
       return;

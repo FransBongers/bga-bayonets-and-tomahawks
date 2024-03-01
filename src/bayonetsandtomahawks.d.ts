@@ -19,7 +19,7 @@ interface BayonetsAndTomahawksGame extends Game {
   animationManager: AnimationManager;
   // updatePlayAreaSize: () => void;
   notificationManager: NotificationManager;
-  playAreaScale: number;
+  // playAreaScale: number;
   playerManager: PlayerManager;
   tooltipManager: TooltipManager;
 }

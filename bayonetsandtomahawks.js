@@ -1174,15 +1174,17 @@ var BayonetsAndTomahawks = (function () {
     function BayonetsAndTomahawks() {
         this.tooltipsToMap = [];
         this._helpMode = false;
-        this._notif_uid_to_log_id = {};
-        this._notif_uid_to_mobile_log_id = {};
         this._last_notif = null;
         this._last_tooltip_id = 0;
+        this._notif_uid_to_log_id = {};
+        this._notif_uid_to_mobile_log_id = {};
         this._selectableNodes = [];
         console.log("bayonetsandtomahawks constructor");
     }
     BayonetsAndTomahawks.prototype.setup = function (gamedatas) {
         dojo.place("<div id='customActions' style='display:inline-block'></div>", $("generalactions"), "after");
+        this.setAlwaysFixTopActions();
+        this.setupDontPreloadImages();
         this.gamedatas = gamedatas;
         debug("gamedatas", gamedatas);
         this._connections = [];
@@ -1196,13 +1198,17 @@ var BayonetsAndTomahawks = (function () {
         });
         this.gameMap = new GameMap(this);
         this.pools = new Pools(this);
+        this.tooltipManager = new TooltipManager(this);
+        this.playerManager = new PlayerManager(this);
         if (this.notificationManager != undefined) {
             this.notificationManager.destroy();
         }
         this.notificationManager = new NotificationManager(this);
         this.notificationManager.setupNotifications();
+        this.tooltipManager.setupTooltips();
         debug("Ending game setup");
     };
+    BayonetsAndTomahawks.prototype.setupDontPreloadImages = function () { };
     BayonetsAndTomahawks.prototype.onEnteringState = function (stateName, args) {
         var _this = this;
         console.log("Entering state: " + stateName, args);
@@ -1210,21 +1216,20 @@ var BayonetsAndTomahawks = (function () {
             this.activeStates[stateName]) {
             this.activeStates[stateName].onEnteringState(args.args);
         }
-        if (this.framework().isCurrentPlayerActive()) {
-            this.addPrimaryActionButton({
-                id: "pass_button",
-                text: _("Pass"),
-                callback: function () { return _this.takeAction({ action: "passTurn" }); },
-            });
-            this.addDangerActionButton({
-                id: "end_game_button",
-                text: _("End game"),
-                callback: function () { return _this.takeAction({ action: "endGame" }); },
+        if (args.args && args.args.previousSteps) {
+            args.args.previousSteps.forEach(function (stepId) {
+                var logEntry = $("logs").querySelector(".log.notif_newUndoableStep[data-step=\"".concat(stepId, "\"]"));
+                if (logEntry) {
+                    _this.onClick(logEntry, function () { return _this.undoToStep({ stepId: stepId }); });
+                }
+                logEntry = document.querySelector(".chatwindowlogs_zone .log.notif_newUndoableStep[data-step=\"".concat(stepId, "\"]"));
+                if (logEntry) {
+                    _this.onClick(logEntry, function () { return _this.undoToStep({ stepId: stepId }); });
+                }
             });
         }
     };
     BayonetsAndTomahawks.prototype.onLeavingState = function (stateName) {
-        console.log("Leaving state: " + stateName);
         this.clearPossible();
     };
     BayonetsAndTomahawks.prototype.onUpdateActionButtons = function (stateName, args) {
@@ -1247,13 +1252,24 @@ var BayonetsAndTomahawks = (function () {
             callback: function () { return _this.onCancel(); },
         });
     };
-    BayonetsAndTomahawks.prototype.addUndoButton = function () {
-        var _this = this;
-        this.addDangerActionButton({
-            id: "undo_btn",
-            text: _("Undo"),
-            callback: function () { return _this.takeAction({ action: "restart" }); },
+    BayonetsAndTomahawks.prototype.addConfirmButton = function (_a) {
+        var callback = _a.callback;
+        this.addPrimaryActionButton({
+            id: "confirm_btn",
+            text: _("Confirm"),
+            callback: callback,
         });
+    };
+    BayonetsAndTomahawks.prototype.addPassButton = function (_a) {
+        var _this = this;
+        var optionalAction = _a.optionalAction, text = _a.text;
+        if (optionalAction) {
+            this.addSecondaryActionButton({
+                id: "pass_btn",
+                text: text ? _(text) : _("Pass"),
+                callback: function () { return _this.takeAction({ action: "actPassOptionalAction" }); },
+            });
+        }
     };
     BayonetsAndTomahawks.prototype.addPrimaryActionButton = function (_a) {
         var id = _a.id, text = _a.text, callback = _a.callback, extraClasses = _a.extraClasses;
@@ -1283,6 +1299,33 @@ var BayonetsAndTomahawks = (function () {
         this.framework().addActionButton(id, text, callback, "customActions", false, "red");
         if (extraClasses) {
             dojo.addClass(id, extraClasses);
+        }
+    };
+    BayonetsAndTomahawks.prototype.addUndoButtons = function (_a) {
+        var _this = this;
+        var previousSteps = _a.previousSteps, previousEngineChoices = _a.previousEngineChoices;
+        var lastStep = Math.max.apply(Math, __spreadArray([0], previousSteps, false));
+        if (lastStep > 0) {
+            this.addDangerActionButton({
+                id: "undo_last_step_btn",
+                text: _("Undo last step"),
+                callback: function () {
+                    return _this.takeAction({
+                        action: "actUndoToStep",
+                        args: {
+                            stepId: lastStep,
+                        },
+                        checkAction: "actRestart",
+                    });
+                },
+            });
+        }
+        if (previousEngineChoices > 0) {
+            this.addDangerActionButton({
+                id: "restart_btn",
+                text: _("Restart turn"),
+                callback: function () { return _this.takeAction({ action: "actRestart" }); },
+            });
         }
     };
     BayonetsAndTomahawks.prototype.clearInterface = function () {
@@ -1341,6 +1384,16 @@ var BayonetsAndTomahawks = (function () {
             dojo.connect($(node), "click", safeCallback);
         }
     };
+    BayonetsAndTomahawks.prototype.undoToStep = function (_a) {
+        var stepId = _a.stepId;
+        this.takeAction({
+            action: "actUndoToStep",
+            args: {
+                stepId: stepId,
+            },
+            checkAction: "actRestart",
+        });
+    };
     BayonetsAndTomahawks.prototype.updateLayout = function () {
         if (!this.settings) {
             return;
@@ -1371,6 +1424,23 @@ var BayonetsAndTomahawks = (function () {
             ROOT.style.setProperty("--leftColumnScale", "".concat(rightColumnScale));
         }
     };
+    BayonetsAndTomahawks.prototype.onAddingNewUndoableStepToLog = function (notif) {
+        var _this = this;
+        var _a;
+        if (!$("log_".concat(notif.logId)))
+            return;
+        var stepId = notif.msg.args.stepId;
+        $("log_".concat(notif.logId)).dataset.step = stepId;
+        if ($("dockedlog_".concat(notif.mobileLogId)))
+            $("dockedlog_".concat(notif.mobileLogId)).dataset.step = stepId;
+        if ((_a = this.gamedatas.gamestate.args.previousSteps) === null || _a === void 0 ? void 0 : _a.includes(Number(stepId))) {
+            this.onClick($("log_".concat(notif.logId)), function () { return _this.undoToStep({ stepId: stepId }); });
+            if ($("dockedlog_".concat(notif.mobileLogId)))
+                this.onClick($("dockedlog_".concat(notif.mobileLogId)), function () {
+                    return _this.undoToStep({ stepId: stepId });
+                });
+        }
+    };
     BayonetsAndTomahawks.prototype.onScreenWidthChange = function () {
         this.updateLayout();
     };
@@ -1398,10 +1468,13 @@ var BayonetsAndTomahawks = (function () {
     };
     BayonetsAndTomahawks.prototype.onPlaceLogOnChannel = function (msg) {
         var currentLogId = this.framework().notifqueue.next_log_id;
+        var currentMobileLogId = this.framework().next_log_id;
         var res = this.framework().inherited(arguments);
         this._notif_uid_to_log_id[msg.uid] = currentLogId;
+        this._notif_uid_to_mobile_log_id[msg.uid] = currentMobileLogId;
         this._last_notif = {
             logId: currentLogId,
+            mobileLogId: currentMobileLogId,
             msg: msg,
         };
         return res;
@@ -1420,18 +1493,34 @@ var BayonetsAndTomahawks = (function () {
                 if ($("log_" + logId))
                     dojo.addClass("log_" + logId, "cancel");
             }
+            if (_this._notif_uid_to_mobile_log_id.hasOwnProperty(uid)) {
+                var mobileLogId = _this._notif_uid_to_mobile_log_id[uid];
+                if ($("dockedlog_" + mobileLogId))
+                    dojo.addClass("dockedlog_" + mobileLogId, "cancel");
+            }
         });
     };
     BayonetsAndTomahawks.prototype.addLogClass = function () {
-        if (this._last_notif == null)
+        var _a;
+        if (this._last_notif == null) {
             return;
-        var notif = this._last_notif;
-        if ($("log_" + notif.logId)) {
-            var type = notif.msg.type;
-            if (type == "history_history")
-                type = notif.msg.args.originalType;
-            dojo.addClass("log_" + notif.logId, "notif_" + type);
         }
+        var notif = this._last_notif;
+        var type = notif.msg.type;
+        if (type == "history_history") {
+            type = notif.msg.args.originalType;
+        }
+        if ($("log_" + notif.logId)) {
+            dojo.addClass("log_" + notif.logId, "notif_" + type);
+            var methodName = "onAdding" + type.charAt(0).toUpperCase() + type.slice(1) + "ToLog";
+            (_a = this[methodName]) === null || _a === void 0 ? void 0 : _a.call(this, notif);
+        }
+        if ($("dockedlog_" + notif.mobileLogId)) {
+            dojo.addClass("dockedlog_" + notif.mobileLogId, "notif_" + type);
+        }
+    };
+    BayonetsAndTomahawks.prototype.addLogTooltip = function (_a) {
+        var tooltipId = _a.tooltipId, cardId = _a.cardId;
     };
     BayonetsAndTomahawks.prototype.setLoader = function (value, max) {
         this.framework().inherited(arguments);
@@ -1442,6 +1531,7 @@ var BayonetsAndTomahawks = (function () {
     };
     BayonetsAndTomahawks.prototype.onLoadingComplete = function () {
         this.cancelLogs(this.gamedatas.canceledNotifIds);
+        this.updateLayout();
     };
     BayonetsAndTomahawks.prototype.updatePlayerOrdering = function () {
         this.framework().inherited(arguments);
@@ -1488,13 +1578,15 @@ var BayonetsAndTomahawks = (function () {
         this.framework().showMessage("cannot take ".concat(actionName, " action"), "error");
     };
     BayonetsAndTomahawks.prototype.takeAction = function (_a) {
-        var action = _a.action, _b = _a.data, data = _b === void 0 ? {} : _b;
-        console.log("takeAction ".concat(action), data);
-        if (!this.framework().checkAction(action)) {
+        var action = _a.action, _b = _a.args, args = _b === void 0 ? {} : _b, checkAction = _a.checkAction;
+        if (!this.framework().checkAction(checkAction ? checkAction : action)) {
             this.actionError(action);
             return;
         }
-        data.lock = true;
+        var data = {
+            lock: true,
+            args: JSON.stringify(args),
+        };
         var gameName = this.framework().game_name;
         this.framework().ajaxcall("/".concat(gameName, "/").concat(gameName, "/").concat(action, ".html"), data, this, function () { });
     };
