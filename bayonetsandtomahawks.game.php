@@ -43,6 +43,7 @@ use BayonetsAndTomahawks\Helpers\Log;
 use BayonetsAndTomahawks\Managers\Players;
 
 // Game specific
+use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Scenario;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Units;
@@ -106,10 +107,11 @@ class bayonetsandtomahawks extends Table
         Preferences::setupNewGame($players, $options);
         Players::setupNewGame($players, $options);
         Stats::checkExistence();
-        // Spaces::setupNewGame($players, $options);
+        Spaces::setupNewGame($players, $options);
         Globals::setTest($options);
-        // Scenario::loadId($options[OPTION_SCENARIO]);
-        // Scenario::setup();
+        Scenario::loadId($options[OPTION_SCENARIO]);
+        Scenario::setup();
+        Cards::setupNewGame();
 
         $this->setGameStateInitialValue('logging', false);
 
