@@ -50,6 +50,7 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
     return array_merge($data, [
       'faction' => $this->faction,
       'initiativeValue' => $this->initiativeValue,
+      'years' => $this->years,
     ]);
   }
 

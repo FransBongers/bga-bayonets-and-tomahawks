@@ -19,8 +19,8 @@ trait DebugTrait
 
   function test()
   {
-    Notifications::log('card10', Cards::get('Card10'));
-    // Cards::setupNewGame();
+    // Notifications::log('card10', Cards::get('Card10'));
+    Cards::setupNewGame();
     // Notifications::log('test', Globals::getTest());
     // Notifications::log('static', Units::getStaticUiData());
     // Notifications::log('ui', Units::getUiData());

@@ -5,6 +5,7 @@ namespace BayonetsAndTomahawks\Managers;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Game;
 use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Helpers\Utils;
 
@@ -98,35 +99,27 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
     // Load list of cards
     include dirname(__FILE__) . '/../Cards/list.inc.php';
 
-    Notifications::log('cardIds',$cardIds);
+    Notifications::log('cardIds', $cardIds);
+    $scenario = Globals::getScenario();
+    Notifications::log('scenario', $scenario);
     // return;
     foreach ($cardIds as $cId) {
       $card = self::getCardInstance($cId);
 
-      // if ($card->isAgeOfReformpationPromo() && !$addAgeOfReformationPromoCards) {
-
-      // $type = $card->getType();
-
       $location = '';
       $extraData = null;
-      $location = 'deck';
-      // if ($type === TABLEAU_CARD && Utils::startsWith($card->getId(), 'COMET')) {
-      //   $region = $card->getRegion();
-      //   $location = 'deck_' . $region;
-      // } else if ($type === TABLEAU_CARD) {
-      //   $region = $card->getRegion();
-      //   $location = 'pool_' . $region;
-      // } else if ($type === VICTORY_CARD) {
-      //   $location = $card->getStartLocation();
-      //   $extraData = [
-      //     'active' => false,
-      //   ];
-      // } else if ($type === EMPIRE_CARD) {
-      //   $location = $card->getStartLocation();
-      //   $extraData = [
-      //     'side' => KING,
-      //   ];
-      // }
+      // $location = 'deck';
+
+      $faction = $card->getFaction();
+      if ($faction === INDIAN) {
+        $location = Locations::campaignDeck(INDIAN);
+      } else if (!self::yearsMatchScenario($card, $scenario['cards'])) {
+        $location = Locations::cardPool($faction);
+      } else if ($card->getBuildUpDeck()) {
+        $location = Locations::buildUpDeck($faction);
+      } else {
+        $location = Locations::campaignDeck($faction);
+      }
 
       $cards[$cId] = [
         'id' => $cId,
@@ -134,11 +127,14 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
         'extra_data' => json_encode($extraData)
       ];
     }
-
+    Notifications::log('cards', $cards);
     // // Create the cards
     self::create($cards, null);
-    self::shuffle('deck');
-    // self::shuffle(POOL_WEST);
+    foreach([BRITISH, FRENCH] as $faction) {
+      self::shuffle(Locations::buildUpDeck($faction));
+      self::shuffle(Locations::campaignDeck($faction));
+    }
+    self::shuffle(Locations::campaignDeck(INDIAN));
   }
 
   /* Creation of the cards */
@@ -147,5 +143,16 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
     self::setupLoadCards();
   }
 
-
+  private static function yearsMatchScenario($card, $scenarioCards)
+  {
+    $years = $card->getYears();
+    if ($card->getYears() === null) {
+      return true;
+    }
+    $faction = $card->getFaction();
+    // check if at least one years match
+    return Utils::array_some($years, function ($year) use ($scenarioCards, $faction) {
+      return in_array($year, $scenarioCards[$faction]);
+    });
+  }
 }

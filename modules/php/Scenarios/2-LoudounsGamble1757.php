@@ -7,6 +7,10 @@ $scenarios[2] = [
     'scenario_id' => '2',
     'name' => clienttranslate("Loudoun's Gamble 1757"),
   ],
+  'cards' => [
+    BRITISH => [1757],
+    FRENCH => [1757],
+  ],
   'locations' => [
     // Indian Setup
     MIRAMICHY => [

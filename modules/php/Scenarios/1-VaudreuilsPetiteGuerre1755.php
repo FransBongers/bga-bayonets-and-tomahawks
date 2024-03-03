@@ -7,6 +7,10 @@ $scenarios[1] = [
     'scenario_id' => '1',
     'name' => clienttranslate("Vaudreil's Petite Guerre 1755"),
   ],
+  'cards' => [
+    BRITISH => [1755, 1756],
+    FRENCH => [1755, 1756],
+  ],
   'locations' => [
     // Indian Setup
     MIRAMICHY => [
