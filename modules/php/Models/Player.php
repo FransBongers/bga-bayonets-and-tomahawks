@@ -6,6 +6,7 @@ use BayonetsAndTomahawks\Core\Game;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Core\Preferences;
+use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Events;
@@ -43,8 +44,15 @@ class Player extends \BayonetsAndTomahawks\Helpers\DB_Model
   public function jsonSerialize($currentPlayerId = null)
   {
     $data = parent::jsonSerialize();
+    $isCurrentPlayer = intval($currentPlayerId) == $this->getId();
 
-    return $data;
+    return array_merge(
+      $data,
+      [
+        'faction' => $this->getFaction(),
+        'hand' => $isCurrentPlayer ? $this->getHand() : [],
+      ],
+    );
   }
 
   public function getId()
@@ -52,4 +60,23 @@ class Player extends \BayonetsAndTomahawks\Helpers\DB_Model
     return (int) parent::getId();
   }
 
+  public function getHand()
+  {
+    $faction = $this->getFaction();
+    if ($faction === BRITISH) {
+      return Cards::getInLocationOrdered(Locations::hand(BRITISH))->toArray();
+    } else if ($faction === FRENCH) {
+      return array_merge(
+        Cards::getInLocationOrdered(Locations::hand(FRENCH))->toArray(),
+        Cards::getInLocationOrdered(Locations::hand(INDIAN))->toArray()
+      );
+    }
+  }
+
+  // TODO: might set this in PlayerExtra table?
+  public function getFaction()
+  {
+    $color = $this->getColor();
+    return $color === "B73E20" ? BRITISH : FRENCH;
+  }
 }

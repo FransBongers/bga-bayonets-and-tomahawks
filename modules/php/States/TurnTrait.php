@@ -36,16 +36,14 @@ trait TurnTrait
   {
     $player = Players::getActive();
     self::giveExtraTime($player->getId());
-    // Globals::setRemainingActions(2);
-    // Cards::resetUsed();
 
     // Stats::incPlayerTurnCount($player);
     // Stats::incTurnCount(1);
     $node = [
       'children' => [
         [
-          'action' => PLAYER_ACTION,
-          'playerId' => $player->getId(),
+          'action' => SELECT_RESERVE_CARD,
+          'playerId' => 'all',
         ],
         // [
         //   'action' => PLAYER_ACTION,

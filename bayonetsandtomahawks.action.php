@@ -22,6 +22,7 @@
  *
  */
 
+ use BayonetsAndTomahawks\Helpers\Utils;
 
 class action_bayonetsandtomahawks extends APP_GameAction
 {
@@ -59,6 +60,16 @@ class action_bayonetsandtomahawks extends APP_GameAction
   {
     self::setAjaxMode();
     $result = $this->game->endGame();
+    self::ajaxResponse();
+  }
+
+  public function actTakeAtomicAction()
+  {
+    self::setAjaxMode();
+    $action = self::getArg('actionName', AT_alphanum, true);
+    $args = self::getArg('args', AT_json, true);
+    Utils::validateJSonAlphaNum($args, 'args');
+    $this->game->actTakeAtomicAction($action, $args);
     self::ajaxResponse();
   }
 }

@@ -15,15 +15,22 @@
 
 @use "sass:math";
 @use 'base';
+@use "card-managers/cards";
 @use 'game-map/gamemap';
+@use "hand/hand";
 @use "info-panel/infoPanel";
 @use 'pools/pools';
 @use 'counters';
 @use "settings/settingsModal";
 @use "nouislider";
+@import "../node_modules/bga-cards/bga-cards";
 
 html {
   background: url("") rgb(192, 192, 192);
+}
+
+:root {
+  --btCardScale: 1;
 }
 
 #play_area_container {  
@@ -31,6 +38,24 @@ html {
   display: grid;
   grid-template-columns: auto auto;
   grid-gap: 8px;
+}
+
+#bt_discard {
+  position: absolute;
+  top: -400px;
+  left: 150px;
+  --btCardScale: 1;
+  // width: 150px;
+  // height: 230px;
+}
+
+#bt_deck {
+  position: absolute;
+  top: -400px;
+  left: 0px;
+  --btCardScale: 1;
+  // width: 150px;
+  // height: 230px;
 }
 
 /* make space between buttons on touch devices */

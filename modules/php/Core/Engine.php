@@ -108,6 +108,20 @@ class Engine
     $oldPlayerId = Game::get()->getActivePlayerId();
     $playerId = $node->getPlayerId();
 
+    // Multi active node
+    if ($playerId == 'all') {
+      Game::get()->gamestate->jumpToState(ST_RESOLVE_STACK);
+      Game::get()->gamestate->setAllPlayersMultiactive();
+
+      // Ensure no undo
+      Log::checkpoint();
+      Globals::setEngineChoices(0);
+
+      // Proceed to do the action
+      self::proceedToState($node, $isUndo);
+      return;
+    }
+
     // Confirm partial turn in case next unresolved node in tree
     // activates a different player and player has made choices
     if (
@@ -133,12 +147,20 @@ class Engine
       Globals::setEngineChoices(0);
     }
 
-    self::proceedToState($node);
+    self::proceedToState($node, $isUndo);
   }
 
-  public function proceedToState($node)
+  public function proceedToState($node, $isUndo = false)
   {
     $state = $node->getState();
+    // $args = $node->getArgs();
+    $actionId = AtomicActions::getActionOfState($state, false);
+    // Do some pre-action code if needed and if we are not undoing to an irreversible node
+    // TODO: check if we need isIrreversible check at some point?
+    // if (!$isUndo || !$node->isIrreversible(Players::get($node->getPId()))) {
+    if (!$isUndo) {
+      AtomicActions::stPreAction($actionId, $node);
+    }
     Game::get()->gamestate->jumpToState($state);
   }
 

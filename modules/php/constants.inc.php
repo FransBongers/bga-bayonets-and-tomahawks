@@ -42,6 +42,7 @@ const ST_END_GAME_NAME = 'gameEnd';
 const ST_CLEANUP = 88; // TODO: replace
 
 // Game
+const ST_SELECT_RESERVE_CARD = 20;
 const ST_PLAYER_ACTION = 21;
 
 
@@ -49,6 +50,7 @@ const ST_PLAYER_ACTION = 21;
  * Atomic actions
  */
 const PLAYER_ACTION = 'PLAYER_ACTION';
+const SELECT_RESERVE_CARD = 'SELECT_RESERVE_CARD';
 
 /*
  * Units types

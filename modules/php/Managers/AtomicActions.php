@@ -13,6 +13,7 @@ class AtomicActions
   // Mapping of actionId and corresponding class
   static $classes = [
     PLAYER_ACTION => 'PlayerAction',
+    SELECT_RESERVE_CARD => 'SelectReserveCard',
   ];
 
   public static function get($actionId, $ctx = null)
@@ -93,6 +94,22 @@ class AtomicActions
     $methodName = 'st' . $action->getClassName();
     if (\method_exists($action, $methodName)) {
       $action->$methodName();
+    }
+  }
+
+  /**
+   * Action executed before activating the state
+   */
+  public static function stPreAction($actionId, $ctx)
+  {
+    $action = self::get($actionId, $ctx);
+    $methodName = 'stPre' . $action->getClassName();
+    if (\method_exists($action, $methodName)) {
+      $action->$methodName();
+      // TODO: check if we need irreversible check at some points
+      // if ($ctx->isIrreversible(Players::get($ctx->getPId()))) {
+      //   Engine::checkpoint();
+      // }
     }
   }
 

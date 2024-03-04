@@ -129,6 +129,7 @@ class bayonetsandtomahawks extends Table
 
         $data = [
             'canceledNotifIds' => Log::getCanceledNotifIds(),
+            'playerOrder' => Players::getPlayerOrder(),
             'players' => Players::getUiData($pId),
             'staticData' => [
                 'units' => Units::getStaticUiData(),
@@ -291,6 +292,8 @@ class bayonetsandtomahawks extends Table
                 // TODO: check if we need this
                 $this->gamestate->nextState('zombiePass');
             }
+        } else if ($state['type'] == 'multipleactiveplayer') {
+            $this->gamestate->setPlayerNonMultiactive($activePlayer, 'zombiePass');
         }
     }
 

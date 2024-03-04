@@ -1,0 +1,104 @@
+@use "sass:math";
+@use "sass:map";
+@use "../base";
+
+// w: 580
+// h: 415
+.bt_card {
+  box-sizing: border-box;
+  background-image: url("img/cards.webp");
+  background-size: 700% 900%;
+  width: calc(var(--btCardScale) * 250px);
+  height: calc(var(--btCardScale) * 179px);
+  background-repeat: no-repeat;
+  border: calc(var(--btCardScale) * 1px) black solid;
+  border-radius: calc(var(--btCardScale) * 5px);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+}
+
+.card-sides {
+  position: relative !important;
+}
+
+.card.bt_selectable > .card-sides > .card-side {
+  cursor: pointer;
+  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px)
+    base.$selectable-color !important;
+}
+
+.card.bt_selectable:hover > .card-sides > .card-side,
+.card.bt_selected > .card-sides > .card-side {
+  cursor: pointer;
+  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px)
+    base.$selected-color !important;
+}
+
+// .bt_card[data-card-id="null"] {
+//   opacity: 0;
+//   // background-color: yellow;
+// }
+
+$cards: (
+  1: "Card01",
+  2: "Card02",
+  3: "Card03",
+  4: "Card04",
+  5: "Card05",
+  6: "Card06",
+  7: "Card07",
+  8: "Card08",
+  9: "Card09",
+  10: "Card10",
+  11: "Card11",
+  12: "Card12",
+  13: "Card13",
+  14: "Card14",
+  15: "Card15",
+  16: "Card16",
+  17: "Card17",
+  18: "Card18",
+  19: "Card19",
+  20: "Card20",
+  21: "Card21",
+  22: "Card22",
+  23: "Card23",
+  24: "Card24",
+  25: "Card25",
+  26: "Card26",
+  27: "Card27",
+  28: "Card28",
+  29: "Card29",
+  30: "Card30",
+  31: "Card31",
+  32: "Card32",
+  33: "Card33",
+  34: "Card34",
+  35: "Card35",
+  36: "Card36",
+  37: "Card37",
+  38: "Card38",
+  39: "Card39",
+  40: "Card40",
+  41: "Card41",
+  42: "Card42",
+  43: "Card43",
+  44: "Card44",
+  45: "Card45",
+  46: "Card46",
+  47: "Card47",
+  48: "Card48",
+  49: "Card49",
+  50: "Card50",
+  51: "Card51",
+  52: "Card52",
+  53: "Card53",
+  54: "Card54",
+);
+
+@for $i from 1 through 54 {
+  .bt_card[data-card-id="#{map.get($cards,$i)}"] {
+    background-position-x: math.div((($i - 1) % 7 * 100%), 6);
+    background-position-y: math.div(math.floor(calc(($i - 1) / 7)) * 100%, 8);
+  }
+}

@@ -15,7 +15,13 @@ class BatPlayer {
 
   private player: BayonetsAndTomahawksPlayerData;
 
-  constructor({ game, player }: { game: BayonetsAndTomahawksGame; player: BayonetsAndTomahawksPlayerData }) {
+  constructor({
+    game,
+    player,
+  }: {
+    game: BayonetsAndTomahawksGame;
+    player: BayonetsAndTomahawksPlayerData;
+  }) {
     // console.log("Player", player);
     this.game = game;
     const playerId = player.id;
@@ -41,35 +47,44 @@ class BatPlayer {
   // .##....##.##..........##....##.....##.##.......
   // ..######..########....##.....#######..##.......
 
-  updatePlayer({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
-
-
-  }
+  updatePlayer({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {}
 
   // Setup functions
   setupPlayer({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
     const playerGamedatas = gamedatas.players[this.playerId];
 
     this.setupPlayerPanel({ playerGamedatas });
-
+    this.setupHand({ playerGamedatas });
   }
 
-  setupPlayerPanel({ playerGamedatas }: { playerGamedatas: BgaPlayer }) {
+  setupHand({
+    playerGamedatas,
+  }: {
+    playerGamedatas: BayonetsAndTomahawksPlayerData;
+  }) {
+    if (this.playerId === this.game.getPlayerId()) {
+      // console.log('hand', this.game.hand);
+      this.game.hand.getStock().addCards(playerGamedatas.hand);
+    }
+  }
 
+  setupPlayerPanel({
+    playerGamedatas,
+  }: {
+    playerGamedatas: BayonetsAndTomahawksPlayerData;
+  }) {
     this.updatePlayerPanel({ playerGamedatas });
   }
 
   updatePlayerPanel({ playerGamedatas }: { playerGamedatas: BgaPlayer }) {
-
     if (this.game.framework().scoreCtrl?.[this.playerId]) {
-      this.game.framework().scoreCtrl[this.playerId].setValue(Number(playerGamedatas.score));
+      this.game
+        .framework()
+        .scoreCtrl[this.playerId].setValue(Number(playerGamedatas.score));
     }
-
   }
 
-  clearInterface() {
-
-  }
+  clearInterface() {}
 
   // ..######...########.########.########.########.########...######.
   // .##....##..##..........##.......##....##.......##.....##.##....##
@@ -118,5 +133,4 @@ class BatPlayer {
   // .#########.##..........##.....##..##.....##.##..####.......##
   // .##.....##.##....##....##.....##..##.....##.##...###.##....##
   // .##.....##..######.....##....####..#######..##....##..######.
-
 }

@@ -119,6 +119,7 @@ class GameState {
     }
     
     function getActivePlayerList() {
+        return [];
     }
     
     function updateMultiactiveOrNextState($next_state_if_none) {

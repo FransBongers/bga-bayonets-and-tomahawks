@@ -10,18 +10,48 @@ interface AddActionButtonProps extends AddButtonProps {
 }
 
 interface BayonetsAndTomahawksGame extends Game {
+  addCancelButton: () => void;
+  addConfirmButton: (props: { callback: Function | string }) => void;
   addPrimaryActionButton: (props: AddButtonProps) => void;
   addSecondaryActionButton: (props: AddButtonProps) => void;
   addDangerActionButton: (props: AddButtonProps) => void;
   clearInterface: () => void;
   clearPossible: () => void;
+  clientUpdatePageTitle: (props: {
+    text: string;
+    args: Record<string, unknown>;
+    nonActivePlayers?: boolean;
+  }) => void;
+  getPlayerId: () => number;
+  setCardSelectable: (props: {
+    id: string;
+    callback: (event: PointerEvent) => void;
+  }) => void;
+  setCardSelected: (props: { id: string }) => void;
+  takeAction: (props: {
+    action: string;
+    args?: Record<string, unknown>;
+  }) => void;
   updateLayout: () => void;
   animationManager: AnimationManager;
+  hand: Hand;
   // updatePlayAreaSize: () => void;
   notificationManager: NotificationManager;
   // playAreaScale: number;
   playerManager: PlayerManager;
+  settings: Settings;
   tooltipManager: TooltipManager;
+
+  cardManager: BTCardManager;
+}
+
+interface BTCard {
+  id: string;
+  faction: string;
+  initiativeValue: number;
+  location: string;
+  state: number;
+  years: number[] | null;
 }
 
 interface BTSpace {
@@ -42,7 +72,8 @@ interface BTUnit {
 
 interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   canceledNotifIds: string[];
-  players: Record<number, BgaPlayer>;
+  playerOrder: number[];
+  players: Record<number, BayonetsAndTomahawksPlayerData>;
   staticData: {
     units: {
       [counterId: string]: {
@@ -56,4 +87,5 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
 
 interface BayonetsAndTomahawksPlayerData extends BgaPlayer {
   hexColor: string;
+  hand: BTCard[];
 }

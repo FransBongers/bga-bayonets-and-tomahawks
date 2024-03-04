@@ -34,6 +34,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   // public gameOptions: BayonetsAndTomahawksGamedatas['gameOptions'];
   public notificationManager: NotificationManager;
   public playerManager: PlayerManager;
+  public playerOrder: number[];
   public tooltipManager: TooltipManager;
 
   // Boiler plate
@@ -49,11 +50,17 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   private _selectableNodes = []; // TODO: use to keep track of selectable classed?
 
   // Game specific
+  public cardManager: BTCardManager;
+  public discard: VoidStock<BTCard>;
+  public deck: LineStock<BTCard>;
   public gameMap: GameMap;
+  public hand: Hand;
   public pools: Pools;
   // public playAreaScale: number;
 
-  public activeStates: {};
+  public activeStates: {
+    selectReserveCard: SelectReserveCardState;
+  };
 
   constructor() {
     console.log("bayonetsandtomahawks constructor");
@@ -79,11 +86,14 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     this.gamedatas = gamedatas;
     // this.gameOptions = gamedatas.gameOptions;
     debug("gamedatas", gamedatas);
+    this.setupPlayerOrder({ playerOrder: gamedatas.playerOrder });
 
     this._connections = [];
 
     // Will store all data for active player and gets refreshed with entering player actions state
-    this.activeStates = {};
+    this.activeStates = {
+      selectReserveCard: new SelectReserveCardState(this),
+    };
 
     this.infoPanel = new InfoPanel(this);
     this.settings = new Settings(this);
@@ -95,9 +105,24 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
           : 2100 - (this.settings.get({ id: PREF_ANIMATION_SPEED }) as number),
     });
 
+    this.cardManager = new BTCardManager(this);
+    this.discard = new VoidStock(
+      this.cardManager,
+      document.getElementById("bt_discard")
+    );
+    this.deck = new LineStock(
+      this.cardManager,
+      document.getElementById("bt_deck")
+    );
+
     this.gameMap = new GameMap(this);
     this.pools = new Pools(this);
     this.tooltipManager = new TooltipManager(this);
+
+    if (this.playerOrder.includes(this.getPlayerId())) {
+      this.hand = new Hand(this);
+    }
+
     this.playerManager = new PlayerManager(this);
 
     if (this.notificationManager != undefined) {
@@ -108,6 +133,19 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
 
     this.tooltipManager.setupTooltips();
     debug("Ending game setup");
+  }
+
+  // Sets player order with current player at index 0 if player is in the game
+  setupPlayerOrder({ playerOrder }: { playerOrder: number[] }) {
+    const currentPlayerId = this.getPlayerId();
+    const isInGame = playerOrder.includes(currentPlayerId);
+    if (isInGame) {
+      while (playerOrder[0] !== currentPlayerId) {
+        const firstItem = playerOrder.shift();
+        playerOrder.push(firstItem);
+      }
+    }
+    this.playerOrder = playerOrder;
   }
 
   /**
@@ -407,15 +445,46 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   clientUpdatePageTitle({
     text,
     args,
+    nonActivePlayers = false,
   }: {
     text: string;
     args: Record<string, string | number>;
+    nonActivePlayers?: boolean;
   }) {
-    this.gamedatas.gamestate.descriptionmyturn = this.format_string_recursive(
-      _(text),
-      args
-    );
+    const title = this.format_string_recursive(_(text), args);
+    if (nonActivePlayers) {
+      this.gamedatas.gamestate.description = title;
+    } else {
+      this.gamedatas.gamestate.descriptionmyturn = title;
+    }
     this.framework().updatePageTitle();
+  }
+
+  setCardSelectable({
+    id,
+    callback,
+  }: {
+    id: string;
+    callback: (event: PointerEvent) => void;
+  }) {
+    const node = $(id);
+    if (node === null) {
+      return;
+    }
+    node.classList.add(BT_SELECTABLE);
+    this._connections.push(
+      dojo.connect(node, "onclick", this, (event: PointerEvent) =>
+        callback(event)
+      )
+    );
+  }
+
+  setCardSelected({ id }: { id: string }) {
+    const node = $(id);
+    if (node === null) {
+      return;
+    }
+    node.classList.add(BT_SELECTED);
   }
 
   // .########...#######..####.##.......########.########.
@@ -678,10 +747,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     // }
   }
 
-    // cardId will be PRENXXXX for tableau cards and full id for empire card / victory card
-    addLogTooltip({ tooltipId, cardId }: { tooltipId: number; cardId: string }) {
-
-    }
+  // cardId will be PRENXXXX for tableau cards and full id for empire card / victory card
+  addLogTooltip({ tooltipId, cardId }: { tooltipId: number; cardId: string }) {}
 
   /*
    * [Undocumented] Override BGA framework functions to call onLoadingComplete when loading is done
@@ -773,28 +840,48 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
    */
   takeAction({
     action,
+    atomicAction = true,
     args = {},
     checkAction,
   }: {
     action: string;
+    atomicAction?: boolean;
     args?: Record<string, unknown>;
-    checkAction?: string;
+    checkAction?: string; // Action used in checkAction
   }) {
-    if (!this.framework().checkAction(checkAction ? checkAction : action)) {
+    const actionName = atomicAction ? action : undefined;
+
+    if (!this.framework().checkAction(checkAction || action)) {
       this.actionError(action);
       return;
     }
     const data = {
       lock: true,
+      actionName,
       args: JSON.stringify(args),
     };
     // data.
     const gameName = this.framework().game_name;
     this.framework().ajaxcall(
-      `/${gameName}/${gameName}/${action}.html`,
+      `/${gameName}/${gameName}/${
+        atomicAction ? "actTakeAtomicAction" : action
+      }.html`,
       data,
       this,
       () => {}
     );
   }
+
+  // // Generic call for Atomic Action that encode args as a JSON to be decoded by backend
+  // takeAtomicAction(action, args, warning = false) {
+  //   if (!this.framework().checkAction(action)) {
+  //     this.actionError(action);
+  //     return;
+  //   }
+
+  //   this.takeAction({
+  //     action: "actTakeAtomicAction",
+  //     args: { actionName: action, actionArgs: args },
+  //   });
+  // }
 }

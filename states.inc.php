@@ -115,6 +115,7 @@ $machinestates = array(
     // .##.......##..####.##....##...##..##..####.##......
     // .##.......##...###.##....##...##..##...###.##......
     // .########.##....##..######...####.##....##.########
+    
     ST_RESOLVE_STACK => [
         'name' => 'resolveStack',
         'type' => 'game',
@@ -187,6 +188,16 @@ $machinestates = array(
     // .##.....##.##....##....##.....##..##.....##.##...###.##....##
     // .##.....##..######.....##....####..#######..##....##..######.
 
+    ST_SELECT_RESERVE_CARD => [
+        'name' => 'selectReserveCard',
+        'type' => 'multipleactiveplayer',
+        'description' => clienttranslate('Both players must select a Reserve card'),
+        'descriptionmyturn' => clienttranslate('${you} must select a Reserve card'),
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actSelectReserveCard'],
+        'transitions' => ['next' => ST_RESOLVE_STACK],
+      ],
 
     ST_PLAYER_ACTION => [
         'name' => 'playerAction',

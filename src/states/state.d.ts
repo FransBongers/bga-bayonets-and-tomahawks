@@ -8,3 +8,7 @@ interface CommonArgs {
   previousEngineChoices: number;
   previousSteps: number[];
 }
+
+interface OnEnteringSelectReserveCardStateArgs {
+  _private: BTCard[];
+}
