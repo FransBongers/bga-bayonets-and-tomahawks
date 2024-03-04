@@ -27,7 +27,7 @@ class Pools {
   setupUnits({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
     POOLS.forEach((pool: string) => {
       const units = gamedatas.units.filter((unit) => unit.location === pool);
-      console.log('units ' + pool,units);
+      // console.log('units ' + pool,units);
       if (units.length === 0) {
         return;
       }

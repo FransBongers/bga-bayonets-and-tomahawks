@@ -2566,27 +2566,27 @@ var BTCardManager = (function (_super) {
     return BTCardManager;
 }(CardManager));
 var MIN_PLAY_AREA_WIDTH = 1500;
-var DISABLED = 'disabled';
-var BT_SELECTABLE = 'bt_selectable';
-var BT_SELECTED = 'bt_selected';
-var PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY = 'confirmEndOfTurnPlayerSwitchOnly';
-var PREF_SHOW_ANIMATIONS = 'showAnimations';
-var PREF_ANIMATION_SPEED = 'animationSpeed';
-var PREF_DISABLED = 'disabled';
-var PREF_ENABLED = 'enabled';
-var POOL_FLEETS = 'poolFleets';
-var POOL_BRITISH_COMMANDERS = 'poolBritishCommanders';
-var POOL_BRITISH_LIGHT = 'poolBritishLight';
-var POOL_BRITISH_ARTILLERY = 'poolBritishArtillery';
-var POOL_BRITISH_FORTS = 'poolBritishForts';
-var POOL_BRITISH_METROPOLITAN_VOW = 'poolBritishMetropolitanVoW';
-var POOL_BRITISH_COLONIAL_VOW = 'poolBritishColonialVoW';
-var POOL_FRENCH_COMMANDERS = 'poolFrenchCommanders';
-var POOL_FRENCH_LIGHT = 'poolFrenchLight';
-var POOL_FRENCH_ARTILLERY = 'poolFrenchArtillery';
-var POOL_FRENCH_FORTS = 'poolFrenchForts';
-var POOL_FRENCH_METROPOLITAN_VOW = 'poolFrenchMetropolitanVoW';
-var POOL_NEUTRAL_INDIANS = 'poolNeutralIndians';
+var DISABLED = "disabled";
+var BT_SELECTABLE = "bt_selectable";
+var BT_SELECTED = "bt_selected";
+var PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY = "confirmEndOfTurnPlayerSwitchOnly";
+var PREF_SHOW_ANIMATIONS = "showAnimations";
+var PREF_ANIMATION_SPEED = "animationSpeed";
+var PREF_DISABLED = "disabled";
+var PREF_ENABLED = "enabled";
+var POOL_FLEETS = "poolFleets";
+var POOL_BRITISH_COMMANDERS = "poolBritishCommanders";
+var POOL_BRITISH_LIGHT = "poolBritishLight";
+var POOL_BRITISH_ARTILLERY = "poolBritishArtillery";
+var POOL_BRITISH_FORTS = "poolBritishForts";
+var POOL_BRITISH_METROPOLITAN_VOW = "poolBritishMetropolitanVoW";
+var POOL_BRITISH_COLONIAL_VOW = "poolBritishColonialVoW";
+var POOL_FRENCH_COMMANDERS = "poolFrenchCommanders";
+var POOL_FRENCH_LIGHT = "poolFrenchLight";
+var POOL_FRENCH_ARTILLERY = "poolFrenchArtillery";
+var POOL_FRENCH_FORTS = "poolFrenchForts";
+var POOL_FRENCH_METROPOLITAN_VOW = "poolFrenchMetropolitanVoW";
+var POOL_NEUTRAL_INDIANS = "poolNeutralIndians";
 var POOLS = [
     POOL_FLEETS,
     POOL_BRITISH_COMMANDERS,
@@ -2602,6 +2602,12 @@ var POOLS = [
     POOL_FRENCH_METROPOLITAN_VOW,
     POOL_NEUTRAL_INDIANS,
 ];
+var YEAR_MARKER = "year_marker";
+var ROUND_MARKER = "round_marker";
+var VICTORY_MARKER = "victory_marker";
+var OPEN_SEAS_MARKER = "open_seas_marker";
+var FRENCH_RAID_MARKER = "french_raid_marker";
+var BRITISH_RAID_MARKER = "british_raid_marker";
 define([
     'dojo',
     'dojo/_base/declare',
@@ -2621,6 +2627,95 @@ var debug = isDebug ? console.info.bind(window.console) : function () { };
 var capitalizeFirstLetter = function (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
+var YEAR_TRACK_CONFIG = [
+    {
+        year: 1755,
+        top: 579,
+        left: 1340,
+    },
+    {
+        year: 1756,
+        top: 579,
+        left: 1385,
+    },
+    {
+        year: 1757,
+        top: 579,
+        left: 1431,
+    },
+    {
+        year: 1758,
+        top: 630,
+        left: 1340,
+    },
+    {
+        year: 1759,
+        top: 630,
+        left: 1385,
+    },
+];
+var ACTION_ROUND_TRACK_CONFIG = [
+    {
+        id: 'ar1',
+        top: 717,
+        left: 1340,
+    },
+    {
+        id: 'ar2',
+        top: 717,
+        left: 1385,
+    },
+    {
+        id: 'fleetsArrive',
+        top: 717,
+        left: 1431,
+    },
+    {
+        id: 'ar3',
+        top: 768,
+        left: 1340,
+    },
+    {
+        id: 'colonialsEnlist',
+        top: 768,
+        left: 1385,
+    },
+    {
+        id: 'ar4',
+        top: 831,
+        left: 1340,
+    },
+    {
+        id: 'ar5',
+        top: 831,
+        left: 1385,
+    },
+    {
+        id: 'ar6',
+        top: 831,
+        left: 1431,
+    },
+    {
+        id: 'ar7',
+        top: 882,
+        left: 1340,
+    },
+    {
+        id: 'ar8',
+        top: 882,
+        left: 1385,
+    },
+    {
+        id: 'ar9',
+        top: 882,
+        left: 1431,
+    },
+    {
+        id: 'winterQuarters',
+        top: 933,
+        left: 1340,
+    },
+];
 var GameMap = (function () {
     function GameMap(game) {
         this.game = game;
@@ -2638,8 +2733,25 @@ var GameMap = (function () {
             if (node.length === 0) {
                 return;
             }
-            node[0].insertAdjacentHTML("afterbegin", tplUnit({ faction: gamedatas.staticData.units[unit.counterId].faction, counterId: unit.counterId }));
+            node[0].insertAdjacentHTML("afterbegin", tplUnit({
+                faction: gamedatas.staticData.units[unit.counterId].faction,
+                counterId: unit.counterId,
+            }));
         });
+    };
+    GameMap.prototype.setupMarkers = function (_a) {
+        var gamedatas = _a.gamedatas;
+        var markers = gamedatas.markers;
+        if (markers[YEAR_MARKER]) {
+            document
+                .getElementById("year_track_".concat(markers[YEAR_MARKER].location))
+                .insertAdjacentHTML("beforeend", tplMarker({ id: markers[YEAR_MARKER].id }));
+        }
+        if (markers[ROUND_MARKER]) {
+            document
+                .getElementById("action_round_track_".concat(markers[ROUND_MARKER].location))
+                .insertAdjacentHTML("beforeend", tplMarker({ id: markers[ROUND_MARKER].id }));
+        }
     };
     GameMap.prototype.updateGameMap = function (_a) {
         var gamedatas = _a.gamedatas;
@@ -2650,25 +2762,50 @@ var GameMap = (function () {
             .getElementById("play_area_container")
             .insertAdjacentHTML("afterbegin", tplGameMap({ gamedatas: gamedatas }));
         this.setupUnits({ gamedatas: gamedatas });
+        this.setupMarkers({ gamedatas: gamedatas });
     };
     GameMap.prototype.clearInterface = function () { };
     return GameMap;
 }());
+var tplMarker = function (_a) {
+    var id = _a.id;
+    return "<div id=\"".concat(id, "\" class=\"bt_marker\"></div>");
+};
 var tplUnit = function (_a) {
     var faction = _a.faction, counterId = _a.counterId, style = _a.style;
-    return "\n  <div class=\"bt_token\" data-counter-id=\"".concat(counterId, "\"").concat(style ? " style=\"".concat(style, "\"") : '', "></div>\n");
+    return "\n  <div class=\"bt_token\" data-counter-id=\"".concat(counterId, "\"").concat(style ? " style=\"".concat(style, "\"") : "", "></div>\n");
 };
 var tplSpaces = function (_a) {
     var spaces = _a.spaces;
     var filteredSpaces = spaces.filter(function (space) { return space.top && space.left; });
-    var mappedSpaces = filteredSpaces.map(function (space) { return "<div data-space-id=\"".concat(space.id, "\" class=\"bt_space\" style=\"top: calc(var(--btMapScale) * ").concat(space.top - 26, "px); left: calc(var(--btMapScale) * ").concat(space.left - 26, "px);\"></div>"); });
-    var result = mappedSpaces.join('');
+    var mappedSpaces = filteredSpaces.map(function (space) {
+        return "<div data-space-id=\"".concat(space.id, "\" class=\"bt_space\" style=\"top: calc(var(--btMapScale) * ").concat(space.top - 26, "px); left: calc(var(--btMapScale) * ").concat(space.left - 26, "px);\"></div>");
+    });
+    var result = mappedSpaces.join("");
     return result;
 };
+var tplMarkerSpace = function (_a) {
+    var id = _a.id, top = _a.top, left = _a.left;
+    return "<div id=\"".concat(id, "\" class=\"bt_marker_space\" style=\"top: calc(var(--btMapScale) * ").concat(top, "px); left: calc(var(--btMapScale) * ").concat(left, "px);\"></div>");
+};
+var tplActionRoundTrack = function () { return ACTION_ROUND_TRACK_CONFIG.map(function (markerSpace) {
+    return tplMarkerSpace({
+        id: "action_round_track_".concat(markerSpace.id),
+        top: markerSpace.top,
+        left: markerSpace.left,
+    });
+}).join(""); };
+var tplYearTrack = function () { return YEAR_TRACK_CONFIG.map(function (markerSpace) {
+    return tplMarkerSpace({
+        id: "year_track_".concat(markerSpace.year),
+        top: markerSpace.top,
+        left: markerSpace.left,
+    });
+}).join(""); };
 var tplGameMap = function (_a) {
     var gamedatas = _a.gamedatas;
     var spaces = gamedatas.spaces;
-    return "\n  <div id=\"bt_game_map\">\n    <div class=\"bt_marker\" data-marker-type=\"victory_point\"></div>\n    ".concat(tplSpaces({ spaces: spaces }), "\n  </div>");
+    return "\n  <div id=\"bt_game_map\">\n    <div class=\"bt_marker_test\" data-marker-type=\"victory_point\"></div>\n    ".concat(tplSpaces({ spaces: spaces }), "\n    ").concat(tplYearTrack(), "\n    ").concat(tplActionRoundTrack(), "\n\n  </div>");
 };
 var Hand = (function () {
     function Hand(game) {
@@ -2915,7 +3052,6 @@ var Pools = (function () {
         var gamedatas = _a.gamedatas;
         POOLS.forEach(function (pool) {
             var units = gamedatas.units.filter(function (unit) { return unit.location === pool; });
-            console.log('units ' + pool, units);
             if (units.length === 0) {
                 return;
             }

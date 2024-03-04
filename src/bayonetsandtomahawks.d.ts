@@ -6,7 +6,7 @@ interface AddButtonProps {
 }
 
 interface AddActionButtonProps extends AddButtonProps {
-  color?: 'blue' | 'gray' | 'red' | 'none';
+  color?: "blue" | "gray" | "red" | "none";
 }
 
 interface BayonetsAndTomahawksGame extends Game {
@@ -54,6 +54,12 @@ interface BTCard {
   years: number[] | null;
 }
 
+interface BTMarker {
+  id: string;
+  location: string;
+  state: number;
+}
+
 interface BTSpace {
   id: string;
   control: string;
@@ -72,14 +78,22 @@ interface BTUnit {
 
 interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   canceledNotifIds: string[];
+  markers: {
+    year_marker: BTMarker;
+    round_marker: BTMarker;
+    victory_marker: BTMarker;
+    open_seas_marker: BTMarker;
+    french_raid_marker: BTMarker;
+    british_raid_marker: BTMarker;
+  };
   playerOrder: number[];
   players: Record<number, BayonetsAndTomahawksPlayerData>;
   staticData: {
     units: {
       [counterId: string]: {
-        faction: 'british' | 'french' | 'indian';
-      }
-    }
+        faction: "british" | "french" | "indian";
+      };
+    };
   };
   spaces: BTSpace[];
   units: BTUnit[];

@@ -72,6 +72,16 @@ const INDIAN = 'indian';
 const NEUTRAL = 'neutral';
 
 /**
+ * Tokens / markers
+ */
+const YEAR_MARKER = 'year_marker';
+const ROUND_MARKER = 'round_marker';
+const VICTORY_MARKER = 'victory_marker';
+const OPEN_SEAS_MARKER = 'open_seas_marker';
+const FRENCH_RAID_MARKER = 'french_raid_marker';
+const BRITISH_RAID_MARKER = 'british_raid_marker';
+
+/**
  * Pools
  */
 const POOL_FLEETS = 'poolFleets';
