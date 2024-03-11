@@ -53,6 +53,14 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
   //////////////////////////////////
   //////////////////////////////////
 
+  public static function getCardsInPlay() {
+    return [
+      BRITISH => self::getTopOf(Locations::cardInPlay(BRITISH)),
+      FRENCH => self::getTopOf(Locations::cardInPlay(FRENCH)),
+      INDIAN => self::getTopOf(Locations::cardInPlay(INDIAN)),
+    ];
+  }
+
   // public static function getOfTypeInLocation($type, $location)
   // {
   //   return self::getSelectQuery()

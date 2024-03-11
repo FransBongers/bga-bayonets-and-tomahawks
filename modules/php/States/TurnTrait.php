@@ -29,6 +29,63 @@ trait TurnTrait
     $this->initCustomDefaultTurnOrder('default', \ST_TURNACTION, ST_BEFORE_START_OF_TURN, true);
   }
 
+  function stSetupYear()
+  {
+    $year = Globals::getYear();
+    $year += 1;
+    Globals::setYear($year);
+    Globals::setActionRound(1);
+    // TODO: move tokens?
+
+    // TODO: check how we should handle giving extra time
+    $players = Players::getAll();
+    foreach($players as $player) {
+      self::giveExtraTime($player->getId());
+    }
+
+    $node = [
+      'children' => [
+        [
+          'action' => SELECT_RESERVE_CARD,
+          'playerId' => 'all',
+        ],
+      ],
+    ];
+
+    Engine::setup($node, ['method' => 'stSetupActionRound']);
+    Engine::proceed();
+  }
+
+  function stSetupActionRound() {
+    $player = Players::getActive();
+    self::giveExtraTime($player->getId());
+
+    // Stats::incPlayerTurnCount($player);
+    // Stats::incTurnCount(1);
+    $node = [
+      'children' => [
+        [
+          'action' => ACTION_ROUND_CHOOSE_CARD,
+          'playerId' => 'all',
+        ],
+        // [
+        //   'children' => [
+        //     [
+        //       'action' => FREE_ACTION,
+        //       'optional' => true,
+        //       'playerId' => $player->getId(),
+        //     ],
+        //   ]
+        // ]
+      ],
+    ];
+    // Notifications::startTurn($player);
+
+    // Inserting leaf Action card
+    Engine::setup($node, ['method' => 'stSetupActionRound']); // End of action round
+    Engine::proceed();
+  }
+
   /**
    * Activate next player
    */
@@ -45,11 +102,10 @@ trait TurnTrait
           'action' => SELECT_RESERVE_CARD,
           'playerId' => 'all',
         ],
-        // [
-        //   'action' => PLAYER_ACTION,
-        //   'optional' => true,
-        //   'playerId' => $player->getId(),
-        // ],
+        [
+          'action' => ACTION_ROUND_CHOOSE_CARD,
+          'playerId' => 'all',
+        ],
         // [
         //   'children' => [
         //     [
@@ -64,7 +120,7 @@ trait TurnTrait
     // Notifications::startTurn($player);
 
     // Inserting leaf Action card
-    Engine::setup($node, ['method' => 'stEndOfTurn']);
+    Engine::setup($node, ['method' => 'stTurnAction']);
     Engine::proceed();
   }
 

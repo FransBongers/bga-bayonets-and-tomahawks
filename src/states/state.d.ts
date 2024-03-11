@@ -9,6 +9,24 @@ interface CommonArgs {
   previousSteps: number[];
 }
 
+interface OnEnteringConfirmTurnArgs extends CommonArgs {}
+
+interface OnEnteringActionRoundActionPhaseStateArgs extends CommonArgs {
+
+}
+
+interface OnEnteringActionRoundChooseCardStateArgs {
+  _private: BTCard[];
+}
+
+interface OnEnteringActionRoundChooseFirstPlayerStateArgs extends CommonArgs {
+
+}
+
+interface OnEnteringActionRoundSailBoxLandingStateArgs extends CommonArgs {
+
+}
+
 interface OnEnteringSelectReserveCardStateArgs {
   _private: BTCard[];
 }

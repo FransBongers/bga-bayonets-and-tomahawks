@@ -42,6 +42,7 @@ interface Framework {
     next_log_id: string; // actually a number?
     setSynchronous: (notifId: string, waitMilliSeconds: number) => void;
     onSynchronousNotificationEnd: () => void;
+    setIgnoreNotificationCheck: (notifId: string, predicate: (notif: Notif<unknown>) => void) => void;
   };
   placeOnObject: (mobileObject: string | Element, targetObj: string | Element) => void;
   player_id: string;

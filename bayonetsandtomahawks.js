@@ -2060,6 +2060,68 @@ var CardManager = (function () {
     };
     return CardManager;
 }());
+var MIN_PLAY_AREA_WIDTH = 1500;
+var DISABLED = "disabled";
+var BT_SELECTABLE = "bt_selectable";
+var BT_SELECTED = "bt_selected";
+var PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY = "confirmEndOfTurnPlayerSwitchOnly";
+var PREF_SHOW_ANIMATIONS = "showAnimations";
+var PREF_ANIMATION_SPEED = "animationSpeed";
+var PREF_DISABLED = "disabled";
+var PREF_ENABLED = "enabled";
+var BRITISH = "british";
+var FRENCH = "french";
+var INDIAN = "indian";
+var NEUTRAL = "neutral";
+var FACTIONS = [BRITISH, FRENCH, INDIAN];
+var POOL_FLEETS = "poolFleets";
+var POOL_BRITISH_COMMANDERS = "poolBritishCommanders";
+var POOL_BRITISH_LIGHT = "poolBritishLight";
+var POOL_BRITISH_ARTILLERY = "poolBritishArtillery";
+var POOL_BRITISH_FORTS = "poolBritishForts";
+var POOL_BRITISH_METROPOLITAN_VOW = "poolBritishMetropolitanVoW";
+var POOL_BRITISH_COLONIAL_VOW = "poolBritishColonialVoW";
+var POOL_FRENCH_COMMANDERS = "poolFrenchCommanders";
+var POOL_FRENCH_LIGHT = "poolFrenchLight";
+var POOL_FRENCH_ARTILLERY = "poolFrenchArtillery";
+var POOL_FRENCH_FORTS = "poolFrenchForts";
+var POOL_FRENCH_METROPOLITAN_VOW = "poolFrenchMetropolitanVoW";
+var POOL_NEUTRAL_INDIANS = "poolNeutralIndians";
+var POOLS = [
+    POOL_FLEETS,
+    POOL_BRITISH_COMMANDERS,
+    POOL_BRITISH_LIGHT,
+    POOL_BRITISH_ARTILLERY,
+    POOL_BRITISH_FORTS,
+    POOL_BRITISH_METROPOLITAN_VOW,
+    POOL_BRITISH_COLONIAL_VOW,
+    POOL_FRENCH_COMMANDERS,
+    POOL_FRENCH_LIGHT,
+    POOL_FRENCH_ARTILLERY,
+    POOL_FRENCH_FORTS,
+    POOL_FRENCH_METROPOLITAN_VOW,
+    POOL_NEUTRAL_INDIANS,
+];
+var YEAR_MARKER = "year_marker";
+var ROUND_MARKER = "round_marker";
+var VICTORY_MARKER = "victory_marker";
+var OPEN_SEAS_MARKER = "open_seas_marker";
+var FRENCH_RAID_MARKER = "french_raid_marker";
+var BRITISH_RAID_MARKER = "british_raid_marker";
+define([
+    'dojo',
+    'dojo/_base/declare',
+    g_gamethemeurl + 'modules/js/vendor/nouislider.min.js',
+    'dojo/fx',
+    'dojox/fx/ext-dojo/complex',
+    'ebg/core/gamegui',
+    'ebg/counter',
+], function (dojo, declare, noUiSliderDefined) {
+    if (noUiSliderDefined) {
+        noUiSlider = noUiSliderDefined;
+    }
+    return declare('bgagame.bayonetsandtomahawks', ebg.core.gamegui, new BayonetsAndTomahawks());
+});
 var BayonetsAndTomahawks = (function () {
     function BayonetsAndTomahawks() {
         this.tooltipsToMap = [];
@@ -2080,6 +2142,12 @@ var BayonetsAndTomahawks = (function () {
         this.setupPlayerOrder({ playerOrder: gamedatas.playerOrder });
         this._connections = [];
         this.activeStates = {
+            actionRoundActionPhase: new ActionRoundActionPhaseState(this),
+            actionRoundChooseCard: new ActionRoundChooseCardState(this),
+            actionRoundChooseFirstPlayer: new ActionRoundChooseFirstPlayerState(this),
+            actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
+            confirmPartialTurn: new ConfirmPartialTurnState(this),
+            confirmTurn: new ConfirmTurnState(this),
             selectReserveCard: new SelectReserveCardState(this),
         };
         this.infoPanel = new InfoPanel(this);
@@ -2095,6 +2163,7 @@ var BayonetsAndTomahawks = (function () {
         this.gameMap = new GameMap(this);
         this.pools = new Pools(this);
         this.tooltipManager = new TooltipManager(this);
+        this.cardsInPlay = new CardsInPlay(this);
         if (this.playerOrder.includes(this.getPlayerId())) {
             this.hand = new Hand(this);
         }
@@ -2178,9 +2247,25 @@ var BayonetsAndTomahawks = (function () {
             this.addSecondaryActionButton({
                 id: "pass_btn",
                 text: text ? _(text) : _("Pass"),
-                callback: function () { return _this.takeAction({ action: "actPassOptionalAction" }); },
+                callback: function () {
+                    return _this.takeAction({
+                        action: "actPassOptionalAction",
+                        atomicAction: false,
+                    });
+                },
             });
         }
+    };
+    BayonetsAndTomahawks.prototype.addPlayerButton = function (_a) {
+        var player = _a.player, callback = _a.callback;
+        var id = "select_".concat(player.id);
+        this.addPrimaryActionButton({
+            id: id,
+            text: player.name,
+            callback: callback,
+        });
+        var node = document.getElementById(id);
+        node.style.backgroundColor = "#".concat(player.color);
     };
     BayonetsAndTomahawks.prototype.addPrimaryActionButton = function (_a) {
         var id = _a.id, text = _a.text, callback = _a.callback, extraClasses = _a.extraClasses;
@@ -2558,70 +2643,80 @@ var BTCardManager = (function (_super) {
     };
     BTCardManager.prototype.setupBackDiv = function (card, div) { };
     BTCardManager.prototype.isCardVisible = function (card) {
-        if (card.location.startsWith("hand_")) {
+        if (card.location.startsWith("hand_") || card.location.startsWith("cardInPlay_")) {
             return true;
         }
         return false;
     };
     return BTCardManager;
 }(CardManager));
-var MIN_PLAY_AREA_WIDTH = 1500;
-var DISABLED = "disabled";
-var BT_SELECTABLE = "bt_selectable";
-var BT_SELECTED = "bt_selected";
-var PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY = "confirmEndOfTurnPlayerSwitchOnly";
-var PREF_SHOW_ANIMATIONS = "showAnimations";
-var PREF_ANIMATION_SPEED = "animationSpeed";
-var PREF_DISABLED = "disabled";
-var PREF_ENABLED = "enabled";
-var POOL_FLEETS = "poolFleets";
-var POOL_BRITISH_COMMANDERS = "poolBritishCommanders";
-var POOL_BRITISH_LIGHT = "poolBritishLight";
-var POOL_BRITISH_ARTILLERY = "poolBritishArtillery";
-var POOL_BRITISH_FORTS = "poolBritishForts";
-var POOL_BRITISH_METROPOLITAN_VOW = "poolBritishMetropolitanVoW";
-var POOL_BRITISH_COLONIAL_VOW = "poolBritishColonialVoW";
-var POOL_FRENCH_COMMANDERS = "poolFrenchCommanders";
-var POOL_FRENCH_LIGHT = "poolFrenchLight";
-var POOL_FRENCH_ARTILLERY = "poolFrenchArtillery";
-var POOL_FRENCH_FORTS = "poolFrenchForts";
-var POOL_FRENCH_METROPOLITAN_VOW = "poolFrenchMetropolitanVoW";
-var POOL_NEUTRAL_INDIANS = "poolNeutralIndians";
-var POOLS = [
-    POOL_FLEETS,
-    POOL_BRITISH_COMMANDERS,
-    POOL_BRITISH_LIGHT,
-    POOL_BRITISH_ARTILLERY,
-    POOL_BRITISH_FORTS,
-    POOL_BRITISH_METROPOLITAN_VOW,
-    POOL_BRITISH_COLONIAL_VOW,
-    POOL_FRENCH_COMMANDERS,
-    POOL_FRENCH_LIGHT,
-    POOL_FRENCH_ARTILLERY,
-    POOL_FRENCH_FORTS,
-    POOL_FRENCH_METROPOLITAN_VOW,
-    POOL_NEUTRAL_INDIANS,
-];
-var YEAR_MARKER = "year_marker";
-var ROUND_MARKER = "round_marker";
-var VICTORY_MARKER = "victory_marker";
-var OPEN_SEAS_MARKER = "open_seas_marker";
-var FRENCH_RAID_MARKER = "french_raid_marker";
-var BRITISH_RAID_MARKER = "british_raid_marker";
-define([
-    'dojo',
-    'dojo/_base/declare',
-    g_gamethemeurl + 'modules/js/vendor/nouislider.min.js',
-    'dojo/fx',
-    'dojox/fx/ext-dojo/complex',
-    'ebg/core/gamegui',
-    'ebg/counter',
-], function (dojo, declare, noUiSliderDefined) {
-    if (noUiSliderDefined) {
-        noUiSlider = noUiSliderDefined;
+var CardsInPlay = (function () {
+    function CardsInPlay(game) {
+        this.game = game;
+        this.setupCardsInPlay({ gamedatas: game.gamedatas });
     }
-    return declare('bgagame.bayonetsandtomahawks', ebg.core.gamegui, new BayonetsAndTomahawks());
-});
+    CardsInPlay.prototype.clearInterface = function () { };
+    CardsInPlay.prototype.updateCardsInPlay = function (_a) {
+        var _this = this;
+        var gamedatas = _a.gamedatas;
+        FACTIONS.forEach(function (faction) {
+            if (!gamedatas.cardsInPlay[faction]) {
+                return;
+            }
+            _this.addCard({ faction: faction, card: gamedatas.cardsInPlay[faction] });
+        });
+    };
+    CardsInPlay.prototype.setupCardsInPlay = function (_a) {
+        var _b;
+        var gamedatas = _a.gamedatas;
+        var node = $("bt_right_column");
+        node.insertAdjacentHTML("afterbegin", tplCardsInPlay());
+        this.cards = (_b = {},
+            _b[BRITISH] = new LineStock(this.game.cardManager, document.getElementById("british_card_in_play"), { direction: "column", center: false }),
+            _b[FRENCH] = new LineStock(this.game.cardManager, document.getElementById("french_card_in_play"), { direction: "column", center: false }),
+            _b[INDIAN] = new LineStock(this.game.cardManager, document.getElementById("indian_card_in_play"), { direction: "column", center: false }),
+            _b);
+        this.updateCardsInPlay({ gamedatas: gamedatas });
+    };
+    CardsInPlay.prototype.addCard = function (_a) {
+        var card = _a.card, faction = _a.faction;
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4, this.cards[faction].addCard(card)];
+                    case 1:
+                        _b.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    CardsInPlay.prototype.removeCard = function (_a) {
+        var card = _a.card, faction = _a.faction;
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4, this.cards[faction].removeCard(card)];
+                    case 1:
+                        _b.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    CardsInPlay.prototype.getCards = function (_a) {
+        var faction = _a.faction;
+        return this.cards[faction].getCards();
+    };
+    CardsInPlay.prototype.getStock = function (_a) {
+        var faction = _a.faction;
+        return this.cards[faction];
+    };
+    return CardsInPlay;
+}());
+var tplCardsInPlay = function () {
+    return "<div id=\"bt_cards_in_play\">\n            <span>Cards in play</span>\n            <div class=\"bt_cards_in_play_container\">\n              <div id=\"british_card_in_play\" class=\"bt_card_in_play\"></div>\n              <div id=\"french_card_in_play\" class=\"bt_card_in_play\"></div>\n              <div id=\"indian_card_in_play\" class=\"bt_card_in_play\"></div>\n            </div>\n          </div\n  ";
+};
 var isDebug = window.location.host == 'studio.boardgamearena.com' || window.location.hash.indexOf('debug') > -1;
 var debug = isDebug ? console.info.bind(window.console) : function () { };
 var capitalizeFirstLetter = function (string) {
@@ -2860,6 +2955,12 @@ var Hand = (function () {
     Hand.prototype.getStock = function () {
         return this.hand;
     };
+    Hand.prototype.open = function () {
+        var handWrapper = $("floating_hand_wrapper");
+        if (handWrapper) {
+            handWrapper.dataset.open = "hand";
+        }
+    };
     return Hand;
 }());
 var tplHand = function () {
@@ -2921,27 +3022,29 @@ var NotificationManager = (function () {
     }
     NotificationManager.prototype.setupNotifications = function () {
         var _this = this;
-        console.log('notifications subscriptions setup');
+        console.log("notifications subscriptions setup");
         var notifs = [
-            ['log', 1],
+            ["log", undefined],
+            ["drawCardPrivate", undefined],
+            ["revealCardsInPlay", undefined],
+            ["selectReserveCard", undefined],
+            ["selectReserveCardPrivate", undefined],
         ];
         notifs.forEach(function (notif) {
             _this.subscriptions.push(dojo.subscribe(notif[0], _this, function (notifDetails) {
                 debug("notif_".concat(notif[0]), notifDetails);
+                var msg = _this.game.format_string_recursive(notifDetails.log, notifDetails.args);
+                if (msg != "") {
+                    $("gameaction_status").innerHTML = msg;
+                    $("pagemaintitletext").innerHTML = msg;
+                }
                 var promise = _this["notif_".concat(notif[0])](notifDetails);
-                promise === null || promise === void 0 ? void 0 : promise.then(function () { return _this.game.framework().notifqueue.onSynchronousNotificationEnd(); });
+                promise === null || promise === void 0 ? void 0 : promise.then(function () {
+                    return _this.game.framework().notifqueue.onSynchronousNotificationEnd();
+                });
             }));
             _this.game.framework().notifqueue.setSynchronous(notif[0], notif[1]);
         });
-    };
-    NotificationManager.prototype.notif_log = function (notif) {
-        debug('notif_log', notif.args);
-    };
-    NotificationManager.prototype.notif_smallRefreshInterface = function (notif) {
-        var updatedGamedatas = __assign(__assign({}, this.game.gamedatas), notif.args);
-        this.game.clearInterface();
-        this.game.gamedatas = updatedGamedatas;
-        this.game.playerManager.updatePlayers({ gamedatas: updatedGamedatas });
     };
     NotificationManager.prototype.destroy = function () {
         dojo.forEach(this.subscriptions, dojo.unsubscribe);
@@ -2949,6 +3052,95 @@ var NotificationManager = (function () {
     NotificationManager.prototype.getPlayer = function (_a) {
         var playerId = _a.playerId;
         return this.game.playerManager.getPlayer({ playerId: playerId });
+    };
+    NotificationManager.prototype.notif_log = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                debug("notif_log", notif.args);
+                return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_smallRefreshInterface = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var updatedGamedatas;
+            return __generator(this, function (_a) {
+                updatedGamedatas = __assign(__assign({}, this.game.gamedatas), notif.args);
+                this.game.clearInterface();
+                this.game.gamedatas = updatedGamedatas;
+                this.game.playerManager.updatePlayers({ gamedatas: updatedGamedatas });
+                return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_drawCardPrivate = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var card;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        card = notif.args.card;
+                        return [4, this.game.deck.addCard(card)];
+                    case 1:
+                        _a.sent();
+                        return [4, this.game.hand.addCard(card)];
+                    case 2:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_revealCardsInPlay = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var factions, _i, factions_1, faction;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        factions = [BRITISH, FRENCH, INDIAN];
+                        _i = 0, factions_1 = factions;
+                        _a.label = 1;
+                    case 1:
+                        if (!(_i < factions_1.length)) return [3, 4];
+                        faction = factions_1[_i];
+                        return [4, this.game.cardsInPlay.addCard({
+                                card: notif.args[faction],
+                                faction: faction,
+                            })];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _i++;
+                        return [3, 1];
+                    case 4: return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_selectReserveCard = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var faction;
+            return __generator(this, function (_a) {
+                faction = notif.args.faction;
+                return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_selectReserveCardPrivate = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var discardedCard;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        discardedCard = notif.args.discardedCard;
+                        return [4, this.game.discard.addCard(discardedCard)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
     };
     return NotificationManager;
 }());
@@ -2992,7 +3184,7 @@ var BatPlayer = (function () {
         this.game = game;
         var playerId = player.id;
         this.playerId = Number(playerId);
-        this.player = player;
+        this.playerData = player;
         this.playerName = player.name;
         this.playerColor = player.color;
         this.playerHexColor = player.hexColor;
@@ -3078,7 +3270,7 @@ var Pools = (function () {
     return Pools;
 }());
 var tplPoolsContainer = function () {
-    return "\n  <div id=\"bt_pools_container\">\n    ".concat(tplPoolFleets(), "\n    ").concat(tplPoolNeutralIndians(), "\n    ").concat(tplPoolBritish(), "\n    ").concat(tplPoolFrench(), "\n  </div>");
+    return "\n  <div id=\"bt_right_column\">\n    ".concat(tplPoolFleets(), "\n    ").concat(tplPoolNeutralIndians(), "\n    ").concat(tplPoolBritish(), "\n    ").concat(tplPoolFrench(), "\n  </div>");
 };
 var tplPoolFleets = function () { return "\n<div id=\"bt_pool_fleets\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Fleets'), "</span></div>\n  <div data-pool-id=\"poolFleets\" class=\"bt_unit_pool\"></div>\n</div>"); };
 var tplPoolNeutralIndians = function () { return "\n<div id=\"bt_pool_neutralIndians\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Neutral Indians'), "</span></div>\n  <div data-pool-id=\"poolNeutralIndians\" class=\"bt_unit_pool\"></div>\n</div>"); };
@@ -3439,6 +3631,248 @@ var tplPlayerPrefenceSliderRow = function (_a) {
     var label = _a.label, id = _a.id, _b = _a.visible, visible = _b === void 0 ? true : _b;
     return "\n  <div id=\"setting_row_".concat(id, "\" class=\"player_preference_row\"").concat(!visible ? " style=\"display: none;\"" : '', ">\n    <div class=\"player_preference_row_label\">").concat(_(label), "</div>\n    <div class=\"player_preference_row_value slider\">\n      <div id=\"setting_").concat(id, "\"></div>\n    </div>\n  </div>\n  ");
 };
+var ActionRoundActionPhaseState = (function () {
+    function ActionRoundActionPhaseState(game) {
+        this.game = game;
+    }
+    ActionRoundActionPhaseState.prototype.onEnteringState = function (args) {
+        debug("Entering ActionRoundActionPhaseState");
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    ActionRoundActionPhaseState.prototype.onLeavingState = function () {
+        debug("Leaving ActionRoundActionPhaseState");
+    };
+    ActionRoundActionPhaseState.prototype.setDescription = function (activePlayerId) { };
+    ActionRoundActionPhaseState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _("${you} may perform actions"),
+            args: {
+                you: "${you}",
+            },
+        });
+        this.game.addConfirmButton({
+            callback: function () {
+                return _this.game.takeAction({
+                    action: "actActionRoundActionPhase",
+                    args: {},
+                });
+            },
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    return ActionRoundActionPhaseState;
+}());
+var ActionRoundChooseCardState = (function () {
+    function ActionRoundChooseCardState(game) {
+        this.game = game;
+    }
+    ActionRoundChooseCardState.prototype.onEnteringState = function (args) {
+        debug("Entering ActionRoundChooseCardState");
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    ActionRoundChooseCardState.prototype.onLeavingState = function () {
+        debug("Leaving ActionRoundChooseCardState");
+    };
+    ActionRoundChooseCardState.prototype.setDescription = function (activePlayerId) {
+    };
+    ActionRoundChooseCardState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _("${you} must choose your card for this Action Round"),
+            args: {
+                you: "${you}",
+            },
+        });
+        this.game.hand.open();
+        this.args._private.forEach(function (card) {
+            _this.game.setCardSelectable({
+                id: card.id,
+                callback: function () {
+                    _this.updateInterfaceConfirm({ card: card });
+                },
+            });
+        });
+    };
+    ActionRoundChooseCardState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var card = _a.card;
+        this.game.clearPossible();
+        this.game.setCardSelected({ id: card.id });
+        this.game.clientUpdatePageTitle({
+            text: _("Select card?"),
+            args: {},
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: "actActionRoundChooseCard",
+                args: {
+                    cardId: card.id,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    return ActionRoundChooseCardState;
+}());
+var ActionRoundChooseFirstPlayerState = (function () {
+    function ActionRoundChooseFirstPlayerState(game) {
+        this.game = game;
+    }
+    ActionRoundChooseFirstPlayerState.prototype.onEnteringState = function (args) {
+        debug("Entering ActionRoundChooseFirstPlayerState");
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    ActionRoundChooseFirstPlayerState.prototype.onLeavingState = function () {
+        debug("Leaving ActionRoundChooseFirstPlayerState");
+    };
+    ActionRoundChooseFirstPlayerState.prototype.setDescription = function (activePlayerId) {
+    };
+    ActionRoundChooseFirstPlayerState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _("${you} must choose the First Player for this Action Round"),
+            args: {
+                you: "${you}",
+            },
+        });
+        this.game.hand.open();
+        this.game.playerManager.getPlayers().forEach(function (player) {
+            _this.game.addPlayerButton({
+                player: player.playerData,
+                callback: function () {
+                    return _this.game.takeAction({
+                        action: "actActionRoundChooseFirstPlayer",
+                        args: {
+                            playerId: player.getPlayerId(),
+                        },
+                    });
+                },
+            });
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    return ActionRoundChooseFirstPlayerState;
+}());
+var ActionRoundSailBoxLandingState = (function () {
+    function ActionRoundSailBoxLandingState(game) {
+        this.game = game;
+    }
+    ActionRoundSailBoxLandingState.prototype.onEnteringState = function (args) {
+        debug("Entering ActionRoundSailBoxLandingState");
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    ActionRoundSailBoxLandingState.prototype.onLeavingState = function () {
+        debug("Leaving ActionRoundSailBoxLandingState");
+    };
+    ActionRoundSailBoxLandingState.prototype.setDescription = function (activePlayerId) { };
+    ActionRoundSailBoxLandingState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _("${you} must perform landing"),
+            args: {
+                you: "${you}",
+            },
+        });
+        this.game.addConfirmButton({
+            callback: function () {
+                return _this.game.takeAction({
+                    action: "actActionRoundSailBoxLanding",
+                    args: {},
+                });
+            },
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    return ActionRoundSailBoxLandingState;
+}());
+var ConfirmPartialTurnState = (function () {
+    function ConfirmPartialTurnState(game) {
+        this.game = game;
+    }
+    ConfirmPartialTurnState.prototype.onEnteringState = function (args) {
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    ConfirmPartialTurnState.prototype.onLeavingState = function () {
+        debug("Leaving ConfirmTurnState");
+    };
+    ConfirmPartialTurnState.prototype.setDescription = function (activePlayerId) {
+    };
+    ConfirmPartialTurnState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _("${you} must confirm the switch of player. You will not be able to restart your turn"),
+            args: {
+                you: "${you}",
+            },
+        });
+        this.game.addConfirmButton({
+            callback: function () {
+                return _this.game.takeAction({
+                    action: "actConfirmPartialTurn",
+                    atomicAction: false,
+                });
+            },
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    return ConfirmPartialTurnState;
+}());
+var ConfirmTurnState = (function () {
+    function ConfirmTurnState(game) {
+        this.game = game;
+    }
+    ConfirmTurnState.prototype.onEnteringState = function (args) {
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    ConfirmTurnState.prototype.onLeavingState = function () {
+        debug("Leaving ConfirmTurnState");
+    };
+    ConfirmTurnState.prototype.setDescription = function (activePlayerId) {
+    };
+    ConfirmTurnState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _("${you} must confirm or restart your turn"),
+            args: {
+                you: "${you}",
+            },
+        });
+        this.game.addConfirmButton({
+            callback: function () {
+                return _this.game.takeAction({ action: "actConfirmTurn", atomicAction: false });
+            },
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    return ConfirmTurnState;
+}());
 var SelectReserveCardState = (function () {
     function SelectReserveCardState(game) {
         this.game = game;
@@ -3462,6 +3896,7 @@ var SelectReserveCardState = (function () {
                 you: "${you}",
             },
         });
+        this.game.hand.open();
         this.args._private.forEach(function (card) {
             _this.game.setCardSelectable({
                 id: card.id,
@@ -3481,7 +3916,8 @@ var SelectReserveCardState = (function () {
             args: {},
         });
         var callback = function () {
-            return _this.game.takeAction({
+            _this.game.clearPossible();
+            _this.game.takeAction({
                 action: "actSelectReserveCard",
                 args: {
                     cardId: card.id,

@@ -40,6 +40,7 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
     'faction',
     'actionPoints',
     'buildUpDeck',
+    'initiativeValue',
     'years'
   ];
 

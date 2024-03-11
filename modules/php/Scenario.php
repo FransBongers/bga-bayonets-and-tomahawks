@@ -60,6 +60,7 @@ class Scenario extends \APP_DbObject
 
     // Create Units
     Units::loadScenario($scenario);
-
+    // Minus 1 because we increase in first setupYear state
+    Globals::setYear($scenario['meta_data']['startYear'] - 1);
   }
 }

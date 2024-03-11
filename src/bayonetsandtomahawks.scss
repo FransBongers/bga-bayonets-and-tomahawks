@@ -16,6 +16,7 @@
 @use "sass:math";
 @use 'base';
 @use "card-managers/cards";
+@use "cards-in-play/cardsInPlay";
 @use 'game-map/gamemap';
 @use "hand/hand";
 @use "info-panel/infoPanel";
@@ -31,6 +32,10 @@ html {
 
 :root {
   --btCardScale: 1;
+}
+
+#globalaction_zoom_wrap {
+  display: none !important;
 }
 
 #play_area_container {  

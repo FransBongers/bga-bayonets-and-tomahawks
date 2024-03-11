@@ -61,7 +61,7 @@ $machinestates = array(
         "description" => "",
         "type" => "manager",
         "action" => "stGameSetup",
-        "transitions" => ["" => ST_BEFORE_START_OF_TURN]
+        "transitions" => ["" => ST_SETUP_YEAR]
     ],
 
     ST_GENERIC_NEXT_PLAYER => [
@@ -97,6 +97,20 @@ $machinestates = array(
         'action' => 'stBeforeStartOfTurn',
     ],
 
+    ST_SETUP_YEAR => [
+        'name' => 'setupYear',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stSetupYear',
+    ],
+
+    ST_SETUP_ACTION_ROUND => [
+        'name' => 'setupActionRound',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stSetupActionRound',
+    ],
+
     ST_TURNACTION => [
         'name' => 'turnAction',
         'description' => '',
@@ -115,7 +129,7 @@ $machinestates = array(
     // .##.......##..####.##....##...##..##..####.##......
     // .##.......##...###.##....##...##..##...###.##......
     // .########.##....##..######...####.##....##.########
-    
+
     ST_RESOLVE_STACK => [
         'name' => 'resolveStack',
         'type' => 'game',
@@ -197,7 +211,7 @@ $machinestates = array(
         'action' => 'stAtomicAction',
         'possibleactions' => ['actSelectReserveCard'],
         'transitions' => ['next' => ST_RESOLVE_STACK],
-      ],
+    ],
 
     ST_PLAYER_ACTION => [
         'name' => 'playerAction',
@@ -208,5 +222,72 @@ $machinestates = array(
         'action' => 'stAtomicAction',
         // 'transitions' => [],
         'possibleactions' => ['actPlayerAction', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_ACTION_ROUND_CHOOSE_CARD => [
+        'name' => 'actionRoundChooseCard',
+        'type' => 'multipleactiveplayer',
+        'description' => clienttranslate('Both players must choose a card to play'),
+        'descriptionmyturn' => clienttranslate('${you} must choose a card to play'),
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actActionRoundChooseCard'],
+        'transitions' => ['next' => ST_RESOLVE_STACK],
+    ],
+
+    ST_ACTION_ROUND_CHOOSE_FIRST_PLAYER => [
+        'name' => 'actionRoundChooseFirstPlayer',
+        'description' => clienttranslate('${actplayer} must choose who will be First Player for this Action Round'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actActionRoundChooseFirstPlayer', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_ACTION_ROUND_ACTION_PHASE => [
+        'name' => 'actionRoundActionPhase',
+        'description' => clienttranslate('${actplayer} may perform actions'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actActionRoundActionPhase', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_ACTION_ROUND_RESOLVE_BATTLES => [
+        'name' => 'actionRoundResolveBattles',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_ACTION_ROUND_END => [
+        'name' => 'actionRoundResolveBattles',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_ACTION_ROUND_SAIL_BOX_LANDING => [
+        'name' => 'actionRoundSailBoxLanding',
+        'description' => clienttranslate('${actplayer} must perform landings'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actActionRoundSailBoxLanding', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_ACTION_ROUND_CHOOSE_REACTION => [
+        'name' => 'actionRoundChooseReaction',
+        'description' => clienttranslate('${actplayer} may hold an Action Point for Reaction'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actActionRoundChooseReaction', 'actPassOptionalAction', 'actRestart'],
     ],
 );

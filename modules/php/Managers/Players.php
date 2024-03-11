@@ -113,6 +113,13 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
     return self::get(self::getCurrentId());
   }
 
+  public static function getPlayerForFaction($faction)
+  {
+    return Utils::array_find(self::getAll()->toArray(), function ($player) use ($faction) {
+      return $player->getFaction() === $faction;
+    });
+  }
+
   public function getNextId($player)
   {
     $playerId = is_int($player) ? $player : $player->getId();

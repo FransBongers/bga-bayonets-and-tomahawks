@@ -51,6 +51,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
 
   // Game specific
   public cardManager: BTCardManager;
+  public cardsInPlay: CardsInPlay;
   public discard: VoidStock<BTCard>;
   public deck: LineStock<BTCard>;
   public gameMap: GameMap;
@@ -59,6 +60,12 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   // public playAreaScale: number;
 
   public activeStates: {
+    actionRoundActionPhase: ActionRoundActionPhaseState;
+    actionRoundChooseCard: ActionRoundChooseCardState;
+    actionRoundChooseFirstPlayer: ActionRoundChooseFirstPlayerState;
+    actionRoundSailBoxLanding: ActionRoundSailBoxLandingState;
+    confirmPartialTurn: ConfirmPartialTurnState;
+    confirmTurn: ConfirmTurnState;
     selectReserveCard: SelectReserveCardState;
   };
 
@@ -92,6 +99,12 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
 
     // Will store all data for active player and gets refreshed with entering player actions state
     this.activeStates = {
+      actionRoundActionPhase: new ActionRoundActionPhaseState(this),
+      actionRoundChooseCard: new ActionRoundChooseCardState(this),
+      actionRoundChooseFirstPlayer: new ActionRoundChooseFirstPlayerState(this),
+      actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
+      confirmPartialTurn: new ConfirmPartialTurnState(this),
+      confirmTurn: new ConfirmTurnState(this),
       selectReserveCard: new SelectReserveCardState(this),
     };
 
@@ -118,6 +131,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     this.gameMap = new GameMap(this);
     this.pools = new Pools(this);
     this.tooltipManager = new TooltipManager(this);
+
+    this.cardsInPlay = new CardsInPlay(this);
 
     if (this.playerOrder.includes(this.getPlayerId())) {
       this.hand = new Hand(this);
@@ -293,9 +308,32 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       this.addSecondaryActionButton({
         id: "pass_btn",
         text: text ? _(text) : _("Pass"),
-        callback: () => this.takeAction({ action: "actPassOptionalAction" }),
+        callback: () =>
+          this.takeAction({
+            action: "actPassOptionalAction",
+            atomicAction: false,
+          }),
       });
     }
+  }
+
+  addPlayerButton({
+    player,
+    callback,
+  }: {
+    player: BgaPlayer;
+    callback: Function | string;
+  }) {
+    const id = `select_${player.id}`;
+
+    this.addPrimaryActionButton({
+      id,
+      text: player.name,
+      callback,
+    });
+
+    const node = document.getElementById(id);
+    node.style.backgroundColor = `#${player.color}`;
   }
 
   addPrimaryActionButton({

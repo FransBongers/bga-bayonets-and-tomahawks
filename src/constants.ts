@@ -20,6 +20,15 @@ const PREF_DISABLED = "disabled";
 const PREF_ENABLED = "enabled";
 
 /**
+ * Factions / control
+ */
+const BRITISH = "british";
+const FRENCH = "french";
+const INDIAN = "indian";
+const NEUTRAL = "neutral";
+const FACTIONS: Faction[] = [BRITISH, FRENCH, INDIAN];
+
+/**
  * Pools
  */
 const POOL_FLEETS = "poolFleets";

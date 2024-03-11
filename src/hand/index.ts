@@ -56,4 +56,11 @@ class Hand {
   public getStock(): LineStock<BTCard> {
     return this.hand;
   }
+
+  public open(): void {
+    const handWrapper = $("floating_hand_wrapper");
+    if (handWrapper) {
+      handWrapper.dataset.open = "hand";
+    }
+  }
 }

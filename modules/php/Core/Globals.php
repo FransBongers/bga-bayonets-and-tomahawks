@@ -22,7 +22,9 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'firstPlayer' => 'int',
     // 'activePlayerId' => 'int',
     'scenario' => 'obj', // Used to store the scenario,
-    'test' => 'obj'
+    'test' => 'obj',
+    'year' => 'int',
+    'actionRound' => 'int',
   ];
 
   protected static $table = 'global_variables';

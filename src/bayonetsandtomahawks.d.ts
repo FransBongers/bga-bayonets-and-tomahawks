@@ -12,9 +12,12 @@ interface AddActionButtonProps extends AddButtonProps {
 interface BayonetsAndTomahawksGame extends Game {
   addCancelButton: () => void;
   addConfirmButton: (props: { callback: Function | string }) => void;
+  addPassButton: (props: { optionalAction: boolean; text?: string }) => void;
+  addPlayerButton: ({ player, callback }: { player: BgaPlayer; callback: Function | string }) => void; 
   addPrimaryActionButton: (props: AddButtonProps) => void;
   addSecondaryActionButton: (props: AddButtonProps) => void;
   addDangerActionButton: (props: AddButtonProps) => void;
+  addUndoButtons: (props: CommonArgs) => void;
   clearInterface: () => void;
   clearPossible: () => void;
   clientUpdatePageTitle: (props: {
@@ -22,6 +25,10 @@ interface BayonetsAndTomahawksGame extends Game {
     args: Record<string, unknown>;
     nonActivePlayers?: boolean;
   }) => void;
+  format_string_recursive: (
+    log: string,
+    args: Record<string, unknown>
+  ) => string;
   getPlayerId: () => number;
   setCardSelectable: (props: {
     id: string;
@@ -30,10 +37,13 @@ interface BayonetsAndTomahawksGame extends Game {
   setCardSelected: (props: { id: string }) => void;
   takeAction: (props: {
     action: string;
+    atomicAction?: boolean;
     args?: Record<string, unknown>;
+    checkAction?: string; // Action used in checkAction
   }) => void;
   updateLayout: () => void;
   animationManager: AnimationManager;
+  cardsInPlay: CardsInPlay;
   hand: Hand;
   // updatePlayAreaSize: () => void;
   notificationManager: NotificationManager;
@@ -43,7 +53,16 @@ interface BayonetsAndTomahawksGame extends Game {
   tooltipManager: TooltipManager;
 
   cardManager: BTCardManager;
+  discard: VoidStock<BTCard>;
+  deck: LineStock<BTCard>;
 }
+
+// type BRITISH = 'british';
+// type FRENCH = 'french';
+// type INDIAN = 'indian';
+
+// type Faction = BRITISH | FRENCH | INDIAN;
+type Faction = 'british' | 'french' | 'indian';
 
 interface BTCard {
   id: string;
@@ -78,6 +97,11 @@ interface BTUnit {
 
 interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   canceledNotifIds: string[];
+  cardsInPlay: {
+    british: BTCard | null;
+    french: BTCard | null;
+    indian: BTCard | null;
+  };
   markers: {
     year_marker: BTMarker;
     round_marker: BTMarker;

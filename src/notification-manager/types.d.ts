@@ -8,4 +8,27 @@ interface Log {
   args: Record<string, unknown>;
 }
 
+interface NotifWithPlayerArgs {
+  playerId: number;
+  player_name: string;
+}
+
 type NotifSmallRefreshInterfaceArgs = Omit<BayonetsAndTomahawksGamedatas, 'staticData'>;
+
+interface NotifDrawCardPrivateArgs extends NotifWithPlayerArgs {
+  card: BTCard;
+}
+
+interface NotifRevealCardsInPlayArgs {
+  british: BTCard;
+  french: BTCard;
+  indian: BTCard;
+}
+
+interface NotifSelectReserveCardArgs extends NotifWithPlayerArgs {
+  faction: Faction;
+}
+
+interface NotifSelectReserveCardPrivateArgs extends NotifWithPlayerArgs {
+  discardedCard: BTCard;
+}

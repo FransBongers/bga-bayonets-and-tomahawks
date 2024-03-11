@@ -22,7 +22,7 @@
  *
  */
 
- use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Helpers\Utils;
 
 class action_bayonetsandtomahawks extends APP_GameAction
 {
@@ -42,24 +42,62 @@ class action_bayonetsandtomahawks extends APP_GameAction
    **** GENERIC METHODS ****
    *************************/
 
-  public function restart()
+  // public function restart()
+  // {
+  //   self::setAjaxMode();
+  //   $result = $this->game->restart();
+  //   self::ajaxResponse();
+  // }
+
+  // public function passTurn()
+  // {
+  //   self::setAjaxMode();
+  //   $result = $this->game->passTurn();
+  //   self::ajaxResponse();
+  // }
+
+  // public function endGame()
+  // {
+  //   self::setAjaxMode();
+  //   $result = $this->game->endGame();
+  //   self::ajaxResponse();
+  // }
+
+  public function actConfirmTurn()
   {
     self::setAjaxMode();
-    $result = $this->game->restart();
+    $this->game->actConfirmTurn();
     self::ajaxResponse();
   }
 
-  public function passTurn()
+  public function actConfirmPartialTurn()
   {
     self::setAjaxMode();
-    $result = $this->game->passTurn();
+    $this->game->actConfirmPartialTurn();
     self::ajaxResponse();
   }
 
-  public function endGame()
+  public function actPassOptionalAction()
   {
     self::setAjaxMode();
-    $result = $this->game->endGame();
+    $result = $this->game->actPassOptionalAction();
+    self::ajaxResponse();
+  }
+
+  public function actRestart()
+  {
+    self::setAjaxMode();
+    $this->game->actRestart();
+    self::ajaxResponse();
+  }
+
+  public function actUndoToStep()
+  {
+    self::setAjaxMode();
+    $args = self::getArg('args', AT_json, true);
+    Utils::validateJSonAlphaNum($args, 'args');
+    $stepId = $args['stepId'];
+    $this->game->actUndoToStep($stepId);
     self::ajaxResponse();
   }
 

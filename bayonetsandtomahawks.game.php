@@ -131,6 +131,7 @@ class bayonetsandtomahawks extends Table
 
         $data = [
             'canceledNotifIds' => Log::getCanceledNotifIds(),
+            'cardsInPlay' => Cards::getCardsInPlay(),
             'playerOrder' => Players::getPlayerOrder(),
             'players' => Players::getUiData($pId),
             'staticData' => [

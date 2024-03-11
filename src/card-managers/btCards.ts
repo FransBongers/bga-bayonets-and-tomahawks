@@ -29,7 +29,7 @@ class BTCardManager extends CardManager<BTCard> {
   setupBackDiv(card: BTCard, div: HTMLElement) {}
 
   isCardVisible(card: BTCard) {
-    if (card.location.startsWith("hand_")) {
+    if (card.location.startsWith("hand_") || card.location.startsWith("cardInPlay_")) {
       return true;
     }
     return false;

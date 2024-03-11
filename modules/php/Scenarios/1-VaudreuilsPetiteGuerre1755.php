@@ -6,6 +6,8 @@ $scenarios[1] = [
   'meta_data' => [
     'scenario_id' => '1',
     'name' => clienttranslate("Vaudreil's Petite Guerre 1755"),
+    'startYear' => 1755,
+    'duration' => 1, 
   ],
   'cards' => [
     BRITISH => [1755, 1756],

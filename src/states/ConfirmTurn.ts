@@ -1,28 +1,25 @@
-class SelectReserveCardState implements State {
+class ConfirmTurnState implements State {
   private game: BayonetsAndTomahawksGame;
-  private args: OnEnteringSelectReserveCardStateArgs;
+  private args: OnEnteringConfirmTurnArgs;
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
   }
 
-  onEnteringState(args: OnEnteringSelectReserveCardStateArgs) {
-    debug("Entering SelectReserveCardState")
+  onEnteringState(args: OnEnteringConfirmTurnArgs) {
     this.args = args;
     this.updateInterfaceInitialStep();
   }
 
   onLeavingState() {
-    debug("Leaving SelectReserveCardState");
+    debug("Leaving ConfirmTurnState");
   }
 
   setDescription(activePlayerId: number) {
     // this.game.clientUpdatePageTitle({
-    //   text: _("${player_name} must choose a Reservc"),
+    //   text: _("${player_name} must confirm or restart their turn"),
     //   args: {
-    //     player_name: this.game.playerManager
-    //       .getPlayer({ playerId: activePlayerId })
-    //       .getName(),
+    //     player_name: this.game.playerManager.getPlayer({playerId: activePlayerId}).getName()
     //   },
     //   nonActivePlayers: true,
     // });
@@ -47,57 +44,16 @@ class SelectReserveCardState implements State {
   private updateInterfaceInitialStep() {
     this.game.clearPossible();
     this.game.clientUpdatePageTitle({
-      text: _("${you} must select a Reserve Card"),
+      text: _("${you} must confirm or restart your turn"),
       args: {
         you: "${you}",
       },
     });
-    this.game.hand.open();
-    this.args._private.forEach((card) => {
-      this.game.setCardSelectable({
-        id: card.id,
-        callback: () => {
-          this.updateInterfaceConfirm({ card });
-        },
-      });
+    this.game.addConfirmButton({
+      callback: () =>
+        this.game.takeAction({ action: "actConfirmTurn", atomicAction: false }),
     });
-
-    // this.addButtons();
-    // this.game.addUndoButtons(this.args);
-  }
-
-  private updateInterfaceConfirm({ card }: { card: BTCard }) {
-    this.game.clearPossible();
-    this.game.setCardSelected({ id: card.id });
-    this.game.clientUpdatePageTitle({
-      text: _("Select card?"),
-      args: {},
-    });
-
-    const callback = () =>
-    {
-      this.game.clearPossible();
-      this.game.takeAction({
-        action: "actSelectReserveCard",
-        args: {
-          cardId: card.id,
-        },
-      });
-    }
-
-    if (
-      this.game.settings.get({
-        id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
-      }) === PREF_ENABLED
-    ) {
-      callback();
-    } else {
-      this.game.addConfirmButton({
-        callback,
-      });
-    }
-
-    this.game.addCancelButton();
+    this.game.addUndoButtons(this.args);
   }
 
   //  .##.....##.########.####.##.......####.########.##....##
@@ -107,16 +63,6 @@ class SelectReserveCardState implements State {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
-
-  // private addButtons() {
-  //   this.args.options.forEach((apostasy, index) => {
-  //     this.game.addPrimaryActionButton({
-  //       id: `apostasy_btn_${index}`,
-  //       text: this.apostasyTextMap[apostasy],
-  //       callback: () => this.updateInterfaceConfirm({ apostasy }),
-  //     });
-  //   });
-  // }
 
   //  ..######..##.......####..######..##....##
   //  .##....##.##........##..##....##.##...##.

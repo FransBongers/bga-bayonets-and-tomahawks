@@ -20,7 +20,7 @@ trait DebugTrait
 
   function test()
   {
-    Notifications::log('players', Players::getAll());
+    Notifications::log('british player', Players::getPlayerForFaction(BRITISH));
     // Cards::setupNewGame();
     // Notifications::log('test', Globals::getTest());
     // Notifications::log('static', Units::getStaticUiData());
@@ -30,5 +30,10 @@ trait DebugTrait
     // Notifications::log('all', Spaces::getAll()->toArray()[0]->getId());
     // $this->debugLoadScenario('1');
     // Notifications::log('units',Units::getAll());
+  }
+
+  function engineDisplay()
+  {
+    Notifications::log('engine', Globals::getEngine());
   }
 }

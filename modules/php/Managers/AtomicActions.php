@@ -12,7 +12,16 @@ class AtomicActions
 {
   // Mapping of actionId and corresponding class
   static $classes = [
-    PLAYER_ACTION => 'PlayerAction',
+    ACTION_ROUND_CHOOSE_CARD => 'ActionRoundChooseCard',
+    ACTION_ROUND_CHOOSE_FIRST_PLAYER => 'ActionRoundChooseFirstPlayer',
+    ACTION_ROUND_CHOOSE_REACTION => 'ActionRoundChooseReaction',
+    ACTION_ROUND_END => 'ActionRoundEnd',
+    ACTION_ROUND_FIRST_PLAYER_ACTIONS => 'ActionRoundActionPhase',
+    ACTION_ROUND_INDIAN_ACTIONS => 'ActionRoundActionPhase',
+    ACTION_ROUND_REACTION => 'ActionRoundActionPhase',
+    ACTION_ROUND_RESOLVE_BATTLES => 'ActionRoundResolveBattles',
+    ACTION_ROUND_SECOND_PLAYER_ACTIONS => 'ActionRoundActionPhase',
+    ACTION_ROUND_SAIL_BOX_LANDING => 'ActionRoundSailBoxLanding',
     SELECT_RESERVE_CARD => 'SelectReserveCard',
   ];
 

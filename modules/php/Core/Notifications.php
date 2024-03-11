@@ -144,4 +144,54 @@ class Notifications
   // .##.....##.##..........##....##.....##.##.....##.##.....##.##....##
   // .##.....##.########....##....##.....##..#######..########...######.
 
+  public static function drawCard($player, $card) {
+    self::notify($player,'drawCardPrivate', clienttranslate('Private: ${player_name} draws ${cardId}'),[
+      'player' => $player,
+      'card' => $card,
+      'cardId' => $card->getId(),
+    ]);
+  }
+
+  public static function discardCardInPlay($cardsInPlay) {
+    self::notifyAll("discardCardInPlay", clienttranslate('All played cards are discarded'), [
+      'british' => $cardsInPlay[BRITISH],
+      'french' => $cardsInPlay[FRENCH],
+      'indian' => $cardsInPlay[INDIAN],
+    ]);
+  }
+
+  public static function gainInitiative($faction) {
+    $factionNameMap = [
+      BRITISH => clienttranslate('British'),
+      FRENCH => clienttranslate('French'),
+    ];
+
+    self::message(clienttranslate('The ${factionName} gain initiative'), [
+      'factionName' => $factionNameMap[$faction],
+      'i18n' => ['factionName']
+    ]);
+  }
+
+  public static function revealCardsInPlay($britishCard, $frenchCard, $indianCard) {
+    self::notifyAll("revealCardsInPlay", clienttranslate('Both players have selected a card. Cards are revealed'), [
+      'british' => $britishCard,
+      'french' => $frenchCard,
+      'indian' => $indianCard,
+    ]);
+  }
+
+  public static function selectReserveCard($player, $discardedCard) {
+    self::notify($player,'selectReserveCardPrivate', clienttranslate('Private: ${player_name} discard ${cardId}'),[
+      'player' => $player,
+      'discardedCard' => $discardedCard,
+      'cardId' => $discardedCard->getId(),
+    ]);
+
+    self::notifyAll("selectReserveCard", clienttranslate('${player_name} selects their reserve card and discards the other'), [
+      'player' => $player,
+      'faction' => $player->getFaction(),
+      'preserve' => ['playerId'],
+    ]);
+  }
+
 }

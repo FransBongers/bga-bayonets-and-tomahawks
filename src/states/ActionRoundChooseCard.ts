@@ -1,19 +1,19 @@
-class SelectReserveCardState implements State {
+class ActionRoundChooseCardState implements State {
   private game: BayonetsAndTomahawksGame;
-  private args: OnEnteringSelectReserveCardStateArgs;
+  private args: OnEnteringActionRoundChooseCardStateArgs;
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
   }
 
-  onEnteringState(args: OnEnteringSelectReserveCardStateArgs) {
-    debug("Entering SelectReserveCardState")
+  onEnteringState(args: OnEnteringActionRoundChooseCardStateArgs) {
+    debug("Entering ActionRoundChooseCardState")
     this.args = args;
     this.updateInterfaceInitialStep();
   }
 
   onLeavingState() {
-    debug("Leaving SelectReserveCardState");
+    debug("Leaving ActionRoundChooseCardState");
   }
 
   setDescription(activePlayerId: number) {
@@ -47,7 +47,7 @@ class SelectReserveCardState implements State {
   private updateInterfaceInitialStep() {
     this.game.clearPossible();
     this.game.clientUpdatePageTitle({
-      text: _("${you} must select a Reserve Card"),
+      text: _("${you} must choose your card for this Action Round"),
       args: {
         you: "${you}",
       },
@@ -78,7 +78,7 @@ class SelectReserveCardState implements State {
     {
       this.game.clearPossible();
       this.game.takeAction({
-        action: "actSelectReserveCard",
+        action: "actActionRoundChooseCard",
         args: {
           cardId: card.id,
         },

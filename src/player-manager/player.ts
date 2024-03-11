@@ -13,7 +13,7 @@ class BatPlayer {
   protected playerId: number;
   private playerName: string;
 
-  private player: BayonetsAndTomahawksPlayerData;
+  public playerData: BayonetsAndTomahawksPlayerData;
 
   constructor({
     game,
@@ -26,7 +26,7 @@ class BatPlayer {
     this.game = game;
     const playerId = player.id;
     this.playerId = Number(playerId);
-    this.player = player;
+    this.playerData = player;
     this.playerName = player.name;
     this.playerColor = player.color;
     this.playerHexColor = player.hexColor;
