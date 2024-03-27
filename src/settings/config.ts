@@ -81,21 +81,21 @@ const getSettingsConfig = (): Record<string, PlayerPreferenceTab> => ({
         },
         type: "slider",
       },
-      // [CARD_SIZE_IN_LOG]: {
-      //   id: CARD_SIZE_IN_LOG,
-      //   onChangeInSetup: true,
-      //   label: _("Size of cards in log"),
-      //   defaultValue: 0,
-      //   sliderConfig: {
-      //     step: 5,
-      //     padding: 0,
-      //     range: {
-      //       min: 0,
-      //       max: 150,
-      //     },
-      //   },
-      //   type: "slider",
-      // },
+      [PREF_CARD_SIZE_IN_LOG]: {
+        id: PREF_CARD_SIZE_IN_LOG,
+        onChangeInSetup: true,
+        label: _("Size of cards in log"),
+        defaultValue: 0,
+        sliderConfig: {
+          step: 5,
+          padding: 0,
+          range: {
+            min: 0,
+            max: 90,
+          },
+        },
+        type: "slider",
+      },
       // [CARD_INFO_IN_TOOLTIP]: {
       //   id: CARD_INFO_IN_TOOLTIP,
       //   onChangeInSetup: false,

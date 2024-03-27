@@ -37,7 +37,6 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
   protected $staticAttributes = [
     'id',
     'faction',
-    'faction',
     'actionPoints',
     'buildUpDeck',
     'initiativeValue',
@@ -71,6 +70,30 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
   {
     Cards::insertOnTop($this->getId(), $location);
     $this->location = $location;
+  }
+
+  public function discard()
+  {
+    $owner = $this->getOwner();
+
+    Cards::insertOnTop($this->getId(),DISCARD);
+    $this->location = DISCARD;
+    if ($owner !== null) {
+      Notifications::discardCardFromHand($owner, $this);
+    } else {
+      // TODO
+    }
+  }
+
+  public function getOwner()
+  {
+    if ($this->location === Locations::hand(FRENCH) || $this->location === Locations::hand(INDIAN)) {
+      return Players::getPlayerForFaction(FRENCH);
+    };
+    if ($this->location === Locations::hand(BRITISH)) {
+      return Players::getPlayerForFaction(BRITISH);
+    }
+    return null;
   }
 
   // public function getBuildUpDeck()

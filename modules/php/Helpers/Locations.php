@@ -19,6 +19,11 @@ abstract class Locations extends \APP_DbObject
     return 'cardPool_' . $faction;
   }
 
+  public static function discard()
+  {
+    return 'discard';
+  }
+
   public static function hand($faction)
   {
     return 'hand_' . $faction;

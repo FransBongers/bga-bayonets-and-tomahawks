@@ -41,6 +41,7 @@ interface Framework {
   notifqueue: {
     next_log_id: string; // actually a number?
     setSynchronous: (notifId: string, waitMilliSeconds: number) => void;
+    setSynchronousDuration: (waitMilliSeconds: number) => void;
     onSynchronousNotificationEnd: () => void;
     setIgnoreNotificationCheck: (notifId: string, predicate: (notif: Notif<unknown>) => void) => void;
   };

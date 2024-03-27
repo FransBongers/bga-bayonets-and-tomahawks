@@ -2061,12 +2061,15 @@ var CardManager = (function () {
     return CardManager;
 }());
 var MIN_PLAY_AREA_WIDTH = 1500;
+var MIN_NOTIFICATION_MS = 1200;
 var DISABLED = "disabled";
 var BT_SELECTABLE = "bt_selectable";
 var BT_SELECTED = "bt_selected";
+var DISCARD = "discard";
 var PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY = "confirmEndOfTurnPlayerSwitchOnly";
 var PREF_SHOW_ANIMATIONS = "showAnimations";
 var PREF_ANIMATION_SPEED = "animationSpeed";
+var PREF_CARD_SIZE_IN_LOG = "cardSizeInLog";
 var PREF_DISABLED = "disabled";
 var PREF_ENABLED = "enabled";
 var BRITISH = "british";
@@ -2122,6 +2125,9 @@ define([
     }
     return declare('bgagame.bayonetsandtomahawks', ebg.core.gamegui, new BayonetsAndTomahawks());
 });
+function sleep(ms) {
+    return new Promise(function (r) { return setTimeout(r, ms); });
+}
 var BayonetsAndTomahawks = (function () {
     function BayonetsAndTomahawks() {
         this.tooltipsToMap = [];
@@ -2158,6 +2164,7 @@ var BayonetsAndTomahawks = (function () {
                 : 2100 - this.settings.get({ id: PREF_ANIMATION_SPEED }),
         });
         this.cardManager = new BTCardManager(this);
+        this.tokenManager = new TokenManager(this);
         this.discard = new VoidStock(this.cardManager, document.getElementById("bt_discard"));
         this.deck = new LineStock(this.cardManager, document.getElementById("bt_deck"));
         this.gameMap = new GameMap(this);
@@ -2641,7 +2648,12 @@ var BTCardManager = (function (_super) {
         div.style.width = "calc(var(--btCardScale) * 250px)";
         div.style.height = "calc(var(--btCardScale) * 179px)";
     };
-    BTCardManager.prototype.setupBackDiv = function (card, div) { };
+    BTCardManager.prototype.setupBackDiv = function (card, div) {
+        div.classList.add("bt_card");
+        div.setAttribute("data-card-id", "".concat(card.faction, "_back"));
+        div.style.width = "calc(var(--btCardScale) * 250px)";
+        div.style.height = "calc(var(--btCardScale) * 179px)";
+    };
     BTCardManager.prototype.isCardVisible = function (card) {
         if (card.location.startsWith("hand_") || card.location.startsWith("cardInPlay_")) {
             return true;
@@ -2813,25 +2825,29 @@ var ACTION_ROUND_TRACK_CONFIG = [
 ];
 var GameMap = (function () {
     function GameMap(game) {
+        this.stacks = {};
         this.game = game;
         var gamedatas = game.gamedatas;
         this.setupGameMap({ gamedatas: gamedatas });
     }
     GameMap.prototype.setupUnits = function (_a) {
+        var _this = this;
         var gamedatas = _a.gamedatas;
         gamedatas.spaces.forEach(function (space) {
-            var unit = gamedatas.units.find(function (unit) { return unit.location === space.id; });
-            if (!unit) {
-                return;
+            if (!_this.stacks[space.id]) {
+                _this.stacks[space.id] = new ManualPositionStock(_this.game.tokenManager, document.getElementById(space.id), {}, function (element, cards, lastCard, stock) {
+                    cards.forEach(function (card, index) {
+                        var unitDiv = stock.getCardElement(card);
+                        unitDiv.style.position = 'absolute';
+                        unitDiv.style.top = "".concat(index * -5, "px");
+                        unitDiv.style.left = "".concat(index * 5, "px");
+                    });
+                });
             }
-            var node = document.querySelectorAll(".bt_space[data-space-id=\"".concat(space.id, "\"]"));
-            if (node.length === 0) {
-                return;
+            var units = gamedatas.units.filter(function (unit) { return unit.location === space.id; });
+            if (units.length > 0) {
             }
-            node[0].insertAdjacentHTML("afterbegin", tplUnit({
-                faction: gamedatas.staticData.units[unit.counterId].faction,
-                counterId: unit.counterId,
-            }));
+            _this.stacks[space.id].addCards(units);
         });
     };
     GameMap.prototype.setupMarkers = function (_a) {
@@ -2874,7 +2890,7 @@ var tplSpaces = function (_a) {
     var spaces = _a.spaces;
     var filteredSpaces = spaces.filter(function (space) { return space.top && space.left; });
     var mappedSpaces = filteredSpaces.map(function (space) {
-        return "<div data-space-id=\"".concat(space.id, "\" class=\"bt_space\" style=\"top: calc(var(--btMapScale) * ").concat(space.top - 26, "px); left: calc(var(--btMapScale) * ").concat(space.left - 26, "px);\"></div>");
+        return "<div id=\"".concat(space.id, "\" class=\"bt_space\" style=\"top: calc(var(--btMapScale) * ").concat(space.top - 26, "px); left: calc(var(--btMapScale) * ").concat(space.left - 26, "px);\"></div>");
     });
     var result = mappedSpaces.join("");
     return result;
@@ -2987,22 +3003,32 @@ var InfoPanel = (function () {
     return InfoPanel;
 }());
 var tplInfoPanel = function () { return "<div class='player-board' id=\"info_panel\"></div>"; };
-var LOG_TOKEN_BOLD_TEXT = 'boldText';
-var LOG_TOKEN_NEW_LINE = 'newLine';
-var LOG_TOKEN_PLAYER_NAME = 'playerName';
+var LOG_TOKEN_BOLD_TEXT = "boldText";
+var LOG_TOKEN_NEW_LINE = "newLine";
+var LOG_TOKEN_PLAYER_NAME = "playerName";
+var LOG_TOKEN_CARD = "card";
 var tooltipIdCounter = 0;
 var getTokenDiv = function (_a) {
     var key = _a.key, value = _a.value, game = _a.game;
-    var splitKey = key.split('_');
+    var splitKey = key.split("_");
     var type = splitKey[1];
     switch (type) {
         case LOG_TOKEN_BOLD_TEXT:
             return tlpLogTokenBoldText({ text: value });
+        case LOG_TOKEN_CARD:
+            return tplLogTokenCard(value);
         case LOG_TOKEN_NEW_LINE:
-            return '<br>';
+            return "<br>";
         case LOG_TOKEN_PLAYER_NAME:
-            var player = game.playerManager.getPlayers().find(function (player) { return player.getName() === value; });
-            return player ? tplLogTokenPlayerName({ name: player.getName(), color: player.getHexColor() }) : value;
+            var player = game.playerManager
+                .getPlayers()
+                .find(function (player) { return player.getName() === value; });
+            return player
+                ? tplLogTokenPlayerName({
+                    name: player.getName(),
+                    color: player.getHexColor(),
+                })
+                : value;
         default:
             return value;
     }
@@ -3015,6 +3041,9 @@ var tplLogTokenPlayerName = function (_a) {
     var name = _a.name, color = _a.color;
     return "<span class=\"playername\" style=\"color:#".concat(color, ";\">").concat(name, "</span>");
 };
+var tplLogTokenCard = function (id) {
+    return "<div class=\"bt_log_card bt_card\" data-card-id=\"".concat(id, "\"></div>");
+};
 var NotificationManager = (function () {
     function NotificationManager(game) {
         this.game = game;
@@ -3024,26 +3053,42 @@ var NotificationManager = (function () {
         var _this = this;
         console.log("notifications subscriptions setup");
         var notifs = [
-            ["log", undefined],
-            ["drawCardPrivate", undefined],
-            ["revealCardsInPlay", undefined],
-            ["selectReserveCard", undefined],
-            ["selectReserveCardPrivate", undefined],
+            "log",
+            "discardCardFromHand",
+            "discardCardFromHandPrivate",
+            "drawCardPrivate",
+            "revealCardsInPlay",
+            "selectReserveCard",
+            "selectReserveCardPrivate",
         ];
-        notifs.forEach(function (notif) {
-            _this.subscriptions.push(dojo.subscribe(notif[0], _this, function (notifDetails) {
-                debug("notif_".concat(notif[0]), notifDetails);
+        notifs.forEach(function (notifName) {
+            _this.subscriptions.push(dojo.subscribe(notifName, _this, function (notifDetails) {
+                debug("notif_".concat(notifName), notifDetails);
+                var promise = _this["notif_".concat(notifName)](notifDetails);
+                var promises = promise ? [promise] : [];
+                var minDuration = 1;
                 var msg = _this.game.format_string_recursive(notifDetails.log, notifDetails.args);
                 if (msg != "") {
                     $("gameaction_status").innerHTML = msg;
                     $("pagemaintitletext").innerHTML = msg;
+                    $("generalactions").innerHTML = "";
+                    minDuration = MIN_NOTIFICATION_MS;
                 }
-                var promise = _this["notif_".concat(notif[0])](notifDetails);
-                promise === null || promise === void 0 ? void 0 : promise.then(function () {
-                    return _this.game.framework().notifqueue.onSynchronousNotificationEnd();
-                });
+                if (_this.game.animationManager.animationsActive()) {
+                    Promise.all(__spreadArray(__spreadArray([], promises, true), [sleep(minDuration)], false)).then(function () {
+                        return _this.game.framework().notifqueue.onSynchronousNotificationEnd();
+                    });
+                }
+                else {
+                    _this.game.framework().notifqueue.setSynchronousDuration(0);
+                }
             }));
-            _this.game.framework().notifqueue.setSynchronous(notif[0], notif[1]);
+            _this.game.framework().notifqueue.setSynchronous(notifName, undefined);
+            _this.game
+                .framework()
+                .notifqueue.setIgnoreNotificationCheck("discardCardFromHand", function (notif) {
+                return notif.args.playerId == _this.game.getPlayerId();
+            });
         });
     };
     NotificationManager.prototype.destroy = function () {
@@ -3070,6 +3115,43 @@ var NotificationManager = (function () {
                 this.game.gamedatas = updatedGamedatas;
                 this.game.playerManager.updatePlayers({ gamedatas: updatedGamedatas });
                 return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_discardCardFromHand = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, faction, playerId, fakeCard, fromElement;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = notif.args, faction = _a.faction, playerId = _a.playerId;
+                        fakeCard = {
+                            id: "bt_tempCardDiscard_".concat(faction),
+                            faction: faction,
+                            location: DISCARD,
+                        };
+                        fromElement = document.getElementById("overall_player_board_".concat(playerId));
+                        return [4, this.game.discard.addCard(fakeCard, { fromElement: fromElement })];
+                    case 1:
+                        _b.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_discardCardFromHandPrivate = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, card, playerId;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = notif.args, card = _a.card, playerId = _a.playerId;
+                        card.location = 'hand_';
+                        return [4, this.game.discard.addCard(card)];
+                    case 1:
+                        _b.sent();
+                        return [2];
+                }
             });
         });
     };
@@ -3281,53 +3363,69 @@ var tplPool = function (_a) {
     return "<div id=\"bt_pool_".concat(type, "\" class=\"bt_unit_pool\">\n  </div>");
 };
 var getSettingsConfig = function () {
-    var _a;
+    var _a, _b;
     return ({
         layout: {
             id: "layout",
-            config: {
-                twoColumnsLayout: {
-                    id: "twoColumnsLayout",
-                    onChangeInSetup: true,
-                    defaultValue: "disabled",
-                    label: _("Two column layout"),
-                    type: "select",
-                    options: [
-                        {
-                            label: _("Enabled"),
-                            value: "enabled",
-                        },
-                        {
-                            label: _("Disabled (single column)"),
-                            value: "disabled",
-                        },
-                    ],
-                },
-                columnSizes: {
-                    id: "columnSizes",
-                    onChangeInSetup: true,
-                    label: _("Column sizes"),
-                    defaultValue: 50,
-                    visibleCondition: {
+            config: (_a = {
+                    twoColumnsLayout: {
                         id: "twoColumnsLayout",
-                        values: [PREF_ENABLED],
+                        onChangeInSetup: true,
+                        defaultValue: "disabled",
+                        label: _("Two column layout"),
+                        type: "select",
+                        options: [
+                            {
+                                label: _("Enabled"),
+                                value: "enabled",
+                            },
+                            {
+                                label: _("Disabled (single column)"),
+                                value: "disabled",
+                            },
+                        ],
                     },
+                    columnSizes: {
+                        id: "columnSizes",
+                        onChangeInSetup: true,
+                        label: _("Column sizes"),
+                        defaultValue: 50,
+                        visibleCondition: {
+                            id: "twoColumnsLayout",
+                            values: [PREF_ENABLED],
+                        },
+                        sliderConfig: {
+                            step: 5,
+                            padding: 0,
+                            range: {
+                                min: 30,
+                                max: 70,
+                            },
+                        },
+                        type: "slider",
+                    }
+                },
+                _a[PREF_CARD_SIZE_IN_LOG] = {
+                    id: PREF_CARD_SIZE_IN_LOG,
+                    onChangeInSetup: true,
+                    label: _("Size of cards in log"),
+                    defaultValue: 0,
                     sliderConfig: {
                         step: 5,
                         padding: 0,
                         range: {
-                            min: 30,
-                            max: 70,
+                            min: 0,
+                            max: 90,
                         },
                     },
                     type: "slider",
                 },
-            },
+                _a),
         },
         gameplay: {
             id: "gameplay",
-            config: (_a = {},
-                _a[PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY] = {
+            config: (_b = {},
+                _b[PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY] = {
                     id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
                     onChangeInSetup: false,
                     defaultValue: DISABLED,
@@ -3344,7 +3442,7 @@ var getSettingsConfig = function () {
                         },
                     ],
                 },
-                _a[PREF_SHOW_ANIMATIONS] = {
+                _b[PREF_SHOW_ANIMATIONS] = {
                     id: PREF_SHOW_ANIMATIONS,
                     onChangeInSetup: false,
                     defaultValue: PREF_ENABLED,
@@ -3361,7 +3459,7 @@ var getSettingsConfig = function () {
                         },
                     ],
                 },
-                _a[PREF_ANIMATION_SPEED] = {
+                _b[PREF_ANIMATION_SPEED] = {
                     id: PREF_ANIMATION_SPEED,
                     onChangeInSetup: false,
                     label: _("Animation speed"),
@@ -3380,7 +3478,7 @@ var getSettingsConfig = function () {
                     },
                     type: "slider",
                 },
-                _a),
+                _b),
         },
     });
 };
@@ -3520,6 +3618,7 @@ var Settings = (function () {
         this.game.updateLayout();
     };
     Settings.prototype.onChangeCardSizeInLogSetting = function (value) {
+        console.log("onChangeCardSizeInLogSetting", value);
         var ROOT = document.documentElement;
         ROOT.style.setProperty("--logCardScale", "".concat(Number(value) / 100));
     };
@@ -3745,8 +3844,7 @@ var ActionRoundChooseFirstPlayerState = (function () {
     ActionRoundChooseFirstPlayerState.prototype.onLeavingState = function () {
         debug("Leaving ActionRoundChooseFirstPlayerState");
     };
-    ActionRoundChooseFirstPlayerState.prototype.setDescription = function (activePlayerId) {
-    };
+    ActionRoundChooseFirstPlayerState.prototype.setDescription = function (activePlayerId) { };
     ActionRoundChooseFirstPlayerState.prototype.updateInterfaceInitialStep = function () {
         var _this = this;
         this.game.clearPossible();
@@ -3938,6 +4036,38 @@ var SelectReserveCardState = (function () {
     };
     return SelectReserveCardState;
 }());
+var TokenManager = (function (_super) {
+    __extends(TokenManager, _super);
+    function TokenManager(game) {
+        var _this = _super.call(this, game, {
+            getId: function (card) { return "".concat(card.id); },
+            setupDiv: function (card, div) { return _this.setupDiv(card, div); },
+            setupFrontDiv: function (card, div) { return _this.setupFrontDiv(card, div); },
+            setupBackDiv: function (card, div) { return _this.setupBackDiv(card, div); },
+            isCardVisible: function (card) { return _this.isCardVisible(card); },
+            animationManager: game.animationManager,
+        }) || this;
+        _this.game = game;
+        return _this;
+    }
+    TokenManager.prototype.clearInterface = function () { };
+    TokenManager.prototype.setupDiv = function (card, div) {
+        console.log('setup', card);
+        div.style.position = 'relative';
+    };
+    TokenManager.prototype.setupFrontDiv = function (card, div) {
+        div.classList.add('bt_token');
+        div.setAttribute('data-counter-id', card.counterId);
+    };
+    TokenManager.prototype.setupBackDiv = function (card, div) {
+        div.classList.add('bt_token');
+        div.setAttribute('data-counter-id', "".concat(card.counterId, "_reduced"));
+    };
+    TokenManager.prototype.isCardVisible = function (card) {
+        return true;
+    };
+    return TokenManager;
+}(CardManager));
 var tplCardTooltipContainer = function (_a) {
     var card = _a.card, content = _a.content;
     return "<div class=\"bt_card_tooltip\">\n  <div class=\"bt_card_tooltip_inner_container\">\n    ".concat(content, "\n  </div>\n  ").concat(card, "\n</div>");

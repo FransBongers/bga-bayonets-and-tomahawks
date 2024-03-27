@@ -33,7 +33,11 @@ class Settings {
 
   clearInterface() {}
 
-  updateInterface({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {}
+  updateInterface({
+    gamedatas,
+  }: {
+    gamedatas: BayonetsAndTomahawksGamedatas;
+  }) {}
 
   // ..######..########.########.##.....##.########.
   // .##....##.##..........##....##.....##.##.....##
@@ -43,14 +47,22 @@ class Settings {
   // .##....##.##..........##....##.....##.##.......
   // ..######..########....##.....#######..##.......
 
-  private addButton({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
+  private addButton({
+    gamedatas,
+  }: {
+    gamedatas: BayonetsAndTomahawksGamedatas;
+  }) {
     const configPanel = document.getElementById("info_panel");
     if (configPanel) {
       configPanel.insertAdjacentHTML("beforeend", tplSettingsButton());
     }
   }
 
-  private setupModal({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
+  private setupModal({
+    gamedatas,
+  }: {
+    gamedatas: BayonetsAndTomahawksGamedatas;
+  }) {
     this.modal = new Modal(`settings_modal`, {
       class: "settings_modal",
       closeIcon: "fa-times",
@@ -218,6 +230,7 @@ class Settings {
   }
 
   public onChangeCardSizeInLogSetting(value: number) {
+    console.log("onChangeCardSizeInLogSetting", value);
     const ROOT = document.documentElement;
     ROOT.style.setProperty("--logCardScale", `${Number(value) / 100}`);
   }

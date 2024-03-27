@@ -12,3 +12,8 @@ const tplLogTokenPlayerName = ({
 }) => `<span class="playername" style="color:#${color};">${name}</span>`;
 
 /* ------- GAME SPECIFIC LOG TOKENS ------- */
+
+const tplLogTokenCard = (id: string) => {
+  
+    return `<div class="bt_log_card bt_card" data-card-id="${id}"></div>`;
+};

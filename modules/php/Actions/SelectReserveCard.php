@@ -109,9 +109,11 @@ class SelectReserveCard extends \BayonetsAndTomahawks\Models\AtomicAction
       return $cardId !== $card->getId();
     })[0];
 
-    Cards::move($discardedCard->getId(),'discard');
+    // Cards::move($discardedCard->getId(),'discard');
 
-    Notifications::selectReserveCard($player, $discardedCard);
+    Notifications::selectReserveCard($player);
+
+    $discardedCard->discard();
 
     // Make the player inactive
     $game = Game::get();

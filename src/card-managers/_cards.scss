@@ -94,9 +94,12 @@ $cards: (
   52: "Card52",
   53: "Card53",
   54: "Card54",
+  55: "british_back",
+  56: "french_back",
+  57: "indian_back",
 );
 
-@for $i from 1 through 54 {
+@for $i from 1 through 57 {
   .bt_card[data-card-id="#{map.get($cards,$i)}"] {
     background-position-x: math.div((($i - 1) % 7 * 100%), 6);
     background-position-y: math.div(math.floor(calc(($i - 1) / 7)) * 100%, 8);

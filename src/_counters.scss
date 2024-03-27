@@ -23,6 +23,7 @@
   width: calc(var(--btTokenScale) * 52px);
   position: absolute;
   z-index: 1;
+  box-shadow: none !important;
 }
 
 $indian-units: (

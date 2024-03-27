@@ -13,6 +13,7 @@
  *
  */
 
+ 
 @use "sass:math";
 @use 'base';
 @use "card-managers/cards";
@@ -20,6 +21,7 @@
 @use 'game-map/gamemap';
 @use "hand/hand";
 @use "info-panel/infoPanel";
+@use "logs/logs";
 @use 'pools/pools';
 @use 'counters';
 @use "settings/settingsModal";

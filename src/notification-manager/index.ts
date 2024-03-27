@@ -34,29 +34,49 @@ class NotificationManager {
   setupNotifications() {
     console.log("notifications subscriptions setup");
 
-    const notifs: [
-      id: string,
-      wait: number
-      // predicate?: (notif: Notif<{ playerId: number }>) => void
-    ][] = [
-      // checked
-      ["log", undefined],
-      ["drawCardPrivate", undefined],
-      ["revealCardsInPlay", undefined],
-      ["selectReserveCard", undefined],
-      ["selectReserveCardPrivate", undefined],
-      // [
-      //   "selectReserveCard",
-      //   undefined,
-      //   (notif) => notif.args.playerId == this.game.getPlayerId(),
-      // ],
+    // const notifs: [
+    //   id: string,
+    //   wait: number,
+    //   predicate?: (notif: Notif<{ playerId: number }>) => void
+    // ][] = [
+    //   // checked
+    //   ["log", undefined],
+    //   [
+    //     "discardCardFromHand",
+    //     undefined,
+    //     (notif) => notif.args.playerId == this.game.getPlayerId(),
+    //   ],
+    //   ["discardCardFromHandPrivate", undefined],
+    //   ["drawCardPrivate", undefined],
+    //   ["revealCardsInPlay", undefined],
+    //   ["selectReserveCard", undefined],
+    //   ["selectReserveCardPrivate", undefined],
+    //   // [
+    //   //   "selectReserveCard",
+    //   //   undefined,
+    //   //   (notif) => notif.args.playerId == this.game.getPlayerId(),
+    //   // ],
+    // ];
+    const notifs: string[] = [
+      "log",
+      "discardCardFromHand",
+      "discardCardFromHandPrivate",
+      "drawCardPrivate",
+      "revealCardsInPlay",
+      "selectReserveCard",
+      "selectReserveCardPrivate",
     ];
 
     // example: https://github.com/thoun/knarr/blob/main/src/knarr.ts
-    notifs.forEach((notif) => {
+    notifs.forEach((notifName) => {
       this.subscriptions.push(
-        dojo.subscribe(notif[0], this, (notifDetails: Notif<unknown>) => {
-          debug(`notif_${notif[0]}`, notifDetails); // log notif params (with Tisaac log method, so only studio side)
+        dojo.subscribe(notifName, this, (notifDetails: Notif<unknown>) => {
+          debug(`notif_${notifName}`, notifDetails); // log notif params (with Tisaac log method, so only studio side)
+
+          const promise = this[`notif_${notifName}`](notifDetails);
+          const promises = promise ? [promise] : [];
+          let minDuration = 1;
+
           // Show log messags in page title
           let msg = this.game.format_string_recursive(
             notifDetails.log,
@@ -65,26 +85,35 @@ class NotificationManager {
           if (msg != "") {
             $("gameaction_status").innerHTML = msg;
             $("pagemaintitletext").innerHTML = msg;
+            $("generalactions").innerHTML = "";
+
+            // If there is some text, we let the message some time, to be read
+            minDuration = MIN_NOTIFICATION_MS;
           }
 
-          const promise = this[`notif_${notif[0]}`](notifDetails);
-
-          // tell the UI notification ends
-          promise?.then(() =>
-            this.game.framework().notifqueue.onSynchronousNotificationEnd()
-          );
+          // Promise.all([...promises, sleep(minDuration)]).then(() =>
+          //   this.game.framework().notifqueue.onSynchronousNotificationEnd()
+          // );
+          // tell the UI notification ends, if the function returned a promise.
+          if (this.game.animationManager.animationsActive()) {
+            Promise.all([...promises, sleep(minDuration)]).then(() =>
+              this.game.framework().notifqueue.onSynchronousNotificationEnd()
+            );
+          } else {
+            // TODO: check what this does
+            this.game.framework().notifqueue.setSynchronousDuration(0);
+          }
         })
       );
+      this.game.framework().notifqueue.setSynchronous(notifName, undefined);
 
-      // if (notif[2] !== undefined) {
-      //   this.game
-      //     .framework()
-      //     .notifqueue.setIgnoreNotificationCheck(notif[0], notif[2]);
-      // } else {
-      // make all notif as synchronous
-      // make all notif as synchronous
-      this.game.framework().notifqueue.setSynchronous(notif[0], notif[1]);
-      // }
+      this.game
+        .framework()
+        .notifqueue.setIgnoreNotificationCheck(
+          "discardCardFromHand",
+          (notif: Notif<{ playerId: number }>) =>
+            notif.args.playerId == this.game.getPlayerId()
+        );
     });
   }
 
@@ -143,6 +172,30 @@ class NotificationManager {
     this.game.clearInterface();
     this.game.gamedatas = updatedGamedatas;
     this.game.playerManager.updatePlayers({ gamedatas: updatedGamedatas });
+  }
+
+  async notif_discardCardFromHand(notif: Notif<NotifDiscardCardFromHandArgs>) {
+    const { faction, playerId } = notif.args;
+    const fakeCard = {
+      id: `bt_tempCardDiscard_${faction}`,
+      faction,
+      location: DISCARD,
+    } as BTCard;
+    const fromElement = document.getElementById(
+      `overall_player_board_${playerId}`
+    );
+    await this.game.discard.addCard(fakeCard, { fromElement });
+  }
+
+  async notif_discardCardFromHandPrivate(
+    notif: Notif<NotifDiscardCardFromHandPrivateArgs>
+  ) {
+    const { card, playerId } = notif.args;
+
+    // TODO: check why card becomes 'invisibile' if it flips when discarding from hand
+    card.location = 'hand_';
+
+    await this.game.discard.addCard(card);
   }
 
   async notif_drawCardPrivate(notif: Notif<NotifDrawCardPrivateArgs>) {

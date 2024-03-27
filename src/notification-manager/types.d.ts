@@ -19,6 +19,14 @@ interface NotifDrawCardPrivateArgs extends NotifWithPlayerArgs {
   card: BTCard;
 }
 
+interface NotifDiscardCardFromHandArgs extends NotifWithPlayerArgs {
+  faction: Faction;
+}
+
+interface NotifDiscardCardFromHandPrivateArgs extends NotifWithPlayerArgs {
+  card: BTCard;
+}
+
 interface NotifRevealCardsInPlayArgs {
   british: BTCard;
   french: BTCard;

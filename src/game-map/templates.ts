@@ -25,7 +25,7 @@ const tplSpaces = ({
   // TO Check: why -26px?
   const mappedSpaces = filteredSpaces.map(
     (space) =>
-      `<div data-space-id="${
+      `<div id="${
         space.id
       }" class="bt_space" style="top: calc(var(--btMapScale) * ${
         space.top - 26

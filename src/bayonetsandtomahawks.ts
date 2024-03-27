@@ -24,6 +24,10 @@ declare const g_gamethemeurl;
 declare const playSound;
 declare var noUiSlider;
 
+function sleep(ms: number){
+  return new Promise((r) => setTimeout(r, ms));
+}
+
 class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public gamedatas: BayonetsAndTomahawksGamedatas;
 
@@ -57,6 +61,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public gameMap: GameMap;
   public hand: Hand;
   public pools: Pools;
+  public tokenManager: TokenManager;
   // public playAreaScale: number;
 
   public activeStates: {
@@ -119,6 +124,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     });
 
     this.cardManager = new BTCardManager(this);
+    this.tokenManager = new TokenManager(this);
     this.discard = new VoidStock(
       this.cardManager,
       document.getElementById("bt_discard")

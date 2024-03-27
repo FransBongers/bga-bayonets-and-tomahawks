@@ -26,7 +26,12 @@ class BTCardManager extends CardManager<BTCard> {
     div.style.height = "calc(var(--btCardScale) * 179px)";
   }
 
-  setupBackDiv(card: BTCard, div: HTMLElement) {}
+  setupBackDiv(card: BTCard, div: HTMLElement) {
+    div.classList.add("bt_card");
+    div.setAttribute("data-card-id", `${card.faction}_back`);
+    div.style.width = "calc(var(--btCardScale) * 250px)";
+    div.style.height = "calc(var(--btCardScale) * 179px)";
+  }
 
   isCardVisible(card: BTCard) {
     if (card.location.startsWith("hand_") || card.location.startsWith("cardInPlay_")) {

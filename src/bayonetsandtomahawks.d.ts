@@ -50,6 +50,7 @@ interface BayonetsAndTomahawksGame extends Game {
   // playAreaScale: number;
   playerManager: PlayerManager;
   settings: Settings;
+  tokenManager: TokenManager;
   tooltipManager: TooltipManager;
 
   cardManager: BTCardManager;

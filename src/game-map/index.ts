@@ -8,6 +8,7 @@
 
 class GameMap {
   protected game: BayonetsAndTomahawksGame;
+  public stacks: Record<string, ManualPositionStock<BTUnit>> = {};
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
@@ -26,23 +27,43 @@ class GameMap {
 
   setupUnits({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
     gamedatas.spaces.forEach((space) => {
-      const unit = gamedatas.units.find((unit) => unit.location === space.id);
-      if (!unit) {
-        return;
+      if (!this.stacks[space.id]) {
+        this.stacks[space.id] = new ManualPositionStock<BTUnit>(
+          this.game.tokenManager,
+          document.getElementById(space.id),
+          { },
+          (element: HTMLElement, cards: BTUnit[], lastCard: BTUnit, stock: ManualPositionStock<BTUnit>) => {
+            cards.forEach((card, index) => {
+              const unitDiv = stock.getCardElement(card);
+              unitDiv.style.position = 'absolute';
+              unitDiv.style.top = `${index * -5}px`;
+              unitDiv.style.left = `${index * 5}px`;
+            })
+            // console.log('card',lastCard);
+            // console.log('cards',cards);
+          }
+        );
       }
-      const node = document.querySelectorAll(
-        `.bt_space[data-space-id="${space.id}"]`
-      );
-      if (node.length === 0) {
-        return;
+
+      const units = gamedatas.units.filter((unit) => unit.location === space.id);
+      if (units.length > 0) {
+
       }
-      node[0].insertAdjacentHTML(
-        "afterbegin",
-        tplUnit({
-          faction: gamedatas.staticData.units[unit.counterId].faction,
-          counterId: unit.counterId,
-        })
-      );
+      this.stacks[space.id].addCards(units);
+      // if (!unit) {
+      //   return;
+      // }
+      // const node = document.getElementById(space.id);
+      // if (!node) {
+      //   return;
+      // }
+      // node.insertAdjacentHTML(
+      //   "afterbegin",
+      //   tplUnit({
+      //     faction: gamedatas.staticData.units[unit.counterId].faction,
+      //     counterId: unit.counterId,
+      //   })
+      // );
     });
   }
 

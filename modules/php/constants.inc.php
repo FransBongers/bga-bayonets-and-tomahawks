@@ -7,6 +7,11 @@ require_once 'gameoptions.inc.php';
 
 const STAT_TURN = 12;
 
+/**
+ * Carc locations
+ */
+const DISCARD = 'discard';
+
 /*
   * ENGINE
   */

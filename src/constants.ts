@@ -1,4 +1,5 @@
-const MIN_PLAY_AREA_WIDTH = 1500;
+const MIN_PLAY_AREA_WIDTH = 1500; // Is this still used?
+const MIN_NOTIFICATION_MS = 1200;
 
 /**
  * Class names
@@ -6,6 +7,11 @@ const MIN_PLAY_AREA_WIDTH = 1500;
 const DISABLED = "disabled";
 const BT_SELECTABLE = "bt_selectable";
 const BT_SELECTED = "bt_selected";
+
+/**
+ * Card locations
+ */
+const DISCARD = "discard";
 
 /**
  * Setting ids
@@ -16,6 +22,7 @@ const PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY =
   "confirmEndOfTurnPlayerSwitchOnly";
 const PREF_SHOW_ANIMATIONS = "showAnimations";
 const PREF_ANIMATION_SPEED = "animationSpeed";
+const PREF_CARD_SIZE_IN_LOG = "cardSizeInLog";
 const PREF_DISABLED = "disabled";
 const PREF_ENABLED = "enabled";
 

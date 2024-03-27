@@ -16,8 +16,7 @@ class ActionRoundChooseFirstPlayerState implements State {
     debug("Leaving ActionRoundChooseFirstPlayerState");
   }
 
-  setDescription(activePlayerId: number) {
-  }
+  setDescription(activePlayerId: number) {}
 
   //  .####.##....##.########.########.########..########....###.....######..########
   //  ..##..###...##....##....##.......##.....##.##.........##.##...##....##.##......
