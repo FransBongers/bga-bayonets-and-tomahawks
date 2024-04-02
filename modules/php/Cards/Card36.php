@@ -8,6 +8,17 @@ class Card36 extends \BayonetsAndTomahawks\Models\Card
   {
     parent::__construct($row);
     $this->id = 'Card36';
+    $this->actionPoints = [
+      [
+        'id' => LIGHT_AP_2X
+      ],
+      [
+        'id' => FRENCH_LIGHT_ARMY_AP
+      ],
+      [
+        'id' => SAIL_ARMY_AP
+      ]
+    ];
     $this->faction = FRENCH;
     $this->initiativeValue = 1;
     $this->years = [1755, 1756];

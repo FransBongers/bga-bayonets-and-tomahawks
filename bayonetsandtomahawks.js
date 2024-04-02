@@ -2151,6 +2151,7 @@ var BayonetsAndTomahawks = (function () {
             actionRoundActionPhase: new ActionRoundActionPhaseState(this),
             actionRoundChooseCard: new ActionRoundChooseCardState(this),
             actionRoundChooseFirstPlayer: new ActionRoundChooseFirstPlayerState(this),
+            actionRoundChooseReaction: new ActionRoundChooseReactionState(this),
             actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
@@ -2848,7 +2849,6 @@ var GameMap = (function () {
             gamedatas.units
                 .filter(function (unit) { return unit.location === space.id; })
                 .forEach(function (unit) {
-                console.log('unit', unit);
                 var data = _this.game.getUnitData({ counterId: unit.counterId });
                 if (data.faction === BRITISH) {
                     _this.stacks[space.id][BRITISH].addUnit(unit);
@@ -3627,7 +3627,6 @@ var Settings = (function () {
         this.game.updateLayout();
     };
     Settings.prototype.onChangeCardSizeInLogSetting = function (value) {
-        console.log("onChangeCardSizeInLogSetting", value);
         var ROOT = document.documentElement;
         ROOT.style.setProperty("--logCardScale", "".concat(Number(value) / 100));
     };
@@ -3881,6 +3880,63 @@ var ActionRoundChooseFirstPlayerState = (function () {
     };
     return ActionRoundChooseFirstPlayerState;
 }());
+var ActionRoundChooseReactionState = (function () {
+    function ActionRoundChooseReactionState(game) {
+        this.game = game;
+    }
+    ActionRoundChooseReactionState.prototype.onEnteringState = function (args) {
+        debug('Entering ActionRoundChooseReactionState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    ActionRoundChooseReactionState.prototype.onLeavingState = function () {
+        debug('Leaving ActionRoundChooseReactionState');
+    };
+    ActionRoundChooseReactionState.prototype.setDescription = function (activePlayerId) { };
+    ActionRoundChooseReactionState.prototype.updateInterfaceInitialStep = function () {
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} may choose an Action Point to hold for Reaction'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.addActionPointButtons();
+        this.game.addUndoButtons(this.args);
+    };
+    ActionRoundChooseReactionState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var actionPoint = _a.actionPoint;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Hold ${ap} for Reaction?'),
+            args: {
+                ap: actionPoint.id,
+            },
+        });
+        this.game.addConfirmButton({
+            callback: function () {
+                return _this.game.takeAction({
+                    action: 'actActionRoundChooseReaction',
+                    args: {
+                        actionPointId: actionPoint.id,
+                    },
+                });
+            },
+        });
+    };
+    ActionRoundChooseReactionState.prototype.addActionPointButtons = function () {
+        var _this = this;
+        this.args.actionPoints.forEach(function (ap, index) {
+            return _this.game.addPrimaryActionButton({
+                text: _(ap.id),
+                id: "action_point_btn_".concat(index),
+                callback: function () { return _this.updateInterfaceConfirm({ actionPoint: ap }); },
+            });
+        });
+    };
+    return ActionRoundChooseReactionState;
+}());
 var ActionRoundSailBoxLandingState = (function () {
     function ActionRoundSailBoxLandingState(game) {
         this.game = game;
@@ -4076,21 +4132,19 @@ var UnitStack = (function (_super) {
         }
     };
     UnitStack.prototype.onMouseOver = function () {
-        console.log('onMouseOver');
         this.hovering = true;
         this.updateStackDisplay(this.element, this.getCards(), this);
     };
     UnitStack.prototype.onMouseOut = function () {
-        console.log('onMouseOut');
         this.hovering = false;
         this.updateStackDisplay(this.element, this.getCards(), this);
     };
     UnitStack.prototype.updateStackDisplay = function (element, cards, stock) {
         var _this = this;
-        console.log('open', this.open);
-        console.log('hovering', this.hovering);
         var expanded = this.open || this.hovering;
-        console.log('expanded', expanded);
+        if (expanded) {
+            this.element.setAttribute('data-expanded', 'true');
+        }
         cards.forEach(function (card, index) {
             var unitDiv = stock.getCardElement(card);
             unitDiv.style.position = 'absolute';
@@ -4098,6 +4152,9 @@ var UnitStack = (function (_super) {
             var offset = expanded ? 52 : 8;
             unitDiv.style.left = "calc(var(--btTokenScale) * ".concat(index * (_this.faction === FRENCH ? -1 * offset : offset), "px)");
         });
+        if (!expanded) {
+            this.element.removeAttribute('data-expanded');
+        }
     };
     return UnitStack;
 }(ManualPositionStock));
@@ -4117,7 +4174,6 @@ var TokenManager = (function (_super) {
     }
     TokenManager.prototype.clearInterface = function () { };
     TokenManager.prototype.setupDiv = function (card, div) {
-        console.log('setup', card);
         div.style.position = 'relative';
         div.classList.add('bt_token');
     };

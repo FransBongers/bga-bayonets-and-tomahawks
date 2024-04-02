@@ -47,8 +47,12 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
   public function argsActionRoundChooseReaction()
   {
 
+    $player = $this->getPlayer();
+    $faction = $player->getFaction();
+    $cardInPlay = Cards::getTopOf(Locations::cardInPlay($faction));
+
     return [
-      
+      'actionPoints' => $cardInPlay->getActionPoints(),
     ];
   }
 

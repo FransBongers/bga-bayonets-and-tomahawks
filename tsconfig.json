@@ -65,6 +65,7 @@
     "src/states/ActionRoundActionPhase.ts",
     "src/states/ActionRoundChooseCard.ts",
     "src/states/ActionRoundChooseFirstPlayer.ts",
+    "src/states/ActionRoundChooseReaction.ts",
     "src/states/ActionRoundSailBoxLanding.ts",
     "src/states/ConfirmPartialTurn.ts",
     "src/states/ConfirmTurn.ts",

@@ -68,6 +68,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     actionRoundActionPhase: ActionRoundActionPhaseState;
     actionRoundChooseCard: ActionRoundChooseCardState;
     actionRoundChooseFirstPlayer: ActionRoundChooseFirstPlayerState;
+    actionRoundChooseReaction: ActionRoundChooseReactionState;
     actionRoundSailBoxLanding: ActionRoundSailBoxLandingState;
     confirmPartialTurn: ConfirmPartialTurnState;
     confirmTurn: ConfirmTurnState;
@@ -107,6 +108,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       actionRoundActionPhase: new ActionRoundActionPhaseState(this),
       actionRoundChooseCard: new ActionRoundChooseCardState(this),
       actionRoundChooseFirstPlayer: new ActionRoundChooseFirstPlayerState(this),
+      actionRoundChooseReaction: new ActionRoundChooseReactionState(this),
       actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
       confirmPartialTurn: new ConfirmPartialTurnState(this),
       confirmTurn: new ConfirmTurnState(this),

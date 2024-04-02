@@ -84,7 +84,8 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
     $secondPlayer = Utils::array_find($players, function ($player) use ($firstPlayerId) {
       return $player->getId() !== $firstPlayerId;
     });
-
+    Notifications::log('firstPlayer', $firstPlayer);
+    Notifications::log('secondPlayer', $secondPlayer);
     // TODO: AR start events
     $actionRoundFlow = [
       'children' => [
@@ -118,7 +119,7 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  private function getPlayerActionsFlow($player, $isFirstplayer)
+  public function getPlayerActionsFlow($player, $isFirstplayer)
   {
     $playerId = $player->getId();
     $flow = [
@@ -137,13 +138,13 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
         'optional' => true,
       ];
     }
-    // if ($isFirstplayer) {
-    //   $flow['children'][] = [
-    //     'action' => ACTION_ROUND_CHOOSE_REACTION,
-    //     'playerId' => $playerId,
-    //     'optional' => true,
-    //   ];
-    // }
+    if ($isFirstplayer) {
+      $flow['children'][] = [
+        'action' => ACTION_ROUND_CHOOSE_REACTION,
+        'playerId' => $playerId,
+        'optional' => true,
+      ];
+    }
     $flow['children'][] = [
       'action' => $isFirstplayer ? ACTION_ROUND_FIRST_PLAYER_ACTIONS : ACTION_ROUND_SECOND_PLAYER_ACTIONS,
       'playerId' => $playerId,

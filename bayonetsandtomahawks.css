@@ -465,6 +465,10 @@
   transition: top 500ms, left 500ms;
 }
 
+.bt_stack[data-expanded=true] .bt_token {
+  z-index: 1;
+}
+
 #floating_hand_wrapper {
   position: fixed;
   bottom: 0;

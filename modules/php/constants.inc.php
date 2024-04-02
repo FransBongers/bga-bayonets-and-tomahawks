@@ -69,12 +69,35 @@ const ACTION_ROUND_CHOOSE_CARD = 'ACTION_ROUND_CHOOSE_CARD';
 const ACTION_ROUND_CHOOSE_FIRST_PLAYER = 'ACTION_ROUND_CHOOSE_FIRST_PLAYER';
 const ACTION_ROUND_FIRST_PLAYER_ACTIONS = 'ACTION_ROUND_FIRST_PLAYER_ACTIONS';
 const ACTION_ROUND_SECOND_PLAYER_ACTIONS = 'ACTION_ROUND_SECOND_PLAYER_ACTIONS';
-const ACTION_ROUND_INDIAN_ACTIONS = 'ACTION_ROUND_SECOND_PLAYER_ACTIONS';
+const ACTION_ROUND_INDIAN_ACTIONS = 'ACTION_ROUND_INDIAN_ACTIONS';
 const ACTION_ROUND_REACTION = 'ACTION_ROUND_REACTION';
 const ACTION_ROUND_RESOLVE_BATTLES = 'ACTION_ROUND_RESOLVE_BATTLES';
 const ACTION_ROUND_END = 'ACTION_ROUND_END';
 const ACTION_ROUND_SAIL_BOX_LANDING = 'ACTION_ROUND_SAIL_BOX_LANDING';
 const ACTION_ROUND_CHOOSE_REACTION = 'ACTION_ROUND_CHOOSE_REACTION';
+
+/**
+ * Action Points
+ */
+// const ARMY_AP = 'armyActionPoint';
+// const ARMY_AP_2X = 'armyActionPoint2x';
+// const LIGHT_AP = 'lightActionPoint';
+// const LIGHT_AP_2X = 'lightActionPoint2x';
+// const INDIAN_AP = 'indianActionPoint';
+// const INDIAN_AP_2X = 'indianActionPoint2x';
+// const SAIL_ARMY_AP = 'sailArmyActionPoint';
+// const SAIL_ARMY_AP_2X = 'sailArmyActionPoint2x';
+// const FRENCH_LIGHT_ARMY_AP = 'frenchLightArmyActionPoint';
+
+const ARMY_AP = 'ARMY_AP';
+const ARMY_AP_2X = 'ARMY_AP_2X';
+const LIGHT_AP = 'LIGHT_AP';
+const LIGHT_AP_2X = 'LIGHT_AP_2X';
+const INDIAN_AP = 'INDIAN_AP';
+const INDIAN_AP_2X = 'INDIAN_AP_2X';
+const SAIL_ARMY_AP = 'SAIL_ARMY_AP';
+const SAIL_ARMY_AP_2X = 'SAIL_ARMY_AP_2X';
+const FRENCH_LIGHT_ARMY_AP = 'FRENCH_LIGHT_ARMY_AP';
 
 /*
  * Units types
@@ -168,6 +191,8 @@ const LE_DETROIT = 'LeDetroit';
 const LES_ILLINOIS = 'LesIllinois';
 const LES_TROIS_RIVIERES = 'LesTroisRivieres';
 const LOUISBOURG = 'Louisbourg';
+const LOUISBOURG_BASTION_1 = 'LouisbourgBastion1';
+const LOUISBOURG_BASTION_2 = 'LouisbourgBastion2';
 const LOYALHANNA = 'Loyalhanna';
 const MAMHLAWBAGOK = 'Mamhlawbagok';
 const MATAWASKIYAK = 'Matawaskiyak';
@@ -200,6 +225,8 @@ const POINTE_SAINTE_ANNE = 'PointeSainteAnne';
 const PORT_DAUPHIN = 'PortDauphin';
 const PORT_LA_JOYE = 'PortLaJoye';
 const QUEBEC = 'Quebec';
+const QUEBEC_BASTION_1 = 'QuebecBastion1';
+const QUEBEC_BASTION_2 = 'QuebecBastion2';
 const RAYS_TOWN = 'RaysTown';
 const RIVIERE_DU_LOUP = 'RiviereDuLoup';
 const RIVIERE_OUABACHE = 'RiviereOuabache';
@@ -265,6 +292,8 @@ const SPACES = [
   LES_ILLINOIS,
   LES_TROIS_RIVIERES,
   LOUISBOURG,
+  LOUISBOURG_BASTION_1,
+  LOUISBOURG_BASTION_2,
   LOYALHANNA,
   MAMHLAWBAGOK,
   MATAWASKIYAK,
@@ -297,6 +326,8 @@ const SPACES = [
   PORT_DAUPHIN,
   PORT_LA_JOYE,
   QUEBEC,
+  QUEBEC_BASTION_1,
+  QUEBEC_BASTION_2,
   RAYS_TOWN,
   RIVIERE_DU_LOUP,
   RIVIERE_OUABACHE,

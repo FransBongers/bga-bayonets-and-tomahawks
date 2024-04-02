@@ -230,7 +230,7 @@ class Settings {
   }
 
   public onChangeCardSizeInLogSetting(value: number) {
-    console.log("onChangeCardSizeInLogSetting", value);
+    // console.log("onChangeCardSizeInLogSetting", value);
     const ROOT = document.documentElement;
     ROOT.style.setProperty("--logCardScale", `${Number(value) / 100}`);
   }

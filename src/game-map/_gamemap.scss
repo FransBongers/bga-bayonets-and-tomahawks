@@ -92,8 +92,12 @@
 
   .bt_token {
     transition: top 500ms, left 500ms;
-    // top: 0px;
-    // left: 0px;
+  }
+}
+
+.bt_stack[data-expanded="true"] {
+  .bt_token {
+    z-index: 1;
   }
 }
 

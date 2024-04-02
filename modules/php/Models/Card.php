@@ -32,6 +32,7 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
     'location' => 'card_location',
     'state' => ['card_state', 'int'],
     'extraData' => ['extra_data', 'obj'],
+
   ];
 
   protected $staticAttributes = [
@@ -48,6 +49,7 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
     $data = parent::jsonSerialize();
 
     return array_merge($data, [
+      'actionPoints' => $this->actionPoints,
       'faction' => $this->faction,
       'initiativeValue' => $this->initiativeValue,
       'years' => $this->years,

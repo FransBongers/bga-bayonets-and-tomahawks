@@ -83,10 +83,15 @@ $scenarios[1] = [
         LANGIS,
       ]
     ],
-    LOUISBOURG => [
-      'id' => LOUISBOURG,
+    LOUISBOURG_BASTION_1 => [
+      'id' => LOUISBOURG_BASTION_1,
       'units' => [
         BASTION,
+      ]
+    ],
+    LOUISBOURG_BASTION_2 => [
+      'id' => LOUISBOURG_BASTION_2,
+      'units' => [
         BASTION,
       ]
     ],
@@ -104,7 +109,17 @@ $scenarios[1] = [
         CANADIENS,
         CANONNIERS_BOMBARDIERS,
         CANONNIERS_BOMBARDIERS,
+      ]
+    ],
+    QUEBEC_BASTION_1 => [
+      'id' => QUEBEC_BASTION_1,
+      'units' => [
         BASTION,
+      ]
+    ],
+    QUEBEC_BASTION_2 => [
+      'id' => QUEBEC_BASTION_2,
+      'units' => [
         BASTION,
       ]
     ],

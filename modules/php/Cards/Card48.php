@@ -8,6 +8,11 @@ class Card48 extends \BayonetsAndTomahawks\Models\Card
   {
     parent::__construct($row);
     $this->id = 'Card48';
+    $this->actionPoints = [
+      [
+        'id' => INDIAN_AP_2X
+      ],
+    ];
     $this->faction = INDIAN;
   }
 }

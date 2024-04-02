@@ -15,7 +15,7 @@ class TokenManager extends CardManager<BTUnit> {
   setupDiv(card: BTUnit, div: HTMLElement) {
     // div.style.width = "calc(var(--btCardScale) * 250px)";
     // div.style.height = "calc(var(--btCardScale) * 179px)";
-    console.log('setup', card);
+    // console.log('setup', card);
     div.style.position = 'relative';
     div.classList.add('bt_token')
   }

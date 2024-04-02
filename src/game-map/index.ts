@@ -70,7 +70,6 @@ class GameMap {
       gamedatas.units
         .filter((unit) => unit.location === space.id)
         .forEach((unit) => {
-          console.log('unit', unit);
           const data = this.game.getUnitData({ counterId: unit.counterId });
           if (data.faction === BRITISH) {
             this.stacks[space.id][BRITISH].addUnit(unit);

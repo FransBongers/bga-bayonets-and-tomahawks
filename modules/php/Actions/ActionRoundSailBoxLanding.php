@@ -21,6 +21,29 @@ class ActionRoundSailBoxLanding extends \BayonetsAndTomahawks\Models\AtomicActio
     return ST_ACTION_ROUND_SAIL_BOX_LANDING;
   }
 
+  // ..######..########....###....########.########
+  // .##....##....##......##.##......##....##......
+  // .##..........##.....##...##.....##....##......
+  // ..######.....##....##.....##....##....######..
+  // .......##....##....#########....##....##......
+  // .##....##....##....##.....##....##....##......
+  // ..######.....##....##.....##....##....########
+
+  // ....###.....######..########.####..#######..##....##
+  // ...##.##...##....##....##.....##..##.....##.###...##
+  // ..##...##..##..........##.....##..##.....##.####..##
+  // .##.....##.##..........##.....##..##.....##.##.##.##
+  // .#########.##..........##.....##..##.....##.##..####
+  // .##.....##.##....##....##.....##..##.....##.##...###
+  // .##.....##..######.....##....####..#######..##....##
+
+  public function stActionRoundSailBoxLanding()
+  {
+    // TODO: check if there are friendly units currently on the Sail box
+    // TODO: how can we move this to PreAction?
+    $this->resolveAction(['automatic' => true]);
+  }
+
   // .########..########..########.......###.....######..########.####..#######..##....##
   // .##.....##.##.....##.##............##.##...##....##....##.....##..##.....##.###...##
   // .##.....##.##.....##.##...........##...##..##..........##.....##..##.....##.####..##
@@ -31,7 +54,6 @@ class ActionRoundSailBoxLanding extends \BayonetsAndTomahawks\Models\AtomicActio
 
   public function stPreActionRoundSailBoxLanding()
   {
-    // $this->resolveAction(['automatic' => true]);
   }
 
 
@@ -47,9 +69,7 @@ class ActionRoundSailBoxLanding extends \BayonetsAndTomahawks\Models\AtomicActio
   {
 
 
-    return [
-      
-    ];
+    return [];
   }
 
   //  .########..##..........###....##....##.########.########.
@@ -75,11 +95,11 @@ class ActionRoundSailBoxLanding extends \BayonetsAndTomahawks\Models\AtomicActio
     Engine::resolve(PASS);
   }
 
-    public function actActionRoundSailBoxLanding($args)
+  public function actActionRoundSailBoxLanding($args)
   {
     self::checkAction('actActionRoundSailBoxLanding');
-    
-    Notifications::log('perform landing',[]);
+
+    Notifications::log('perform landing', []);
 
     $this->resolveAction($args);
   }

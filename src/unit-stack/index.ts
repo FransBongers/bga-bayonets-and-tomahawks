@@ -70,13 +70,11 @@ class UnitStack<T> extends ManualPositionStock<T> {
   }
 
   private onMouseOver() {
-    console.log('onMouseOver');
     this.hovering = true;
     this.updateStackDisplay(this.element, this.getCards(), this);
   }
 
   private onMouseOut() {
-    console.log('onMouseOut');
     this.hovering = false;
     this.updateStackDisplay(this.element, this.getCards(), this);
   }
@@ -86,10 +84,10 @@ class UnitStack<T> extends ManualPositionStock<T> {
     cards: T[],
     stock: ManualPositionStock<T>
   ) {
-    console.log('open', this.open);
-    console.log('hovering', this.hovering);
     const expanded = this.open || this.hovering;
-    console.log('expanded', expanded);
+    if (expanded) {
+      this.element.setAttribute('data-expanded','true');
+    }
 
     cards.forEach((card, index) => {
       const unitDiv = stock.getCardElement(card);
@@ -103,6 +101,10 @@ class UnitStack<T> extends ManualPositionStock<T> {
         index * (this.faction === FRENCH ? -1 * offset : offset)
       }px)`;
     });
+    if (!expanded) {
+      // TODO: add timeout for this so it is removed after transition finished?
+      this.element.removeAttribute('data-expanded');
+    }
     // console.log('card',lastCard);
     // console.log('cards',cards);
   }

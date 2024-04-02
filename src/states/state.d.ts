@@ -23,6 +23,10 @@ interface OnEnteringActionRoundChooseFirstPlayerStateArgs extends CommonArgs {
 
 }
 
+interface OnEnteringActionRoundChooseReactionStateArgs extends CommonArgs {
+  actionPoints: BTActionPoint[];
+}
+
 interface OnEnteringActionRoundSailBoxLandingStateArgs extends CommonArgs {
 
 }

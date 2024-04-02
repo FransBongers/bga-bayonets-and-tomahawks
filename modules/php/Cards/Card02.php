@@ -8,6 +8,17 @@ class Card02 extends \BayonetsAndTomahawks\Models\Card
   {
     parent::__construct($row);
     $this->id = 'Card02';
+    $this->actionPoints = [
+      [
+        'id' => LIGHT_AP
+      ],
+      [
+        'id' => ARMY_AP
+      ],
+      [
+        'id' => ARMY_AP
+      ]
+    ];
     $this->buildUpDeck = true;
     $this->faction = BRITISH;
     $this->initiativeValue = 5;

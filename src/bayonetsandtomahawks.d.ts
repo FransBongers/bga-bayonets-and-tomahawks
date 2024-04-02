@@ -66,6 +66,10 @@ interface BayonetsAndTomahawksGame extends Game {
 // type Faction = BRITISH | FRENCH | INDIAN;
 type Faction = 'british' | 'french' | 'indian';
 
+interface BTActionPoint {
+  id: string;
+}
+
 interface BTCard {
   id: string;
   faction: string;

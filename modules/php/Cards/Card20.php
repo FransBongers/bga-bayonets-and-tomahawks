@@ -8,6 +8,23 @@ class Card20 extends \BayonetsAndTomahawks\Models\Card
   {
     parent::__construct($row);
     $this->id = 'Card20';
+    $this->actionPoints = [
+      [
+        'id' => LIGHT_AP
+      ],
+      [
+        'id' => ARMY_AP
+      ],
+      [
+        'id' => ARMY_AP
+      ],
+      [
+        'id' => ARMY_AP
+      ],
+      [
+        'id' => SAIL_ARMY_AP
+      ]
+    ];
     $this->faction = BRITISH;
     $this->initiativeValue = 5;
     $this->years = [1758, 1759];
