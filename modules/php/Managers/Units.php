@@ -24,7 +24,7 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
     return self::getInstance($row['counter_id'], $row);
   }
 
-  public function getInstance($counterId, $row = null)
+  public static function getInstance($counterId, $row = null)
   {
     $className = '\BayonetsAndTomahawks\Units\\' . $counterId;
     return new $className($row);

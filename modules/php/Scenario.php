@@ -22,7 +22,7 @@ class Scenario extends \APP_DbObject
     return self::$scenario;
   }
 
-  public function getId()
+  public static function getId()
   {
     $scenario = self::get();
     return is_null($scenario) ? null : $scenario['meta_data']['scenario_id'] ?? $scenario['meta_data']['id'];
@@ -31,7 +31,7 @@ class Scenario extends \APP_DbObject
   /**
    * Load a scenario from a file and store it into a global
    */
-  function loadId($id)
+  static function loadId($id)
   {
     require_once dirname(__FILE__) . '/Scenarios/list.inc.php';
     $scenarios = [];
@@ -51,7 +51,7 @@ class Scenario extends \APP_DbObject
   /**
    * Setup the scenario stored into the global
    */
-  function setup($rematch = false, $forceRefresh = false)
+  static function setup($rematch = false, $forceRefresh = false)
   {
     $scenario = self::get();
     if (is_null($scenario)) {
