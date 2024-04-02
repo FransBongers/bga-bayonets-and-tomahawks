@@ -30,6 +30,7 @@ interface BayonetsAndTomahawksGame extends Game {
     args: Record<string, unknown>
   ) => string;
   getPlayerId: () => number;
+  getUnitData: ({counterId}: {counterId: string;}) => {faction: string;};
   setCardSelectable: (props: {
     id: string;
     callback: (event: PointerEvent) => void;

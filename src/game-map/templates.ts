@@ -10,7 +10,7 @@ const tplUnit = ({
   counterId: string;
   style?: string;
 }) => `
-  <div class="bt_token" data-counter-id="${counterId}"${
+  <div class="bt_token_side" data-counter-id="${counterId}"${
   style ? ` style="${style}"` : ""
 }></div>
 `;
@@ -29,7 +29,10 @@ const tplSpaces = ({
         space.id
       }" class="bt_space" style="top: calc(var(--btMapScale) * ${
         space.top - 26
-      }px); left: calc(var(--btMapScale) * ${space.left - 26}px);"></div>`
+      }px); left: calc(var(--btMapScale) * ${space.left - 26}px);">
+        <div id="${space.id}_french_stack"></div>
+        <div id="${space.id}_british_stack"></div>
+      </div>`
   );
   const result = mappedSpaces.join("");
   return result;

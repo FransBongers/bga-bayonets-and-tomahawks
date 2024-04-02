@@ -70,6 +70,7 @@
     "src/states/ConfirmTurn.ts",
     "src/states/SelectReserveCard.ts",
     "src/states/state.d.ts",
+    "src/unit-stack/index.ts",
     "src/token-manager/index.ts",
     "src/tooltip-manager/templates.ts",
     "src/tooltip-manager/index.ts"

@@ -252,6 +252,10 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  getUnitData({counterId}: {counterId: string;}) {
+    return this.gamedatas.staticData.units[counterId];
+  }
+
   ///////////////////////////////////////////////////
   //// Utility methods - add in alphabetical order
 

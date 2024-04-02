@@ -2221,6 +2221,10 @@ var BayonetsAndTomahawks = (function () {
     };
     BayonetsAndTomahawks.prototype.onUpdateActionButtons = function (stateName, args) {
     };
+    BayonetsAndTomahawks.prototype.getUnitData = function (_a) {
+        var counterId = _a.counterId;
+        return this.gamedatas.staticData.units[counterId];
+    };
     BayonetsAndTomahawks.prototype.addActionButtonClient = function (_a) {
         var id = _a.id, text = _a.text, callback = _a.callback, extraClasses = _a.extraClasses, _b = _a.color, color = _b === void 0 ? "none" : _b;
         if ($(id)) {
@@ -2834,20 +2838,25 @@ var GameMap = (function () {
         var _this = this;
         var gamedatas = _a.gamedatas;
         gamedatas.spaces.forEach(function (space) {
+            var _a;
             if (!_this.stacks[space.id]) {
-                _this.stacks[space.id] = new ManualPositionStock(_this.game.tokenManager, document.getElementById(space.id), {}, function (element, cards, lastCard, stock) {
-                    cards.forEach(function (card, index) {
-                        var unitDiv = stock.getCardElement(card);
-                        unitDiv.style.position = 'absolute';
-                        unitDiv.style.top = "".concat(index * -5, "px");
-                        unitDiv.style.left = "".concat(index * 5, "px");
-                    });
-                });
+                _this.stacks[space.id] = (_a = {},
+                    _a[BRITISH] = new UnitStack(_this.game.tokenManager, document.getElementById("".concat(space.id, "_british_stack")), {}, BRITISH),
+                    _a[FRENCH] = new UnitStack(_this.game.tokenManager, document.getElementById("".concat(space.id, "_french_stack")), {}, FRENCH),
+                    _a);
             }
-            var units = gamedatas.units.filter(function (unit) { return unit.location === space.id; });
-            if (units.length > 0) {
-            }
-            _this.stacks[space.id].addCards(units);
+            gamedatas.units
+                .filter(function (unit) { return unit.location === space.id; })
+                .forEach(function (unit) {
+                console.log('unit', unit);
+                var data = _this.game.getUnitData({ counterId: unit.counterId });
+                if (data.faction === BRITISH) {
+                    _this.stacks[space.id][BRITISH].addUnit(unit);
+                }
+                else if (data.faction === FRENCH) {
+                    _this.stacks[space.id][FRENCH].addUnit(unit);
+                }
+            });
         });
     };
     GameMap.prototype.setupMarkers = function (_a) {
@@ -2856,12 +2865,12 @@ var GameMap = (function () {
         if (markers[YEAR_MARKER]) {
             document
                 .getElementById("year_track_".concat(markers[YEAR_MARKER].location))
-                .insertAdjacentHTML("beforeend", tplMarker({ id: markers[YEAR_MARKER].id }));
+                .insertAdjacentHTML('beforeend', tplMarker({ id: markers[YEAR_MARKER].id }));
         }
         if (markers[ROUND_MARKER]) {
             document
                 .getElementById("action_round_track_".concat(markers[ROUND_MARKER].location))
-                .insertAdjacentHTML("beforeend", tplMarker({ id: markers[ROUND_MARKER].id }));
+                .insertAdjacentHTML('beforeend', tplMarker({ id: markers[ROUND_MARKER].id }));
         }
     };
     GameMap.prototype.updateGameMap = function (_a) {
@@ -2870,8 +2879,8 @@ var GameMap = (function () {
     GameMap.prototype.setupGameMap = function (_a) {
         var gamedatas = _a.gamedatas;
         document
-            .getElementById("play_area_container")
-            .insertAdjacentHTML("afterbegin", tplGameMap({ gamedatas: gamedatas }));
+            .getElementById('play_area_container')
+            .insertAdjacentHTML('afterbegin', tplGameMap({ gamedatas: gamedatas }));
         this.setupUnits({ gamedatas: gamedatas });
         this.setupMarkers({ gamedatas: gamedatas });
     };
@@ -2884,13 +2893,13 @@ var tplMarker = function (_a) {
 };
 var tplUnit = function (_a) {
     var faction = _a.faction, counterId = _a.counterId, style = _a.style;
-    return "\n  <div class=\"bt_token\" data-counter-id=\"".concat(counterId, "\"").concat(style ? " style=\"".concat(style, "\"") : "", "></div>\n");
+    return "\n  <div class=\"bt_token_side\" data-counter-id=\"".concat(counterId, "\"").concat(style ? " style=\"".concat(style, "\"") : "", "></div>\n");
 };
 var tplSpaces = function (_a) {
     var spaces = _a.spaces;
     var filteredSpaces = spaces.filter(function (space) { return space.top && space.left; });
     var mappedSpaces = filteredSpaces.map(function (space) {
-        return "<div id=\"".concat(space.id, "\" class=\"bt_space\" style=\"top: calc(var(--btMapScale) * ").concat(space.top - 26, "px); left: calc(var(--btMapScale) * ").concat(space.left - 26, "px);\"></div>");
+        return "<div id=\"".concat(space.id, "\" class=\"bt_space\" style=\"top: calc(var(--btMapScale) * ").concat(space.top - 26, "px); left: calc(var(--btMapScale) * ").concat(space.left - 26, "px);\">\n        <div id=\"").concat(space.id, "_french_stack\"></div>\n        <div id=\"").concat(space.id, "_british_stack\"></div>\n      </div>");
     });
     var result = mappedSpaces.join("");
     return result;
@@ -4036,6 +4045,62 @@ var SelectReserveCardState = (function () {
     };
     return SelectReserveCardState;
 }());
+var UnitStack = (function (_super) {
+    __extends(UnitStack, _super);
+    function UnitStack(manager, element, settings, faction) {
+        var _this = _super.call(this, manager, element, settings, function (element, cards, lastCard, stock) { return _this.updateStackDisplay(element, cards, stock); }) || this;
+        _this.manager = manager;
+        _this.element = element;
+        _this.hovering = false;
+        _this.open = false;
+        _this.element.classList.add('bt_stack');
+        _this.faction = faction;
+        _this.element.addEventListener('mouseover', function () { return _this.onMouseOver(); });
+        _this.element.addEventListener('mouseout', function () { return _this.onMouseOut(); });
+        _this.element.addEventListener('click', function () {
+            console.log('clicked');
+            _this.open = !_this.open;
+            _this.updateStackDisplay(_this.element, _this.getCards(), _this);
+        });
+        return _this;
+    }
+    UnitStack.prototype.addUnit = function (unit, animation, settings) {
+        var promise = _super.prototype.addCard.call(this, unit, animation, settings);
+        this.element.setAttribute('data-has-unit', 'true');
+        return promise;
+    };
+    UnitStack.prototype.unitRemoved = function (unit, settings) {
+        _super.prototype.cardRemoved.call(this, unit, settings);
+        if (this.getCards().length === 0) {
+            this.element.removeAttribute('data-has-unit');
+        }
+    };
+    UnitStack.prototype.onMouseOver = function () {
+        console.log('onMouseOver');
+        this.hovering = true;
+        this.updateStackDisplay(this.element, this.getCards(), this);
+    };
+    UnitStack.prototype.onMouseOut = function () {
+        console.log('onMouseOut');
+        this.hovering = false;
+        this.updateStackDisplay(this.element, this.getCards(), this);
+    };
+    UnitStack.prototype.updateStackDisplay = function (element, cards, stock) {
+        var _this = this;
+        console.log('open', this.open);
+        console.log('hovering', this.hovering);
+        var expanded = this.open || this.hovering;
+        console.log('expanded', expanded);
+        cards.forEach(function (card, index) {
+            var unitDiv = stock.getCardElement(card);
+            unitDiv.style.position = 'absolute';
+            unitDiv.style.top = "calc(var(--btTokenScale) * ".concat(index * (expanded ? 0 : -8), "px)");
+            var offset = expanded ? 52 : 8;
+            unitDiv.style.left = "calc(var(--btTokenScale) * ".concat(index * (_this.faction === FRENCH ? -1 * offset : offset), "px)");
+        });
+    };
+    return UnitStack;
+}(ManualPositionStock));
 var TokenManager = (function (_super) {
     __extends(TokenManager, _super);
     function TokenManager(game) {
@@ -4054,13 +4119,14 @@ var TokenManager = (function (_super) {
     TokenManager.prototype.setupDiv = function (card, div) {
         console.log('setup', card);
         div.style.position = 'relative';
+        div.classList.add('bt_token');
     };
     TokenManager.prototype.setupFrontDiv = function (card, div) {
-        div.classList.add('bt_token');
+        div.classList.add('bt_token_side');
         div.setAttribute('data-counter-id', card.counterId);
     };
     TokenManager.prototype.setupBackDiv = function (card, div) {
-        div.classList.add('bt_token');
+        div.classList.add('bt_token_side');
         div.setAttribute('data-counter-id', "".concat(card.counterId, "_reduced"));
     };
     TokenManager.prototype.isCardVisible = function (card) {

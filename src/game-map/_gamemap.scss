@@ -71,6 +71,10 @@
   height: calc(var(--btMapScale) * 52px);
   width: calc(var(--btMapScale) * 52px);
   // opacity: 0.5;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
 }
 
 .bt_marker_space {
@@ -81,6 +85,16 @@
   align-items: center;
   justify-content: center;
   // background-color: yellow;
+}
+
+.bt_stack[data-has-unit="true"] {
+  min-width: calc(var(--btMapScale) * 52px);
+
+  .bt_token {
+    transition: top 500ms, left 500ms;
+    // top: 0px;
+    // left: 0px;
+  }
 }
 
 // #bt_location {

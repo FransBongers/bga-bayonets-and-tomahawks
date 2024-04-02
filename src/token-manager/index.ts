@@ -17,17 +17,18 @@ class TokenManager extends CardManager<BTUnit> {
     // div.style.height = "calc(var(--btCardScale) * 179px)";
     console.log('setup', card);
     div.style.position = 'relative';
+    div.classList.add('bt_token')
   }
 
   setupFrontDiv(card: BTUnit, div: HTMLElement) {
-    div.classList.add('bt_token');
+    div.classList.add('bt_token_side');
     div.setAttribute('data-counter-id', card.counterId);
     // div.style.width = "calc(var(--btCardScale) * 250px)";
     // div.style.height = "calc(var(--btCardScale) * 179px)";
   }
 
   setupBackDiv(card: BTUnit, div: HTMLElement) {
-    div.classList.add('bt_token');
+    div.classList.add('bt_token_side');
     div.setAttribute('data-counter-id', `${card.counterId}_reduced`);
   }
 

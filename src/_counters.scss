@@ -16,7 +16,7 @@
 //   background-size: 500% 300%;
 // }
 
-.bt_token {
+.bt_token_side {
   // width: 52px;
   // height: 52px;
   height: calc(var(--btTokenScale) * 52px);
@@ -45,7 +45,7 @@ $indian-units: (
 );
 
 @for $i from 1 through 15 {
-  .bt_token[data-counter-id="#{map.get($indian-units,$i)}"] {
+  .bt_token_side[data-counter-id="#{map.get($indian-units,$i)}"] {
     background-position-x: math.div((($i - 1) % 5 * 100%), 4);
     background-position-y: math.div(math.floor(calc(($i - 1) / 5)) * 100%, 2);
     background-image: url('img/unit_tokens_ind.webp');
@@ -176,7 +176,7 @@ $british-units: (
 );
 
 @for $i from 1 through 119 {
-  .bt_token[data-counter-id="#{map.get($british-units,$i)}"] {
+  .bt_token_side[data-counter-id="#{map.get($british-units,$i)}"] {
     background-position-x: math.div((($i - 1) % 12 * 100%), 11);
     background-position-y: math.div(math.floor(calc(($i - 1) / 12)) * 100%, 10);
     background-image: url('img/unit_tokens_bri.webp');
@@ -265,7 +265,7 @@ $french-units: (
 );
 
 @for $i from 1 through 119 {
-  .bt_token[data-counter-id="#{map.get($french-units,$i)}"] {
+  .bt_token_side[data-counter-id="#{map.get($french-units,$i)}"] {
     background-position-x: math.div((($i - 1) % 12 * 100%), 11);
     background-position-y: math.div(math.floor(calc(($i - 1) / 12)) * 100%, 6);
     background-image: url('img/unit_tokens_fre.webp');

@@ -20,7 +20,8 @@ trait DebugTrait
 
   function test()
   {
-    Notifications::log('british player', Players::getPlayerForFaction(BRITISH));
+    Units::moveAllInLocation(HALIFAX,CHIGNECTOU);
+    // Notifications::log('british player', Players::getPlayerForFaction(BRITISH));
     // Cards::setupNewGame();
     // Notifications::log('test', Globals::getTest());
     // Notifications::log('static', Units::getStaticUiData());
