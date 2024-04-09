@@ -53,7 +53,8 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
   //////////////////////////////////
   //////////////////////////////////
 
-  public static function getCardsInPlay() {
+  public static function getCardsInPlay()
+  {
     return [
       BRITISH => self::getTopOf(Locations::cardInPlay(BRITISH)),
       FRENCH => self::getTopOf(Locations::cardInPlay(FRENCH)),
@@ -100,7 +101,56 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
   // .##....##.##..........##....##.....##.##.......
   // ..######..########....##.....#######..##.......
 
+  public static function setupDecksForYear($year)
+  {
+    // Move all cards to the pool
+    $cards = Cards::getAll()->toArray();
+    Cards::move(array_map(function ($card) {
+      return $card->getId();
+    }, $cards), Locations::cardPool());
 
+
+    $britishBuildupDeck = [];
+    $britishCampaignDeck = [];
+    $frenchBuildupDeck = [];
+    $frenchCampaignDeck = [];
+    $indianCampaignDeck = [];
+
+    $cards = Cards::getAll()->toArray();
+
+    foreach ($cards as $card) {
+      $cardId = $card->getId();
+      $faction = $card->getFaction();
+      $usedInYears = $card->getYears();
+
+      if ($usedInYears !== null && !in_array($year, $usedInYears)) {
+        continue;
+      }
+
+      if ($faction === INDIAN) {
+        $indianCampaignDeck[] = $cardId;
+      } else if ($faction === FRENCH && $card->getBuildUpDeck()) {
+        $frenchBuildupDeck[] = $cardId;
+      } else if ($faction === FRENCH) {
+        $frenchCampaignDeck[] = $cardId;
+      } else if ($faction === BRITISH && $card->getBuildUpDeck()) {
+        $britishBuildupDeck[] = $cardId;
+      } else if ($faction === BRITISH) {
+        $britishCampaignDeck[] = $cardId;
+      }
+    }
+    Cards::move($britishBuildupDeck, Locations::buildUpDeck(BRITISH));
+    Cards::move($britishCampaignDeck, Locations::campaignDeck(BRITISH));
+    Cards::move($frenchBuildupDeck, Locations::buildUpDeck(FRENCH));
+    Cards::move($frenchCampaignDeck, Locations::campaignDeck(FRENCH));
+    Cards::move($indianCampaignDeck, Locations::campaignDeck(INDIAN));
+
+    foreach ([BRITISH, FRENCH] as $faction) {
+      self::shuffle(Locations::buildUpDeck($faction));
+      self::shuffle(Locations::campaignDeck($faction));
+    }
+    self::shuffle(Locations::campaignDeck(INDIAN));
+  }
 
   private static function setupLoadCards()
   {
@@ -108,26 +158,17 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
     include dirname(__FILE__) . '/../Cards/list.inc.php';
 
     Notifications::log('cardIds', $cardIds);
-    $scenario = Globals::getScenario();
+    $scenario = Scenarios::get();
     Notifications::log('scenario', $scenario);
     // return;
     foreach ($cardIds as $cId) {
-      $card = self::getCardInstance($cId);
+      // $card = self::getCardInstance($cId);
 
-      $location = '';
+      $location = Locations::cardPool();
       $extraData = null;
-      // $location = 'deck';
+      // // $location = 'deck';
 
-      $faction = $card->getFaction();
-      if ($faction === INDIAN) {
-        $location = Locations::campaignDeck(INDIAN);
-      } else if (!self::yearsMatchScenario($card, $scenario['cards'])) {
-        $location = Locations::cardPool($faction);
-      } else if ($card->getBuildUpDeck()) {
-        $location = Locations::buildUpDeck($faction);
-      } else {
-        $location = Locations::campaignDeck($faction);
-      }
+
 
       $cards[$cId] = [
         'id' => $cId,
@@ -138,11 +179,7 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
     Notifications::log('cards', $cards);
     // // Create the cards
     self::create($cards, null);
-    foreach([BRITISH, FRENCH] as $faction) {
-      self::shuffle(Locations::buildUpDeck($faction));
-      self::shuffle(Locations::campaignDeck($faction));
-    }
-    self::shuffle(Locations::campaignDeck(INDIAN));
+    self::setupDecksForYear($scenario->getStartYear());
   }
 
   /* Creation of the cards */
@@ -151,16 +188,16 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
     self::setupLoadCards();
   }
 
-  private static function yearsMatchScenario($card, $scenarioCards)
-  {
-    $years = $card->getYears();
-    if ($card->getYears() === null) {
-      return true;
-    }
-    $faction = $card->getFaction();
-    // check if at least one years match
-    return Utils::array_some($years, function ($year) use ($scenarioCards, $faction) {
-      return in_array($year, $scenarioCards[$faction]);
-    });
-  }
+  // private static function yearsMatchScenario($card, $scenarioCards)
+  // {
+  //   $years = $card->getYears();
+  //   if ($card->getYears() === null) {
+  //     return true;
+  //   }
+  //   $faction = $card->getFaction();
+  //   // check if at least one years match
+  //   return Utils::array_some($years, function ($year) use ($scenarioCards, $faction) {
+  //     return in_array($year, $scenarioCards[$faction]);
+  //   });
+  // }
 }

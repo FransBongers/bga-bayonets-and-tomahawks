@@ -290,4 +290,29 @@ $machinestates = array(
         'action' => 'stAtomicAction',
         'possibleactions' => ['actActionRoundChooseReaction', 'actPassOptionalAction', 'actRestart'],
     ],
+
+    ST_FLEETS_ARRIVE_DRAW_REINFORCEMENTS => [
+        'name' => 'fleetsArriveDrawReinforcements',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_COLONIALS_ENLIST_DRAW_REINFORCEMENTS => [
+        'name' => 'colonialsEnlistDrawReinforcements',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_WINTER_QUARTERS_GAME_END_CHECK => [
+        'name' => 'winterQuartersGameEndCheck',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
 );

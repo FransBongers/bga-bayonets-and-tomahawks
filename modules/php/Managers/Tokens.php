@@ -6,10 +6,8 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Game;
 use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Helpers\Locations;
-use BayonetsAndTomahawks\Managers\Players;
+use BayonetsAndTomahawks\Managers\Scenarios;
 use BayonetsAndTomahawks\Helpers\Utils;
-
-use const BayonetsAndTomahawks\OPTION_STARTING_MAP_AGE_OF_REFORMATION_PROMO_VARIANT;
 
 /**
  * extends
@@ -82,15 +80,16 @@ class Tokens extends \BayonetsAndTomahawks\Helpers\Pieces
   public static function setupNewGame($players = null, $options = null)
   {
     $tokens = [];
+    $scenario = Scenarios::get();
 
     $tokens[YEAR_MARKER] = [
       'id' => YEAR_MARKER,
-      'location' => '1755', // get from scenario
+      'location' => $scenario->getStartYear(),
       'extra_data' => json_encode(null)
     ];
     $tokens[ROUND_MARKER] = [
       'id' => ROUND_MARKER,
-      'location' => 'ar1',
+      'location' => ACTION_ROUND_1,
       'extra_data' => json_encode(null)
     ];
 

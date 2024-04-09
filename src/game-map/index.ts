@@ -35,35 +35,35 @@ class GameMap {
     gamedatas.spaces.forEach((space) => {
       if (!this.stacks[space.id]) {
         // [BRITISH, FRENCH].forEach((faction) => {
-          this.stacks[space.id] = {
-            [BRITISH]: new UnitStack<BTUnit>(
-              this.game.tokenManager,
-              document.getElementById(`${space.id}_british_stack`),
-              {},
-              BRITISH
-              // (
-              //   element: HTMLElement,
-              //   cards: BTUnit[],
-              //   lastCard: BTUnit,
-              //   stock: UnitStack<BTUnit>
-              // ) => {
-              //   cards.forEach((card, index) => {
-              //     const unitDiv = stock.getCardElement(card);
-              //     unitDiv.style.position = 'absolute';
-              //     unitDiv.style.top = `${index * -5}px`;
-              //     unitDiv.style.left = `${index * 5}px`;
-              //   });
-              //   // console.log('card',lastCard);
-              //   // console.log('cards',cards);
-              // }
-            ),
-            [FRENCH]: new UnitStack<BTUnit>(
-              this.game.tokenManager,
-              document.getElementById(`${space.id}_french_stack`),
-              {},
-              FRENCH
-            ),
-          };
+        this.stacks[space.id] = {
+          [BRITISH]: new UnitStack<BTUnit>(
+            this.game.tokenManager,
+            document.getElementById(`${space.id}_british_stack`),
+            {},
+            BRITISH
+            // (
+            //   element: HTMLElement,
+            //   cards: BTUnit[],
+            //   lastCard: BTUnit,
+            //   stock: UnitStack<BTUnit>
+            // ) => {
+            //   cards.forEach((card, index) => {
+            //     const unitDiv = stock.getCardElement(card);
+            //     unitDiv.style.position = 'absolute';
+            //     unitDiv.style.top = `${index * -5}px`;
+            //     unitDiv.style.left = `${index * 5}px`;
+            //   });
+            //   // console.log('card',lastCard);
+            //   // console.log('cards',cards);
+            // }
+          ),
+          [FRENCH]: new UnitStack<BTUnit>(
+            this.game.tokenManager,
+            document.getElementById(`${space.id}_french_stack`),
+            {},
+            FRENCH
+          ),
+        };
         // });
       }
 
@@ -146,6 +146,38 @@ class GameMap {
   // .......##.##..........##.......##....##.......##...##.........##
   // .##....##.##..........##.......##....##.......##....##..##....##
   // ..######..########....##.......##....########.##.....##..######.
+
+  public async moveRoundMarker({ nextRoundStep }: { nextRoundStep: string }) {
+    const marker = document.getElementById('round_marker');
+    const toNode = document.getElementById(
+      `action_round_track_${nextRoundStep}`
+    );
+
+    if (!marker && toNode) {
+      console.error('Unable to move round marker');
+      return;
+    }
+
+    await this.game.animationManager.attachWithAnimation(
+      new BgaSlideAnimation({ element: marker }),
+      toNode
+    );
+  }
+
+  public async moveYearMarker({ year }: { year: number }) {
+    const marker = document.getElementById('year_marker');
+    const toNode = document.getElementById(`year_track_${year}`);
+
+    if (!marker && toNode) {
+      console.error('Unable to move round marker');
+      return;
+    }
+
+    await this.game.animationManager.attachWithAnimation(
+      new BgaSlideAnimation({ element: marker }),
+      toNode
+    );
+  }
 
   //  .##.....##.########.####.##.......####.########.##....##
   //  .##.....##....##.....##..##........##.....##.....##..##.

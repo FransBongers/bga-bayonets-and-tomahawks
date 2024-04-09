@@ -46,6 +46,7 @@ interface BayonetsAndTomahawksGame extends Game {
   animationManager: AnimationManager;
   cardsInPlay: CardsInPlay;
   hand: Hand;
+  gameMap: GameMap;
   // updatePlayAreaSize: () => void;
   notificationManager: NotificationManager;
   // playAreaScale: number;

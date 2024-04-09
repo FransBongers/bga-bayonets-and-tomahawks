@@ -77,13 +77,12 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
   public function discard()
   {
     $owner = $this->getOwner();
-
     Cards::insertOnTop($this->getId(),DISCARD);
     $this->location = DISCARD;
     if ($owner !== null) {
       Notifications::discardCardFromHand($owner, $this);
     } else {
-      // TODO
+      Notifications::discardCardInPlay($this);
     }
   }
 

@@ -2137,14 +2137,14 @@ var BayonetsAndTomahawks = (function () {
         this._notif_uid_to_log_id = {};
         this._notif_uid_to_mobile_log_id = {};
         this._selectableNodes = [];
-        console.log("bayonetsandtomahawks constructor");
+        console.log('bayonetsandtomahawks constructor');
     }
     BayonetsAndTomahawks.prototype.setup = function (gamedatas) {
-        dojo.place("<div id='customActions' style='display:inline-block'></div>", $("generalactions"), "after");
+        dojo.place("<div id='customActions' style='display:inline-block'></div>", $('generalactions'), 'after');
         this.setAlwaysFixTopActions();
         this.setupDontPreloadImages();
         this.gamedatas = gamedatas;
-        debug("gamedatas", gamedatas);
+        debug('gamedatas', gamedatas);
         this.setupPlayerOrder({ playerOrder: gamedatas.playerOrder });
         this._connections = [];
         this.activeStates = {
@@ -2166,8 +2166,8 @@ var BayonetsAndTomahawks = (function () {
         });
         this.cardManager = new BTCardManager(this);
         this.tokenManager = new TokenManager(this);
-        this.discard = new VoidStock(this.cardManager, document.getElementById("bt_discard"));
-        this.deck = new LineStock(this.cardManager, document.getElementById("bt_deck"));
+        this.discard = new VoidStock(this.cardManager, document.getElementById('bt_discard'));
+        this.deck = new LineStock(this.cardManager, document.getElementById('bt_deck'));
         this.gameMap = new GameMap(this);
         this.pools = new Pools(this);
         this.tooltipManager = new TooltipManager(this);
@@ -2182,7 +2182,7 @@ var BayonetsAndTomahawks = (function () {
         this.notificationManager = new NotificationManager(this);
         this.notificationManager.setupNotifications();
         this.tooltipManager.setupTooltips();
-        debug("Ending game setup");
+        debug('Ending game setup');
     };
     BayonetsAndTomahawks.prototype.setupPlayerOrder = function (_a) {
         var playerOrder = _a.playerOrder;
@@ -2199,14 +2199,14 @@ var BayonetsAndTomahawks = (function () {
     BayonetsAndTomahawks.prototype.setupDontPreloadImages = function () { };
     BayonetsAndTomahawks.prototype.onEnteringState = function (stateName, args) {
         var _this = this;
-        console.log("Entering state: " + stateName, args);
+        console.log('Entering state: ' + stateName, args);
         if (this.framework().isCurrentPlayerActive() &&
             this.activeStates[stateName]) {
             this.activeStates[stateName].onEnteringState(args.args);
         }
         if (args.args && args.args.previousSteps) {
             args.args.previousSteps.forEach(function (stepId) {
-                var logEntry = $("logs").querySelector(".log.notif_newUndoableStep[data-step=\"".concat(stepId, "\"]"));
+                var logEntry = $('logs').querySelector(".log.notif_newUndoableStep[data-step=\"".concat(stepId, "\"]"));
                 if (logEntry) {
                     _this.onClick(logEntry, function () { return _this.undoToStep({ stepId: stepId }); });
                 }
@@ -2227,11 +2227,11 @@ var BayonetsAndTomahawks = (function () {
         return this.gamedatas.staticData.units[counterId];
     };
     BayonetsAndTomahawks.prototype.addActionButtonClient = function (_a) {
-        var id = _a.id, text = _a.text, callback = _a.callback, extraClasses = _a.extraClasses, _b = _a.color, color = _b === void 0 ? "none" : _b;
+        var id = _a.id, text = _a.text, callback = _a.callback, extraClasses = _a.extraClasses, _b = _a.color, color = _b === void 0 ? 'none' : _b;
         if ($(id)) {
             return;
         }
-        this.framework().addActionButton(id, text, callback, "customActions", false, color);
+        this.framework().addActionButton(id, text, callback, 'customActions', false, color);
         if (extraClasses) {
             dojo.addClass(id, extraClasses);
         }
@@ -2239,16 +2239,16 @@ var BayonetsAndTomahawks = (function () {
     BayonetsAndTomahawks.prototype.addCancelButton = function () {
         var _this = this;
         this.addDangerActionButton({
-            id: "cancel_btn",
-            text: _("Cancel"),
+            id: 'cancel_btn',
+            text: _('Cancel'),
             callback: function () { return _this.onCancel(); },
         });
     };
     BayonetsAndTomahawks.prototype.addConfirmButton = function (_a) {
         var callback = _a.callback;
         this.addPrimaryActionButton({
-            id: "confirm_btn",
-            text: _("Confirm"),
+            id: 'confirm_btn',
+            text: _('Confirm'),
             callback: callback,
         });
     };
@@ -2257,11 +2257,11 @@ var BayonetsAndTomahawks = (function () {
         var optionalAction = _a.optionalAction, text = _a.text;
         if (optionalAction) {
             this.addSecondaryActionButton({
-                id: "pass_btn",
-                text: text ? _(text) : _("Pass"),
+                id: 'pass_btn',
+                text: text ? _(text) : _('Pass'),
                 callback: function () {
                     return _this.takeAction({
-                        action: "actPassOptionalAction",
+                        action: 'actPassOptionalAction',
                         atomicAction: false,
                     });
                 },
@@ -2284,7 +2284,7 @@ var BayonetsAndTomahawks = (function () {
         if ($(id)) {
             return;
         }
-        this.framework().addActionButton(id, text, callback, "customActions", false, "blue");
+        this.framework().addActionButton(id, text, callback, 'customActions', false, 'blue');
         if (extraClasses) {
             dojo.addClass(id, extraClasses);
         }
@@ -2294,7 +2294,7 @@ var BayonetsAndTomahawks = (function () {
         if ($(id)) {
             return;
         }
-        this.framework().addActionButton(id, text, callback, "customActions", false, "gray");
+        this.framework().addActionButton(id, text, callback, 'customActions', false, 'gray');
         if (extraClasses) {
             dojo.addClass(id, extraClasses);
         }
@@ -2304,7 +2304,7 @@ var BayonetsAndTomahawks = (function () {
         if ($(id)) {
             return;
         }
-        this.framework().addActionButton(id, text, callback, "customActions", false, "red");
+        this.framework().addActionButton(id, text, callback, 'customActions', false, 'red');
         if (extraClasses) {
             dojo.addClass(id, extraClasses);
         }
@@ -2315,34 +2315,37 @@ var BayonetsAndTomahawks = (function () {
         var lastStep = Math.max.apply(Math, __spreadArray([0], previousSteps, false));
         if (lastStep > 0) {
             this.addDangerActionButton({
-                id: "undo_last_step_btn",
-                text: _("Undo last step"),
+                id: 'undo_last_step_btn',
+                text: _('Undo last step'),
                 callback: function () {
                     return _this.takeAction({
-                        action: "actUndoToStep",
+                        action: 'actUndoToStep',
                         args: {
                             stepId: lastStep,
                         },
-                        checkAction: "actRestart",
+                        checkAction: 'actRestart',
+                        atomicAction: false,
                     });
                 },
             });
         }
         if (previousEngineChoices > 0) {
             this.addDangerActionButton({
-                id: "restart_btn",
-                text: _("Restart turn"),
-                callback: function () { return _this.takeAction({ action: "actRestart" }); },
+                id: 'restart_btn',
+                text: _('Restart turn'),
+                callback: function () {
+                    return _this.takeAction({ action: 'actRestart', atomicAction: false });
+                },
             });
         }
     };
     BayonetsAndTomahawks.prototype.clearInterface = function () {
-        console.log("clear interface");
+        console.log('clear interface');
         this.playerManager.clearInterface();
     };
     BayonetsAndTomahawks.prototype.clearPossible = function () {
         this.framework().removeActionButtons();
-        dojo.empty("customActions");
+        dojo.empty('customActions');
         dojo.forEach(this._connections, dojo.disconnect);
         this._connections = [];
         dojo.query(".".concat(BT_SELECTABLE)).removeClass(BT_SELECTABLE);
@@ -2379,7 +2382,7 @@ var BayonetsAndTomahawks = (function () {
             return;
         }
         node.classList.add(BT_SELECTABLE);
-        this._connections.push(dojo.connect(node, "onclick", this, function (event) {
+        this._connections.push(dojo.connect(node, 'onclick', this, function (event) {
             return callback(event);
         }));
     };
@@ -2408,53 +2411,53 @@ var BayonetsAndTomahawks = (function () {
             callback(evt);
         };
         if (temporary) {
-            this.connect($(node), "click", safeCallback);
-            dojo.removeClass(node, "unselectable");
-            dojo.addClass(node, "selectable");
+            this.connect($(node), 'click', safeCallback);
+            dojo.removeClass(node, 'unselectable');
+            dojo.addClass(node, 'selectable');
             this._selectableNodes.push(node);
         }
         else {
-            dojo.connect($(node), "click", safeCallback);
+            dojo.connect($(node), 'click', safeCallback);
         }
     };
     BayonetsAndTomahawks.prototype.undoToStep = function (_a) {
         var stepId = _a.stepId;
         this.takeAction({
-            action: "actUndoToStep",
+            action: 'actUndoToStep',
             args: {
                 stepId: stepId,
             },
-            checkAction: "actRestart",
+            checkAction: 'actRestart',
         });
     };
     BayonetsAndTomahawks.prototype.updateLayout = function () {
         if (!this.settings) {
             return;
         }
-        $("play_area_container").setAttribute("data-two-columns", this.settings.get({ id: "twoColumnsLayout" }));
+        $('play_area_container').setAttribute('data-two-columns', this.settings.get({ id: 'twoColumnsLayout' }));
         var ROOT = document.documentElement;
-        var WIDTH = $("play_area_container").getBoundingClientRect()["width"] - 8;
+        var WIDTH = $('play_area_container').getBoundingClientRect()['width'] - 8;
         var LEFT_COLUMN = 1500;
         var RIGHT_COLUMN = 1500;
-        if (this.settings.get({ id: "twoColumnsLayout" }) === PREF_ENABLED) {
+        if (this.settings.get({ id: 'twoColumnsLayout' }) === PREF_ENABLED) {
             WIDTH = WIDTH - 8;
-            var size = Number(this.settings.get({ id: "columnSizes" }));
+            var size = Number(this.settings.get({ id: 'columnSizes' }));
             var proportions = [size, 100 - size];
             var LEFT_SIZE = (proportions[0] * WIDTH) / 100;
             var leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
-            ROOT.style.setProperty("--leftColumnScale", "".concat(leftColumnScale));
+            ROOT.style.setProperty('--leftColumnScale', "".concat(leftColumnScale));
             var RIGHT_SIZE = (proportions[1] * WIDTH) / 100;
             var rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
-            ROOT.style.setProperty("--rightColumnScale", "".concat(rightColumnScale));
-            $("play_area_container").style.gridTemplateColumns = "".concat(LEFT_SIZE, "px ").concat(RIGHT_SIZE, "px");
+            ROOT.style.setProperty('--rightColumnScale', "".concat(rightColumnScale));
+            $('play_area_container').style.gridTemplateColumns = "".concat(LEFT_SIZE, "px ").concat(RIGHT_SIZE, "px");
         }
         else {
             var LEFT_SIZE = WIDTH;
             var leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
-            ROOT.style.setProperty("--leftColumnScale", "".concat(leftColumnScale));
+            ROOT.style.setProperty('--leftColumnScale', "".concat(leftColumnScale));
             var RIGHT_SIZE = WIDTH;
             var rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
-            ROOT.style.setProperty("--leftColumnScale", "".concat(rightColumnScale));
+            ROOT.style.setProperty('--leftColumnScale', "".concat(rightColumnScale));
         }
     };
     BayonetsAndTomahawks.prototype.onAddingNewUndoableStepToLog = function (notif) {
@@ -2484,7 +2487,7 @@ var BayonetsAndTomahawks = (function () {
                 args.processed = true;
                 Object.entries(args).forEach(function (_a) {
                     var key = _a[0], value = _a[1];
-                    if (key.startsWith("tkn_")) {
+                    if (key.startsWith('tkn_')) {
                         args[key] = getTokenDiv({
                             key: key,
                             value: value,
@@ -2495,7 +2498,7 @@ var BayonetsAndTomahawks = (function () {
             }
         }
         catch (e) {
-            console.error(log, args, "Exception thrown", e.stack);
+            console.error(log, args, 'Exception thrown', e.stack);
         }
         return this.inherited(arguments);
     };
@@ -2523,13 +2526,13 @@ var BayonetsAndTomahawks = (function () {
         notifIds.forEach(function (uid) {
             if (_this._notif_uid_to_log_id.hasOwnProperty(uid)) {
                 var logId = _this._notif_uid_to_log_id[uid];
-                if ($("log_" + logId))
-                    dojo.addClass("log_" + logId, "cancel");
+                if ($('log_' + logId))
+                    dojo.addClass('log_' + logId, 'cancel');
             }
             if (_this._notif_uid_to_mobile_log_id.hasOwnProperty(uid)) {
                 var mobileLogId = _this._notif_uid_to_mobile_log_id[uid];
-                if ($("dockedlog_" + mobileLogId))
-                    dojo.addClass("dockedlog_" + mobileLogId, "cancel");
+                if ($('dockedlog_' + mobileLogId))
+                    dojo.addClass('dockedlog_' + mobileLogId, 'cancel');
             }
         });
     };
@@ -2540,16 +2543,16 @@ var BayonetsAndTomahawks = (function () {
         }
         var notif = this._last_notif;
         var type = notif.msg.type;
-        if (type == "history_history") {
+        if (type == 'history_history') {
             type = notif.msg.args.originalType;
         }
-        if ($("log_" + notif.logId)) {
-            dojo.addClass("log_" + notif.logId, "notif_" + type);
-            var methodName = "onAdding" + type.charAt(0).toUpperCase() + type.slice(1) + "ToLog";
+        if ($('log_' + notif.logId)) {
+            dojo.addClass('log_' + notif.logId, 'notif_' + type);
+            var methodName = 'onAdding' + type.charAt(0).toUpperCase() + type.slice(1) + 'ToLog';
             (_a = this[methodName]) === null || _a === void 0 ? void 0 : _a.call(this, notif);
         }
-        if ($("dockedlog_" + notif.mobileLogId)) {
-            dojo.addClass("dockedlog_" + notif.mobileLogId, "notif_" + type);
+        if ($('dockedlog_' + notif.mobileLogId)) {
+            dojo.addClass('dockedlog_' + notif.mobileLogId, 'notif_' + type);
         }
     };
     BayonetsAndTomahawks.prototype.addLogTooltip = function (_a) {
@@ -2568,12 +2571,12 @@ var BayonetsAndTomahawks = (function () {
     };
     BayonetsAndTomahawks.prototype.updatePlayerOrdering = function () {
         this.framework().inherited(arguments);
-        var container = document.getElementById("player_boards");
-        var infoPanel = document.getElementById("info_panel");
+        var container = document.getElementById('player_boards');
+        var infoPanel = document.getElementById('info_panel');
         if (!container) {
             return;
         }
-        container.insertAdjacentElement("afterbegin", infoPanel);
+        container.insertAdjacentElement('afterbegin', infoPanel);
     };
     BayonetsAndTomahawks.prototype.setAlwaysFixTopActions = function (alwaysFixed, maximum) {
         if (alwaysFixed === void 0) { alwaysFixed = true; }
@@ -2585,8 +2588,8 @@ var BayonetsAndTomahawks = (function () {
     BayonetsAndTomahawks.prototype.adaptStatusBar = function () {
         this.inherited(arguments);
         if (this.alwaysFixTopActions) {
-            var afterTitleElem = document.getElementById("after-page-title");
-            var titleElem = document.getElementById("page-title");
+            var afterTitleElem = document.getElementById('after-page-title');
+            var titleElem = document.getElementById('page-title');
             var zoom = getComputedStyle(titleElem).zoom;
             if (!zoom) {
                 zoom = 1;
@@ -2596,23 +2599,24 @@ var BayonetsAndTomahawks = (function () {
                 titleElem.offsetHeight <
                     (window.innerHeight * this.alwaysFixTopActionsMaximum) / 100) {
                 var afterTitleRect = afterTitleElem.getBoundingClientRect();
-                titleElem.classList.add("fixed-page-title");
-                titleElem.style.width = (afterTitleRect.width - 10) / zoom + "px";
-                afterTitleElem.style.height = titleRect.height + "px";
+                titleElem.classList.add('fixed-page-title');
+                titleElem.style.width = (afterTitleRect.width - 10) / zoom + 'px';
+                afterTitleElem.style.height = titleRect.height + 'px';
             }
             else {
-                titleElem.classList.remove("fixed-page-title");
-                titleElem.style.width = "auto";
-                afterTitleElem.style.height = "0px";
+                titleElem.classList.remove('fixed-page-title');
+                titleElem.style.width = 'auto';
+                afterTitleElem.style.height = '0px';
             }
         }
     };
     BayonetsAndTomahawks.prototype.actionError = function (actionName) {
-        this.framework().showMessage("cannot take ".concat(actionName, " action"), "error");
+        this.framework().showMessage("cannot take ".concat(actionName, " action"), 'error');
     };
     BayonetsAndTomahawks.prototype.takeAction = function (_a) {
         var action = _a.action, _b = _a.atomicAction, atomicAction = _b === void 0 ? true : _b, _c = _a.args, args = _c === void 0 ? {} : _c, checkAction = _a.checkAction;
         var actionName = atomicAction ? action : undefined;
+        console.log('action error', checkAction || action);
         if (!this.framework().checkAction(checkAction || action)) {
             this.actionError(action);
             return;
@@ -2623,7 +2627,7 @@ var BayonetsAndTomahawks = (function () {
             args: JSON.stringify(args),
         };
         var gameName = this.framework().game_name;
-        this.framework().ajaxcall("/".concat(gameName, "/").concat(gameName, "/").concat(atomicAction ? "actTakeAtomicAction" : action, ".html"), data, this, function () { });
+        this.framework().ajaxcall("/".concat(gameName, "/").concat(gameName, "/").concat(atomicAction ? 'actTakeAtomicAction' : action, ".html"), data, this, function () { });
     };
     return BayonetsAndTomahawks;
 }());
@@ -2885,6 +2889,48 @@ var GameMap = (function () {
         this.setupMarkers({ gamedatas: gamedatas });
     };
     GameMap.prototype.clearInterface = function () { };
+    GameMap.prototype.moveRoundMarker = function (_a) {
+        var nextRoundStep = _a.nextRoundStep;
+        return __awaiter(this, void 0, void 0, function () {
+            var marker, toNode;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        marker = document.getElementById('round_marker');
+                        toNode = document.getElementById("action_round_track_".concat(nextRoundStep));
+                        if (!marker && toNode) {
+                            console.error('Unable to move round marker');
+                            return [2];
+                        }
+                        return [4, this.game.animationManager.attachWithAnimation(new BgaSlideAnimation({ element: marker }), toNode)];
+                    case 1:
+                        _b.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    GameMap.prototype.moveYearMarker = function (_a) {
+        var year = _a.year;
+        return __awaiter(this, void 0, void 0, function () {
+            var marker, toNode;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        marker = document.getElementById('year_marker');
+                        toNode = document.getElementById("year_track_".concat(year));
+                        if (!marker && toNode) {
+                            console.error('Unable to move round marker');
+                            return [2];
+                        }
+                        return [4, this.game.animationManager.attachWithAnimation(new BgaSlideAnimation({ element: marker }), toNode)];
+                    case 1:
+                        _b.sent();
+                        return [2];
+                }
+            });
+        });
+    };
     return GameMap;
 }());
 var tplMarker = function (_a) {
@@ -3060,15 +3106,18 @@ var NotificationManager = (function () {
     }
     NotificationManager.prototype.setupNotifications = function () {
         var _this = this;
-        console.log("notifications subscriptions setup");
+        console.log('notifications subscriptions setup');
         var notifs = [
-            "log",
-            "discardCardFromHand",
-            "discardCardFromHandPrivate",
-            "drawCardPrivate",
-            "revealCardsInPlay",
-            "selectReserveCard",
-            "selectReserveCardPrivate",
+            'log',
+            'discardCardFromHand',
+            'discardCardFromHandPrivate',
+            'discardCardInPlay',
+            'drawCardPrivate',
+            'moveRoundMarker',
+            'moveYearMarker',
+            'revealCardsInPlay',
+            'selectReserveCard',
+            'selectReserveCardPrivate',
         ];
         notifs.forEach(function (notifName) {
             _this.subscriptions.push(dojo.subscribe(notifName, _this, function (notifDetails) {
@@ -3077,10 +3126,10 @@ var NotificationManager = (function () {
                 var promises = promise ? [promise] : [];
                 var minDuration = 1;
                 var msg = _this.game.format_string_recursive(notifDetails.log, notifDetails.args);
-                if (msg != "") {
-                    $("gameaction_status").innerHTML = msg;
-                    $("pagemaintitletext").innerHTML = msg;
-                    $("generalactions").innerHTML = "";
+                if (msg != '') {
+                    $('gameaction_status').innerHTML = msg;
+                    $('pagemaintitletext').innerHTML = msg;
+                    $('generalactions').innerHTML = '';
                     minDuration = MIN_NOTIFICATION_MS;
                 }
                 if (_this.game.animationManager.animationsActive()) {
@@ -3095,7 +3144,7 @@ var NotificationManager = (function () {
             _this.game.framework().notifqueue.setSynchronous(notifName, undefined);
             _this.game
                 .framework()
-                .notifqueue.setIgnoreNotificationCheck("discardCardFromHand", function (notif) {
+                .notifqueue.setIgnoreNotificationCheck('discardCardFromHand', function (notif) {
                 return notif.args.playerId == _this.game.getPlayerId();
             });
         });
@@ -3110,7 +3159,7 @@ var NotificationManager = (function () {
     NotificationManager.prototype.notif_log = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                debug("notif_log", notif.args);
+                debug('notif_log', notif.args);
                 return [2];
             });
         });
@@ -3164,6 +3213,21 @@ var NotificationManager = (function () {
             });
         });
     };
+    NotificationManager.prototype.notif_discardCardInPlay = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var card;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        card = notif.args.card;
+                        return [4, this.game.discard.addCard(card)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
     NotificationManager.prototype.notif_drawCardPrivate = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var card;
@@ -3176,6 +3240,36 @@ var NotificationManager = (function () {
                         _a.sent();
                         return [4, this.game.hand.addCard(card)];
                     case 2:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_moveRoundMarker = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var nextRoundStep;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        nextRoundStep = notif.args.nextRoundStep;
+                        return [4, this.game.gameMap.moveRoundMarker({ nextRoundStep: nextRoundStep })];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_moveYearMarker = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var year;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        year = notif.args.year;
+                        return [4, this.game.gameMap.moveYearMarker({ year: year })];
+                    case 1:
                         _a.sent();
                         return [2];
                 }
@@ -3752,20 +3846,11 @@ var ActionRoundActionPhaseState = (function () {
     };
     ActionRoundActionPhaseState.prototype.setDescription = function (activePlayerId) { };
     ActionRoundActionPhaseState.prototype.updateInterfaceInitialStep = function () {
-        var _this = this;
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
             text: _("${you} may perform actions"),
             args: {
                 you: "${you}",
-            },
-        });
-        this.game.addConfirmButton({
-            callback: function () {
-                return _this.game.takeAction({
-                    action: "actActionRoundActionPhase",
-                    args: {},
-                });
             },
         });
         this.game.addPassButton({
@@ -3902,6 +3987,7 @@ var ActionRoundChooseReactionState = (function () {
             },
         });
         this.addActionPointButtons();
+        this.game.addPassButton({ optionalAction: this.args.optionalAction });
         this.game.addUndoButtons(this.args);
     };
     ActionRoundChooseReactionState.prototype.updateInterfaceConfirm = function (_a) {

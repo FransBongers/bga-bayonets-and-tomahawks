@@ -13,7 +13,10 @@ interface NotifWithPlayerArgs {
   player_name: string;
 }
 
-type NotifSmallRefreshInterfaceArgs = Omit<BayonetsAndTomahawksGamedatas, 'staticData'>;
+type NotifSmallRefreshInterfaceArgs = Omit<
+  BayonetsAndTomahawksGamedatas,
+  'staticData'
+>;
 
 interface NotifDrawCardPrivateArgs extends NotifWithPlayerArgs {
   card: BTCard;
@@ -25,6 +28,18 @@ interface NotifDiscardCardFromHandArgs extends NotifWithPlayerArgs {
 
 interface NotifDiscardCardFromHandPrivateArgs extends NotifWithPlayerArgs {
   card: BTCard;
+}
+
+interface NotifDiscardCardsInPlayArgs {
+  card: BTCard;
+}
+
+interface NotifMoveRoundMarkerArgs {
+  nextRoundStep: string;
+}
+
+interface NotifMoveYearMarkerArgs {
+  year: number;
 }
 
 interface NotifRevealCardsInPlayArgs {

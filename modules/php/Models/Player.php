@@ -79,4 +79,12 @@ class Player extends \BayonetsAndTomahawks\Helpers\DB_Model
     $color = $this->getColor();
     return $color === "B73E20" ? BRITISH : FRENCH;
   }
+
+  public function discardReserveCard()
+  {
+    $cards = $this->getHand();
+    foreach($cards as $card) {
+      $card->discard();
+    }
+  }
 }

@@ -24,7 +24,7 @@ declare const g_gamethemeurl;
 declare const playSound;
 declare var noUiSlider;
 
-function sleep(ms: number){
+function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
@@ -76,7 +76,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   };
 
   constructor() {
-    console.log("bayonetsandtomahawks constructor");
+    console.log('bayonetsandtomahawks constructor');
   }
 
   // ..######..########.########.##.....##.########.
@@ -90,15 +90,15 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     // Create a new div for buttons to avoid BGA auto clearing it
     dojo.place(
       "<div id='customActions' style='display:inline-block'></div>",
-      $("generalactions"),
-      "after"
+      $('generalactions'),
+      'after'
     );
     this.setAlwaysFixTopActions();
     this.setupDontPreloadImages();
 
     this.gamedatas = gamedatas;
     // this.gameOptions = gamedatas.gameOptions;
-    debug("gamedatas", gamedatas);
+    debug('gamedatas', gamedatas);
     this.setupPlayerOrder({ playerOrder: gamedatas.playerOrder });
 
     this._connections = [];
@@ -129,11 +129,11 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     this.tokenManager = new TokenManager(this);
     this.discard = new VoidStock(
       this.cardManager,
-      document.getElementById("bt_discard")
+      document.getElementById('bt_discard')
     );
     this.deck = new LineStock(
       this.cardManager,
-      document.getElementById("bt_deck")
+      document.getElementById('bt_deck')
     );
 
     this.gameMap = new GameMap(this);
@@ -155,7 +155,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     this.notificationManager.setupNotifications();
 
     this.tooltipManager.setupTooltips();
-    debug("Ending game setup");
+    debug('Ending game setup');
   }
 
   // Sets player order with current player at index 0 if player is in the game
@@ -191,7 +191,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   // onEnteringState: this method is called each time we are entering into a new game state.
   //                  You can use this method to perform some user interface changes at this moment.
   public onEnteringState(stateName: string, args: any) {
-    console.log("Entering state: " + stateName, args);
+    console.log('Entering state: ' + stateName, args);
     // UI changes for active player
     if (
       this.framework().isCurrentPlayerActive() &&
@@ -215,7 +215,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     // Undo last steps
     if (args.args && args.args.previousSteps) {
       args.args.previousSteps.forEach((stepId: number) => {
-        let logEntry = $("logs").querySelector(
+        let logEntry = $('logs').querySelector(
           `.log.notif_newUndoableStep[data-step="${stepId}"]`
         );
         if (logEntry) {
@@ -254,7 +254,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  getUnitData({counterId}: {counterId: string;}) {
+  getUnitData({ counterId }: { counterId: string }) {
     return this.gamedatas.staticData.units[counterId];
   }
 
@@ -269,13 +269,13 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     text,
     callback,
     extraClasses,
-    color = "none",
+    color = 'none',
   }: {
     id: string;
     text: string;
     callback: Function | string;
     extraClasses?: string;
-    color?: "blue" | "gray" | "red" | "none";
+    color?: 'blue' | 'gray' | 'red' | 'none';
   }) {
     if ($(id)) {
       return;
@@ -284,7 +284,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       id,
       text,
       callback,
-      "customActions",
+      'customActions',
       false,
       color
     );
@@ -295,16 +295,16 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
 
   addCancelButton() {
     this.addDangerActionButton({
-      id: "cancel_btn",
-      text: _("Cancel"),
+      id: 'cancel_btn',
+      text: _('Cancel'),
       callback: () => this.onCancel(),
     });
   }
 
   addConfirmButton({ callback }: { callback: Function | string }) {
     this.addPrimaryActionButton({
-      id: "confirm_btn",
-      text: _("Confirm"),
+      id: 'confirm_btn',
+      text: _('Confirm'),
       callback,
     });
   }
@@ -318,11 +318,11 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   }) {
     if (optionalAction) {
       this.addSecondaryActionButton({
-        id: "pass_btn",
-        text: text ? _(text) : _("Pass"),
+        id: 'pass_btn',
+        text: text ? _(text) : _('Pass'),
         callback: () =>
           this.takeAction({
-            action: "actPassOptionalAction",
+            action: 'actPassOptionalAction',
             atomicAction: false,
           }),
       });
@@ -366,9 +366,9 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       id,
       text,
       callback,
-      "customActions",
+      'customActions',
       false,
-      "blue"
+      'blue'
     );
     if (extraClasses) {
       dojo.addClass(id, extraClasses);
@@ -393,9 +393,9 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       id,
       text,
       callback,
-      "customActions",
+      'customActions',
       false,
-      "gray"
+      'gray'
     );
     if (extraClasses) {
       dojo.addClass(id, extraClasses);
@@ -420,9 +420,9 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       id,
       text,
       callback,
-      "customActions",
+      'customActions',
       false,
-      "red"
+      'red'
     );
     if (extraClasses) {
       dojo.addClass(id, extraClasses);
@@ -434,36 +434,38 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     if (lastStep > 0) {
       // this.addDangerActionButton('btnUndoLastStep', _('Undo last step'), () => this.undoToStep(lastStep), 'restartAction');
       this.addDangerActionButton({
-        id: "undo_last_step_btn",
-        text: _("Undo last step"),
+        id: 'undo_last_step_btn',
+        text: _('Undo last step'),
         callback: () =>
           this.takeAction({
-            action: "actUndoToStep",
+            action: 'actUndoToStep',
             args: {
               stepId: lastStep,
             },
-            checkAction: "actRestart",
+            checkAction: 'actRestart',
+            atomicAction: false,
           }),
       });
     }
 
     if (previousEngineChoices > 0) {
       this.addDangerActionButton({
-        id: "restart_btn",
-        text: _("Restart turn"),
-        callback: () => this.takeAction({ action: "actRestart" }),
+        id: 'restart_btn',
+        text: _('Restart turn'),
+        callback: () =>
+          this.takeAction({ action: 'actRestart', atomicAction: false }),
       });
     }
   }
 
   public clearInterface() {
-    console.log("clear interface");
+    console.log('clear interface');
     this.playerManager.clearInterface();
   }
 
   clearPossible() {
     this.framework().removeActionButtons();
-    dojo.empty("customActions");
+    dojo.empty('customActions');
 
     dojo.forEach(this._connections, dojo.disconnect);
     this._connections = [];
@@ -523,7 +525,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     }
     node.classList.add(BT_SELECTABLE);
     this._connections.push(
-      dojo.connect(node, "onclick", this, (event: PointerEvent) =>
+      dojo.connect(node, 'onclick', this, (event: PointerEvent) =>
         callback(event)
       )
     );
@@ -574,12 +576,12 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     };
 
     if (temporary) {
-      this.connect($(node), "click", safeCallback);
-      dojo.removeClass(node, "unselectable"); // replace with pr_selectable / pr_selected
-      dojo.addClass(node, "selectable");
+      this.connect($(node), 'click', safeCallback);
+      dojo.removeClass(node, 'unselectable'); // replace with pr_selectable / pr_selected
+      dojo.addClass(node, 'selectable');
       this._selectableNodes.push(node);
     } else {
-      dojo.connect($(node), "click", safeCallback);
+      dojo.connect($(node), 'click', safeCallback);
     }
   }
 
@@ -588,11 +590,11 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     // this.framework().checkAction("actRestart");
     // this.takeAction('actUndoToStep', args: { stepId });
     this.takeAction({
-      action: "actUndoToStep",
+      action: 'actUndoToStep',
       args: {
         stepId,
       },
-      checkAction: "actRestart",
+      checkAction: 'actRestart',
     });
   }
 
@@ -601,38 +603,38 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       return;
     }
 
-    $("play_area_container").setAttribute(
-      "data-two-columns",
-      this.settings.get({ id: "twoColumnsLayout" })
+    $('play_area_container').setAttribute(
+      'data-two-columns',
+      this.settings.get({ id: 'twoColumnsLayout' })
     );
 
     const ROOT = document.documentElement;
-    let WIDTH = $("play_area_container").getBoundingClientRect()["width"] - 8;
+    let WIDTH = $('play_area_container').getBoundingClientRect()['width'] - 8;
     const LEFT_COLUMN = 1500;
     const RIGHT_COLUMN = 1500;
 
-    if (this.settings.get({ id: "twoColumnsLayout" }) === PREF_ENABLED) {
+    if (this.settings.get({ id: 'twoColumnsLayout' }) === PREF_ENABLED) {
       WIDTH = WIDTH - 8; // grid gap
-      const size = Number(this.settings.get({ id: "columnSizes" }));
+      const size = Number(this.settings.get({ id: 'columnSizes' }));
       const proportions = [size, 100 - size];
       const LEFT_SIZE = (proportions[0] * WIDTH) / 100;
       const leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
-      ROOT.style.setProperty("--leftColumnScale", `${leftColumnScale}`);
+      ROOT.style.setProperty('--leftColumnScale', `${leftColumnScale}`);
 
       const RIGHT_SIZE = (proportions[1] * WIDTH) / 100;
       const rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
-      ROOT.style.setProperty("--rightColumnScale", `${rightColumnScale}`);
+      ROOT.style.setProperty('--rightColumnScale', `${rightColumnScale}`);
 
       $(
-        "play_area_container"
+        'play_area_container'
       ).style.gridTemplateColumns = `${LEFT_SIZE}px ${RIGHT_SIZE}px`;
     } else {
       const LEFT_SIZE = WIDTH;
       const leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
-      ROOT.style.setProperty("--leftColumnScale", `${leftColumnScale}`);
+      ROOT.style.setProperty('--leftColumnScale', `${leftColumnScale}`);
       const RIGHT_SIZE = WIDTH;
       const rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
-      ROOT.style.setProperty("--leftColumnScale", `${rightColumnScale}`);
+      ROOT.style.setProperty('--leftColumnScale', `${rightColumnScale}`);
     }
   }
 
@@ -700,7 +702,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
 
         // replace all keys that start with 'logToken'
         Object.entries(args).forEach(([key, value]) => {
-          if (key.startsWith("tkn_")) {
+          if (key.startsWith('tkn_')) {
             args[key] = getTokenDiv({
               key,
               value: value as string,
@@ -710,7 +712,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
         });
       }
     } catch (e) {
-      console.error(log, args, "Exception thrown", e.stack);
+      console.error(log, args, 'Exception thrown', e.stack);
     }
     return (this as any).inherited(arguments);
   }
@@ -752,12 +754,12 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     notifIds.forEach((uid) => {
       if (this._notif_uid_to_log_id.hasOwnProperty(uid)) {
         let logId = this._notif_uid_to_log_id[uid];
-        if ($("log_" + logId)) dojo.addClass("log_" + logId, "cancel");
+        if ($('log_' + logId)) dojo.addClass('log_' + logId, 'cancel');
       }
       if (this._notif_uid_to_mobile_log_id.hasOwnProperty(uid)) {
         let mobileLogId = this._notif_uid_to_mobile_log_id[uid];
-        if ($("dockedlog_" + mobileLogId))
-          dojo.addClass("dockedlog_" + mobileLogId, "cancel");
+        if ($('dockedlog_' + mobileLogId))
+          dojo.addClass('dockedlog_' + mobileLogId, 'cancel');
       }
     });
   }
@@ -769,19 +771,19 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
 
     let notif = this._last_notif;
     let type = notif.msg.type;
-    if (type == "history_history") {
+    if (type == 'history_history') {
       type = notif.msg.args.originalType;
     }
 
-    if ($("log_" + notif.logId)) {
-      dojo.addClass("log_" + notif.logId, "notif_" + type);
+    if ($('log_' + notif.logId)) {
+      dojo.addClass('log_' + notif.logId, 'notif_' + type);
 
       var methodName =
-        "onAdding" + type.charAt(0).toUpperCase() + type.slice(1) + "ToLog";
+        'onAdding' + type.charAt(0).toUpperCase() + type.slice(1) + 'ToLog';
       this[methodName]?.(notif);
     }
-    if ($("dockedlog_" + notif.mobileLogId)) {
-      dojo.addClass("dockedlog_" + notif.mobileLogId, "notif_" + type);
+    if ($('dockedlog_' + notif.mobileLogId)) {
+      dojo.addClass('dockedlog_' + notif.mobileLogId, 'notif_' + type);
     }
 
     // while (this.tooltipsToMap.length) {
@@ -822,12 +824,12 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   updatePlayerOrdering() {
     this.framework().inherited(arguments);
 
-    const container = document.getElementById("player_boards");
-    const infoPanel = document.getElementById("info_panel");
+    const container = document.getElementById('player_boards');
+    const infoPanel = document.getElementById('info_panel');
     if (!container) {
       return;
     }
-    container.insertAdjacentElement("afterbegin", infoPanel);
+    container.insertAdjacentElement('afterbegin', infoPanel);
   }
 
   setAlwaysFixTopActions(alwaysFixed = true, maximum = 30) {
@@ -840,8 +842,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     (this as any).inherited(arguments);
 
     if (this.alwaysFixTopActions) {
-      const afterTitleElem = document.getElementById("after-page-title");
-      const titleElem = document.getElementById("page-title");
+      const afterTitleElem = document.getElementById('after-page-title');
+      const titleElem = document.getElementById('page-title');
       let zoom = (getComputedStyle(titleElem) as any).zoom;
       if (!zoom) {
         zoom = 1;
@@ -854,13 +856,13 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
           (window.innerHeight * this.alwaysFixTopActionsMaximum) / 100
       ) {
         const afterTitleRect = afterTitleElem.getBoundingClientRect();
-        titleElem.classList.add("fixed-page-title");
-        titleElem.style.width = (afterTitleRect.width - 10) / zoom + "px";
-        afterTitleElem.style.height = titleRect.height + "px";
+        titleElem.classList.add('fixed-page-title');
+        titleElem.style.width = (afterTitleRect.width - 10) / zoom + 'px';
+        afterTitleElem.style.height = titleRect.height + 'px';
       } else {
-        titleElem.classList.remove("fixed-page-title");
-        titleElem.style.width = "auto";
-        afterTitleElem.style.height = "0px";
+        titleElem.classList.remove('fixed-page-title');
+        titleElem.style.width = 'auto';
+        afterTitleElem.style.height = '0px';
       }
     }
   }
@@ -882,7 +884,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   //.##.....##..######..##.....##.##.....##
 
   actionError(actionName: string) {
-    this.framework().showMessage(`cannot take ${actionName} action`, "error");
+    this.framework().showMessage(`cannot take ${actionName} action`, 'error');
   }
 
   /*
@@ -900,7 +902,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     checkAction?: string; // Action used in checkAction
   }) {
     const actionName = atomicAction ? action : undefined;
-
+    console.log('action error', checkAction || action);
     if (!this.framework().checkAction(checkAction || action)) {
       this.actionError(action);
       return;
@@ -914,7 +916,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     const gameName = this.framework().game_name;
     this.framework().ajaxcall(
       `/${gameName}/${gameName}/${
-        atomicAction ? "actTakeAtomicAction" : action
+        atomicAction ? 'actTakeAtomicAction' : action
       }.html`,
       data,
       this,

@@ -10,15 +10,41 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
-use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Cards;
+use BayonetsAndTomahawks\Managers\Tokens;
 use BayonetsAndTomahawks\Models\Player;
 
-class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
+class ColonialsEnlistDrawReinforcements extends \BayonetsAndTomahawks\Models\AtomicAction
 {
   public function getState()
   {
-    return ST_ACTION_ROUND_ACTION_PHASE;
+    return ST_COLONIALS_ENLIST_DRAW_REINFORCEMENTS;
+  }
+
+  // ..######..########....###....########.########
+  // .##....##....##......##.##......##....##......
+  // .##..........##.....##...##.....##....##......
+  // ..######.....##....##.....##....##....######..
+  // .......##....##....#########....##....##......
+  // .##....##....##....##.....##....##....##......
+  // ..######.....##....##.....##....##....########
+
+  // ....###.....######..########.####..#######..##....##
+  // ...##.##...##....##....##.....##..##.....##.###...##
+  // ..##...##..##..........##.....##..##.....##.####..##
+  // .##.....##.##..........##.....##..##.....##.##.##.##
+  // .#########.##..........##.....##..##.....##.##..####
+  // .##.....##.##....##....##.....##..##.....##.##...###
+  // .##.....##..######.....##....####..#######..##....##
+
+  public function stColonialsEnlistDrawReinforcements()
+  {
+    Notifications::log('stColonialsEnlistDrawReinforcements', []);
+    Globals::setActionRound(ACTION_ROUND_4);
+    Tokens::move(ROUND_MARKER, ACTION_ROUND_4);
+    Notifications::moveRoundMarker(ACTION_ROUND_4);
+
+    $this->resolveAction(['automatic' => true]);
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##
@@ -29,9 +55,8 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreActionRoundActionPhase()
+  public function stPreColonialsEnlistDrawReinforcements()
   {
-
   }
 
 
@@ -43,15 +68,11 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsActionRoundActionPhase()
+  public function argsColonialsEnlistDrawReinforcements()
   {
-    $action = $this->ctx->getAction();
 
-    
 
-    return [
-      'action' => $action,
-    ];
+    return [];
   }
 
   //  .########..##..........###....##....##.########.########.
@@ -70,20 +91,20 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassActionRoundActionPhase()
+  public function actPassColonialsEnlistDrawReinforcements()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-    public function actActionRoundActionPhase($args)
+  public function actColonialsEnlistDrawReinforcements($args)
   {
-    self::checkAction('actActionRoundActionPhase');
-    
-    Notifications::log('actActionRoundActionPhase',[]);
+    self::checkAction('actColonialsEnlistDrawReinforcements');
 
-    $this->resolveAction($args);
+
+
+    $this->resolveAction($args, true);
   }
 
   //  .##.....##.########.####.##.......####.########.##....##

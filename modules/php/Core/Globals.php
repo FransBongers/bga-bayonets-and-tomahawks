@@ -21,10 +21,10 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'logState' => 'int', // Used to store state id when enabling the log
     'firstPlayer' => 'int',
     // 'activePlayerId' => 'int',
-    'scenario' => 'obj', // Used to store the scenario,
+    'scenarioId' => 'str',
     'test' => 'obj',
     'year' => 'int',
-    'actionRound' => 'int',
+    'actionRound' => 'str',
   ];
 
   protected static $table = 'global_variables';

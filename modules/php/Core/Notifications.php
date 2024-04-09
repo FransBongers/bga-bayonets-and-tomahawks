@@ -193,13 +193,19 @@ class Notifications
     ]);
   }
 
-  public static function discardCardInPlay($cardsInPlay)
+  public static function discardCardInPlay($card)
   {
-    self::notifyAll("discardCardInPlay", clienttranslate('All played cards are discarded'), [
-      'british' => $cardsInPlay[BRITISH],
-      'french' => $cardsInPlay[FRENCH],
-      'indian' => $cardsInPlay[INDIAN],
+    self::notifyAll("discardCardInPlay", '', [
+      'card' => $card,
     ]);
+  }
+
+  public static function discardCardsInPlayMessage() {
+    self::message(clienttranslate('All played cards are discarded'), []);
+  }
+
+  public static function discardReserveCards() {
+    self::message(clienttranslate('Both players discard their Reserve card'), []);
   }
 
   public static function gainInitiative($faction)
@@ -207,6 +213,18 @@ class Notifications
     self::message(clienttranslate('The ${factionName} gain initiative'), [
       'factionName' => self::getFactionName($faction),
       'i18n' => ['factionName']
+    ]);
+  }
+
+  public static function moveRoundMarker($nextRoundStep) {
+    self::notifyAll("moveRoundMarker", '', [
+      'nextRoundStep' => $nextRoundStep,
+    ]);
+  }
+
+  public static function moveYearMarker($year) {
+    self::notifyAll("moveYearMarker", '', [
+      'year' => $year,
     ]);
   }
 

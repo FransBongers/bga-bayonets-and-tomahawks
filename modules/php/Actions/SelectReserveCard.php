@@ -31,8 +31,14 @@ class SelectReserveCard extends \BayonetsAndTomahawks\Models\AtomicAction
   public function stPreSelectReserveCard()
   {
     Notifications::log('stPreSelectReserveCard', $this->ctx->getInfo());
-    Cards::pickForLocation(2, Locations::buildUpDeck(BRITISH), Locations::hand(BRITISH));
-    Cards::pickForLocation(2, Locations::buildUpDeck(FRENCH), Locations::hand(FRENCH));
+    $britishReserveCards = Cards::pickForLocation(2, Locations::buildUpDeck(BRITISH), Locations::hand(BRITISH))->toArray();
+    $frenchReserveCards = Cards::pickForLocation(2, Locations::buildUpDeck(FRENCH), Locations::hand(FRENCH))->toArray();
+
+
+
+    foreach (array_merge($britishReserveCards, $frenchReserveCards) as $card) {
+      Notifications::drawCard($card->getOwner(), $card);
+    }
   }
 
 

@@ -31,10 +31,10 @@ trait TurnTrait
 
   function stSetupYear()
   {
-    $year = Globals::getYear();
-    $year += 1;
-    Globals::setYear($year);
-    Globals::setActionRound(1);
+    // $year = Globals::getYear();
+    // $year += 1;
+    // Globals::setYear($year);
+    // Globals::setActionRound(ACTION_ROUND_1);
     // TODO: move tokens?
 
     // TODO: check how we should handle giving extra time
@@ -62,27 +62,59 @@ trait TurnTrait
 
     // Stats::incPlayerTurnCount($player);
     // Stats::incTurnCount(1);
-    $node = [
-      'children' => [
-        [
-          'action' => ACTION_ROUND_CHOOSE_CARD,
-          'playerId' => 'all',
+    $node = [];
+    $currentRoundStep = Globals::getActionRound();
+    Notifications::log('currentRoundStep',$currentRoundStep);
+    if (in_array($currentRoundStep,[
+      ACTION_ROUND_1,
+      ACTION_ROUND_2,
+      ACTION_ROUND_3,
+      ACTION_ROUND_4,
+      ACTION_ROUND_5,
+      ACTION_ROUND_6,
+      ACTION_ROUND_7,
+      ACTION_ROUND_8,
+      ACTION_ROUND_9,
+    ])) {
+      $node = [
+        'children' => [
+          [
+            'action' => ACTION_ROUND_CHOOSE_CARD,
+            'playerId' => 'all',
+          ],
         ],
-        // [
-        //   'children' => [
-        //     [
-        //       'action' => FREE_ACTION,
-        //       'optional' => true,
-        //       'playerId' => $player->getId(),
-        //     ],
-        //   ]
-        // ]
-      ],
-    ];
-    // Notifications::startTurn($player);
+      ];
+    } else if ($currentRoundStep === FLEETS_ARRIVE) {
+      $node = [
+        'children' => [
+          [
+            'action' => FLEETS_ARRIVE_DRAW_REINFORCEMENTS,
+            'playerId' => 'all',
+          ],
+        ],
+      ];
+    } else if ($currentRoundStep === COLONIALS_ENLIST) {
+      $node = [
+        'children' => [
+          [
+            'action' => COLONIALS_ENLIST_DRAW_REINFORCEMENTS,
+            'playerId' => 'all',
+          ],
+        ],
+      ];
+    } else if ($currentRoundStep === WINTER_QUARTERS) {
+      $node = [
+        'children' => [
+          [
+            'action' => WINTER_QUARTERS_GAME_END_CHECK,
+            'playerId' => 'all',
+          ],
+        ],
+      ];
+    }
 
     // Inserting leaf Action card
-    Engine::setup($node, ['method' => 'stSetupActionRound']); // End of action round
+    Engine::setup($node, ['method' => $currentRoundStep === WINTER_QUARTERS ? 'stSetupYear' : 'stSetupActionRound']); // End of action round
     Engine::proceed();
   }
 

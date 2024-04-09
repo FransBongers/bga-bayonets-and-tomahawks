@@ -14,9 +14,9 @@ abstract class Locations extends \APP_DbObject
     return 'campaignDeck_' . $faction;
   }
 
-  public static function cardPool($faction)
+  public static function cardPool()
   {
-    return 'cardPool_' . $faction;
+    return 'cardPool';
   }
 
   public static function discard()

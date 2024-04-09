@@ -43,13 +43,13 @@ class ActionRoundActionPhaseState implements State {
       },
     });
 
-    this.game.addConfirmButton({
-      callback: () =>
-        this.game.takeAction({
-          action: "actActionRoundActionPhase",
-          args: {},
-        }),
-    });
+    // this.game.addConfirmButton({
+    //   callback: () =>
+    //     this.game.takeAction({
+    //       action: "actActionRoundActionPhase",
+    //       args: {},
+    //     }),
+    // });
 
     this.game.addPassButton({
       optionalAction: this.args.optionalAction,

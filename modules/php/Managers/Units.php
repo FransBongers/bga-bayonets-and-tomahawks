@@ -84,7 +84,7 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
     $units = [];
 
     // Units in locations
-    $locations = $scenario['locations'];
+    $locations = $scenario->getLocations();
     foreach ($locations as &$location) {
       
       if (!isset($location['units'])) {
@@ -104,7 +104,7 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
     }
 
     // Units in pools
-    $pools = $scenario['pools'];
+    $pools = $scenario->getPools();
     foreach ($pools as $poolId => $pool) {
       Notifications::log('pool',$pool);
       

@@ -22,7 +22,10 @@ class AtomicActions
     ACTION_ROUND_RESOLVE_BATTLES => 'ActionRoundResolveBattles',
     ACTION_ROUND_SECOND_PLAYER_ACTIONS => 'ActionRoundActionPhase',
     ACTION_ROUND_SAIL_BOX_LANDING => 'ActionRoundSailBoxLanding',
+    COLONIALS_ENLIST_DRAW_REINFORCEMENTS => 'ColonialsEnlistDrawReinforcements',
+    FLEETS_ARRIVE_DRAW_REINFORCEMENTS => 'FleetsArriveDrawReinforcements',
     SELECT_RESERVE_CARD => 'SelectReserveCard',
+    WINTER_QUARTERS_GAME_END_CHECK => 'WinterQuartersGameEndCheck',
   ];
 
   public static function get($actionId, $ctx = null)

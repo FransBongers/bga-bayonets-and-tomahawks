@@ -33,8 +33,9 @@ class ActionRoundChooseCard extends \BayonetsAndTomahawks\Models\AtomicAction
   {
     Notifications::log('stPreActionRoundChooseCard', $this->ctx->getInfo());
     // TODO: locationd depends on AR
-    $britishCard = Cards::pickForLocation(1, Locations::buildUpDeck(BRITISH), Locations::hand(BRITISH))->toArray()[0];
-    $frenchCard = Cards::pickForLocation(1, Locations::buildUpDeck(FRENCH), Locations::hand(FRENCH))->toArray()[0];
+    $buildupDeck = in_array(Globals::getActionRound(), [ACTION_ROUND_1, ACTION_ROUND_2, ACTION_ROUND_3]);
+    $britishCard = Cards::pickForLocation(1, $buildupDeck ? Locations::buildUpDeck(BRITISH) : Locations::campaignDeck(BRITISH), Locations::hand(BRITISH))->toArray()[0];
+    $frenchCard = Cards::pickForLocation(1, $buildupDeck ? Locations::buildUpDeck(FRENCH) : Locations::campaignDeck(FRENCH), Locations::hand(FRENCH))->toArray()[0];
     $indianCard = Cards::pickForLocation(1, Locations::campaignDeck(INDIAN), Locations::hand(INDIAN))->toArray()[0];
     // Notifications::log('cards', [
     //   BRITISH => $britishCard[0],

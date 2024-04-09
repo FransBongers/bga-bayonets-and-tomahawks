@@ -618,6 +618,11 @@
 }
 
 /* ------- LOG TOKENS ------- */
+#pagemaintitletext .bt_card,
+#gameaction_status .bt_card {
+  display: none;
+}
+
 .log > .roundedbox .bt_log_card,
 .log > .roundedboxinner .bt_log_card {
   --btCardScale: var(--logCardScale);

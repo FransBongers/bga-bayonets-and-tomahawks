@@ -44,7 +44,7 @@ use BayonetsAndTomahawks\Managers\Players;
 
 // Game specific
 use BayonetsAndTomahawks\Managers\Cards;
-use BayonetsAndTomahawks\Scenario;
+use BayonetsAndTomahawks\Managers\Scenarios;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Tokens;
 use BayonetsAndTomahawks\Managers\Units;
@@ -110,8 +110,7 @@ class bayonetsandtomahawks extends Table
         Stats::checkExistence();
         Spaces::setupNewGame($players, $options);
         Globals::setTest($options);
-        Scenario::loadId($options[OPTION_SCENARIO]);
-        Scenario::setup();
+        Scenarios::setup($options[OPTION_SCENARIO]);
         Cards::setupNewGame();
         Tokens::setupNewGame();
 
@@ -137,7 +136,6 @@ class bayonetsandtomahawks extends Table
             'staticData' => [
                 'units' => Units::getStaticUiData(),
             ],
-            // 'spaces' => Spaces::getUiData(),
             'spaces' => Spaces::getUiData(),
             'units' => Units::getUiData(),
             'markers' => [

@@ -32,7 +32,7 @@ class NotificationManager {
   // ..######..########....##.....#######..##.......
 
   setupNotifications() {
-    console.log("notifications subscriptions setup");
+    console.log('notifications subscriptions setup');
 
     // const notifs: [
     //   id: string,
@@ -58,13 +58,16 @@ class NotificationManager {
     //   // ],
     // ];
     const notifs: string[] = [
-      "log",
-      "discardCardFromHand",
-      "discardCardFromHandPrivate",
-      "drawCardPrivate",
-      "revealCardsInPlay",
-      "selectReserveCard",
-      "selectReserveCardPrivate",
+      'log',
+      'discardCardFromHand',
+      'discardCardFromHandPrivate',
+      'discardCardInPlay',
+      'drawCardPrivate',
+      'moveRoundMarker',
+      'moveYearMarker',
+      'revealCardsInPlay',
+      'selectReserveCard',
+      'selectReserveCardPrivate',
     ];
 
     // example: https://github.com/thoun/knarr/blob/main/src/knarr.ts
@@ -82,10 +85,10 @@ class NotificationManager {
             notifDetails.log,
             notifDetails.args as Record<string, unknown>
           );
-          if (msg != "") {
-            $("gameaction_status").innerHTML = msg;
-            $("pagemaintitletext").innerHTML = msg;
-            $("generalactions").innerHTML = "";
+          if (msg != '') {
+            $('gameaction_status').innerHTML = msg;
+            $('pagemaintitletext').innerHTML = msg;
+            $('generalactions').innerHTML = '';
 
             // If there is some text, we let the message some time, to be read
             minDuration = MIN_NOTIFICATION_MS;
@@ -110,7 +113,7 @@ class NotificationManager {
       this.game
         .framework()
         .notifqueue.setIgnoreNotificationCheck(
-          "discardCardFromHand",
+          'discardCardFromHand',
           (notif: Notif<{ playerId: number }>) =>
             notif.args.playerId == this.game.getPlayerId()
         );
@@ -152,7 +155,7 @@ class NotificationManager {
 
   async notif_log(notif: Notif<unknown>) {
     // this is for debugging php side
-    debug("notif_log", notif.args);
+    debug('notif_log', notif.args);
   }
 
   // notif_smallRefreshHand(notif: Notif<NotifSmallRefreshHandArgs>) {
@@ -198,11 +201,28 @@ class NotificationManager {
     await this.game.discard.addCard(card);
   }
 
+  async notif_discardCardInPlay(notif: Notif<NotifDiscardCardsInPlayArgs>) {
+    const { card } = notif.args;
+    await this.game.discard.addCard(card);
+  }
+
   async notif_drawCardPrivate(notif: Notif<NotifDrawCardPrivateArgs>) {
     const { card } = notif.args;
     await this.game.deck.addCard(card);
     await this.game.hand.addCard(card);
     return;
+  }
+
+  async notif_moveRoundMarker(notif: Notif<NotifMoveRoundMarkerArgs>) {
+    const { nextRoundStep } = notif.args;
+
+    await this.game.gameMap.moveRoundMarker({ nextRoundStep });
+  }
+
+  async notif_moveYearMarker(notif: Notif<NotifMoveYearMarkerArgs>) {
+    const { year } = notif.args;
+
+    await this.game.gameMap.moveYearMarker({ year });
   }
 
   async notif_revealCardsInPlay(notif: Notif<NotifRevealCardsInPlayArgs>) {
