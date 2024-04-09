@@ -64,11 +64,12 @@ class Player extends \BayonetsAndTomahawks\Helpers\DB_Model
   {
     $faction = $this->getFaction();
     if ($faction === BRITISH) {
-      return Cards::getInLocationOrdered(Locations::hand(BRITISH))->toArray();
+      return array_merge(Cards::getInLocationOrdered(Locations::hand(BRITISH))->toArray(),Cards::getInLocationOrdered(Locations::selected(BRITISH))->toArray());
     } else if ($faction === FRENCH) {
       return array_merge(
         Cards::getInLocationOrdered(Locations::hand(FRENCH))->toArray(),
-        Cards::getInLocationOrdered(Locations::hand(INDIAN))->toArray()
+        Cards::getInLocationOrdered(Locations::selected(FRENCH))->toArray(),
+        Cards::getInLocationOrdered(Locations::selected(INDIAN))->toArray(),
       );
     }
   }

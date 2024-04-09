@@ -77,13 +77,19 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
   public function discard()
   {
     $owner = $this->getOwner();
-    Cards::insertOnTop($this->getId(),DISCARD);
+    Cards::insertOnTop($this->getId(), DISCARD);
     $this->location = DISCARD;
     if ($owner !== null) {
       Notifications::discardCardFromHand($owner, $this);
     } else {
       Notifications::discardCardInPlay($this);
     }
+  }
+
+  // Card is selected to be played this action round
+  public function select()
+  {
+    Cards::move($this->getId(), Locations::selected($this->getFaction()));
   }
 
   public function getOwner()

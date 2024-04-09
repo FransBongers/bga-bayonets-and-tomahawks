@@ -36,7 +36,7 @@ class ActionRoundChooseCard extends \BayonetsAndTomahawks\Models\AtomicAction
     $buildupDeck = in_array(Globals::getActionRound(), [ACTION_ROUND_1, ACTION_ROUND_2, ACTION_ROUND_3]);
     $britishCard = Cards::pickForLocation(1, $buildupDeck ? Locations::buildUpDeck(BRITISH) : Locations::campaignDeck(BRITISH), Locations::hand(BRITISH))->toArray()[0];
     $frenchCard = Cards::pickForLocation(1, $buildupDeck ? Locations::buildUpDeck(FRENCH) : Locations::campaignDeck(FRENCH), Locations::hand(FRENCH))->toArray()[0];
-    $indianCard = Cards::pickForLocation(1, Locations::campaignDeck(INDIAN), Locations::hand(INDIAN))->toArray()[0];
+    $indianCard = Cards::pickForLocation(1, Locations::campaignDeck(INDIAN), Locations::selected(INDIAN))->toArray()[0];
     // Notifications::log('cards', [
     //   BRITISH => $britishCard[0],
     //   FRENCH => $frenchCard[0],
@@ -68,13 +68,16 @@ class ActionRoundChooseCard extends \BayonetsAndTomahawks\Models\AtomicAction
 
     foreach (Players::getAll() as $player) {
       $faction = $player->getFaction();
+      $hand = $player->getHand();
       if ($faction === BRITISH) {
-        $privateData[$player->getId()] = $player->getHand();
+        $privateData[$player->getId()]['cards'] = $hand;
       } else {
-        $privateData[$player->getId()] = Utils::filter($player->getHand(), function ($card) {
+        $privateData[$player->getId()]['cards'] = Utils::filter($hand, function ($card) {
           return $card->getFaction() === FRENCH;
         });
+        $privateData[$player->getId()]['indianCard'] = Cards::getTopOf(Locations::selected(INDIAN));
       }
+      $privateData[$player->getId()]['selectedCard'] = Cards::getTopOf(Locations::selected($faction));
     }
 
     return [
@@ -116,18 +119,18 @@ class ActionRoundChooseCard extends \BayonetsAndTomahawks\Models\AtomicAction
     $player = Players::getCurrent();
 
     $stateArgs = $this->argsActionRoundChooseCard();
-    $availableCardsForPlayer = $stateArgs['_private'][$player->getId()];
+    $availableCardsForPlayer = $stateArgs['_private'][$player->getId()]['cards'];
 
     $selectedCard = Utils::array_find($availableCardsForPlayer, function ($card) use ($cardId) {
       return $cardId === $card->getId();
     });
 
-    // Notifications::log('selectedCard', $selectedCard);
     if ($selectedCard === null) {
       throw new \BgaVisibleSystemException('This card cannot be selected');
     }
 
-    Cards::move($cardId, Locations::cardInPlay($player->getFaction()));
+    $selectedCard->select();
+    // Cards::move($cardId, Locations::cardInPlay($player->getFaction()));
 
     // Make the player inactive
     $game = Game::get();
@@ -136,7 +139,10 @@ class ActionRoundChooseCard extends \BayonetsAndTomahawks\Models\AtomicAction
       return;
     }
 
-    Cards::moveAllInLocation(Locations::hand(INDIAN), Locations::cardInPlay(INDIAN));
+    foreach ([BRITISH, FRENCH, INDIAN] as $faction) {
+      Cards::moveAllInLocation(Locations::selected($faction), Locations::cardInPlay($faction));
+    }
+    // Cards::moveAllInLocation(Locations::hand(INDIAN), Locations::cardInPlay(INDIAN));
 
     $britishCard = Cards::getTopOf(Locations::cardInPlay(BRITISH));
     $frenchCard = Cards::getTopOf(Locations::cardInPlay(FRENCH));

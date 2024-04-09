@@ -16,7 +16,11 @@ interface OnEnteringActionRoundActionPhaseStateArgs extends CommonArgs {
 }
 
 interface OnEnteringActionRoundChooseCardStateArgs {
-  _private: BTCard[];
+  _private: {
+    cards: BTCard[];
+    indianCard?: BTCard | null;
+    selectedCard: BTCard | null;
+  };
 }
 
 interface OnEnteringActionRoundChooseFirstPlayerStateArgs extends CommonArgs {

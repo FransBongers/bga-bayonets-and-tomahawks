@@ -34,7 +34,7 @@ class BTCardManager extends CardManager<BTCard> {
   }
 
   isCardVisible(card: BTCard) {
-    if (card.location.startsWith("hand_") || card.location.startsWith("cardInPlay_")) {
+    if (card.location.startsWith("hand_") || card.location.startsWith("cardInPlay_") || card.location.startsWith("selected_")) {
       return true;
     }
     return false;

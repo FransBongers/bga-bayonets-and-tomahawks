@@ -7,25 +7,24 @@ class ActionRoundChooseCardState implements State {
   }
 
   onEnteringState(args: OnEnteringActionRoundChooseCardStateArgs) {
-    debug("Entering ActionRoundChooseCardState")
+    debug('Entering ActionRoundChooseCardState');
     this.args = args;
     this.updateInterfaceInitialStep();
   }
 
   onLeavingState() {
-    debug("Leaving ActionRoundChooseCardState");
+    debug('Leaving ActionRoundChooseCardState');
   }
 
-  setDescription(activePlayerId: number) {
-    // this.game.clientUpdatePageTitle({
-    //   text: _("${player_name} must choose a Reservc"),
-    //   args: {
-    //     player_name: this.game.playerManager
-    //       .getPlayer({ playerId: activePlayerId })
-    //       .getName(),
-    //   },
-    //   nonActivePlayers: true,
-    // });
+  setDescription(
+    activePlayerId: number,
+    args: OnEnteringActionRoundChooseCardStateArgs
+  ) {
+    this.args = args;
+    this.game.hand.open();
+    if (this.args._private.selectedCard) {
+      this.game.setCardSelected({ id: this.args._private.selectedCard.id });
+    }
   }
 
   //  .####.##....##.########.########.########..########....###.....######..########
@@ -47,13 +46,14 @@ class ActionRoundChooseCardState implements State {
   private updateInterfaceInitialStep() {
     this.game.clearPossible();
     this.game.clientUpdatePageTitle({
-      text: _("${you} must choose your card for this Action Round"),
+      text: _('${you} must choose your card for this Action Round'),
       args: {
-        you: "${you}",
+        you: '${you}',
       },
     });
     this.game.hand.open();
-    this.args._private.forEach((card) => {
+    const { cards } = this.args._private;
+    cards.forEach((card) => {
       this.game.setCardSelectable({
         id: card.id,
         callback: () => {
@@ -61,6 +61,7 @@ class ActionRoundChooseCardState implements State {
         },
       });
     });
+    this.setIndianCardSelected();
 
     // this.addButtons();
     // this.game.addUndoButtons(this.args);
@@ -69,21 +70,21 @@ class ActionRoundChooseCardState implements State {
   private updateInterfaceConfirm({ card }: { card: BTCard }) {
     this.game.clearPossible();
     this.game.setCardSelected({ id: card.id });
+    this.setIndianCardSelected();
     this.game.clientUpdatePageTitle({
-      text: _("Select card?"),
+      text: _('Select card?'),
       args: {},
     });
 
-    const callback = () =>
-    {
+    const callback = () => {
       this.game.clearPossible();
       this.game.takeAction({
-        action: "actActionRoundChooseCard",
+        action: 'actActionRoundChooseCard',
         args: {
           cardId: card.id,
         },
       });
-    }
+    };
 
     if (
       this.game.settings.get({
@@ -107,6 +108,13 @@ class ActionRoundChooseCardState implements State {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  private setIndianCardSelected() {
+    const { indianCard } = this.args._private;
+    if (indianCard) {
+      this.game.setCardSelected({ id: indianCard.id });
+    }
+  }
 
   // private addButtons() {
   //   this.args.options.forEach((apostasy, index) => {

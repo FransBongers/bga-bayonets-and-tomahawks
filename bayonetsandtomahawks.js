@@ -2204,6 +2204,9 @@ var BayonetsAndTomahawks = (function () {
             this.activeStates[stateName]) {
             this.activeStates[stateName].onEnteringState(args.args);
         }
+        else if (this.activeStates[stateName]) {
+            this.activeStates[stateName].setDescription(Number(args.active_player), args.args);
+        }
         if (args.args && args.args.previousSteps) {
             args.args.previousSteps.forEach(function (stepId) {
                 var logEntry = $('logs').querySelector(".log.notif_newUndoableStep[data-step=\"".concat(stepId, "\"]"));
@@ -2664,7 +2667,7 @@ var BTCardManager = (function (_super) {
         div.style.height = "calc(var(--btCardScale) * 179px)";
     };
     BTCardManager.prototype.isCardVisible = function (card) {
-        if (card.location.startsWith("hand_") || card.location.startsWith("cardInPlay_")) {
+        if (card.location.startsWith("hand_") || card.location.startsWith("cardInPlay_") || card.location.startsWith("selected_")) {
             return true;
         }
         return false;
@@ -3865,26 +3868,32 @@ var ActionRoundChooseCardState = (function () {
         this.game = game;
     }
     ActionRoundChooseCardState.prototype.onEnteringState = function (args) {
-        debug("Entering ActionRoundChooseCardState");
+        debug('Entering ActionRoundChooseCardState');
         this.args = args;
         this.updateInterfaceInitialStep();
     };
     ActionRoundChooseCardState.prototype.onLeavingState = function () {
-        debug("Leaving ActionRoundChooseCardState");
+        debug('Leaving ActionRoundChooseCardState');
     };
-    ActionRoundChooseCardState.prototype.setDescription = function (activePlayerId) {
+    ActionRoundChooseCardState.prototype.setDescription = function (activePlayerId, args) {
+        this.args = args;
+        this.game.hand.open();
+        if (this.args._private.selectedCard) {
+            this.game.setCardSelected({ id: this.args._private.selectedCard.id });
+        }
     };
     ActionRoundChooseCardState.prototype.updateInterfaceInitialStep = function () {
         var _this = this;
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _("${you} must choose your card for this Action Round"),
+            text: _('${you} must choose your card for this Action Round'),
             args: {
-                you: "${you}",
+                you: '${you}',
             },
         });
         this.game.hand.open();
-        this.args._private.forEach(function (card) {
+        var cards = this.args._private.cards;
+        cards.forEach(function (card) {
             _this.game.setCardSelectable({
                 id: card.id,
                 callback: function () {
@@ -3892,20 +3901,22 @@ var ActionRoundChooseCardState = (function () {
                 },
             });
         });
+        this.setIndianCardSelected();
     };
     ActionRoundChooseCardState.prototype.updateInterfaceConfirm = function (_a) {
         var _this = this;
         var card = _a.card;
         this.game.clearPossible();
         this.game.setCardSelected({ id: card.id });
+        this.setIndianCardSelected();
         this.game.clientUpdatePageTitle({
-            text: _("Select card?"),
+            text: _('Select card?'),
             args: {},
         });
         var callback = function () {
             _this.game.clearPossible();
             _this.game.takeAction({
-                action: "actActionRoundChooseCard",
+                action: 'actActionRoundChooseCard',
                 args: {
                     cardId: card.id,
                 },
@@ -3922,6 +3933,12 @@ var ActionRoundChooseCardState = (function () {
             });
         }
         this.game.addCancelButton();
+    };
+    ActionRoundChooseCardState.prototype.setIndianCardSelected = function () {
+        var indianCard = this.args._private.indianCard;
+        if (indianCard) {
+            this.game.setCardSelected({ id: indianCard.id });
+        }
     };
     return ActionRoundChooseCardState;
 }());

@@ -198,7 +198,13 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       this.activeStates[stateName]
     ) {
       this.activeStates[stateName].onEnteringState(args.args);
+    } else if (this.activeStates[stateName]) {
+      this.activeStates[stateName].setDescription(
+        Number(args.active_player),
+        args.args
+      );
     }
+
     // if (this.framework().isCurrentPlayerActive()) {
     //   this.addPrimaryActionButton({
     //     id: "pass_button",
