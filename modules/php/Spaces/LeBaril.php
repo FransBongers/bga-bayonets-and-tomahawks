@@ -12,6 +12,11 @@ class LeBaril extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Le Baril');
     $this->victorySpace = false;
     $this->top = 2134;
-    $this-> left = 458;
+    $this->left = 458;
+    $this->adjacentSpaces = [
+      DIIOHAGE => DIIOHAGE_LE_BARIL,
+      RIVIERE_OUABACHE => LE_BARIL_RIVIERE_OUABACHE,
+      TU_ENDIE_WEI => LE_BARIL_TU_ENDIE_WEI,
+    ];
   }
 }

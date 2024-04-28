@@ -1,5 +1,6 @@
 @use 'sass:math';
 @use "sass:map";
+@use "../base";
 
 #bt_game_map {
   background-image: url("img/map.webp");
@@ -87,6 +88,10 @@
   // background-color: yellow;
 }
 
+.bt_stack {
+  border-radius: calc(var(--btMapScale) * 4px);
+}
+
 .bt_stack[data-has-unit="true"] {
   min-width: calc(var(--btMapScale) * 52px);
 
@@ -99,6 +104,16 @@
   .bt_token {
     z-index: 1;
   }
+}
+
+.bt_stack.bt_selectable {
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) base.$selectable-color !important;
+  cursor: pointer;
+}
+
+.bt_stack.bt_selected {
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) base.$selected-color !important;
+  cursor: pointer;
 }
 
 // #bt_location {

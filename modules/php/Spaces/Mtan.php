@@ -12,6 +12,10 @@ class Mtan extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate("Mta'n");
     $this->victorySpace = false;
     $this->top = 455.5;
-    $this-> left = 385.5;
+    $this->left = 385.5;
+    $this->adjacentSpaces = [
+      RIVIERE_DU_LOUP => MTAN_RIVIERE_DU_LOUP,
+      RIVIERE_RISTIGOUCHE => MTAN_RIVIERE_RISTIGOUCHE,
+    ];
   }
 }

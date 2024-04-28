@@ -2111,6 +2111,7 @@ var VICTORY_MARKER = "victory_marker";
 var OPEN_SEAS_MARKER = "open_seas_marker";
 var FRENCH_RAID_MARKER = "french_raid_marker";
 var BRITISH_RAID_MARKER = "british_raid_marker";
+var ACTION_ROUND_INDIAN_ACTIONS = 'ACTION_ROUND_INDIAN_ACTIONS';
 define([
     'dojo',
     'dojo/_base/declare',
@@ -2148,6 +2149,7 @@ var BayonetsAndTomahawks = (function () {
         this.setupPlayerOrder({ playerOrder: gamedatas.playerOrder });
         this._connections = [];
         this.activeStates = {
+            actionActivateStack: new ActionActivateStackState(this),
             actionRoundActionPhase: new ActionRoundActionPhaseState(this),
             actionRoundChooseCard: new ActionRoundChooseCardState(this),
             actionRoundChooseFirstPlayer: new ActionRoundChooseFirstPlayerState(this),
@@ -2155,6 +2157,7 @@ var BayonetsAndTomahawks = (function () {
             actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
+            movementSelectDestinationAndUnits: new MovementSelectDestinationAndUnitsState(this),
             selectReserveCard: new SelectReserveCardState(this),
         };
         this.infoPanel = new InfoPanel(this);
@@ -2390,6 +2393,25 @@ var BayonetsAndTomahawks = (function () {
         }));
     };
     BayonetsAndTomahawks.prototype.setCardSelected = function (_a) {
+        var id = _a.id;
+        var node = $(id);
+        if (node === null) {
+            return;
+        }
+        node.classList.add(BT_SELECTED);
+    };
+    BayonetsAndTomahawks.prototype.setLocationSelectable = function (_a) {
+        var id = _a.id, callback = _a.callback;
+        var node = $(id);
+        if (node === null) {
+            return;
+        }
+        node.classList.add(BT_SELECTABLE);
+        this._connections.push(dojo.connect(node, "onclick", this, function (event) {
+            return callback(event);
+        }));
+    };
+    BayonetsAndTomahawks.prototype.setLocationSelected = function (_a) {
         var id = _a.id;
         var node = $(id);
         if (node === null) {
@@ -2739,7 +2761,7 @@ var CardsInPlay = (function () {
     return CardsInPlay;
 }());
 var tplCardsInPlay = function () {
-    return "<div id=\"bt_cards_in_play\">\n            <span>Cards in play</span>\n            <div class=\"bt_cards_in_play_container\">\n              <div id=\"british_card_in_play\" class=\"bt_card_in_play\"></div>\n              <div id=\"french_card_in_play\" class=\"bt_card_in_play\"></div>\n              <div id=\"indian_card_in_play\" class=\"bt_card_in_play\"></div>\n            </div>\n          </div\n  ";
+    return "<div id=\"bt_cards_in_play\">\n            <span>Cards in play</span>\n            <div class=\"bt_cards_in_play_container\">\n              <div id=\"british_card_in_play\" class=\"bt_card_in_play\">\n                <div class=\"bt_card_in_play_border\"></div>\n              </div>\n              <div id=\"french_card_in_play\" class=\"bt_card_in_play\">\n                <div class=\"bt_card_in_play_border\"></div>\n              </div>\n              <div id=\"indian_card_in_play\" class=\"bt_card_in_play\">\n                <div class=\"bt_card_in_play_border\"></div>\n              </div>\n            </div>\n          </div\n  ";
 };
 var isDebug = window.location.host == 'studio.boardgamearena.com' || window.location.hash.indexOf('debug') > -1;
 var debug = isDebug ? console.info.bind(window.console) : function () { };
@@ -2861,6 +2883,9 @@ var GameMap = (function () {
                     _this.stacks[space.id][BRITISH].addUnit(unit);
                 }
                 else if (data.faction === FRENCH) {
+                    _this.stacks[space.id][FRENCH].addUnit(unit);
+                }
+                else if (data.faction === INDIAN) {
                     _this.stacks[space.id][FRENCH].addUnit(unit);
                 }
             });
@@ -3835,31 +3860,171 @@ var tplPlayerPrefenceSliderRow = function (_a) {
     var label = _a.label, id = _a.id, _b = _a.visible, visible = _b === void 0 ? true : _b;
     return "\n  <div id=\"setting_row_".concat(id, "\" class=\"player_preference_row\"").concat(!visible ? " style=\"display: none;\"" : '', ">\n    <div class=\"player_preference_row_label\">").concat(_(label), "</div>\n    <div class=\"player_preference_row_value slider\">\n      <div id=\"setting_").concat(id, "\"></div>\n    </div>\n  </div>\n  ");
 };
+var ActionActivateStackState = (function () {
+    function ActionActivateStackState(game) {
+        this.game = game;
+    }
+    ActionActivateStackState.prototype.onEnteringState = function (args) {
+        debug('Entering ActionActivateStackState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    ActionActivateStackState.prototype.onLeavingState = function () {
+        debug('Leaving ActionActivateStackState');
+    };
+    ActionActivateStackState.prototype.setDescription = function (activePlayerId) { };
+    ActionActivateStackState.prototype.updateInterfaceInitialStep = function () {
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a stack to activate'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.setStacksSelectable();
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    ActionActivateStackState.prototype.updateInterfaceSelectAction = function (_a) {
+        var _this = this;
+        var stackId = _a.stackId, stackActions = _a.stackActions;
+        this.game.clearPossible();
+        this.game.setLocationSelected({ id: "".concat(stackId, "_french_stack") });
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must choose an action to perform'),
+            args: {
+                you: '${you}',
+            },
+        });
+        stackActions.forEach(function (action) {
+            _this.game.addPrimaryActionButton({
+                text: _(action.name),
+                id: "".concat(action.id, "_btn"),
+                callback: function () { return _this.updateInterfaceConfirm({ stackAction: action, stackId: stackId }); },
+            });
+        });
+        this.game.addCancelButton();
+    };
+    ActionActivateStackState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var stackAction = _a.stackAction, stackId = _a.stackId;
+        this.game.clearPossible();
+        this.game.setLocationSelected({ id: "".concat(stackId, "_french_stack") });
+        this.game.clientUpdatePageTitle({
+            text: _('Perform ${actionName} with stack in ${locationName}?'),
+            args: {
+                actionName: _(stackAction.name),
+                locationName: stackId,
+            },
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actActionActivateStack',
+                args: {
+                    action: stackAction.id,
+                    stack: stackId,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    ActionActivateStackState.prototype.setStacksSelectable = function () {
+        var _this = this;
+        Object.entries(this.args.stacks).forEach(function (_a, index) {
+            var stackId = _a[0], stackActions = _a[1];
+            _this.game.setLocationSelectable({
+                id: "".concat(stackId, "_french_stack"),
+                callback: function () { return _this.updateInterfaceSelectAction({ stackId: stackId, stackActions: stackActions }); },
+            });
+        });
+    };
+    return ActionActivateStackState;
+}());
 var ActionRoundActionPhaseState = (function () {
     function ActionRoundActionPhaseState(game) {
         this.game = game;
     }
     ActionRoundActionPhaseState.prototype.onEnteringState = function (args) {
-        debug("Entering ActionRoundActionPhaseState");
+        debug('Entering ActionRoundActionPhaseState');
         this.args = args;
         this.updateInterfaceInitialStep();
     };
     ActionRoundActionPhaseState.prototype.onLeavingState = function () {
-        debug("Leaving ActionRoundActionPhaseState");
+        debug('Leaving ActionRoundActionPhaseState');
     };
     ActionRoundActionPhaseState.prototype.setDescription = function (activePlayerId) { };
     ActionRoundActionPhaseState.prototype.updateInterfaceInitialStep = function () {
         this.game.clearPossible();
+        var indianActions = this.args.action === ACTION_ROUND_INDIAN_ACTIONS;
+        this.game.setCardSelected({ id: this.args.card.id });
         this.game.clientUpdatePageTitle({
-            text: _("${you} may perform actions"),
+            text: indianActions
+                ? _('${you} may use the Indian card for actions')
+                : _('${you} may perform actions'),
             args: {
-                you: "${you}",
+                you: '${you}',
             },
         });
+        this.addActionButtons();
         this.game.addPassButton({
             optionalAction: this.args.optionalAction,
         });
         this.game.addUndoButtons(this.args);
+    };
+    ActionRoundActionPhaseState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var actionPoint = _a.actionPoint;
+        this.game.clearPossible();
+        this.game.setCardSelected({ id: this.args.card.id });
+        this.game.clientUpdatePageTitle({
+            text: _('Use ${tkn_actionPoint} to perform an Action?'),
+            args: {
+                tkn_actionPoint: actionPoint.id,
+            },
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actActionRoundActionPhase',
+                args: {
+                    actionPoint: actionPoint.id,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    ActionRoundActionPhaseState.prototype.addActionButtons = function () {
+        var _this = this;
+        this.args.card.actionPoints.forEach(function (actionPoint, index) {
+            _this.game.addPrimaryActionButton({
+                id: "ap_".concat(actionPoint, "_").concat(index),
+                text: actionPoint.id,
+                callback: function () { return _this.updateInterfaceConfirm({ actionPoint: actionPoint }); },
+            });
+        });
     };
     return ActionRoundActionPhaseState;
 }());
@@ -4138,6 +4303,34 @@ var ConfirmTurnState = (function () {
         this.game.addUndoButtons(this.args);
     };
     return ConfirmTurnState;
+}());
+var MovementSelectDestinationAndUnitsState = (function () {
+    function MovementSelectDestinationAndUnitsState(game) {
+        this.game = game;
+    }
+    MovementSelectDestinationAndUnitsState.prototype.onEnteringState = function (args) {
+        debug('Entering MovementSelectDestinationAndUnitsState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    MovementSelectDestinationAndUnitsState.prototype.onLeavingState = function () {
+        debug('Leaving MovementSelectDestinationAndUnitsState');
+    };
+    MovementSelectDestinationAndUnitsState.prototype.setDescription = function (activePlayerId) { };
+    MovementSelectDestinationAndUnitsState.prototype.updateInterfaceInitialStep = function () {
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select units to move'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    return MovementSelectDestinationAndUnitsState;
 }());
 var SelectReserveCardState = (function () {
     function SelectReserveCardState(game) {

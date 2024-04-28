@@ -3,6 +3,7 @@
 namespace BayonetsAndTomahawks\Models;
 
 use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Managers\Units;
 
 /**
  * Space
@@ -27,6 +28,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   protected $victorySpace = false;
   protected $top = 0;
   protected $left = 0;
+  protected $adjacentSpaces = [];
 
   public function __construct($row)
   {
@@ -46,5 +48,10 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
       'top' => $this->top,
       'left' => $this->left,
     ];
+  }
+
+  public function getUnits()
+  {
+    return Units::getInLocation($this->id)->toArray();
   }
 }

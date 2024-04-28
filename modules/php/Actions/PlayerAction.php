@@ -11,6 +11,9 @@ use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Players;
 
+/**
+ * TODO: check if this can be removed?
+ */
 class PlayerAction extends \BayonetsAndTomahawks\Models\AtomicAction
 {
   public function getState()

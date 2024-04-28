@@ -9,7 +9,7 @@ class Brigade extends AbstractUnit
 
   public function __construct($row)
   {
-    $this->type = LIGHT;
+    $this->type = BRIGADE;
     parent::__construct($row);
   }
 }

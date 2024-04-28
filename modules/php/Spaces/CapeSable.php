@@ -12,6 +12,10 @@ class CapeSable extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('CapeSable');
     $this->victorySpace = false;
     $this->top = 738;
-    $this-> left = 1092;
+    $this->left = 1092;
+    $this->adjacentSpaces = [
+      ANNAPOLIS_ROYAL => ANNAPOLIS_ROYAL_CAPE_SABLE,
+      HALIFAX => CAPE_SABLE_HALIFAX,
+    ];
   }
 }

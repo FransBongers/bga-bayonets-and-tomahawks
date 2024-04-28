@@ -12,6 +12,13 @@ class Gnadenhutten extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Gnadenhütten');
     $this->victorySpace = false;
     $this->top = 1739;
-    $this-> left = 773.5;
+    $this->left = 773.5;
+    $this->adjacentSpaces = [
+      CAWICHNOWANE => CAWICHNOWANE_GNADENHUTTEN,
+      EASTON => EASTON_GNADENHUTTEN,
+      MINISINK => GNADENHUTTEN_MINISINK,
+      OQUAGA => GNADENHUTTEN_OQUAGA,
+      SHAMOKIN => GNADENHUTTEN_SHAMOKIN,
+    ];
   }
 }

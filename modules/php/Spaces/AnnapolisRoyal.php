@@ -12,6 +12,11 @@ class AnnapolisRoyal extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('ANNAPOLIS ROYAL');
     $this->victorySpace = true;
     $this->top = 664;
-    $this-> left = 972.5;
+    $this->left = 972.5;
+    $this->adjacentSpaces = [
+      CAPE_SABLE => ANNAPOLIS_ROYAL_CAPE_SABLE,
+      CHIGNECTOU => ANNAPOLIS_ROYAL_CHIGNECTOU,
+      HALIFAX => ANNAPOLIS_ROYAL_HALIFAX,
+    ];
   }
 }

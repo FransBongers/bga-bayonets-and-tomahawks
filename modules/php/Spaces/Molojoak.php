@@ -12,6 +12,12 @@ class Molojoak extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Molôjoak');
     $this->victorySpace = false;
     $this->top = 890;
-    $this-> left = 682;
+    $this->left = 682;
+    $this->adjacentSpaces = [
+      NAMASKONKIK => MOLOJOAK_NAMASKONKIK,
+      MOZODEBINEBESEK => MOLOJOAK_MOZODEBINEBESEK,
+      TACONNET => MOLOJOAK_TACONNET,
+      ZAWAKWTEGOK => MOLOJOAK_ZAWAKWTEGOK,
+    ];
   }
 }

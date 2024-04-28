@@ -12,6 +12,10 @@ class Alexandria extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Alexandria');
     $this->victorySpace = false;
     $this->top = 2064;
-    $this-> left = 1198.5;
+    $this->left = 1198.5;
+    $this->adjacentSpaces = [
+      PHILADELPHIA => ALEXANDRIA_PHILADELPHIA,
+      WINCHESTER => ALEXANDRIA_WINCHESTER,
+    ];
   }
 }

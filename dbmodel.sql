@@ -40,6 +40,14 @@ CREATE TABLE IF NOT EXISTS `cards` (
   PRIMARY KEY (`card_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
+CREATE TABLE IF NOT EXISTS `connections` (
+  `connection_id` varchar(100) NOT NULL,
+  `connection_location` varchar(32) NOT NULL,
+  `connection_state` int(10) DEFAULT 0,
+  `extra_data` JSON NULL,
+  PRIMARY KEY (`connection_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
 CREATE TABLE IF NOT EXISTS `units` (
   `unit_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `unit_location` varchar(32) NOT NULL,

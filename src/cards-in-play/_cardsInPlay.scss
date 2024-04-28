@@ -3,7 +3,7 @@
   min-width: 100px;
   // max-width: 400px;
   background-color: ivory;
-  padding: 4px;
+  padding: 8px;
   // margin: 4px;
   box-shadow: 1px 1px 5px #000;
   --btCardScale: 1;
@@ -15,11 +15,21 @@
     gap: 12px;
 
     .bt_card_in_play {
+      position: relative;
       box-sizing: border-box;
       width: calc(var(--btCardScale) * 250px);
       height: calc(var(--btCardScale) * 179px);
-      border: calc(var(--btCardScale) * 1px) black dashed;
-      border-radius: calc(var(--btCardScale) * 5px);
+
+      .bt_card_in_play_border {
+        box-sizing: border-box;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: calc(var(--btCardScale) * 250px);
+        height: calc(var(--btCardScale) * 179px);
+        border: calc(var(--btCardScale) * 2px) black dashed;
+        border-radius: calc(var(--btCardScale) * 5px);        
+      }
     }
   }
 }

@@ -12,6 +12,13 @@ class Carlisle extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('CARLISLE');
     $this->victorySpace = true;
     $this->top = 1903;
-    $this-> left = 953.5;
+    $this->left = 953.5;
+    $this->adjacentSpaces = [
+      EASTON => CARLISLE_EASTON,
+      PHILADELPHIA => CARLISLE_PHILADELPHIA,
+      RAYS_TOWN => CARLISLE_RAYS_TOWN,
+      SHAMOKIN => CARLISLE_SHAMOKIN,
+      WINCHESTER => CARLISLE_WINCHESTER,
+    ];
   }
 }

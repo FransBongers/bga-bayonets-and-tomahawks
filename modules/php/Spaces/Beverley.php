@@ -12,6 +12,10 @@ class Beverley extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Beverley');
     $this->victorySpace = false;
     $this->top = 2106;
-    $this-> left = 1049;
+    $this->left = 1049;
+    $this->adjacentSpaces = [
+      CHOTE => BEVERLEY_CHOTE,
+      WINCHESTER => BEVERLEY_WINCHESTER,
+    ];
   }
 }

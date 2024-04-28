@@ -44,6 +44,7 @@ use BayonetsAndTomahawks\Managers\Players;
 
 // Game specific
 use BayonetsAndTomahawks\Managers\Cards;
+use BayonetsAndTomahawks\Managers\Connections;
 use BayonetsAndTomahawks\Managers\Scenarios;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Tokens;
@@ -109,6 +110,7 @@ class bayonetsandtomahawks extends Table
         Players::setupNewGame($players, $options);
         Stats::checkExistence();
         Spaces::setupNewGame($players, $options);
+        Connections::setupNewGame($players, $options);
         Globals::setTest($options);
         Scenarios::setup($options[OPTION_SCENARIO]);
         Cards::setupNewGame();

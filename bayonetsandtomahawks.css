@@ -368,7 +368,7 @@
   min-height: 52px;
   min-width: 100px;
   background-color: ivory;
-  padding: 4px;
+  padding: 8px;
   box-shadow: 1px 1px 5px #000;
   --btCardScale: 1;
 }
@@ -379,13 +379,36 @@
   gap: 12px;
 }
 #bt_cards_in_play .bt_cards_in_play_container .bt_card_in_play {
+  position: relative;
   box-sizing: border-box;
   width: calc(var(--btCardScale) * 250px);
   height: calc(var(--btCardScale) * 179px);
-  border: calc(var(--btCardScale) * 1px) black dashed;
+}
+#bt_cards_in_play .bt_cards_in_play_container .bt_card_in_play .bt_card_in_play_border {
+  box-sizing: border-box;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: calc(var(--btCardScale) * 250px);
+  height: calc(var(--btCardScale) * 179px);
+  border: calc(var(--btCardScale) * 2px) black dashed;
   border-radius: calc(var(--btCardScale) * 5px);
 }
 
+/**
+ *------
+ * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
+ * Bayonets and Tomahawks implementation : © Frans Bongers <fjmbongers@gmail.com>
+ *
+ * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
+ * See http://en.boardgamearena.com/#!doc/Studio for more information.
+ * -----
+ *
+ * bayonetsandtomahawks.css
+ *
+ * bayonetsandtomahawks stylesheet
+ *
+ */
 #bt_game_map {
   background-image: url("img/map.webp");
   background-size: calc(var(--leftColumnScale) * 1500px) calc(var(--leftColumnScale) * 2318px);
@@ -458,6 +481,10 @@
   justify-content: center;
 }
 
+.bt_stack {
+  border-radius: calc(var(--btMapScale) * 4px);
+}
+
 .bt_stack[data-has-unit=true] {
   min-width: calc(var(--btMapScale) * 52px);
 }
@@ -467,6 +494,16 @@
 
 .bt_stack[data-expanded=true] .bt_token {
   z-index: 1;
+}
+
+.bt_stack.bt_selectable {
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #ffff00 !important;
+  cursor: pointer;
+}
+
+.bt_stack.bt_selected {
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #0000ff !important;
+  cursor: pointer;
 }
 
 #floating_hand_wrapper {
@@ -3144,6 +3181,7 @@ html {
   --btCardScale: 1;
 }
 
+/* Note that this must be set on the element itself, since it does not inherit in Chrome, and is not supported in Firefox. */
 #globalaction_zoom_wrap {
   display: none !important;
 }

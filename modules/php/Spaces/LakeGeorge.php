@@ -13,5 +13,12 @@ class LakeGeorge extends \BayonetsAndTomahawks\Models\Space
     $this->victorySpace = true;
     $this->top = 1375.5;
     $this-> left = 651;
+    $this->adjacentSpaces = [
+      ALBANY => ALBANY_LAKE_GEORGE,
+      MIKAZAWITEGOK => LAKE_GEORGE_MIKAZAWITEGOK,
+      ONEIDA_LAKE => LAKE_GEORGE_ONEIDA_LAKE,
+      SACHENDAGA => LAKE_GEORGE_SACHENDAGA,
+      TICONDEROGA => LAKE_GEORGE_TICONDEROGA,
+    ];
   }
 }

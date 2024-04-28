@@ -18,6 +18,7 @@ class FleetsArriveAction extends \BayonetsAndTomahawks\Models\AtomicAction
 {
   public function getState()
   {
+    // TODO: should be something different probably
     return ST_ACTION_ROUND_END;
   }
 

@@ -75,6 +75,8 @@ class GameMap {
             this.stacks[space.id][BRITISH].addUnit(unit);
           } else if (data.faction === FRENCH) {
             this.stacks[space.id][FRENCH].addUnit(unit);
+          } else if (data.faction === INDIAN) {
+            this.stacks[space.id][FRENCH].addUnit(unit);
           }
         });
       // if (units.length > 0) {

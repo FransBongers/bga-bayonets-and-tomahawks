@@ -4,16 +4,19 @@ namespace BayonetsAndTomahawks;
 
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Managers\ActionPoints;
 use BayonetsAndTomahawks\Managers\AtomicActions;
 use BayonetsAndTomahawks\Managers\Cards;
+use BayonetsAndTomahawks\Managers\Connections;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Scenarios;
 use BayonetsAndTomahawks\Managers\Spaces;
+use BayonetsAndTomahawks\Managers\StackActions;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Managers\Tokens;
 use BayonetsAndTomahawks\Models\AtomicAction;
 use BayonetsAndTomahawks\Models\Space;
-use BayonetsAndTomahawks\Scenarios\VaudreuilsPetiteGuerre1755;
+use BayonetsAndTomahawks\Helpers\Utils;
 
 trait DebugTrait
 {
@@ -23,13 +26,51 @@ trait DebugTrait
   //   Scenario::setup();
   // }
 
+  function getStacks() {
+    $spaces = Spaces::getAll();
+    
+    $stacks = [];
+    foreach($spaces as $space) {
+      $units = $space->getUnits();
+      // if (count($units) > 0) {
+      //   Notifications::log('units '.$space->getId(),$units);
+      // }
+      
+      $hasUnitToActivate = Utils::array_some($units, function ($unit) {
+        $faction = $unit->getFaction();
+        Notifications::log('faction',$faction);
+        return $faction === INDIAN;
+      });
+      if ($hasUnitToActivate) {
+        $stacks[] = $space->getId();
+      }
+    }
+    Notifications::log('stacks',$stacks);
+  }
+
   function test()
   {
+    // Connections::setupNewGame();
+    $connection = Connections::get(GRAND_SAULT_WOLASTOKUK);
+    // $space = Spaces::get(CHIGNECTOU);
+    // $connection->incLimitUsed(FRENCH, 2);
+
+    Notifications::log('conneciton', $connection);
+
+    // $lightAP = ActionPoints::get(LIGHT_AP);
+
+    // Notifications::log('lightAP', $lightAP);
+
+    // $result = $lightAP->canActivateStackInSpace($space, Players::get());
+    // Notifications::log('canActivateStackInSpace',$result);
+    // Notifications::log('canActivateStackInSpaceCount',count($result));
+
+    // Notifications::log('action', StackActions::get(LIGHT_MOVEMENT));
+    // $this->getStacks();
     
-    // Notifications::log('scenario',Scenarios::get());
     // Scenarios::setup($options[OPTION_SCENARIO]);
-    Globals::setActionRound(ACTION_ROUND_9);
-    Tokens::move(ROUND_MARKER,ACTION_ROUND_9);
+    // Globals::setActionRound(ACTION_ROUND_9);
+    // Tokens::move(ROUND_MARKER,ACTION_ROUND_9);
     // Notifications::log('scenario',Scenarios::get(VaudreuilsPetiteGuerre1755));
     // Globals::setScenarioId(1);
     // Scenario::loadId($scenarioId);

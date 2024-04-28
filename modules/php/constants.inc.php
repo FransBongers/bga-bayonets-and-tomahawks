@@ -61,7 +61,8 @@ const ST_ACTION_ROUND_CHOOSE_REACTION = 29;
 const ST_FLEETS_ARRIVE_DRAW_REINFORCEMENTS = 30;
 const ST_COLONIALS_ENLIST_DRAW_REINFORCEMENTS = 40;
 const ST_WINTER_QUARTERS_GAME_END_CHECK = 50;
-
+const ST_ACTION_ACTIVATE_STACK = 60;
+const ST_MOVEMENT_SELECT_DESTINATION_AND_UNITS = 61;
 
 /**
  * Scenario Ids
@@ -74,6 +75,7 @@ const LoudounsGamble1757 = 'LoudounsGamble1757';
  */
 const PLAYER_ACTION = 'PLAYER_ACTION';
 const SELECT_RESERVE_CARD = 'SELECT_RESERVE_CARD';
+const ACTION_ACTIVATE_STACK = 'ACTION_ACTIVATE_STACK';
 const ACTION_ROUND_CHOOSE_CARD = 'ACTION_ROUND_CHOOSE_CARD';
 const ACTION_ROUND_CHOOSE_FIRST_PLAYER = 'ACTION_ROUND_CHOOSE_FIRST_PLAYER';
 const ACTION_ROUND_FIRST_PLAYER_ACTIONS = 'ACTION_ROUND_FIRST_PLAYER_ACTIONS';
@@ -88,6 +90,7 @@ const COLONIALS_ENLIST_DRAW_REINFORCEMENTS = 'COLONIALS_ENLIST_DRAW_REINFORCEMEN
 const FLEETS_ARRIVE_DRAW_REINFORCEMENTS = 'FLEETS_ARRIVE_DRAW_REINFORCEMENTS';
 const FLEETS_ARRIVE_ACTION = 'FLEETS_ARRIVE_ACTION';
 const WINTER_QUARTERS_GAME_END_CHECK = 'WINTER_QUARTERS_GAME_END_CHECK';
+const MOVEMENT_SELECT_DESTINATION_AND_UNITS = 'MOVEMENT_SELECT_DESTINATION_AND_UNITS';
 
 /**
  * Action rounds / steps in year
@@ -128,6 +131,16 @@ const INDIAN_AP_2X = 'INDIAN_AP_2X';
 const SAIL_ARMY_AP = 'SAIL_ARMY_AP';
 const SAIL_ARMY_AP_2X = 'SAIL_ARMY_AP_2X';
 const FRENCH_LIGHT_ARMY_AP = 'FRENCH_LIGHT_ARMY_AP';
+
+/**
+ * Actions that can be performed by a stack
+ */
+const ARMY_MOVEMENT = 'ARMY_MOVEMENT';
+const CONSTRUCTION = 'CONSTRUCTION';
+const LIGHT_MOVEMENT = 'LIGHT_MOVEMENT';
+const MARSHAL_TROOPS = 'MARSHAL_TROOPS';
+const RAID = 'RAID';
+const SAIL_MOVEMENT = 'SAIL_MOVEMENT';
 
 /*
  * Units types
@@ -207,12 +220,12 @@ const ISLE_AUX_NOIX = 'IsleAuxNoix';
 const JACQUES_CARTIER = 'JacquesCartier'; // doubles with unit
 const KADESQUIT = 'Kadesquit';
 const KAHUAHGO = 'Kahuahgo';
-const KANISTIOH = 'Kanistioh';
+const KAHNISTIOH = 'Kahnistioh';
 const KENINSHEKA = 'Keninsheka';
 const KEOWEE = 'Keowee';
 const KINGSTON = 'Kingston';
 const KITHANINK = 'Kithanink';
-const KWANOSKWANCOK = 'Kwanoskwamcok';
+const KWANOSKWAMCOK = 'Kwanoskwamcok';
 const LA_PRESQU_ISLE = 'LaPresquIsle';
 const LA_PRESENTATION = 'LaPresentation';
 const LAKE_GEORGE = 'LakeGeorge';
@@ -308,12 +321,12 @@ const SPACES = [
   JACQUES_CARTIER,
   KADESQUIT,
   KAHUAHGO,
-  KANISTIOH,
+  KAHNISTIOH,
   KENINSHEKA,
   KEOWEE,
   KINGSTON,
   KITHANINK,
-  KWANOSKWANCOK,
+  KWANOSKWAMCOK,
   LA_PRESQU_ISLE,
   LA_PRESENTATION,
   LAKE_GEORGE,
@@ -515,3 +528,150 @@ const MISSISSAGUE = 'Mississague';
 const MOHAWK = 'Mohawk';
 const OUTAOUAIS = 'Outaouais';
 const SENECA = 'Seneca';
+
+/**
+ * Connection types
+ */
+const ROAD = 'road';
+const PATH = 'path';
+const HIGHWAY = 'highway';
+
+/**
+ * ConnectionIds
+ */
+const ALBANY_KINGSTON = 'Albany_Kingston';
+const ALBANY_LAKE_GEORGE = 'Albany_LakeGeorge';
+const ALBANY_NORTHFIELD = 'Albany_Northfield';
+const ALBANY_ONEIDA_LAKE = 'Albany_OneidaLake';
+const ALBANY_OQUAGA = 'Albany_Oquaga';
+const ALEXANDRIA_PHILADELPHIA = 'Alexandria_Philadelphia';
+const ALEXANDRIA_WINCHESTER = 'Alexandria_Winchester';
+const ANNAPOLIS_ROYAL_CAPE_SABLE = 'AnnapolisRoyal_CapeSable';
+const ANNAPOLIS_ROYAL_CHIGNECTOU = 'AnnapolisRoyal_Chignectou';
+const ANNAPOLIS_ROYAL_HALIFAX = 'AnnapolisRoyal_Halifax';
+const ASSUNEPACHLA_CAWICHNOWANE = 'Assunepachla_Cawichnowane';
+const ASSUNEPACHLA_KITHANINK = 'Assunepachla_Kithanink';
+const ASSUNEPACHLA_LOYALHANNA = 'Assunepachla_Loyalhanna';
+const ASSUNEPACHLA_RAYS_TOWN = 'Assunepachla_RaysTown';
+const BAYE_DE_CATARACOUY_LA_PRESENTATION = 'BayeDeCataracouy_LaPresentation';
+const BAYE_DE_CATARACOUY_OSWEGO = 'BayeDeCataracouy_Oswego';
+const BAYE_DE_CATARACOUY_TORONTO = 'BayeDeCataracouy_Toronto';
+const BEVERLEY_CHOTE = 'Beverley_Chote';
+const BEVERLEY_WINCHESTER = 'Beverley_Winchester';
+const BOSTON_NEW_LONDON = 'Boston_NewLondon';
+const BOSTON_NORTHFIELD = 'Boston_Northfield';
+const BOSTON_YORK = 'Boston_York';
+const CAPE_SABLE_HALIFAX = 'CapeSable_Halifax';
+const CARLISLE_EASTON = 'Carlisle_Easton';
+const CARLISLE_PHILADELPHIA = 'Carlisle_Philadelphia';
+const CARLISLE_RAYS_TOWN = 'Carlisle_RaysTown';
+const CARLISLE_SHAMOKIN = 'Carlisle_Shamokin';
+const CARLISLE_WINCHESTER = 'Carlisle_Winchester';
+const CAWICHNOWANE_GNADENHUTTEN = 'Cawichnowane_Gnadenhutten';
+const CAWICHNOWANE_KAHNISTIOH = 'Cawichnowane_Kahnistioh';
+const CAWICHNOWANE_KITHANINK = 'Cawichnowane_Kithanink';
+const CAWICHNOWANE_OQUAGA = 'Cawichnowane_Oquaga';
+const CAWICHNOWANE_SHAMOKIN = 'Cawichnowane_Shamokin';
+const CHARLES_TOWN_NINETY_SIX = 'CharlesTown_NinetySix';
+const CHIGNECTOU_HALIFAX = 'Chignectou_Halifax';
+const CHIGNECTOU_KWANOSKWAMCOK = 'Chignectou_Kwanoskwamcok';
+const CHIGNECTOU_MIRAMICHY = 'Chignectou_Miramichy';
+const CHIGNECTOU_POINTE_SAINTE_ANNE = 'Chignectou_PointeSainteAnne';
+const CHIGNECTOU_PORT_LA_JOYE = 'Chignectou_PortLaJoye';
+const CHOTE_KENINSHEKA = 'Chote_Keninsheka';
+const CHOTE_KEOWEE = 'Chote_Keowee';
+const COTE_DE_BEAUPRE_COTE_DU_SUD = 'CoteDeBeaupre_CoteDuSud';
+const COTE_DE_BEAUPRE_JACQUES_CARTIER = 'CoteDeBeaupre_JacquesCartier';
+const COTE_DE_BEAUPRE_QUEBEC = 'CoteDeBeaupre_Quebec';
+const COTE_DE_BEAUPRE_TADOUSSAC = 'CoteDeBeaupre_Tadoussac';
+const COTE_DU_SUD_RIVIERE_DU_LOUP = 'CoteDuSud_RiviereDuLoup';
+const COTE_DU_SUD_QUEBEC = 'CoteDuSud_Quebec';
+const COTE_DU_SUD_WOLASTOKUK = 'CoteDuSud_Wolastokuk';
+const DIIOHAGE_FORKS_OF_THE_OHIO = 'Diiohage_ForksOfTheOhio';
+const DIIOHAGE_LA_PRESQU_ISLE = 'Diiohage_LaPresquIsle';
+const DIIOHAGE_LE_BARIL = 'Diiohage_LeBaril';
+const DIIOHAGE_LE_DETROIT = 'Diiohage_LeDetroit';
+const EASTON_GNADENHUTTEN = 'Easton_Gnadenhutten';
+const EASTON_MINISINK = 'Easton_Minisink';
+const EASTON_PHILADELPHIA = 'Easton_Philadelphia';
+const FORKS_OF_THE_OHIO_KITHANINK = 'ForksOfTheOhio_Kithanink';
+const FORKS_OF_THE_OHIO_LOYALHANNA = 'ForksOfTheOhio_Loyalhanna';
+const FORKS_OF_THE_OHIO_MEKEKASINK = 'ForksOfTheOhio_Mekekasink';
+const FORKS_OF_THE_OHIO_TU_ENDIE_WEI = 'ForksOfTheOhio_TuEndieWei';
+const FORT_OUIATENON_LE_DETROIT = 'FortOuiatenon_LeDetroit';
+const FORT_OUIATENON_RIVIERE_OUABACHE = 'FortOuiatenon_RiviereOuabache';
+const GENNISHEYO_KAHNISTIOH = 'Gennisheyo_Kahnistioh';
+const GENNISHEYO_LA_PRESQU_ISLE = 'Gennisheyo_LaPresquIsle';
+const GENNISHEYO_NIAGARA = 'Gennisheyo_Niagara';
+const GENNISHEYO_ONONTAKE = 'Gennisheyo_Onontake';
+const GENNISHEYO_ONYIUDAONDAGWAT = 'Gennisheyo_Onyiudaondagwat';
+const GNADENHUTTEN_MINISINK = 'Gnadenhutten_Minisink';
+const GNADENHUTTEN_OQUAGA = 'Gnadenhutten_Oquaga';
+const GNADENHUTTEN_SHAMOKIN = 'Gnadenhutten_Shamokin';
+const GOASEK_MAMHLAWBAGOK = 'Goasek_Mamhlawbagok';
+const GOASEK_NUMBER_FOUR = 'Goasek_NumberFour';
+const GOASEK_TICONDEROGA = 'Goasek_Ticonderoga';
+const GOASEK_ZAWAKWTEGOK = 'Goasek_Zawakwtegok';
+const GRAND_SAULT_MATAWASKIYAK = 'GrandSault_Matawaskiyak';
+const GRAND_SAULT_MIRAMICHY = 'GrandSault_Miramichy';
+const GRAND_SAULT_POINTE_SAINTE_ANNE = 'GrandSault_PointeSainteAnne';
+const GRAND_SAULT_WOLASTOKUK = 'GrandSault_Wolastokuk';
+const ISLE_AUX_NOIX_LES_TROIS_RIVIERES = 'IsleAuxNoix_LesTroisRivieres';
+const ISLE_AUX_NOIX_MAMHLAWBAGOK = 'IsleAuxNoix_Mamhlawbagok';
+const ISLE_AUX_NOIX_MONTREAL = 'IsleAuxNoix_Montreal';
+const ISLE_AUX_NOIX_SARANAC = 'IsleAuxNoix_Saranac';
+const ISLE_AUX_NOIX_TICONDEROGA = 'IsleAuxNoix_Ticonderoga';
+const JACQUES_CARTIER_LES_TROIS_RIVIERES = 'JacquesCartier_LesTroisRivieres';
+const JACQUES_CARTIER_QUEBEC = 'JacquesCartier_Quebec';
+const KADESQUIT_MOZODEBINEBESEK = 'Kadesquit_Mozodebinebesek';
+const KADESQUIT_POINTE_SAINTE_ANNE = 'Kadesquit_PointeSainteAnne';
+const KADESQUIT_ST_GEORGE = 'Kadesquit_StGeorge';
+const KADESQUIT_TACONNET = 'Kadesquit_Taconnet';
+const KAHNISTIOH_KITHANINK = 'Kahnistioh_Kithanink';
+const KAHUAHGO_LA_PRESENTATION = 'Kahnistioh_LaPresentation';
+const KAHUAHGO_NIHANAWATE = 'Kahuahgo_Nihanawate';
+const KAHUAHGO_ONEIDA_LAKE = 'Kahuahgo_OneidaLake';
+const KAHUAHGO_OSWEGO = 'Kahuahgo_Oswego';
+const KENINSHEKA_TU_ENDIE_WEI = 'Keninsheka_TuEndieWei';
+const KEOWEE_NINETY_SIX = 'Keowee_NinetySix';
+const KINGSTON_MINISINK = 'Kingston_Minisink';
+const KINGSTON_NEW_YORK = 'Kingston_NewYork';
+const KINGSTON_OQUAGA = 'Kingston_Oquaga';
+const KITHANINK_LA_PRESQU_ISLE = 'Kithanink_LaPresquIsle';
+const KWANOSKWAMCOK_ST_GEORGE = 'Kwanoskwamcok_StGeorge';
+const LAKE_GEORGE_MIKAZAWITEGOK = 'LakeGeorge_Mikazawitegok';
+const LAKE_GEORGE_ONEIDA_LAKE = 'LakeGeorge_OneidaLake';
+const LAKE_GEORGE_SACHENDAGA = 'LakeGeorge_Sachendaga';
+const LAKE_GEORGE_TICONDEROGA = 'LakeGeorge_Ticonderoga';
+const LA_PRESENTATION_MONTREAL = 'LaPresentation_Montreal';
+const LA_PRESENTATION_NIHANAWATE = 'LaPresentation_Nihanawate';
+const LA_PRESQU_ISLE_NIAGARA = 'LaPresquIsle_Niagara';
+const LE_BARIL_RIVIERE_OUABACHE = 'LeBaril_RiviereOuabache';
+const LE_BARIL_TU_ENDIE_WEI = 'LeBaril_TuEndieWei';
+const LE_DETROIT_SAUGINK = 'LeDetroit_Saugink';
+const LE_DETROIT_WAABISHKIIGOO_GICHIGAMI = 'LeDetroit_WaabishkiigooGichigami';
+const LES_ILLINOIS_RIVIERE_OUABACHE = 'LesIllinois_RiviereOuabache';
+const LES_TROIS_RIVIERES_MAMHLAWBAGOK = 'LesTroisRivieres_Mamhlawbagok';
+const LES_TROIS_RIVIERES_MONTREAL = 'LesTroisRivieres_Montreal';
+const LES_TROIS_RIVIERES_QUEBEC = 'LesTroisRivieres_Quebec';
+const LOUISBOURG_PORT_DAUPHIN = 'Louisbourg_PortDauphin';
+const LOUISBOURG_PORT_LA_JOYE = 'Louisbourg_PortLaJoye';
+const LOYALHANNA_RAYS_TOWN = 'Loyalhanna_RaysTown';
+const MAMHLAWBAGOK_NAMASKONKIK = 'Mamhlawbagok_Namaskonkik';
+const MATAWASKIYAK_RIVIERE_DU_LOUP = 'Matawaskiyak_RiviereDuLoup';
+const MATSCHEDASH_OUENTIRONK = 'Matschedash_Ouentironk';
+const MATSCHEDASH_SAUGINK = 'Matschedash_Saugink';
+const MEKEKASINK_RAYS_TOWN = 'Mekekasink_RaysTown';
+const MEKEKASINK_WILLS_CREEK = 'Mekekasink_WillsCreek';
+const MIKAZAWITEGOK_NUMBER_FOUR = 'Mikazawitegok_NumberFour';
+const MINISINK_OQUAGA = 'Minisink_Oquaga';
+const MIRAMICHY_POINTE_SAINTE_ANNE = 'Miramichy_PointeSainteAnne';
+const MIRAMICHY_RIVIERE_RISTIGOUCHE = 'Miramichy_RiviereRistigouche';
+const MIRAMICHY_PORT_LA_JOYE = 'Miramichy_PortLaJoye';
+const MOLOJOAK_MOZODEBINEBESEK = 'Molojoak_Mozodebinebesek';
+const MOLOJOAK_NAMASKONKIK = 'Molojoak_Namaskonkik';
+const MOLOJOAK_TACONNET = 'Molojoak_Taconnet';
+const MOLOJOAK_ZAWAKWTEGOK = 'Molojoak_Zawakwtegok';
+const MOZODEBINEBESEK_WOLASTOKUK = 'Mozodebinebesek_Wolastokuk';
+const MTAN_RIVIERE_DU_LOUP = 'Mtan_RiviereDuLoup';
+const MTAN_RIVIERE_RISTIGOUCHE = 'Mtan_RiviereRistigouche';

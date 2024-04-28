@@ -12,6 +12,9 @@ class LesIllinois extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('LES ILLINOIS');
     $this->victorySpace = true;
     $this->top = 2248;
-    $this-> left = 597;
+    $this->left = 597;
+    $this->adjacentSpaces = [
+      RIVIERE_OUABACHE => LES_ILLINOIS_RIVIERE_OUABACHE,
+    ];
   }
 }

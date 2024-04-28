@@ -79,3 +79,8 @@ const VICTORY_MARKER = "victory_marker";
 const OPEN_SEAS_MARKER = "open_seas_marker";
 const FRENCH_RAID_MARKER = "french_raid_marker";
 const BRITISH_RAID_MARKER = "british_raid_marker";
+
+/**
+ * Actions
+ */
+const ACTION_ROUND_INDIAN_ACTIONS = 'ACTION_ROUND_INDIAN_ACTIONS';

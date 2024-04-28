@@ -12,6 +12,11 @@ class JacquesCartier extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Jacques Cartier');
     $this->victorySpace = false;
     $this->top = 926.5;
-    $this-> left = 233.5;
+    $this->left = 233.5;
+    $this->adjacentSpaces = [
+      COTE_DE_BEAUPRE => COTE_DE_BEAUPRE_JACQUES_CARTIER,
+      LES_TROIS_RIVIERES => JACQUES_CARTIER_LES_TROIS_RIVIERES,
+      QUEBEC => JACQUES_CARTIER_QUEBEC,
+    ];
   }
 }

@@ -12,6 +12,11 @@ class Chote extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Chote');
     $this->victorySpace = false;
     $this->top = 2203;
-    $this-> left = 954;
+    $this->left = 954;
+    $this->adjacentSpaces = [
+      BEVERLEY => BEVERLEY_CHOTE,
+      KENINSHEKA => CHOTE_KENINSHEKA,
+      KEOWEE => CHOTE_KEOWEE,
+    ];
   }
 }

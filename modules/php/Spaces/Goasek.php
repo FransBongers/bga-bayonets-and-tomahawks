@@ -12,6 +12,12 @@ class Goasek extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Goasek');
     $this->victorySpace = false;
     $this->top = 1058;
-    $this-> left = 666;
+    $this->left = 666;
+    $this->adjacentSpaces = [
+      MAMHLAWBAGOK => GOASEK_MAMHLAWBAGOK,
+      NUMBER_FOUR => GOASEK_NUMBER_FOUR,
+      TICONDEROGA => GOASEK_TICONDEROGA,
+      ZAWAKWTEGOK => GOASEK_ZAWAKWTEGOK,
+    ];
   }
 }

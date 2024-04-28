@@ -8,7 +8,7 @@ class Seneca extends \BayonetsAndTomahawks\Models\Light
     parent::__construct($row);
     $this->counterId = SENECA;
     $this->counterText = clienttranslate('Seneca');
-    $this->faction = FRENCH;
+    $this->faction = INDIAN;
     $this->indian = true;
   }
 }

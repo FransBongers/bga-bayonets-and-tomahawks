@@ -11,5 +11,17 @@ use BayonetsAndTomahawks\Core\Globals;
  */
 abstract class Flows
 {
-
+  public static function performAction($player, $actionPointId)
+  {
+    $playerId = $player->getId();
+    return [
+      'actionPointId' => $actionPointId,
+      'children' => [
+        [
+          'action' => ACTION_ACTIVATE_STACK,
+          'playerId' => $playerId,
+        ],
+      ]
+    ];
+  }
 }

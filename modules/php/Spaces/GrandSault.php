@@ -13,5 +13,11 @@ class GrandSault extends \BayonetsAndTomahawks\Models\Space
     $this->victorySpace = false;
     $this->top = 645;
     $this-> left = 650;
+    $this->adjacentSpaces = [
+      POINTE_SAINTE_ANNE => GRAND_SAULT_POINTE_SAINTE_ANNE,
+      WOLASTOKUK => GRAND_SAULT_WOLASTOKUK,
+      MIRAMICHY => GRAND_SAULT_MIRAMICHY,
+      MATAWASKIYAK => GRAND_SAULT_MATAWASKIYAK,
+    ];
   }
 }

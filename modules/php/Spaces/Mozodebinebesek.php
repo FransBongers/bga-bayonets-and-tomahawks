@@ -12,6 +12,11 @@ class Mozodebinebesek extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Mozôdebinebesek');
     $this->victorySpace = false;
     $this->top = 792;
-    $this-> left = 661;
+    $this->left = 661;
+    $this->adjacentSpaces = [
+      KADESQUIT => KADESQUIT_MOZODEBINEBESEK,
+      MOLOJOAK => MOLOJOAK_MOZODEBINEBESEK,
+      WOLASTOKUK => MOZODEBINEBESEK_WOLASTOKUK,
+    ];
   }
 }

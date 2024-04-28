@@ -12,6 +12,13 @@ class Albany extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('ALBANY');
     $this->victorySpace = true;
     $this->top = 1440;
-    $this-> left = 787;
+    $this->left = 787;
+    $this->adjacentSpaces = [
+      KINGSTON => ALBANY_KINGSTON,
+      LAKE_GEORGE => ALBANY_LAKE_GEORGE,
+      NORTHFIELD => ALBANY_NORTHFIELD,
+      ONEIDA_LAKE => ALBANY_ONEIDA_LAKE,
+      OQUAGA => ALBANY_OQUAGA
+    ];
   }
 }

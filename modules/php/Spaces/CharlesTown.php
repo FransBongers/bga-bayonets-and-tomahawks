@@ -12,6 +12,9 @@ class CharlesTown extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('CHARLES TOWN');
     $this->victorySpace = true;
     $this->top = 2211;
-    $this-> left = 1410.5;
+    $this->left = 1410.5;
+    $this->adjacentSpaces = [
+      NINETY_SIX => CHARLES_TOWN_NINETY_SIX,
+    ];
   }
 }

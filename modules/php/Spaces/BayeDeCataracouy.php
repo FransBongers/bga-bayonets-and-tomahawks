@@ -12,6 +12,11 @@ class BayeDeCataracouy extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('BAYE DE CATARACOUY');
     $this->victorySpace = true;
     $this->top = 1482;
-    $this-> left = 338.5;
+    $this->left = 338.5;
+    $this->adjacentSpaces = [
+      LA_PRESENTATION => BAYE_DE_CATARACOUY_LA_PRESENTATION,
+      OSWEGO => BAYE_DE_CATARACOUY_OSWEGO,
+      TORONTO => BAYE_DE_CATARACOUY_TORONTO
+    ];
   }
 }

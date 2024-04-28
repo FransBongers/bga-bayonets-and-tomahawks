@@ -8,7 +8,7 @@ class Kahnawake extends \BayonetsAndTomahawks\Models\Light
     parent::__construct($row);
     $this->counterId = KAHNAWAKE;
     $this->counterText = clienttranslate('Kahnawake');
-    $this->faction = FRENCH;
+    $this->faction = INDIAN;
     $this->indian = true;
   }
 }

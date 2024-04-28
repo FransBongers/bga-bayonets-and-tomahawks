@@ -8,7 +8,7 @@ class Chaouanon extends \BayonetsAndTomahawks\Models\Light
     parent::__construct($row);
     $this->counterId = CHAOUANON;
     $this->counterText = clienttranslate('Chaouanon');
-    $this->faction = FRENCH;
+    $this->faction = INDIAN;
     $this->indian = true;
   }
 }

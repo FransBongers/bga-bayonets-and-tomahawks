@@ -12,6 +12,10 @@ class Keninsheka extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Keninsheka');
     $this->victorySpace = false;
     $this->top = 2161;
-    $this-> left = 759;
+    $this->left = 759;
+    $this->adjacentSpaces = [
+      CHOTE => CHOTE_KENINSHEKA,
+      TU_ENDIE_WEI => KENINSHEKA_TU_ENDIE_WEI,
+    ];
   }
 }

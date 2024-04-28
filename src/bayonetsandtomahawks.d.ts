@@ -36,6 +36,11 @@ interface BayonetsAndTomahawksGame extends Game {
     callback: (event: PointerEvent) => void;
   }) => void;
   setCardSelected: (props: { id: string }) => void;
+  setLocationSelectable: (props: {
+    id: string;
+    callback: (event: PointerEvent) => void;
+  }) => void;
+  setLocationSelected: (props: { id: string }) => void;
   takeAction: (props: {
     action: string;
     atomicAction?: boolean;
@@ -71,8 +76,14 @@ interface BTActionPoint {
   id: string;
 }
 
+interface BTStackAction {
+  id: string;
+  name: string;
+}
+
 interface BTCard {
   id: string;
+  actionPoints: BTActionPoint[];
   faction: string;
   initiativeValue: number;
   location: string;

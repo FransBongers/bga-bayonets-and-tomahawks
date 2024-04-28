@@ -8,7 +8,7 @@ class Iroquois extends \BayonetsAndTomahawks\Models\Light
     parent::__construct($row);
     $this->counterId = IROQUOIS;
     $this->counterText = clienttranslate('IROQUOIS');
-    $this->faction = NEUTRAL;
+    $this->faction = INDIAN;
     $this->indian = true;
   }
 }

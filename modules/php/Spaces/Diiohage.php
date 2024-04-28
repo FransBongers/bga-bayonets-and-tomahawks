@@ -12,6 +12,12 @@ class Diiohage extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Diiohage');
     $this->victorySpace = false;
     $this->top = 2003;
-    $this-> left = 494;
+    $this->left = 494;
+    $this->adjacentSpaces = [
+      FORKS_OF_THE_OHIO => DIIOHAGE_FORKS_OF_THE_OHIO,
+      LA_PRESQU_ISLE => DIIOHAGE_LA_PRESQU_ISLE,
+      LE_BARIL => DIIOHAGE_LE_BARIL,
+      LE_DETROIT => DIIOHAGE_LE_DETROIT,
+    ];
   }
 }

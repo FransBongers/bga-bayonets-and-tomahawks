@@ -18,7 +18,7 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\DB_Manager
 
   protected static function cast($row)
   {
-    $instance = self::getSpaceInstance($row['space_id'],$row);
+    $instance = self::get($row['space_id'],$row);
     return $instance;
   }
 
@@ -34,7 +34,7 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\DB_Manager
   {
     $spaces = [];
     foreach (SPACES as $spaceId) {
-      $space = self::getSpaceInstance($spaceId);
+      $space = self::get($spaceId);
       $data = [
         'space_id' => $space->getId(),
         'control' => $space->getDefaultControl(),
@@ -69,7 +69,7 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\DB_Manager
   //   return self::getSpaceInstance($space['location'], $space);
   // }
 
-  public static function getSpaceInstance($id, $data = null)
+  public static function get($id, $data = null)
   {
     $className = "\BayonetsAndTomahawks\Spaces\\" . $id;
     return new $className($data);

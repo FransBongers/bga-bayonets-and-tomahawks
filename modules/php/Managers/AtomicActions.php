@@ -12,6 +12,7 @@ class AtomicActions
 {
   // Mapping of actionId and corresponding class
   static $classes = [
+    ACTION_ACTIVATE_STACK => 'ActionActivateStack',
     ACTION_ROUND_CHOOSE_CARD => 'ActionRoundChooseCard',
     ACTION_ROUND_CHOOSE_FIRST_PLAYER => 'ActionRoundChooseFirstPlayer',
     ACTION_ROUND_CHOOSE_REACTION => 'ActionRoundChooseReaction',
@@ -24,6 +25,7 @@ class AtomicActions
     ACTION_ROUND_SAIL_BOX_LANDING => 'ActionRoundSailBoxLanding',
     COLONIALS_ENLIST_DRAW_REINFORCEMENTS => 'ColonialsEnlistDrawReinforcements',
     FLEETS_ARRIVE_DRAW_REINFORCEMENTS => 'FleetsArriveDrawReinforcements',
+    MOVEMENT_SELECT_DESTINATION_AND_UNITS => 'MovementSelectDestinationAndUnits',
     SELECT_RESERVE_CARD => 'SelectReserveCard',
     WINTER_QUARTERS_GAME_END_CHECK => 'WinterQuartersGameEndCheck',
   ];

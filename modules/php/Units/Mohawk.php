@@ -8,7 +8,7 @@ class Mohawk extends \BayonetsAndTomahawks\Models\Light
     parent::__construct($row);
     $this->counterId = MOHAWK;
     $this->counterText = clienttranslate('Mohawk');
-    $this->faction = BRITISH;
+    $this->faction = INDIAN;
     $this->indian = true;
   }
 }

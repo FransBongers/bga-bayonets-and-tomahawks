@@ -12,6 +12,10 @@ class Keowee extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Keowee');
     $this->victorySpace = false;
     $this->top = 2224;
-    $this-> left = 1065.5;
+    $this->left = 1065.5;
+    $this->adjacentSpaces = [
+      CHOTE => CHOTE_KEOWEE,
+      NINETY_SIX => KEOWEE_NINETY_SIX,
+    ];
   }
 }

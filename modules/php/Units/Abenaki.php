@@ -8,7 +8,7 @@ class Abenaki extends \BayonetsAndTomahawks\Models\Light
     parent::__construct($row);
     $this->counterId = ABENAKI;
     $this->counterText = clienttranslate('Abénaki');
-    $this->faction = FRENCH;
+    $this->faction = INDIAN;
     $this->indian = true;
   }
 }

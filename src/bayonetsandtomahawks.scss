@@ -36,6 +36,12 @@ html {
   --btCardScale: 1;
 }
 
+/* Note that this must be set on the element itself, since it does not inherit in Chrome, and is not supported in Firefox. */
+// #page-content,
+// #right-side-first-part {
+//   zoom: 1 !important;
+// }
+
 #globalaction_zoom_wrap {
   display: none !important;
 }

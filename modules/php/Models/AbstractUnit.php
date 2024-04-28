@@ -90,6 +90,16 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     return $this->$prop ?? null;
   }
 
+  public function getFaction()
+  {
+    return $this->faction;
+  }
+
+  public function getType()
+  {
+    return $this->type;
+  }
+
   public function __call($method, $args)
   {
     if (!in_array($method, $this->properties)) {

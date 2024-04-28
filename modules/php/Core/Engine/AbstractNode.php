@@ -103,7 +103,7 @@ class AbstractNode
   }
 
   /**
-   * Insert node right after current node in children list
+   * Insert node right before current node in children list
    */
   public function insertBefore($newNode)
   {

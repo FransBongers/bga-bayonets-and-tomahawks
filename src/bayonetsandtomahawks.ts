@@ -65,6 +65,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   // public playAreaScale: number;
 
   public activeStates: {
+    actionActivateStack: ActionActivateStackState;
     actionRoundActionPhase: ActionRoundActionPhaseState;
     actionRoundChooseCard: ActionRoundChooseCardState;
     actionRoundChooseFirstPlayer: ActionRoundChooseFirstPlayerState;
@@ -72,6 +73,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     actionRoundSailBoxLanding: ActionRoundSailBoxLandingState;
     confirmPartialTurn: ConfirmPartialTurnState;
     confirmTurn: ConfirmTurnState;
+    movementSelectDestinationAndUnits: MovementSelectDestinationAndUnitsState;
     selectReserveCard: SelectReserveCardState;
   };
 
@@ -105,6 +107,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
 
     // Will store all data for active player and gets refreshed with entering player actions state
     this.activeStates = {
+      actionActivateStack: new ActionActivateStackState(this),
       actionRoundActionPhase: new ActionRoundActionPhaseState(this),
       actionRoundChooseCard: new ActionRoundChooseCardState(this),
       actionRoundChooseFirstPlayer: new ActionRoundChooseFirstPlayerState(this),
@@ -112,6 +115,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
       confirmPartialTurn: new ConfirmPartialTurnState(this),
       confirmTurn: new ConfirmTurnState(this),
+      movementSelectDestinationAndUnits: new MovementSelectDestinationAndUnitsState(this),
       selectReserveCard: new SelectReserveCardState(this),
     };
 
@@ -538,6 +542,34 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   }
 
   setCardSelected({ id }: { id: string }) {
+    const node = $(id);
+    if (node === null) {
+      return;
+    }
+    node.classList.add(BT_SELECTED);
+  }
+
+  setLocationSelectable({
+    id,
+    callback,
+  }: {
+    id: string;
+    callback: (event: PointerEvent) => void;
+  }) {
+    const node = $(id);
+
+    if (node === null) {
+      return;
+    }
+    node.classList.add(BT_SELECTABLE);
+    this._connections.push(
+      dojo.connect(node, "onclick", this, (event: PointerEvent) =>
+        callback(event)
+      )
+    );
+  }
+
+  setLocationSelected({ id }: { id: string }) {
     const node = $(id);
     if (node === null) {
       return;

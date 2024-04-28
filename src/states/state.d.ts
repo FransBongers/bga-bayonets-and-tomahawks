@@ -11,8 +11,14 @@ interface CommonArgs {
 
 interface OnEnteringConfirmTurnArgs extends CommonArgs {}
 
-interface OnEnteringActionRoundActionPhaseStateArgs extends CommonArgs {
+interface OnEnteringActionActivateStackStateArgs extends CommonArgs {
+  // actionsAllowed: BTStackAction[];
+  stacks: Record<string, BTStackAction[]>;
+}
 
+interface OnEnteringActionRoundActionPhaseStateArgs extends CommonArgs {
+  action: string;
+  card: BTCard;
 }
 
 interface OnEnteringActionRoundChooseCardStateArgs {
@@ -32,6 +38,10 @@ interface OnEnteringActionRoundChooseReactionStateArgs extends CommonArgs {
 }
 
 interface OnEnteringActionRoundSailBoxLandingStateArgs extends CommonArgs {
+
+}
+
+interface OnEnteringMovementSelectDestinationAndUnitsStateArgs extends CommonArgs {
 
 }
 

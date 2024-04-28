@@ -12,6 +12,11 @@ class Mekekasink extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Mekekasink');
     $this->victorySpace = false;
     $this->top = 2077;
-    $this-> left = 806;
+    $this->left = 806;
+    $this->adjacentSpaces = [
+      FORKS_OF_THE_OHIO => FORKS_OF_THE_OHIO_MEKEKASINK,
+      RAYS_TOWN => MEKEKASINK_RAYS_TOWN,
+      WILLS_CREEK => MEKEKASINK_WILLS_CREEK,
+    ];
   }
 }

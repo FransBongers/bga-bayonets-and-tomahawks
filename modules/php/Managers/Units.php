@@ -20,7 +20,7 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
   protected static $autoreshuffle = false;
   protected static function cast($row)
   {
-    Notifications::log('cast',$row);
+    // Notifications::log('cast',$row);
     return self::getInstance($row['counter_id'], $row);
   }
 

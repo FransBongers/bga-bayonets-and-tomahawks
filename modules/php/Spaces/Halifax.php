@@ -12,6 +12,11 @@ class Halifax extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('HALIFAX');
     $this->victorySpace = true;
     $this->top = 570;
-    $this-> left = 1085;
+    $this->left = 1085;
+    $this->adjacentSpaces = [
+      ANNAPOLIS_ROYAL => ANNAPOLIS_ROYAL_HALIFAX,
+      CAPE_SABLE => CAPE_SABLE_HALIFAX,
+      CHIGNECTOU => CHIGNECTOU_HALIFAX,
+    ];
   }
 }
