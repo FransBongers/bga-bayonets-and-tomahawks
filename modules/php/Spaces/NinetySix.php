@@ -12,6 +12,10 @@ class NinetySix extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Ninety Six');
     $this->victorySpace = false;
     $this->top = 2216;
-    $this-> left = 1193.5;
+    $this->left = 1193.5;
+    $this->adjacentSpaces = [
+      CHARLES_TOWN => CHARLES_TOWN_NINETY_SIX,
+      KEOWEE => KEOWEE_NINETY_SIX,
+    ];
   }
 }

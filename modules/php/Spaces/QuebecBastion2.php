@@ -12,6 +12,6 @@ class QuebecBastion2 extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('QUÉBEC Bastion');
     $this->victorySpace = false;
     $this->top = 863;
-    $this-> left = 362.5;
+    $this->left = 362.5;
   }
 }

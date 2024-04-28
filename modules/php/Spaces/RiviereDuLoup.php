@@ -12,6 +12,11 @@ class RiviereDuLoup extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Rivière du Loup');
     $this->victorySpace = false;
     $this->top = 616;
-    $this-> left = 396;
+    $this->left = 396;
+    $this->adjacentSpaces = [
+      COTE_DU_SUD => COTE_DU_SUD_RIVIERE_DU_LOUP,
+      MATAWASKIYAK => MATAWASKIYAK_RIVIERE_DU_LOUP,
+      MTAN => MTAN_RIVIERE_DU_LOUP,
+    ];
   }
 }

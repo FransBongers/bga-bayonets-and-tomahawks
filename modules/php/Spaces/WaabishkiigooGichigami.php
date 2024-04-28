@@ -12,6 +12,10 @@ class WaabishkiigooGichigami extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Waabishkiigoo Gichigami');
     $this->victorySpace = false;
     $this->top = 1966;
-    $this-> left = 311;
+    $this->left = 311;
+    $this->adjacentSpaces = [
+      LE_DETROIT => LE_DETROIT_WAABISHKIIGOO_GICHIGAMI,
+      NIAGARA => NIAGARA_WAABISHKIIGOO_GICHIGAMI,
+    ];
   }
 }

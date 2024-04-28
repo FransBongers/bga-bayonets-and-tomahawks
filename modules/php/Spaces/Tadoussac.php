@@ -12,6 +12,9 @@ class Tadoussac extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Tadoussac');
     $this->victorySpace = false;
     $this->top = 634;
-    $this-> left = 280.5;
+    $this->left = 280.5;
+    $this->adjacentSpaces = [
+      COTE_DE_BEAUPRE => COTE_DE_BEAUPRE_TADOUSSAC,
+    ];
   }
 }

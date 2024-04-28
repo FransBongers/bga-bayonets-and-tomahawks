@@ -12,6 +12,10 @@ class WillsCreek extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Wills Creek');
     $this->victorySpace = false;
     $this->top = 2061;
-    $this-> left = 913;
+    $this->left = 913;
+    $this->adjacentSpaces = [
+      MEKEKASINK => MEKEKASINK_WILLS_CREEK,
+      WINCHESTER => WILLS_CREEK_WINCHESTER,
+    ];
   }
 }

@@ -12,6 +12,11 @@ class Wolastokuk extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Wolastokuk');
     $this->victorySpace = false;
     $this->top = 732;
-    $this-> left = 579;
+    $this->left = 579;
+    $this->adjacentSpaces = [
+      COTE_DU_SUD => COTE_DU_SUD_WOLASTOKUK,
+      GRAND_SAULT => GRAND_SAULT_WOLASTOKUK,
+      MOZODEBINEBESEK => MOZODEBINEBESEK_WOLASTOKUK,
+    ];
   }
 }

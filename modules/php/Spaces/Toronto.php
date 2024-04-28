@@ -12,6 +12,11 @@ class Toronto extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Toronto');
     $this->victorySpace = false;
     $this->top = 1647;
-    $this-> left = 252;
+    $this->left = 252;
+    $this->adjacentSpaces = [
+      BAYE_DE_CATARACOUY => BAYE_DE_CATARACOUY_TORONTO,
+      NIAGARA => NIAGARA_TORONTO,
+      OUENTIRONK => OUENTIRONK_TORONTO,
+    ];
   }
 }

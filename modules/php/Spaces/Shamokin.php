@@ -12,6 +12,12 @@ class Shamokin extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Shamokin');
     $this->victorySpace = false;
     $this->top = 1828;
-    $this-> left = 813.5;
+    $this->left = 813.5;
+    $this->adjacentSpaces = [
+      CARLISLE => CARLISLE_SHAMOKIN,
+      CAWICHNOWANE => CAWICHNOWANE_SHAMOKIN,
+      GNADENHUTTEN => GNADENHUTTEN_SHAMOKIN,
+      RAYS_TOWN => RAYS_TOWN_SHAMOKIN,
+    ];
   }
 }

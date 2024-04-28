@@ -12,6 +12,12 @@ class StGeorge extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('St. George');
     $this->victorySpace = false;
     $this->top = 868.5;
-    $this-> left = 935;
+    $this->left = 935;
+    $this->adjacentSpaces = [
+      KADESQUIT => KADESQUIT_ST_GEORGE,
+      KWANOSKWAMCOK => KWANOSKWAMCOK_ST_GEORGE,
+      TACONNET => ST_GEORGE_TACONNET,
+      YORK => ST_GEORGE_YORK,
+    ];
   }
 }

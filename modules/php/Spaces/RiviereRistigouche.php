@@ -12,6 +12,10 @@ class RiviereRistigouche extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Rivière Ristigouche');
     $this->victorySpace = false;
     $this->top = 484;
-    $this-> left = 533.5;
+    $this->left = 533.5;
+    $this->adjacentSpaces = [
+      MIRAMICHY => MIRAMICHY_RIVIERE_RISTIGOUCHE,
+      MTAN => MTAN_RIVIERE_RISTIGOUCHE,
+    ];
   }
 }

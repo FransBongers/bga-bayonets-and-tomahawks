@@ -12,6 +12,11 @@ class Onyiudaondagwat extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Onyiudaondagwat');
     $this->victorySpace = false;
     $this->top = 1620;
-    $this-> left = 416.5;
+    $this->left = 416.5;
+    $this->adjacentSpaces = [
+      GENNISHEYO => GENNISHEYO_ONYIUDAONDAGWAT,
+      NIAGARA => NIAGARA_ONYIUDAONDAGWAT,
+      OSWEGO => ONYIUDAONDAGWAT_OSWEGO,
+    ];
   }
 }

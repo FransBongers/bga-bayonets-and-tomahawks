@@ -12,6 +12,13 @@ class York extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('YORK');
     $this->victorySpace = true;
     $this->top = 1050;
-    $this-> left = 969.5;
+    $this->left = 969.5;
+    $this->adjacentSpaces = [
+      BOSTON => BOSTON_YORK,
+      RUMFORD => RUMFORD_YORK,
+      ST_GEORGE => ST_GEORGE_YORK,
+      TACONNET => TACONNET_YORK,
+      ZAWAKWTEGOK => YORK_ZAWAKWTEGOK,
+    ];
   }
 }

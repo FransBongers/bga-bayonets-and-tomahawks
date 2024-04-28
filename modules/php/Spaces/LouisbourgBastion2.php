@@ -12,6 +12,6 @@ class LouisbourgBastion2 extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('LOUISBOURG Bastion');
     $this->victorySpace = false;
     $this->top = 316;
-    $this-> left = 1075.5;
+    $this->left = 1075.5;
   }
 }

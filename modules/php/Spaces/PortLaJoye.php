@@ -12,6 +12,11 @@ class PortLaJoye extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Port la Joye');
     $this->victorySpace = false;
     $this->top = 475;
-    $this-> left = 911.5;
+    $this->left = 911.5;
+    $this->adjacentSpaces = [
+      CHIGNECTOU => CHIGNECTOU_PORT_LA_JOYE,
+      LOUISBOURG => LOUISBOURG_PORT_LA_JOYE,
+      MIRAMICHY => MIRAMICHY_PORT_LA_JOYE,
+    ];
   }
 }

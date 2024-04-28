@@ -12,6 +12,11 @@ class TuEndieWei extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Tu-Endie-Wei');
     $this->victorySpace = false;
     $this->top = 2120;
-    $this-> left = 571;
+    $this->left = 571;
+    $this->adjacentSpaces = [
+      FORKS_OF_THE_OHIO => FORKS_OF_THE_OHIO_TU_ENDIE_WEI,
+      KENINSHEKA => KENINSHEKA_TU_ENDIE_WEI,
+      LE_BARIL => LE_BARIL_TU_ENDIE_WEI,
+    ];
   }
 }

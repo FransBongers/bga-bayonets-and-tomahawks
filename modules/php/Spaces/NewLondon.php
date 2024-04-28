@@ -12,6 +12,11 @@ class NewLondon extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('New London');
     $this->victorySpace = false;
     $this->top = 1390;
-    $this-> left = 1100;
+    $this->left = 1100;
+    $this->adjacentSpaces = [
+      BOSTON => BOSTON_NEW_LONDON,
+      NEW_YORK => NEW_LONDON_NEW_YORK,
+      NORTHFIELD => NEW_LONDON_NORTHFIELD,
+    ];
   }
 }

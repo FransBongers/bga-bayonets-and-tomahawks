@@ -12,6 +12,10 @@ class Sachendaga extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate("Sachenda'ga");
     $this->victorySpace = false;
     $this->top = 1331.5;
-    $this-> left = 536.5;
+    $this->left = 536.5;
+    $this->adjacentSpaces = [
+      LAKE_GEORGE => LAKE_GEORGE_SACHENDAGA,
+      NIHANAWATE => NIHANAWATE_SACHENDAGA,
+    ];
   }
 }

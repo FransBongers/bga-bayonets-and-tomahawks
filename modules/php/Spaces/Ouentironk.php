@@ -12,6 +12,10 @@ class Ouentironk extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Ouentironk');
     $this->victorySpace = false;
     $this->top = 1697;
-    $this-> left = 142;
+    $this->left = 142;
+    $this->adjacentSpaces = [
+      MATSCHEDASH => MATSCHEDASH_OUENTIRONK,
+      TORONTO => OUENTIRONK_TORONTO,
+    ];
   }
 }

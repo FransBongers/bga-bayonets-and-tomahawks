@@ -12,6 +12,13 @@ class Oswego extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('OSWEGO');
     $this->victorySpace = true;
     $this->top = 1541;
-    $this-> left = 473.5;
+    $this->left = 473.5;
+    $this->adjacentSpaces = [
+      BAYE_DE_CATARACOUY => BAYE_DE_CATARACOUY_OSWEGO,
+      KAHUAHGO => KAHUAHGO_OSWEGO,
+      ONEIDA_LAKE => ONEIDA_LAKE_OSWEGO,
+      ONONTAKE => ONONTAKE_OSWEGO,
+      ONYIUDAONDAGWAT => ONYIUDAONDAGWAT_OSWEGO,
+    ];
   }
 }

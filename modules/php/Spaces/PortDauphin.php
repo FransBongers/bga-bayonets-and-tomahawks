@@ -12,6 +12,9 @@ class PortDauphin extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Port Dauphin');
     $this->victorySpace = false;
     $this->top = 240;
-    $this-> left = 1009.5;
+    $this->left = 1009.5;
+    $this->adjacentSpaces = [
+      LOUISBOURG => LOUISBOURG_PORT_DAUPHIN,
+    ];
   }
 }

@@ -12,6 +12,11 @@ class Rumford extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Rumford');
     $this->victorySpace = false;
     $this->top = 1121.5;
-    $this-> left = 895.5;
+    $this->left = 895.5;
+    $this->adjacentSpaces = [
+      NORTHFIELD => NORTHFIELD_RUMFORD,
+      YORK => RUMFORD_YORK,
+      ZAWAKWTEGOK => RUMFORD_ZAWAKWTEGOK,
+    ];
   }
 }

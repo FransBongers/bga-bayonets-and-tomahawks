@@ -12,6 +12,11 @@ class Namaskonkik extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('Namaskonkik');
     $this->victorySpace = false;
     $this->top = 864.5;
-    $this-> left = 586.5;
+    $this->left = 586.5;
+    $this->adjacentSpaces = [
+      MAMHLAWBAGOK => MAMHLAWBAGOK_NAMASKONKIK,
+      MOLOJOAK => MOLOJOAK_NAMASKONKIK,
+      QUEBEC => NAMASKONKIK_QUEBEC,
+    ];
   }
 }

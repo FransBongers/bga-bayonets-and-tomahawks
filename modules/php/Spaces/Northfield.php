@@ -12,6 +12,13 @@ class Northfield extends \BayonetsAndTomahawks\Models\Space
     $this->name = clienttranslate('NORTHFIELD');
     $this->victorySpace = true;
     $this->top = 1286;
-    $this-> left = 897;
+    $this->left = 897;
+    $this->adjacentSpaces = [
+      ALBANY => ALBANY_NORTHFIELD,
+      BOSTON => BOSTON_NORTHFIELD,
+      NEW_LONDON => NEW_LONDON_NORTHFIELD,
+      NUMBER_FOUR => NORTHFIELD_NUMBER_FOUR,
+      RUMFORD => NORTHFIELD_RUMFORD,
+    ];
   }
 }
