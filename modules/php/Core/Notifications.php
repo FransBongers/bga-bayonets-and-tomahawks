@@ -222,6 +222,18 @@ class Notifications
     ]);
   }
 
+  public static function moveStack($player, $units, $origin, $destination) {
+    self::notifyAll("moveStack", clienttranslate('${player_name} moves a stack from ${originName} to ${destinationName}'), [
+      'player' => $player,
+      'originName' => $origin->getName(),
+      'destination' => $destination,
+      'destinationName' => $destination->getName(),
+      'faction' => $player->getFaction(),
+      'stack' => $units,
+      'i18n' => ['originName', 'destinationName'],
+    ]);
+  }
+
   public static function moveYearMarker($year) {
     self::notifyAll("moveYearMarker", '', [
       'year' => $year,

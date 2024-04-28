@@ -20,6 +20,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   protected $faction = null;
   protected $location = null;
   protected $datas = null;
+  protected $indian = false;
   
   /*
    * STATIC DATA
@@ -93,6 +94,11 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   public function getFaction()
   {
     return $this->faction;
+  }
+
+  public function isIndian()
+  {
+    return $this->indian;
   }
 
   public function getType()

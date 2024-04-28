@@ -73,7 +73,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     actionRoundSailBoxLanding: ActionRoundSailBoxLandingState;
     confirmPartialTurn: ConfirmPartialTurnState;
     confirmTurn: ConfirmTurnState;
-    movementSelectDestinationAndUnits: MovementSelectDestinationAndUnitsState;
+    movementLight: MovementLightState;
     selectReserveCard: SelectReserveCardState;
   };
 
@@ -115,7 +115,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
       confirmPartialTurn: new ConfirmPartialTurnState(this),
       confirmTurn: new ConfirmTurnState(this),
-      movementSelectDestinationAndUnits: new MovementSelectDestinationAndUnitsState(this),
+      movementLight: new MovementLightState(this),
       selectReserveCard: new SelectReserveCardState(this),
     };
 
@@ -303,11 +303,16 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     }
   }
 
-  addCancelButton() {
+  addCancelButton({ callback }: { callback?: Function } = {}) {
     this.addDangerActionButton({
       id: 'cancel_btn',
       text: _('Cancel'),
-      callback: () => this.onCancel(),
+      callback: () => {
+        if (callback) {
+          callback();
+        }
+        this.onCancel();
+      },
     });
   }
 
@@ -563,7 +568,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     }
     node.classList.add(BT_SELECTABLE);
     this._connections.push(
-      dojo.connect(node, "onclick", this, (event: PointerEvent) =>
+      dojo.connect(node, 'onclick', this, (event: PointerEvent) =>
         callback(event)
       )
     );
@@ -576,6 +581,34 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     }
     node.classList.add(BT_SELECTED);
   }
+
+  // setUnitSelectable({
+  //   id,
+  //   callback,
+  // }: {
+  //   id: string;
+  //   callback: (event: PointerEvent) => void;
+  // }) {
+  //   const node = $(id);
+
+  //   if (node === null) {
+  //     return;
+  //   }
+  //   node.classList.add(BT_SELECTABLE);
+  //   this._connections.push(
+  //     dojo.connect(node, "onclick", this, (event: PointerEvent) =>
+  //       callback(event)
+  //     )
+  //   );
+  // }
+
+  // setUnitSelected({ id }: { id: string }) {
+  //   const node = $(id);
+  //   if (node === null) {
+  //     return;
+  //   }
+  //   node.classList.add(BT_SELECTED);
+  // }
 
   // .########...#######..####.##.......########.########.
   // .##.....##.##.....##..##..##.......##.......##.....##

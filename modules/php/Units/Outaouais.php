@@ -8,7 +8,7 @@ class Outaouais extends \BayonetsAndTomahawks\Models\Light
     parent::__construct($row);
     $this->counterId = OUTAOUAIS;
     $this->counterText = clienttranslate('Outaouais');
-    $this->faction = INDIAN;
+    $this->faction = FRENCH;
     $this->indian = true;
   }
 }

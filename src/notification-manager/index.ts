@@ -64,6 +64,7 @@ class NotificationManager {
       'discardCardInPlay',
       'drawCardPrivate',
       'moveRoundMarker',
+      'moveStack',
       'moveYearMarker',
       'revealCardsInPlay',
       'selectReserveCard',
@@ -217,6 +218,14 @@ class NotificationManager {
     const { nextRoundStep } = notif.args;
 
     await this.game.gameMap.moveRoundMarker({ nextRoundStep });
+  }
+
+  async notif_moveStack(notif: Notif<NotifMoveStackArgs>) {
+    const {stack, destination, faction} = notif.args;
+    const unitStack = this.game.gameMap.stacks[destination.id][faction];
+    if (unitStack) {
+      await (unitStack as UnitStack<BTUnit>).addUnits(stack);
+    }
   }
 
   async notif_moveYearMarker(notif: Notif<NotifMoveYearMarkerArgs>) {

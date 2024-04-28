@@ -325,13 +325,13 @@ $machinestates = array(
         'possibleactions' => ['actActionActivateStack', 'actPassOptionalAction', 'actRestart'],
     ],
 
-    ST_MOVEMENT_SELECT_DESTINATION_AND_UNITS => [
-        'name' => 'movementSelectDestinationAndUnits',
+    ST_MOVEMENT_LIGHT => [
+        'name' => 'movementLight',
         'description' => clienttranslate('${actplayer} may move units'),
         'descriptionmyturn' => clienttranslate('${you}'),
         'type' => 'activeplayer',
         'args' => 'argsAtomicAction',
         'action' => 'stAtomicAction',
-        'possibleactions' => ['actMovementSelectDestinationAndUnits', 'actPassOptionalAction', 'actRestart'],
+        'possibleactions' => ['actMovementLight', 'actPassOptionalAction', 'actRestart'],
     ],
 );

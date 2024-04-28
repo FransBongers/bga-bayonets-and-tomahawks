@@ -43,13 +43,10 @@ class ActionPoint implements \JsonSerializable
     // To check: perhaps move to Unit model?
     $units = Utils::filter($units, function ($unit) use ($playerFaction) {
       $unitFaction = $unit->getFaction();
-      if ($playerFaction === BRITISH) {
-        return $unitFaction === BRITISH;
-      } else if ($this->id === INDIAN_AP) {
-        return $unitFaction === INDIAN;
-      } else {
-        return in_array($unitFaction, [FRENCH, INDIAN]);
+      if ($this->id === INDIAN_AP && !$unit->isIndian()) {
+        return false;
       }
+      return $playerFaction === $unitFaction;
     });
 
     // Notifications::log('units', $units);

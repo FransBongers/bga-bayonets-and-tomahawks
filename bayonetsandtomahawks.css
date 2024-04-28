@@ -68,13 +68,13 @@
   position: relative !important;
 }
 
-.card.bt_selectable > .card-sides > .card-side {
+.bt_card_container.bt_selectable > .card-sides > .card-side {
   cursor: pointer;
   box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) #ffff00 !important;
 }
 
-.card.bt_selectable:hover > .card-sides > .card-side,
-.card.bt_selected > .card-sides > .card-side {
+.bt_card_container.bt_selectable:hover > .card-sides > .card-side,
+.bt_card_container.bt_selected > .card-sides > .card-side {
   cursor: pointer;
   box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) #0000ff !important;
 }
@@ -472,6 +472,16 @@
   justify-content: center;
 }
 
+.bt_space.bt_selectable {
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #ffff00 !important;
+  cursor: pointer;
+}
+
+.bt_space.bt_selected {
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #0000ff !important;
+  cursor: pointer;
+}
+
 .bt_marker_space {
   position: absolute;
   height: calc(var(--btMapScale) * 44px);
@@ -494,6 +504,17 @@
 
 .bt_stack[data-expanded=true] .bt_token {
   z-index: 1;
+}
+
+.bt_token.bt_selectable > .card-sides > .card-side {
+  cursor: pointer;
+  filter: drop-shadow(2px 0px 0px #ffff00) drop-shadow(-2px 0px 0px #ffff00) drop-shadow(0px 2px 0px #ffff00) drop-shadow(0px -2px 0px #ffff00);
+}
+
+.bt_token.bt_selectable:hover > .card-sides > .card-side,
+.bt_token.bt_selected > .card-sides > .card-side {
+  cursor: pointer;
+  filter: drop-shadow(2px 0px 0px #0000ff) drop-shadow(-2px 0px 0px #0000ff) drop-shadow(0px 2px 0px #0000ff) drop-shadow(0px -2px 0px #0000ff);
 }
 
 .bt_stack.bt_selectable {

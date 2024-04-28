@@ -41,8 +41,15 @@ interface OnEnteringActionRoundSailBoxLandingStateArgs extends CommonArgs {
 
 }
 
-interface OnEnteringMovementSelectDestinationAndUnitsStateArgs extends CommonArgs {
-
+interface OnEnteringMovementLightStateArgs extends CommonArgs {
+  commanders: BTUnit[];
+  lightUnits: BTUnit[];
+  destinations: Record<string, {
+    space: BTSpace;
+    remainingConnectionLimit: number;
+  }>
+  origin: BTSpace;
+  faction: Faction;
 }
 
 interface OnEnteringSelectReserveCardStateArgs {

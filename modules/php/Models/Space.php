@@ -3,6 +3,8 @@
 namespace BayonetsAndTomahawks\Models;
 
 use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\Connections;
 use BayonetsAndTomahawks\Managers\Units;
 
 /**
@@ -50,8 +52,23 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     ];
   }
 
-  public function getUnits()
+  public function getAdjacentSpaces()
   {
-    return Units::getInLocation($this->id)->toArray();
+    $result = [];
+    foreach($this->adjacentSpaces as $spaceId => $connectionId) {
+      $result[$spaceId] = Connections::get($connectionId);
+    };
+    return $result;
+  }
+
+  public function getUnits($faction = null)
+  {
+    $units = Units::getInLocation($this->id)->toArray();
+    if ($faction === null) {
+      return $units;
+    }
+    return Utils::filter($units, function ($unit) use ($faction) {
+      return $unit->getFaction() === $faction;
+    });
   }
 }

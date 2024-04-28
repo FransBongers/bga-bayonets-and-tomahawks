@@ -4,7 +4,7 @@
 class UnitStack<T> extends ManualPositionStock<T> {
   private hovering: boolean = false;
   private faction: 'british' | 'french';
-  private open: boolean = false;
+  private isOpen: boolean = false;
 
   /**
    * @param manager the card manager
@@ -39,7 +39,7 @@ class UnitStack<T> extends ManualPositionStock<T> {
     this.element.addEventListener('mouseout', () => this.onMouseOut());
     this.element.addEventListener('click', () => {
       console.log('clicked');
-      this.open = !this.open;
+      this.isOpen = !this.isOpen;
       this.updateStackDisplay(this.element, this.getCards(), this);
     });
   }
@@ -62,6 +62,16 @@ class UnitStack<T> extends ManualPositionStock<T> {
     return promise;
   }
 
+  public addUnits(
+    units: T[],
+    animation?: CardAnimation<T>,
+    settings?: AddCardSettings
+  ) {
+    const promise = super.addCards(units, animation, settings);
+    this.element.setAttribute('data-has-unit', 'true');
+    return promise;
+  }
+
   public unitRemoved(unit: T, settings?: RemoveCardSettings) {
     super.cardRemoved(unit, settings);
     if (this.getCards().length === 0) {
@@ -79,14 +89,19 @@ class UnitStack<T> extends ManualPositionStock<T> {
     this.updateStackDisplay(this.element, this.getCards(), this);
   }
 
+  public open() {
+    this.isOpen = true;
+    this.updateStackDisplay(this.element, this.getCards(), this);
+  }
+
   private updateStackDisplay(
     element: HTMLElement,
     cards: T[],
     stock: ManualPositionStock<T>
   ) {
-    const expanded = this.open || this.hovering;
+    const expanded = this.isOpen || this.hovering;
     if (expanded) {
-      this.element.setAttribute('data-expanded','true');
+      this.element.setAttribute('data-expanded', 'true');
     }
 
     cards.forEach((card, index) => {

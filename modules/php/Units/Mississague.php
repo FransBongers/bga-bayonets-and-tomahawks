@@ -8,7 +8,7 @@ class Mississague extends \BayonetsAndTomahawks\Models\Light
     parent::__construct($row);
     $this->counterId = MISSISSAGUE;
     $this->counterText = clienttranslate('Mississagué');
-    $this->faction = INDIAN;
+    $this->faction = FRENCH;
     $this->indian = true;
   }
 }

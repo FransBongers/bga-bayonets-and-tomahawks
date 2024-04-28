@@ -8,7 +8,7 @@ class Mingo extends \BayonetsAndTomahawks\Models\Light
     parent::__construct($row);
     $this->counterId = MINGO;
     $this->counterText = clienttranslate('Mingo');
-    $this->faction = INDIAN;
+    $this->faction = FRENCH;
     $this->indian = true;
   }
 }

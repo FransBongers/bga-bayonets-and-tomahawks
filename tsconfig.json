@@ -70,7 +70,7 @@
     "src/states/ActionRoundSailBoxLanding.ts",
     "src/states/ConfirmPartialTurn.ts",
     "src/states/ConfirmTurn.ts",
-    "src/states/MovementSelectDestinationAndUnitsState.ts",
+    "src/states/MovementLightState.ts",
     "src/states/SelectReserveCard.ts",
     "src/states/state.d.ts",
     "src/unit-stack/index.ts",

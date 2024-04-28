@@ -10,7 +10,7 @@ interface AddActionButtonProps extends AddButtonProps {
 }
 
 interface BayonetsAndTomahawksGame extends Game {
-  addCancelButton: () => void;
+  addCancelButton: ({ callback }?: { callback?: Function }) => void;
   addConfirmButton: (props: { callback: Function | string }) => void;
   addPassButton: (props: { optionalAction: boolean; text?: string }) => void;
   addPlayerButton: ({ player, callback }: { player: BgaPlayer; callback: Function | string }) => void; 
@@ -31,6 +31,7 @@ interface BayonetsAndTomahawksGame extends Game {
   ) => string;
   getPlayerId: () => number;
   getUnitData: ({counterId}: {counterId: string;}) => {faction: string;};
+  onCancel: () => void;
   setCardSelectable: (props: {
     id: string;
     callback: (event: PointerEvent) => void;

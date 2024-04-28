@@ -28,7 +28,7 @@ class StackAction implements \JsonSerializable
     return false;
   }
 
-  public function getFlow($playerId, $originId)
+  public function getFlow($playerId, $originId, $faction)
   {
     return [];
   }

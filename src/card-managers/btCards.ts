@@ -17,6 +17,7 @@ class BTCardManager extends CardManager<BTCard> {
     div.style.height = "calc(var(--btCardScale) * 179px)";
 
     div.style.position = "relative";
+    div.classList.add('bt_card_container')
   }
 
   setupFrontDiv(card: BTCard, div: HTMLElement) {

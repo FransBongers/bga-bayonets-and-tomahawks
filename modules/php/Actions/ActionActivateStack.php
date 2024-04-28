@@ -45,7 +45,7 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
 
   public function argsActionActivateStack()
   {
-    Notifications::log('argsActionActivateStack',[]);
+    Notifications::log('argsActionActivateStack', []);
     $actionPointId = $this->ctx->getParent()->getInfo()['actionPointId'];
     $actionPoint = ActionPoints::get($actionPointId);
     $player = self::getPlayer();
@@ -118,7 +118,8 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
       throw new \feException("Not allowed to perform selected action");
     }
 
-    $flow = $action->getFlow(self::getPlayer()->getId(), $stackId);
+    $actionPointId = $this->ctx->getParent()->getInfo()['actionPointId'];
+    $flow = $action->getFlow(self::getPlayer()->getId(), $stackId, in_array($actionPointId, [INDIAN_AP, INDIAN_AP_2X]));
     $this->ctx->insertAsBrother(Engine::buildTree($flow));
 
     $this->resolveAction($args);
@@ -131,6 +132,4 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
-
-
 }

@@ -21,14 +21,14 @@
   position: relative !important;
 }
 
-.card.bt_selectable > .card-sides > .card-side {
+.bt_card_container.bt_selectable > .card-sides > .card-side {
   cursor: pointer;
   box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px)
     base.$selectable-color !important;
 }
 
-.card.bt_selectable:hover > .card-sides > .card-side,
-.card.bt_selected > .card-sides > .card-side {
+.bt_card_container.bt_selectable:hover > .card-sides > .card-side,
+.bt_card_container.bt_selected > .card-sides > .card-side {
   cursor: pointer;
   box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px)
     base.$selected-color !important;

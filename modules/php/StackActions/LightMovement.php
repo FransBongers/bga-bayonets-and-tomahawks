@@ -28,14 +28,15 @@ class LightMovement extends \BayonetsAndTomahawks\Models\StackAction
     return $hasLightUnit;
   }
 
-  public function getFlow($playerId, $originId)
+  public function getFlow($playerId, $originId, $indianActionPoint)
   {
     return [
       'stackAction' => LIGHT_MOVEMENT,
+      'indianActionPoint' => $indianActionPoint,
       'originId' => $originId,
       'children' => [
         [
-          'action' => MOVEMENT_SELECT_DESTINATION_AND_UNITS,
+          'action' => MOVEMENT_LIGHT,
           'space' => $originId,
           'playerId' => $playerId,
         ],

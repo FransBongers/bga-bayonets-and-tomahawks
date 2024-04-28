@@ -8,7 +8,7 @@ class Cherokee extends \BayonetsAndTomahawks\Models\Light
     parent::__construct($row);
     $this->counterId = CHEROKEE;
     $this->counterText = clienttranslate('CHEROKEE');
-    $this->faction = INDIAN;
+    $this->faction = NEUTRAL;
     $this->indian = true;
   }
 }

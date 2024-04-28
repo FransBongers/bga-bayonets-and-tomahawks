@@ -2157,7 +2157,7 @@ var BayonetsAndTomahawks = (function () {
             actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
-            movementSelectDestinationAndUnits: new MovementSelectDestinationAndUnitsState(this),
+            movementLight: new MovementLightState(this),
             selectReserveCard: new SelectReserveCardState(this),
         };
         this.infoPanel = new InfoPanel(this);
@@ -2242,12 +2242,18 @@ var BayonetsAndTomahawks = (function () {
             dojo.addClass(id, extraClasses);
         }
     };
-    BayonetsAndTomahawks.prototype.addCancelButton = function () {
+    BayonetsAndTomahawks.prototype.addCancelButton = function (_a) {
         var _this = this;
+        var _b = _a === void 0 ? {} : _a, callback = _b.callback;
         this.addDangerActionButton({
             id: 'cancel_btn',
             text: _('Cancel'),
-            callback: function () { return _this.onCancel(); },
+            callback: function () {
+                if (callback) {
+                    callback();
+                }
+                _this.onCancel();
+            },
         });
     };
     BayonetsAndTomahawks.prototype.addConfirmButton = function (_a) {
@@ -2407,7 +2413,7 @@ var BayonetsAndTomahawks = (function () {
             return;
         }
         node.classList.add(BT_SELECTABLE);
-        this._connections.push(dojo.connect(node, "onclick", this, function (event) {
+        this._connections.push(dojo.connect(node, 'onclick', this, function (event) {
             return callback(event);
         }));
     };
@@ -2675,6 +2681,7 @@ var BTCardManager = (function (_super) {
         div.style.width = "calc(var(--btCardScale) * 250px)";
         div.style.height = "calc(var(--btCardScale) * 179px)";
         div.style.position = "relative";
+        div.classList.add('bt_card_container');
     };
     BTCardManager.prototype.setupFrontDiv = function (card, div) {
         div.classList.add("bt_card");
@@ -3142,6 +3149,7 @@ var NotificationManager = (function () {
             'discardCardInPlay',
             'drawCardPrivate',
             'moveRoundMarker',
+            'moveStack',
             'moveYearMarker',
             'revealCardsInPlay',
             'selectReserveCard',
@@ -3285,6 +3293,24 @@ var NotificationManager = (function () {
                     case 1:
                         _a.sent();
                         return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_moveStack = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, stack, destination, faction, unitStack;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = notif.args, stack = _a.stack, destination = _a.destination, faction = _a.faction;
+                        unitStack = this.game.gameMap.stacks[destination.id][faction];
+                        if (!unitStack) return [3, 2];
+                        return [4, unitStack.addUnits(stack)];
+                    case 1:
+                        _b.sent();
+                        _b.label = 2;
+                    case 2: return [2];
                 }
             });
         });
@@ -4304,33 +4330,96 @@ var ConfirmTurnState = (function () {
     };
     return ConfirmTurnState;
 }());
-var MovementSelectDestinationAndUnitsState = (function () {
-    function MovementSelectDestinationAndUnitsState(game) {
+var MovementLightState = (function () {
+    function MovementLightState(game) {
+        this.selectedUnits = [];
         this.game = game;
     }
-    MovementSelectDestinationAndUnitsState.prototype.onEnteringState = function (args) {
-        debug('Entering MovementSelectDestinationAndUnitsState');
+    MovementLightState.prototype.onEnteringState = function (args) {
+        debug('Entering MovementLightState');
         this.args = args;
+        this.selectedUnits = [];
         this.updateInterfaceInitialStep();
     };
-    MovementSelectDestinationAndUnitsState.prototype.onLeavingState = function () {
-        debug('Leaving MovementSelectDestinationAndUnitsState');
+    MovementLightState.prototype.onLeavingState = function () {
+        debug('Leaving MovementLightState');
     };
-    MovementSelectDestinationAndUnitsState.prototype.setDescription = function (activePlayerId) { };
-    MovementSelectDestinationAndUnitsState.prototype.updateInterfaceInitialStep = function () {
+    MovementLightState.prototype.setDescription = function (activePlayerId) { };
+    MovementLightState.prototype.updateInterfaceInitialStep = function () {
         this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a Space to move units to'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.setSpacesSelectable();
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    MovementLightState.prototype.updateInterfaceSelectUnits = function (_a) {
+        var _this = this;
+        var space = _a.space, remainingConnectionLimit = _a.remainingConnectionLimit;
+        this.game.clearPossible();
+        this.game.setLocationSelected({ id: space.id });
         this.game.clientUpdatePageTitle({
             text: _('${you} must select units to move'),
             args: {
                 you: '${you}',
             },
         });
-        this.game.addPassButton({
-            optionalAction: this.args.optionalAction,
+        var stack = this.game.gameMap.stacks[space.id][this.args.faction];
+        stack.open();
+        this.setUnitsSelectable();
+        this.game.addConfirmButton({
+            callback: function () {
+                if (_this.selectedUnits.length === 0) {
+                    return;
+                }
+                _this.game.clearPossible();
+                _this.game.takeAction({
+                    action: 'actMovementLight',
+                    args: {
+                        unitIds: _this.selectedUnits.map(function (unit) { return unit.id; }),
+                        spaceId: space.id,
+                    },
+                });
+            },
         });
-        this.game.addUndoButtons(this.args);
+        this.game.addCancelButton({
+            callback: function () {
+                _this.selectedUnits = [];
+            },
+        });
     };
-    return MovementSelectDestinationAndUnitsState;
+    MovementLightState.prototype.setSpacesSelectable = function () {
+        var _this = this;
+        Object.values(this.args.destinations).forEach(function (destination) {
+            _this.game.setLocationSelectable({
+                id: destination.space.id,
+                callback: function () {
+                    _this.updateInterfaceSelectUnits(destination);
+                },
+            });
+        });
+    };
+    MovementLightState.prototype.setUnitsSelectable = function () {
+        var _this = this;
+        this.args.lightUnits.forEach(function (unit) {
+            _this.game.setLocationSelectable({
+                id: '' + unit.id,
+                callback: function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    _this.selectedUnits.push(unit);
+                    _this.game.setLocationSelected({ id: '' + unit.id });
+                },
+            });
+        });
+    };
+    return MovementLightState;
 }());
 var SelectReserveCardState = (function () {
     function SelectReserveCardState(game) {
@@ -4404,20 +4493,25 @@ var UnitStack = (function (_super) {
         _this.manager = manager;
         _this.element = element;
         _this.hovering = false;
-        _this.open = false;
+        _this.isOpen = false;
         _this.element.classList.add('bt_stack');
         _this.faction = faction;
         _this.element.addEventListener('mouseover', function () { return _this.onMouseOver(); });
         _this.element.addEventListener('mouseout', function () { return _this.onMouseOut(); });
         _this.element.addEventListener('click', function () {
             console.log('clicked');
-            _this.open = !_this.open;
+            _this.isOpen = !_this.isOpen;
             _this.updateStackDisplay(_this.element, _this.getCards(), _this);
         });
         return _this;
     }
     UnitStack.prototype.addUnit = function (unit, animation, settings) {
         var promise = _super.prototype.addCard.call(this, unit, animation, settings);
+        this.element.setAttribute('data-has-unit', 'true');
+        return promise;
+    };
+    UnitStack.prototype.addUnits = function (units, animation, settings) {
+        var promise = _super.prototype.addCards.call(this, units, animation, settings);
         this.element.setAttribute('data-has-unit', 'true');
         return promise;
     };
@@ -4435,9 +4529,13 @@ var UnitStack = (function (_super) {
         this.hovering = false;
         this.updateStackDisplay(this.element, this.getCards(), this);
     };
+    UnitStack.prototype.open = function () {
+        this.isOpen = true;
+        this.updateStackDisplay(this.element, this.getCards(), this);
+    };
     UnitStack.prototype.updateStackDisplay = function (element, cards, stock) {
         var _this = this;
-        var expanded = this.open || this.hovering;
+        var expanded = this.isOpen || this.hovering;
         if (expanded) {
             this.element.setAttribute('data-expanded', 'true');
         }

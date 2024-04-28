@@ -38,6 +38,12 @@ interface NotifMoveRoundMarkerArgs {
   nextRoundStep: string;
 }
 
+interface NotifMoveStackArgs {
+  stack: BTUnit[];
+  destination: BTSpace;
+  faction: Faction;
+}
+
 interface NotifMoveYearMarkerArgs {
   year: number;
 }

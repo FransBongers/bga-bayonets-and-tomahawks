@@ -8,7 +8,7 @@ class Micmac extends \BayonetsAndTomahawks\Models\Light
     parent::__construct($row);
     $this->counterId = MICMAC;
     $this->counterText = clienttranslate('Micmac');
-    $this->faction = INDIAN;
+    $this->faction = FRENCH;
     $this->indian = true;
   }
 }

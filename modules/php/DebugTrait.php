@@ -51,11 +51,11 @@ trait DebugTrait
   function test()
   {
     // Connections::setupNewGame();
-    $connection = Connections::get(GRAND_SAULT_WOLASTOKUK);
-    // $space = Spaces::get(CHIGNECTOU);
+    // $connection = Connections::get(GRAND_SAULT_WOLASTOKUK);
+    $space = Spaces::get(GRAND_SAULT);
     // $connection->incLimitUsed(FRENCH, 2);
 
-    Notifications::log('conneciton', $connection);
+    Notifications::log('adjacent', $space->getAdjacentSpaces());
 
     // $lightAP = ActionPoints::get(LIGHT_AP);
 
