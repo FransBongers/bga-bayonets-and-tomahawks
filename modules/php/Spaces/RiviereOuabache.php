@@ -9,7 +9,9 @@ class RiviereOuabache extends \BayonetsAndTomahawks\Models\Space
     $this->id = RIVIERE_OUABACHE;
     $this->battlePriority = 302;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Rivière Ouabache');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 2233;
     $this->left = 432.5;

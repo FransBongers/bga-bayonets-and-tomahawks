@@ -9,7 +9,9 @@ class BayeDeCataracouy extends \BayonetsAndTomahawks\Models\Space
     $this->id = BAYE_DE_CATARACOUY;
     $this->battlePriority = 162;
     $this->defaultControl = FRENCH;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('BAYE DE CATARACOUY');
+    $this->value = 1;
     $this->victorySpace = true;
     $this->top = 1482;
     $this->left = 338.5;

@@ -9,7 +9,9 @@ class IsleAuxNoix extends \BayonetsAndTomahawks\Models\Space
     $this->id = ISLE_AUX_NOIX;
     $this->battlePriority = 113;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Isle aux Noix');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 1102;
     $this->left = 456;

@@ -9,7 +9,9 @@ class York extends \BayonetsAndTomahawks\Models\Space
     $this->id = YORK;
     $this->battlePriority = 111;
     $this->defaultControl = BRITISH;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('YORK');
+    $this->value = 1;
     $this->victorySpace = true;
     $this->top = 1050;
     $this->left = 969.5;

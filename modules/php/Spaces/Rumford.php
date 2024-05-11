@@ -9,7 +9,9 @@ class Rumford extends \BayonetsAndTomahawks\Models\Space
     $this->id = RUMFORD;
     $this->battlePriority = 121;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Rumford');
+    $this->value = 2;
     $this->victorySpace = false;
     $this->top = 1121.5;
     $this->left = 895.5;

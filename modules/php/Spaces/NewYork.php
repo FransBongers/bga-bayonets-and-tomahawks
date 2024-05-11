@@ -9,6 +9,7 @@ class NewYork extends \BayonetsAndTomahawks\Models\Space
     $this->id = NEW_YORK;
     $this->battlePriority = 999;
     $this->defaultControl = BRITISH;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('New York');
     $this->victorySpace = false;
     $this->top = 1637;

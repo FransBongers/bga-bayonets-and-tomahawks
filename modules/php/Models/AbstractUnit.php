@@ -21,11 +21,13 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   protected $location = null;
   protected $datas = null;
   protected $indian = false;
+  protected $mpLimit = 0;
+  protected $connectionTypeAllowed = [];
   
   /*
    * STATIC DATA
    */
-  protected $staticAttributes = ['counterId', 'counterText', 'faction', 'type'];
+  protected $staticAttributes = ['counterId', 'counterText', 'faction', 'type', 'mpLimit', 'connectionTypeAllowed'];
   protected $type = null;
   protected $counterText = null;
 

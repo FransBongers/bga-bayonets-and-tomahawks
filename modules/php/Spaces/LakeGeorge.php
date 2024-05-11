@@ -9,7 +9,9 @@ class LakeGeorge extends \BayonetsAndTomahawks\Models\Space
     $this->id = LAKE_GEORGE;
     $this->battlePriority = 152;
     $this->defaultControl = BRITISH;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('LAKE GEORGE');
+    $this->value = 1;
     $this->victorySpace = true;
     $this->top = 1375.5;
     $this-> left = 651;

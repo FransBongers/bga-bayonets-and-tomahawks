@@ -9,7 +9,9 @@ class StGeorge extends \BayonetsAndTomahawks\Models\Space
     $this->id = ST_GEORGE;
     $this->battlePriority = 82;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('St. George');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 868.5;
     $this->left = 935;

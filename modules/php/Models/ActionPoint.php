@@ -4,7 +4,7 @@ namespace BayonetsAndTomahawks\Models;
 
 use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Helpers\Utils;
-use BayonetsAndTomahawks\Managers\StackActions;
+use BayonetsAndTomahawks\Managers\AtomicActions;
 
 class ActionPoint implements \JsonSerializable
 {
@@ -43,20 +43,21 @@ class ActionPoint implements \JsonSerializable
     // To check: perhaps move to Unit model?
     $units = Utils::filter($units, function ($unit) use ($playerFaction) {
       $unitFaction = $unit->getFaction();
-      if ($this->id === INDIAN_AP && !$unit->isIndian()) {
+      if (($this->id === INDIAN_AP || $this->id === INDIAN_AP_2X) && !$unit->isIndian()) {
         return false;
       }
       return $playerFaction === $unitFaction;
     });
 
     // Notifications::log('units', $units);
-    // Notifications::log('actionsAllowed', $this->actionsAllowed);
+    // Notifications::log('actionsAllowed', ['allowed' => $this->actionsAllowed, 'spaceId' => $space->getId()]);
 
 
-    foreach ($this->actionsAllowed as $stackActionId) {
-      $stackAction = StackActions::get($stackActionId);
-      if ($stackAction->canBePerformedBy($units)) {
-        $actions[] = $stackAction;
+    foreach ($this->actionsAllowed as $actionId) {
+      // Notifications::log('actionId', $actionId);
+      $action = AtomicActions::get($actionId);
+      if ($action->canBePerformedBy($units,  $space, $this, $playerFaction)) {
+        $actions[] = $action->getUiData();
       }
     }
 
@@ -66,13 +67,13 @@ class ActionPoint implements \JsonSerializable
     return $actions;
   }
 
-  public function getActionsAllowed()
-  {
-    $actions = array_map(function ($actionId) {
-      return StackActions::get($actionId);
-    }, $this->actionsAllowed);
-    return $actions;
-  }
+  // public function getActionsAllowed()
+  // {
+  //   $actions = array_map(function ($actionId) {
+  //     return AtomicActions::get($actionId);
+  //   }, $this->actionsAllowed);
+  //   return $actions;
+  // }
 
   public function getName()
   {

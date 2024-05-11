@@ -10,5 +10,7 @@ class Light extends AbstractUnit
   {
     $this->type = LIGHT;
     parent::__construct($row);
+    $this->mpLimit = 3;
+    $this->connectionTypeAllowed = [ROAD, HIGHWAY, PATH];
   }
 }

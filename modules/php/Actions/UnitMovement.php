@@ -16,7 +16,7 @@ use BayonetsAndTomahawks\Managers\StackActions;
 use BayonetsAndTomahawks\Managers\Tokens;
 use BayonetsAndTomahawks\Models\Player;
 
-class MovementSelectDestinationAndUnits extends \BayonetsAndTomahawks\Models\AtomicAction
+class UnitMovement extends \BayonetsAndTomahawks\Actions\StackAction
 {
   // public function getState()
   // {

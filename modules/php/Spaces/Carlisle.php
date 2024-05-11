@@ -9,7 +9,9 @@ class Carlisle extends \BayonetsAndTomahawks\Models\Space
     $this->id = CARLISLE;
     $this->battlePriority = 223;
     $this->defaultControl = BRITISH;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('CARLISLE');
+    $this->value = 2;
     $this->victorySpace = true;
     $this->top = 1903;
     $this->left = 953.5;

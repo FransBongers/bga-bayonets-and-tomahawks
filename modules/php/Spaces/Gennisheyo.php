@@ -9,7 +9,9 @@ class Gennisheyo extends \BayonetsAndTomahawks\Models\Space
     $this->id = GENNISHEYO;
     $this->battlePriority = 192;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Gennisheyo');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 1680;
     $this->left = 491;

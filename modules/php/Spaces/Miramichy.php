@@ -9,7 +9,9 @@ class Miramichy extends \BayonetsAndTomahawks\Models\Space
     $this->id = MIRAMICHY;
     $this->battlePriority = 31;
     $this->defaultControl = FRENCH;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Miramichy');
+    $this->value = 1;
     $this->victorySpace = true;
     $this->top = 501;
     $this->left = 725.5;

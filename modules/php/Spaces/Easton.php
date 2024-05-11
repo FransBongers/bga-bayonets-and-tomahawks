@@ -9,7 +9,9 @@ class Easton extends \BayonetsAndTomahawks\Models\Space
     $this->id = EASTON;
     $this->battlePriority = 203;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Easton');
+    $this->value = 2;
     $this->victorySpace = false;
     $this->top = 1780;
     $this->left = 937.5;

@@ -9,6 +9,7 @@ class NewLondon extends \BayonetsAndTomahawks\Models\Space
     $this->id = NEW_LONDON;
     $this->battlePriority = 999;
     $this->defaultControl = BRITISH;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('New London');
     $this->victorySpace = false;
     $this->top = 1390;

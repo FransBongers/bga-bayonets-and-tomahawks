@@ -7,6 +7,8 @@ class Fleet extends AbstractUnit
   {
     $this->type = FLEET;
     parent::__construct($row);
+    $this->mpLimit = 2;
+    $this->connectionTypeAllowed = [ROAD, HIGHWAY, PATH]; // requires coastal
   }
 
 }

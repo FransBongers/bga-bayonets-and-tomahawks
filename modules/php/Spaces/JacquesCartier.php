@@ -9,7 +9,9 @@ class JacquesCartier extends \BayonetsAndTomahawks\Models\Space
     $this->id = JACQUES_CARTIER;
     $this->battlePriority = 93;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Jacques Cartier');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 926.5;
     $this->left = 233.5;

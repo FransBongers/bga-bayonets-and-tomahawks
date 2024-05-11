@@ -25,7 +25,8 @@ class AtomicActions
     ACTION_ROUND_SAIL_BOX_LANDING => 'ActionRoundSailBoxLanding',
     COLONIALS_ENLIST_DRAW_REINFORCEMENTS => 'ColonialsEnlistDrawReinforcements',
     FLEETS_ARRIVE_DRAW_REINFORCEMENTS => 'FleetsArriveDrawReinforcements',
-    MOVEMENT_LIGHT => 'MovementLight',
+    LIGHT_MOVEMENT => 'LightMovement',
+    RAID => 'Raid',
     SELECT_RESERVE_CARD => 'SelectReserveCard',
     WINTER_QUARTERS_GAME_END_CHECK => 'WinterQuartersGameEndCheck',
   ];

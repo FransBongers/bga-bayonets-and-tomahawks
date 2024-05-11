@@ -9,7 +9,9 @@ class Minisink extends \BayonetsAndTomahawks\Models\Space
     $this->id = MINISINK;
     $this->battlePriority = 182;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Minisink');
+    $this->value = 2;
     $this->victorySpace = false;
     $this->top = 1639;
     $this->left = 917.5;

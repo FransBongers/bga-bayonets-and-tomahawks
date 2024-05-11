@@ -9,7 +9,9 @@ class Tadoussac extends \BayonetsAndTomahawks\Models\Space
     $this->id = TADOUSSAC;
     $this->battlePriority = 42;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Tadoussac');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 634;
     $this->left = 280.5;

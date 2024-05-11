@@ -9,7 +9,9 @@ class Albany extends \BayonetsAndTomahawks\Models\Space
     $this->id = ALBANY;
     $this->battlePriority = 161;
     $this->defaultControl = BRITISH;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('ALBANY');
+    $this->value = 3;
     $this->victorySpace = true;
     $this->top = 1440;
     $this->left = 787;

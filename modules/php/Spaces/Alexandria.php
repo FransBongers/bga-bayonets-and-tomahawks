@@ -9,6 +9,7 @@ class Alexandria extends \BayonetsAndTomahawks\Models\Space
     $this->id = ALEXANDRIA;
     $this->battlePriority = 999;
     $this->defaultControl = BRITISH;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Alexandria');
     $this->victorySpace = false;
     $this->top = 2064;

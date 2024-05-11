@@ -9,7 +9,9 @@ class Kingston extends \BayonetsAndTomahawks\Models\Space
     $this->id = KINGSTON;
     $this->battlePriority = 171;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Kingston');
+    $this->value = 2;
     $this->victorySpace = false;
     $this->top = 1533;
     $this->left = 891.5;

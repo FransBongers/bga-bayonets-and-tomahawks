@@ -9,7 +9,9 @@ class CoteDuSud extends \BayonetsAndTomahawks\Models\Space
     $this->id = COTE_DU_SUD;
     $this->battlePriority = 62;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Côte du Sud');
+    $this->value = 2;
     $this->victorySpace = false;
     $this->top = 740;
     $this->left = 459;

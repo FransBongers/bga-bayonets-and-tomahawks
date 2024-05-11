@@ -84,7 +84,8 @@
   cursor: pointer;
 }
 
-.bt_space.bt_selected {
+.bt_space.bt_selected,
+.bt_space.bt_selectable:hover {
   box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) base.$selected-color !important;
   cursor: pointer;
 }

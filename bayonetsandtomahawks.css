@@ -70,7 +70,7 @@
 
 .bt_card_container.bt_selectable > .card-sides > .card-side {
   cursor: pointer;
-  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) #ffff00 !important;
+  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) red !important;
 }
 
 .bt_card_container.bt_selectable:hover > .card-sides > .card-side,
@@ -473,11 +473,12 @@
 }
 
 .bt_space.bt_selectable {
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #ffff00 !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) red !important;
   cursor: pointer;
 }
 
-.bt_space.bt_selected {
+.bt_space.bt_selected,
+.bt_space.bt_selectable:hover {
   box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #0000ff !important;
   cursor: pointer;
 }
@@ -508,7 +509,7 @@
 
 .bt_token.bt_selectable > .card-sides > .card-side {
   cursor: pointer;
-  filter: drop-shadow(2px 0px 0px #ffff00) drop-shadow(-2px 0px 0px #ffff00) drop-shadow(0px 2px 0px #ffff00) drop-shadow(0px -2px 0px #ffff00);
+  filter: drop-shadow(2px 0px 0px red) drop-shadow(-2px 0px 0px red) drop-shadow(0px 2px 0px red) drop-shadow(0px -2px 0px red);
 }
 
 .bt_token.bt_selectable:hover > .card-sides > .card-side,
@@ -518,7 +519,7 @@
 }
 
 .bt_stack.bt_selectable {
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #ffff00 !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) red !important;
   cursor: pointer;
 }
 

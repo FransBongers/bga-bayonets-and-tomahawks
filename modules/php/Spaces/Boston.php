@@ -9,6 +9,7 @@ class Boston extends \BayonetsAndTomahawks\Models\Space
     $this->id = BOSTON;
     $this->battlePriority = 999;
     $this->defaultControl = BRITISH;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Boston');
     $this->victorySpace = false;
     $this->top = 1174;

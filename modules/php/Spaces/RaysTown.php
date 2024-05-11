@@ -9,7 +9,9 @@ class RaysTown extends \BayonetsAndTomahawks\Models\Space
     $this->id = RAYS_TOWN;
     $this->battlePriority = 241;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('RaysTown');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 1970.5;
     $this->left = 852;

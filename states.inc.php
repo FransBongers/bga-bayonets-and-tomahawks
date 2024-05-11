@@ -325,13 +325,23 @@ $machinestates = array(
         'possibleactions' => ['actActionActivateStack', 'actPassOptionalAction', 'actRestart'],
     ],
 
-    ST_MOVEMENT_LIGHT => [
-        'name' => 'movementLight',
+    ST_LIGHT_MOVEMENT => [
+        'name' => 'lightMovement',
         'description' => clienttranslate('${actplayer} may move units'),
         'descriptionmyturn' => clienttranslate('${you}'),
         'type' => 'activeplayer',
         'args' => 'argsAtomicAction',
         'action' => 'stAtomicAction',
-        'possibleactions' => ['actMovementLight', 'actPassOptionalAction', 'actRestart'],
+        'possibleactions' => ['actLightMovement', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_RAID => [
+        'name' => 'raid',
+        'description' => clienttranslate('${actplayer} may move units'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actRaid', 'actPassOptionalAction', 'actRestart'],
     ],
 );

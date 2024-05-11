@@ -9,7 +9,9 @@ class LeBaril extends \BayonetsAndTomahawks\Models\Space
     $this->id = LE_BARIL;
     $this->battlePriority = 273;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Le Baril');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 2134;
     $this->left = 458;

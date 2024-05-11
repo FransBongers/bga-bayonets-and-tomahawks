@@ -19,14 +19,16 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     'control' => ['control', 'str'],
     // 'extraData' => ['extra_data', 'obj'],
   ];
-  protected $staticAttributes = ['battlePriority', 'name', 'victorySpace', 'defaultControl', 'top', 'left'];
+  protected $staticAttributes = ['battlePriority', 'homeSpace', 'name', 'value', 'victorySpace', 'defaultControl', 'top', 'left'];
 
   protected $id = null;
   protected $battlePriority;
   protected $control = null;
   protected $defaultControl;
   protected $faction = null;
+  protected $homeSpace = null;
   protected $name = null;
+  protected $value = 0;
   protected $victorySpace = false;
   protected $top = 0;
   protected $left = 0;
@@ -59,6 +61,11 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
       $result[$spaceId] = Connections::get($connectionId);
     };
     return $result;
+  }
+
+  public function getAdjacentSpacesIds()
+  {
+    return array_keys($this->adjacentSpaces);
   }
 
   public function getUnits($faction = null)

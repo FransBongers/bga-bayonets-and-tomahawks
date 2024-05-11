@@ -9,7 +9,9 @@ class Diiohage extends \BayonetsAndTomahawks\Models\Space
     $this->id = DIIOHAGE;
     $this->battlePriority = 251;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Diiohage');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 2003;
     $this->left = 494;

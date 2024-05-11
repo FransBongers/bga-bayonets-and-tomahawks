@@ -9,7 +9,9 @@ class NumberFour extends \BayonetsAndTomahawks\Models\Space
     $this->id = NUMBER_FOUR;
     $this->battlePriority = 123;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Number Four');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 1168;
     $this->left = 794;

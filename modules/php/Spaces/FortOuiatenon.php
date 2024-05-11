@@ -9,7 +9,9 @@ class FortOuiatenon extends \BayonetsAndTomahawks\Models\Space
     $this->id = FORT_OUIATENON;
     $this->battlePriority = 282;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Fort Ouiatenon');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 2174;
     $this->left = 300.5;

@@ -9,7 +9,9 @@ class NinetySix extends \BayonetsAndTomahawks\Models\Space
     $this->id = NINETY_SIX;
     $this->battlePriority = 292;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Ninety Six');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 2216;
     $this->left = 1193.5;

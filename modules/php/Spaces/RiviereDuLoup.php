@@ -9,7 +9,9 @@ class RiviereDuLoup extends \BayonetsAndTomahawks\Models\Space
     $this->id = RIVIERE_DU_LOUP;
     $this->battlePriority = 41;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Rivière du Loup');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 616;
     $this->left = 396;

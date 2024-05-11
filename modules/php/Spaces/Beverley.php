@@ -9,7 +9,9 @@ class Beverley extends \BayonetsAndTomahawks\Models\Space
     $this->id = BEVERLEY;
     $this->battlePriority = 271;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Beverley');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 2106;
     $this->left = 1049;

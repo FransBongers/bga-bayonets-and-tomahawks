@@ -9,7 +9,9 @@ class CoteDeBeaupre extends \BayonetsAndTomahawks\Models\Space
     $this->id = COTE_DE_BEAUPRE;
     $this->battlePriority = 61;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Côte de Beaupré');
+    $this->value = 2;
     $this->victorySpace = false;
     $this->top = 734;
     $this->left = 360.5;

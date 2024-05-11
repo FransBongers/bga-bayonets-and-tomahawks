@@ -73,7 +73,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     actionRoundSailBoxLanding: ActionRoundSailBoxLandingState;
     confirmPartialTurn: ConfirmPartialTurnState;
     confirmTurn: ConfirmTurnState;
-    movementLight: MovementLightState;
+    lightMovement: LightMovementState;
+    raid: RaidState;
     selectReserveCard: SelectReserveCardState;
   };
 
@@ -115,7 +116,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
       confirmPartialTurn: new ConfirmPartialTurnState(this),
       confirmTurn: new ConfirmTurnState(this),
-      movementLight: new MovementLightState(this),
+      lightMovement: new LightMovementState(this),
+      raid: new RaidState(this),
       selectReserveCard: new SelectReserveCardState(this),
     };
 

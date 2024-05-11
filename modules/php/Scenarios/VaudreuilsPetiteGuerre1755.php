@@ -214,8 +214,8 @@ class VaudreuilsPetiteGuerre1755 extends \BayonetsAndTomahawks\Models\Scenario
           ONTARIO
         ]
       ],
-      WILLS_CREEK => [
-        'id' => WILLS_CREEK,
+      KADESQUIT => [
+        'id' => KADESQUIT,
         'units' => [
           WASHINGTON
         ]

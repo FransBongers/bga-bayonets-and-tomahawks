@@ -9,7 +9,9 @@ class Niagara extends \BayonetsAndTomahawks\Models\Space
     $this->id = NIAGARA;
     $this->battlePriority = 201;
     $this->defaultControl = FRENCH;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('NIAGARA');
+    $this->value = 1;
     $this->victorySpace = true;
     $this->top = 1728.5;
     $this->left = 384.5;

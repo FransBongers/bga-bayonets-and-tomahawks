@@ -9,7 +9,9 @@ class Toronto extends \BayonetsAndTomahawks\Models\Space
     $this->id = TORONTO;
     $this->battlePriority = 191;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Toronto');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 1647;
     $this->left = 252;

@@ -9,7 +9,9 @@ class Ticonderoga extends \BayonetsAndTomahawks\Models\Space
     $this->id = TICONDEROGA;
     $this->battlePriority = 131;
     $this->defaultControl = FRENCH;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('TICONDEROGA');
+    $this->value = 1;
     $this->victorySpace = true;
     $this->top = 1206.5;
     $this->left = 591.5;

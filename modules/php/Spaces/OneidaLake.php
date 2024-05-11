@@ -9,7 +9,9 @@ class OneidaLake extends \BayonetsAndTomahawks\Models\Space
     $this->id = ONEIDA_LAKE;
     $this->battlePriority = 163;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Oneida Lake');
+    $this->value = 1;
     $this->victorySpace = false;
     $this->top = 1520;
     $this->left = 599.5;

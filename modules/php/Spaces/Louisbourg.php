@@ -9,7 +9,9 @@ class Louisbourg extends \BayonetsAndTomahawks\Models\Space
     $this->id = LOUISBOURG;
     $this->battlePriority = 13;
     $this->defaultControl = FRENCH;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('LOUISBOURG');
+    $this->value = 3;
     $this->victorySpace = true;
     $this->top = 317;
     $this->left = 1141.5;

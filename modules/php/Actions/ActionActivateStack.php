@@ -11,6 +11,7 @@ use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\ActionPoints;
+use BayonetsAndTomahawks\Managers\AtomicActions;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Models\Player;
@@ -70,7 +71,6 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
 
     return [
       'stacks' => $stacks,
-      // 'actionsAllowed' => $actionPoint->getActionsAllowed(),
     ];
   }
 
@@ -108,18 +108,20 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
 
     $args = $this->argsActionActivateStack();
 
+    Notifications::log('args', $args);
+
     if (!isset($args['stacks'][$stackId])) {
       throw new \feException("Not allowed to activate selected stack");
     }
     $action = Utils::array_find($args['stacks'][$stackId], function ($action) use ($actionId) {
-      return $action->getId() === $actionId;
+      return $action['id'] === $actionId;
     });
     if ($action === null) {
       throw new \feException("Not allowed to perform selected action");
     }
 
     $actionPointId = $this->ctx->getParent()->getInfo()['actionPointId'];
-    $flow = $action->getFlow(self::getPlayer()->getId(), $stackId, in_array($actionPointId, [INDIAN_AP, INDIAN_AP_2X]));
+    $flow = AtomicActions::get($action['id'])->getFlow(self::getPlayer()->getId(), $stackId, in_array($actionPointId, [INDIAN_AP, INDIAN_AP_2X]));
     $this->ctx->insertAsBrother(Engine::buildTree($flow));
 
     $this->resolveAction($args);

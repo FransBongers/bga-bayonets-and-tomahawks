@@ -9,7 +9,9 @@ class LesTroisRivieres extends \BayonetsAndTomahawks\Models\Space
     $this->id = LES_TROIS_RIVIERES;
     $this->battlePriority = 101;
     $this->defaultControl = NEUTRAL;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Les Trois Rivières');
+    $this->value = 2;
     $this->victorySpace = false;
     $this->top = 1009.5;
     $this->left = 369.5;
