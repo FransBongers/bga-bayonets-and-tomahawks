@@ -133,9 +133,13 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
 
     if ($player->getFaction() === FRENCH) {
       $flow['children'][] = [
-        'action' => ACTION_ROUND_INDIAN_ACTIONS,
-        'playerId' => $playerId,
-        'optional' => true,
+        'children' => [
+          [
+            'action' => ACTION_ROUND_INDIAN_ACTIONS,
+            'playerId' => $playerId,
+            'optional' => true,
+          ]
+        ]
       ];
     }
     if ($isFirstplayer) {
@@ -146,9 +150,13 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
       ];
     }
     $flow['children'][] = [
-      'action' => $isFirstplayer ? ACTION_ROUND_FIRST_PLAYER_ACTIONS : ACTION_ROUND_SECOND_PLAYER_ACTIONS,
-      'playerId' => $playerId,
-      'optional' => true,
+      'children' => [
+        [
+          'action' => $isFirstplayer ? ACTION_ROUND_FIRST_PLAYER_ACTIONS : ACTION_ROUND_SECOND_PLAYER_ACTIONS,
+          'playerId' => $playerId,
+          'optional' => true,
+        ]
+      ]
     ];
     return $flow;
   }

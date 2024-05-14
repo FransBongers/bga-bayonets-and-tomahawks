@@ -20,6 +20,7 @@ interface OnEnteringActionActivateStackStateArgs extends CommonArgs {
 interface OnEnteringActionRoundActionPhaseStateArgs extends CommonArgs {
   action: string;
   card: BTCard;
+  availableActionPoints: string[];
 }
 
 interface OnEnteringActionRoundChooseCardStateArgs {

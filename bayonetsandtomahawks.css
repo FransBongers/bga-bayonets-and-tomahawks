@@ -2578,12 +2578,12 @@
   background-position-y: 60%;
 }
 
-.bt_marker[data-type=british_raided_marker][data-side=front] {
+.bt_marker_side[data-type=british_raided_marker][data-side=front] {
   background-position-x: 14.2857142857%;
   background-position-y: 100%;
 }
 
-.bt_marker[data-type=french_raided_marker][data-side=front] {
+.bt_marker_side[data-type=french_raided_marker][data-side=front] {
   background-position-x: 28.5714285714%;
   background-position-y: 100%;
 }

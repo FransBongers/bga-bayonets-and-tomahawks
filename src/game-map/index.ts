@@ -157,7 +157,7 @@ class GameMap {
         }
         element.insertAdjacentHTML(
           'beforeend',
-          tplCommonMarker({ type: `${space.raided}_raided_marker` })
+          tplMarkerOfType({ type: `${space.raided}_raided_marker` })
         );
       }
 
@@ -265,7 +265,11 @@ class GameMap {
       ),
       action_round_track_ar2: new LineStock<BTMarker>(
         this.game.markerManager,
-        document.getElementById('action_round_track_ar2')
+        document.getElementById('action_round_track_ar2'),
+        {
+          gap: '0px',
+          center: false,
+        }
       ),
       action_round_track_ar3: new LineStock<BTMarker>(
         this.game.markerManager,
@@ -588,9 +592,7 @@ class GameMap {
 
   public async moveRoundMarker({ nextRoundStep }: { nextRoundStep: string }) {
     const marker = document.getElementById('round_marker');
-    const toNode = document.getElementById(
-      `action_round_track_${nextRoundStep}`
-    );
+    const toNode = document.getElementById(nextRoundStep);
 
     if (!(marker && toNode)) {
       console.error('Unable to move round marker');
@@ -608,7 +610,7 @@ class GameMap {
     const toNode = document.getElementById(`year_track_${year}`);
 
     if (!(marker && toNode)) {
-      console.error('Unable to move round marker');
+      console.error('Unable to move year marker');
       return;
     }
 

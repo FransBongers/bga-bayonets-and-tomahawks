@@ -11,8 +11,10 @@ use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Scenarios;
+use BayonetsAndTomahawks\Models\Marker;
 use BayonetsAndTomahawks\Models\Player;
 use BayonetsAndTomahawks\Scenario;
 
@@ -42,7 +44,8 @@ class WinterQuartersGameEndCheck extends \BayonetsAndTomahawks\Models\AtomicActi
   public function stWinterQuartersGameEndCheck()
   {
     $scenario = Scenarios::get();
-    $currentYear = Globals::getYear();
+    $yearMarker = Markers::get(YEAR_MARKER);
+    $currentYear = intval(explode('_', $yearMarker->getLocation())[2]);
     $nextYear = $currentYear + 1;
 
     if ($nextYear >= $scenario->getStartYear() + $scenario->getDuration()) {
@@ -57,10 +60,15 @@ class WinterQuartersGameEndCheck extends \BayonetsAndTomahawks\Models\AtomicActi
     }
 
     // Move tokens
-    Globals::setYear($nextYear);
-    Globals::setActionRound(ACTION_ROUND_1);
-    Notifications::moveRoundMarker(ACTION_ROUND_1);
-    Notifications::moveYearMarker($nextYear);
+    // Globals::setYear($nextYear);
+    // Globals::setActionRound(ACTION_ROUND_1);
+
+    $yearMarkerLocation = Locations::yearTrack($nextYear);
+    Markers::move(YEAR_MARKER, $yearMarkerLocation);
+    Markers::move(ROUND_MARKER, ACTION_ROUND_1);
+    Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), ACTION_ROUND_1);
+    // Move year marker?
+    Notifications::moveYearMarker(Markers::get(YEAR_MARKER), $yearMarkerLocation);
 
     $this->resolveAction(['automatic' => true]);
   }

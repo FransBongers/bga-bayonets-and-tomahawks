@@ -106,7 +106,7 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     // Notifications::log('nextActionRound', $nextActionRound);
     Globals::setActionRound($nextActionRound);
     Markers::move(ROUND_MARKER,$nextActionRound);
-    Notifications::moveRoundMarker($nextActionRound);
+    Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), $nextActionRound);
 
     $this->resolveAction(['automatic' => true]);
   }

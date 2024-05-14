@@ -42,7 +42,7 @@ class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Models\Atomic
     Notifications::log('stFleetsArriveDrawReinforcements', []);
     Globals::setActionRound(ACTION_ROUND_3);
     Markers::move(ROUND_MARKER,ACTION_ROUND_3);
-    Notifications::moveRoundMarker(ACTION_ROUND_3);
+    Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), ACTION_ROUND_3);
 
     $this->resolveAction(['automatic' => true]);
   }

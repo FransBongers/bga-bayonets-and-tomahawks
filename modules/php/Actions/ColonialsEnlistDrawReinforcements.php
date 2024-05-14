@@ -42,7 +42,7 @@ class ColonialsEnlistDrawReinforcements extends \BayonetsAndTomahawks\Models\Ato
     // Notifications::log('stColonialsEnlistDrawReinforcements', []);
     Globals::setActionRound(ACTION_ROUND_4);
     Markers::move(ROUND_MARKER, ACTION_ROUND_4);
-    Notifications::moveRoundMarker(ACTION_ROUND_4);
+    Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), ACTION_ROUND_4);
 
     $this->resolveAction(['automatic' => true]);
   }

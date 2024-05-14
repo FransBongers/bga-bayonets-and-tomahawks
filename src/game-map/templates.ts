@@ -1,10 +1,13 @@
 const tplMarker = ({ id }: { id: string }) =>
   `<div id="${id}" class="bt_marker"></div>`;
 
-const tplCommonMarker = ({type}: {type: string;}) => `<div class="bt_marker" data-type="${type}"></div>`
+// const tplCommonMarker = ({type}: {type: string;}) => `<div class="bt_marker" data-type="${type}"></div>`
 
 const tplMarkerSide = ({ id }: { id: string }) =>
   `<div id="${id}" class="bt_marker_side" data-type="${id}" data-side="front"></div>`;
+
+const tplMarkerOfType = ({ type }: { type: string }) =>
+  `<div class="bt_marker_side" data-type="${type}" data-side="front"></div>`;
 
 const tplUnit = ({
   faction,

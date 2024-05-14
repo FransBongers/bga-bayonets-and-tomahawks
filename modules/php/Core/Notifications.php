@@ -245,10 +245,11 @@ class Notifications
     ]);
   }
 
-  public static function moveRoundMarker($nextRoundStep)
+  public static function moveRoundMarker($marker, $nextRoundStep)
   {
     self::notifyAll("moveRoundMarker", '', [
       'nextRoundStep' => $nextRoundStep,
+      'marker' => $marker,
     ]);
   }
 
@@ -294,10 +295,11 @@ class Notifications
     ]);
   }
 
-  public static function moveYearMarker($year)
+  public static function moveYearMarker($marker, $location)
   {
     self::notifyAll("moveYearMarker", '', [
-      'year' => $year,
+      'location' => $location,
+      'marker' => $marker,
     ]);
   }
 

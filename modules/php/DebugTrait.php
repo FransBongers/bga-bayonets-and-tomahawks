@@ -56,12 +56,34 @@ trait DebugTrait
 
 
 
+  private function getRemainingActionPoints($usedActionPoints, $card)
+  {
+    $cardActionPoints = $card->getActionPoints();
 
+    $result = [];
+    foreach ($cardActionPoints as $cIndex => $actionPoint) {
+      $uIndex = Utils::array_find_index($usedActionPoints, function ($uActionPointId) use ($actionPoint) {
+        return $uActionPointId === $actionPoint['id'];
+      });
+      if ($uIndex === null) {
+        $result[] = $actionPoint;
+      } else {
+        unset($usedActionPoints[$uIndex]);
+        $usedActionPoints = array_values($usedActionPoints);
+      }
+    }
+
+    return $result;
+  }
 
 
 
   function test()
   {
+    $usedActionPoints = [INDIAN_AP];
+    $result = $this->getRemainingActionPoints($usedActionPoints, Cards::get('Card43'));
+    Notifications::log('result', $result);
+
     // Players::scoreVictoryPoint(Players::getPlayerForFaction(FRENCH), 5);
 
     // Spaces::setupNewGame();

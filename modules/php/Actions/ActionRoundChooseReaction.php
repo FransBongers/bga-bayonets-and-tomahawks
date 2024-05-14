@@ -79,12 +79,34 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
     Engine::resolve(PASS);
   }
 
-    public function actActionRoundChooseReaction($args)
+  public function actActionRoundChooseReaction($args)
   {
 
     self::checkAction('actActionRoundChooseReaction');
-    // Notifications::log('actActionRoundChooseReaction', $args);
+    Notifications::log('actActionRoundChooseReaction', $args);
 
+    $nodes = Engine::getUnresolvedActions([ACTION_ROUND_RESOLVE_BATTLES]);
+
+    $actionPointId = $args['actionPointId'];
+
+    if (count($nodes) !== 1) {
+      throw new \feException("ERROR 007");
+    }
+
+    $node = $nodes[0];
+
+    $node->insertBefore(Engine::buildTree(
+      [
+        'children' => [
+          [
+            'action' => ACTION_ROUND_REACTION,
+            'actionPointId' => $actionPointId,
+            'playerId' => self::getPlayer()->getId(),
+            'optional' => true,
+          ]
+        ]
+      ]
+    ));
 
     $this->resolveAction($args);
   }

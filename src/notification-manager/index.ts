@@ -263,9 +263,10 @@ class NotificationManager {
   }
 
   async notif_moveRoundMarker(notif: Notif<NotifMoveRoundMarkerArgs>) {
-    const { nextRoundStep } = notif.args;
+    const { nextRoundStep, marker } = notif.args;
 
-    await this.game.gameMap.moveRoundMarker({ nextRoundStep });
+    await this.game.gameMap.actionRoundTrack[nextRoundStep].addCard(marker);
+      // this.game.gameMap.moveRoundMarker({ nextRoundStep });
   }
 
   async notif_moveStack(notif: Notif<NotifMoveStackArgs>) {
@@ -292,9 +293,10 @@ class NotificationManager {
   }
 
   async notif_moveYearMarker(notif: Notif<NotifMoveYearMarkerArgs>) {
-    const { year } = notif.args;
+    const { location, marker } = notif.args;
 
-    await this.game.gameMap.moveYearMarker({ year });
+    await this.game.gameMap.yearTrack[location].addCard(marker);
+    // await this.game.gameMap.moveYearMarker({ year });
   }
 
   async notif_placeUnitInLosses(notif: Notif<NotifPlaceUnitInLossesArgs>) {
@@ -312,7 +314,7 @@ class NotificationManager {
     }
     element.insertAdjacentHTML(
       'beforeend',
-      tplCommonMarker({ type: `${faction}_raided_marker` })
+      tplMarkerOfType({ type: `${faction}_raided_marker` })
     );
   }
 

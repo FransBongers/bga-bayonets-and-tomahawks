@@ -58,9 +58,9 @@ class ActionRoundActionPhaseState implements State {
   }
 
   private updateInterfaceConfirm({
-    actionPoint,
+    actionPointId,
   }: {
-    actionPoint: BTActionPoint;
+    actionPointId: string;
   }) {
     this.game.clearPossible();
     this.game.setCardSelected({ id: this.args.card.id });
@@ -68,7 +68,7 @@ class ActionRoundActionPhaseState implements State {
     this.game.clientUpdatePageTitle({
       text: _('Use ${tkn_actionPoint} to perform an Action?'),
       args: {
-        tkn_actionPoint: actionPoint.id,
+        tkn_actionPoint: actionPointId,
       },
     });
 
@@ -77,7 +77,7 @@ class ActionRoundActionPhaseState implements State {
       this.game.takeAction({
         action: 'actActionRoundActionPhase',
         args: {
-          actionPoint: actionPoint.id,
+          actionPoint: actionPointId,
         },
       });
     };
@@ -106,11 +106,11 @@ class ActionRoundActionPhaseState implements State {
   //  ..#######.....##....####.########.####....##.......##...
 
   private addActionButtons() {
-    this.args.card.actionPoints.forEach((actionPoint, index) => {
+    this.args.availableActionPoints.forEach((actionPointId, index) => {
       this.game.addPrimaryActionButton({
-        id: `ap_${actionPoint}_${index}`,
-        text: actionPoint.id,
-        callback: () => this.updateInterfaceConfirm({ actionPoint }),
+        id: `ap_${actionPointId}_${index}`,
+        text: actionPointId,
+        callback: () => this.updateInterfaceConfirm({ actionPointId }),
       });
     });
   }

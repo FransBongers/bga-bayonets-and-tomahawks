@@ -43,7 +43,7 @@ class FleetsArriveAction extends \BayonetsAndTomahawks\Models\AtomicAction
     Notifications::log('stFleetsArriveAction', []);
     Globals::getActionRound(ACTION_ROUND_3);
     Markers::move(ROUND_MARKER,ACTION_ROUND_3);
-    Notifications::moveRoundMarker(ACTION_ROUND_3);
+    Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), ACTION_ROUND_3);
 
     $this->resolveAction(['automatic' => true]);
   }

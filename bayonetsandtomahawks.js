@@ -3129,7 +3129,7 @@ var GameMap = (function () {
                 if (!element) {
                     return;
                 }
-                element.insertAdjacentHTML('beforeend', tplCommonMarker({ type: "".concat(space.raided, "_raided_marker") }));
+                element.insertAdjacentHTML('beforeend', tplMarkerOfType({ type: "".concat(space.raided, "_raided_marker") }));
             }
             if (!_this.stacks[space.id]) {
                 _this.stacks[space.id] = (_a = {},
@@ -3182,7 +3182,10 @@ var GameMap = (function () {
                 gap: '0px',
                 center: false,
             }),
-            action_round_track_ar2: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar2')),
+            action_round_track_ar2: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar2'), {
+                gap: '0px',
+                center: false,
+            }),
             action_round_track_ar3: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar3'), {
                 gap: '0px',
                 center: false,
@@ -3353,7 +3356,7 @@ var GameMap = (function () {
                 switch (_b.label) {
                     case 0:
                         marker = document.getElementById('round_marker');
-                        toNode = document.getElementById("action_round_track_".concat(nextRoundStep));
+                        toNode = document.getElementById(nextRoundStep);
                         if (!(marker && toNode)) {
                             console.error('Unable to move round marker');
                             return [2];
@@ -3376,7 +3379,7 @@ var GameMap = (function () {
                         marker = document.getElementById('year_marker');
                         toNode = document.getElementById("year_track_".concat(year));
                         if (!(marker && toNode)) {
-                            console.error('Unable to move round marker');
+                            console.error('Unable to move year marker');
                             return [2];
                         }
                         return [4, this.game.animationManager.attachWithAnimation(new BgaSlideAnimation({ element: marker }), toNode)];
@@ -3393,13 +3396,13 @@ var tplMarker = function (_a) {
     var id = _a.id;
     return "<div id=\"".concat(id, "\" class=\"bt_marker\"></div>");
 };
-var tplCommonMarker = function (_a) {
-    var type = _a.type;
-    return "<div class=\"bt_marker\" data-type=\"".concat(type, "\"></div>");
-};
 var tplMarkerSide = function (_a) {
     var id = _a.id;
     return "<div id=\"".concat(id, "\" class=\"bt_marker_side\" data-type=\"").concat(id, "\" data-side=\"front\"></div>");
+};
+var tplMarkerOfType = function (_a) {
+    var type = _a.type;
+    return "<div class=\"bt_marker_side\" data-type=\"".concat(type, "\" data-side=\"front\"></div>");
 };
 var tplUnit = function (_a) {
     var faction = _a.faction, counterId = _a.counterId, style = _a.style;
@@ -3821,14 +3824,14 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_moveRoundMarker = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var nextRoundStep;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a, nextRoundStep, marker;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        nextRoundStep = notif.args.nextRoundStep;
-                        return [4, this.game.gameMap.moveRoundMarker({ nextRoundStep: nextRoundStep })];
+                        _a = notif.args, nextRoundStep = _a.nextRoundStep, marker = _a.marker;
+                        return [4, this.game.gameMap.actionRoundTrack[nextRoundStep].addCard(marker)];
                     case 1:
-                        _a.sent();
+                        _b.sent();
                         return [2];
                 }
             });
@@ -3879,14 +3882,14 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_moveYearMarker = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var year;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a, location, marker;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        year = notif.args.year;
-                        return [4, this.game.gameMap.moveYearMarker({ year: year })];
+                        _a = notif.args, location = _a.location, marker = _a.marker;
+                        return [4, this.game.gameMap.yearTrack[location].addCard(marker)];
                     case 1:
-                        _a.sent();
+                        _b.sent();
                         return [2];
                 }
             });
@@ -3916,7 +3919,7 @@ var NotificationManager = (function () {
                 if (!element) {
                     return [2];
                 }
-                element.insertAdjacentHTML('beforeend', tplCommonMarker({ type: "".concat(faction, "_raided_marker") }));
+                element.insertAdjacentHTML('beforeend', tplMarkerOfType({ type: "".concat(faction, "_raided_marker") }));
                 return [2];
             });
         });
@@ -4603,13 +4606,13 @@ var ActionRoundActionPhaseState = (function () {
     };
     ActionRoundActionPhaseState.prototype.updateInterfaceConfirm = function (_a) {
         var _this = this;
-        var actionPoint = _a.actionPoint;
+        var actionPointId = _a.actionPointId;
         this.game.clearPossible();
         this.game.setCardSelected({ id: this.args.card.id });
         this.game.clientUpdatePageTitle({
             text: _('Use ${tkn_actionPoint} to perform an Action?'),
             args: {
-                tkn_actionPoint: actionPoint.id,
+                tkn_actionPoint: actionPointId,
             },
         });
         var callback = function () {
@@ -4617,7 +4620,7 @@ var ActionRoundActionPhaseState = (function () {
             _this.game.takeAction({
                 action: 'actActionRoundActionPhase',
                 args: {
-                    actionPoint: actionPoint.id,
+                    actionPoint: actionPointId,
                 },
             });
         };
@@ -4635,11 +4638,11 @@ var ActionRoundActionPhaseState = (function () {
     };
     ActionRoundActionPhaseState.prototype.addActionButtons = function () {
         var _this = this;
-        this.args.card.actionPoints.forEach(function (actionPoint, index) {
+        this.args.availableActionPoints.forEach(function (actionPointId, index) {
             _this.game.addPrimaryActionButton({
-                id: "ap_".concat(actionPoint, "_").concat(index),
-                text: actionPoint.id,
-                callback: function () { return _this.updateInterfaceConfirm({ actionPoint: actionPoint }); },
+                id: "ap_".concat(actionPointId, "_").concat(index),
+                text: actionPointId,
+                callback: function () { return _this.updateInterfaceConfirm({ actionPointId: actionPointId }); },
             });
         });
     };

@@ -40,6 +40,7 @@ interface NotifMoveRaidPointsMarkerArgs {
 
 interface NotifMoveRoundMarkerArgs {
   nextRoundStep: string;
+  marker: BTMarker;
 }
 
 interface NotifMoveStackArgs {
@@ -60,7 +61,8 @@ interface NotifMoveUnitArgs {
 }
 
 interface NotifMoveYearMarkerArgs {
-  year: number;
+  location: string;
+  marker: BTMarker;
 }
 
 interface NotifPlaceUnitInLossesArgs extends NotifWithPlayerArgs {
