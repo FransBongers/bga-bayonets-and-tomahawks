@@ -54,7 +54,7 @@ class ActionActivateStackState implements State {
 
   private updateInterfaceSelectAction({ stackId, stackActions }: { stackId: string; stackActions: BTStackAction[] }) {
     this.game.clearPossible();
-    this.game.setLocationSelected({ id: `${stackId}_french_stack` });
+    this.game.setLocationSelected({ id: `${stackId}_${this.args.faction}_stack` });
 
     this.game.clientUpdatePageTitle({
       text: _('${you} must choose an action to perform'),
@@ -82,7 +82,7 @@ class ActionActivateStackState implements State {
     stackId: string;
   }) {
     this.game.clearPossible();
-    this.game.setLocationSelected({ id: `${stackId}_french_stack` });
+    this.game.setLocationSelected({ id: `${stackId}_${this.args.faction}_stack` });
 
     this.game.clientUpdatePageTitle({
       text: _('Perform ${actionName} with stack in ${locationName}?'),
@@ -129,7 +129,7 @@ class ActionActivateStackState implements State {
   private setStacksSelectable() {
     Object.entries(this.args.stacks).forEach(([stackId, stackActions], index) => {
       this.game.setLocationSelectable({
-        id: `${stackId}_french_stack`,
+        id: `${stackId}_${this.args.faction}_stack`,
         callback: () => this.updateInterfaceSelectAction({ stackId, stackActions }),
       });
     });

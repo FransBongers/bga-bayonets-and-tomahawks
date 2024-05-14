@@ -44,6 +44,11 @@ abstract class Locations extends \APP_DbObject
     return 'selected_' . $faction;
   }
 
+  public static function yearTrack($year)
+  {
+    return 'year_track_' . $year;
+  }
+
   public static function cardInPlay($faction)
   {
     return 'cardInPlay_' . $faction;

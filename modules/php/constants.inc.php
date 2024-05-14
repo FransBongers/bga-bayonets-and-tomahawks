@@ -104,18 +104,18 @@ const SAIL_MOVEMENT = 'SAIL_MOVEMENT';
  * Action rounds / steps in year
  */
 
-const ACTION_ROUND_1 = 'ar1';
-const ACTION_ROUND_2 = 'ar2';
-const ACTION_ROUND_3 = 'ar3';
-const ACTION_ROUND_4 = 'ar4';
-const ACTION_ROUND_5 = 'ar5';
-const ACTION_ROUND_6 = 'ar6';
-const ACTION_ROUND_7 = 'ar7';
-const ACTION_ROUND_8 = 'ar8';
-const ACTION_ROUND_9 = 'ar9';
-const FLEETS_ARRIVE = 'fleetsArrive';
-const COLONIALS_ENLIST = 'colonialsEnlist';
-const WINTER_QUARTERS = 'winterQuarters';
+const ACTION_ROUND_1 = 'action_round_track_ar1';
+const ACTION_ROUND_2 = 'action_round_track_ar2';
+const ACTION_ROUND_3 = 'action_round_track_ar3';
+const ACTION_ROUND_4 = 'action_round_track_ar4';
+const ACTION_ROUND_5 = 'action_round_track_ar5';
+const ACTION_ROUND_6 = 'action_round_track_ar6';
+const ACTION_ROUND_7 = 'action_round_track_ar7';
+const ACTION_ROUND_8 = 'action_round_track_ar8';
+const ACTION_ROUND_9 = 'action_round_track_ar9';
+const FLEETS_ARRIVE = 'action_round_track_fleetsArrive';
+const COLONIALS_ENLIST = 'action_round_track_colonialsEnlist';
+const WINTER_QUARTERS = 'action_round_track_winterQuarters';
 
 // Raid track
 const RAID_TRACK_0 = 'raid_track_0';

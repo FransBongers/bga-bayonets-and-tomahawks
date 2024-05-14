@@ -1,4 +1,4 @@
-class TokenManager extends CardManager<BTUnit> {
+class UnitManager extends CardManager<BTUnit> {
   constructor(public game: BayonetsAndTomahawksGame) {
     super(game, {
       getId: (card) => `${card.id}`,

@@ -3,6 +3,9 @@ const tplMarker = ({ id }: { id: string }) =>
 
 const tplCommonMarker = ({type}: {type: string;}) => `<div class="bt_marker" data-type="${type}"></div>`
 
+const tplMarkerSide = ({ id }: { id: string }) =>
+  `<div id="${id}" class="bt_marker_side" data-type="${id}" data-side="front"></div>`;
+
 const tplUnit = ({
   faction,
   counterId,
@@ -45,12 +48,14 @@ const tplMarkerSpace = ({
   id,
   top,
   left,
+  extraClasses
 }: {
   id: string;
   top: number;
   left: number;
+  extraClasses?: string;
 }) => {
-  return `<div id="${id}" class="bt_marker_space" style="top: calc(var(--btMapScale) * ${top}px); left: calc(var(--btMapScale) * ${left}px);"></div>`;
+  return `<div id="${id}" class="bt_marker_space${extraClasses ? ` ${extraClasses}` : ''}" style="top: calc(var(--btMapScale) * ${top}px); left: calc(var(--btMapScale) * ${left}px);"></div>`;
 };
 
 const tplLossesBox = () => {
@@ -73,6 +78,7 @@ tplMarkerSpace({
   id: `${markerSpace.id}`,
   top: markerSpace.top,
   left: markerSpace.left,
+  extraClasses: 'bt_raid_track'
 })
 ).join("");
 

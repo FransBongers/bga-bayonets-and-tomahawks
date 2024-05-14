@@ -63,7 +63,8 @@ interface BayonetsAndTomahawksGame extends Game {
   // playAreaScale: number;
   playerManager: PlayerManager;
   settings: Settings;
-  tokenManager: TokenManager;
+  markerManager: MarkerManager;
+  unitManager: UnitManager;
   tooltipManager: TooltipManager;
 
   cardManager: BTCardManager;
@@ -103,6 +104,8 @@ interface BTMarker {
   id: string;
   location: string;
   state: number;
+  side: 'front' | 'back';
+  type: string;
 }
 
 interface BTSpace {

@@ -14,6 +14,7 @@ interface OnEnteringConfirmTurnArgs extends CommonArgs {}
 interface OnEnteringActionActivateStackStateArgs extends CommonArgs {
   // actionsAllowed: BTStackAction[];
   stacks: Record<string, BTStackAction[]>;
+  faction: BRITISH | FRENCH;
 }
 
 interface OnEnteringActionRoundActionPhaseStateArgs extends CommonArgs {

@@ -70,6 +70,7 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
 
     return [
       'stacks' => $stacks,
+      'faction' => $player->getFaction(),
     ];
   }
 

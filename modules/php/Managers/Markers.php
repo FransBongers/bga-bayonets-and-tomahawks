@@ -17,7 +17,9 @@ class Markers extends \BayonetsAndTomahawks\Helpers\Pieces
 {
   protected static $table = 'markers';
   protected static $prefix = 'marker_';
-  protected static $customFields = ['extra_data'];
+  protected static $customFields = [
+    // 'extra_data'
+  ];
   protected static $autoremovePrefix = false;
   protected static $autoreshuffle = false;
   protected static $autoIncrement = false;
@@ -86,33 +88,33 @@ class Markers extends \BayonetsAndTomahawks\Helpers\Pieces
 
     $tokens[YEAR_MARKER] = [
       'id' => YEAR_MARKER,
-      'location' => $scenario->getStartYear(),
-      'extra_data' => json_encode(null)
+      'location' => Locations::yearTrack($scenario->getStartYear()),
+      // 'extra_data' => json_encode(null)
     ];
     $tokens[ROUND_MARKER] = [
       'id' => ROUND_MARKER,
       'location' => ACTION_ROUND_1,
-      'extra_data' => json_encode(null)
+      // 'extra_data' => json_encode(null)
     ];
     $tokens[BRITISH_RAID_MARKER] = [
       'id' => BRITISH_RAID_MARKER,
       'location' => RAID_TRACK_0,
-      'extra_data' => json_encode(null)
+      // 'extra_data' => json_encode(null)
     ];
     $tokens[FRENCH_RAID_MARKER] = [
       'id' => FRENCH_RAID_MARKER,
       'location' => RAID_TRACK_0,
-      'extra_data' => json_encode(null)
+      // 'extra_data' => json_encode(null)
     ];
     $vpMarkerLocation = $scenario->getVictoryMarkerLocation();
     $tokens[VICTORY_MARKER] = [
       'id' => VICTORY_MARKER,
       'location' => $vpMarkerLocation,
-      'extra_data' => json_encode(null)
+      // 'extra_data' => json_encode(null)
     ];
 
     $players = Players::getAll();
-    foreach($players as $player) {
+    foreach ($players as $player) {
       if ($vpMarkerLocation === VICTORY_POINTS_FRENCH_1) {
         if ($player->getFaction() === BRITISH) {
           $player->setScore(-1);

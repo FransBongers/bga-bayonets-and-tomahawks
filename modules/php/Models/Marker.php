@@ -16,17 +16,21 @@ class Marker extends \BayonetsAndTomahawks\Helpers\DB_Model implements \JsonSeri
   protected $attributes = [
     'id' => ['marker_id', 'str'],
     'location' => ['marker_location', 'str'],
-    'extraData' => ['extra_data', 'obj'],
+    'state' => ['marker_location', 'int'],
+    // 'extraData' => ['extra_data', 'obj'],
   ];
 
   protected $id = null;
   protected $location = null;
+  protected $state = null;
 
   public function jsonSerialize()
   {
     return [
       'id' => $this->id,
       'location' => $this->location,
+      'type' => $this->id,
+      'side' => $this->state === 0 ? 'front' : 'back',
     ];
   }
 

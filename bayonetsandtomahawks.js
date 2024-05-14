@@ -2200,7 +2200,8 @@ var BayonetsAndTomahawks = (function () {
                 : 2100 - this.settings.get({ id: PREF_ANIMATION_SPEED }),
         });
         this.cardManager = new BTCardManager(this);
-        this.tokenManager = new TokenManager(this);
+        this.unitManager = new UnitManager(this);
+        this.markerManager = new MarkerManager(this);
         this.discard = new VoidStock(this.cardManager, document.getElementById('bt_discard'));
         this.deck = new LineStock(this.cardManager, document.getElementById('bt_deck'));
         this.gameMap = new GameMap(this);
@@ -3109,10 +3110,10 @@ var GameMap = (function () {
         var gamedatas = _a.gamedatas;
         if (!this.losses) {
             this.losses = (_b = {},
-                _b[LOSSES_BOX_BRITISH] = new LineStock(this.game.tokenManager, document.getElementById(LOSSES_BOX_BRITISH), {
+                _b[LOSSES_BOX_BRITISH] = new LineStock(this.game.unitManager, document.getElementById(LOSSES_BOX_BRITISH), {
                     center: false,
                 }),
-                _b[LOSSES_BOX_FRENCH] = new LineStock(this.game.tokenManager, document.getElementById(LOSSES_BOX_FRENCH), {
+                _b[LOSSES_BOX_FRENCH] = new LineStock(this.game.unitManager, document.getElementById(LOSSES_BOX_FRENCH), {
                     center: false,
                 }),
                 _b);
@@ -3132,8 +3133,8 @@ var GameMap = (function () {
             }
             if (!_this.stacks[space.id]) {
                 _this.stacks[space.id] = (_a = {},
-                    _a[BRITISH] = new UnitStack(_this.game.tokenManager, document.getElementById("".concat(space.id, "_british_stack")), {}, BRITISH),
-                    _a[FRENCH] = new UnitStack(_this.game.tokenManager, document.getElementById("".concat(space.id, "_french_stack")), {}, FRENCH),
+                    _a[BRITISH] = new UnitStack(_this.game.unitManager, document.getElementById("".concat(space.id, "_british_stack")), {}, BRITISH),
+                    _a[FRENCH] = new UnitStack(_this.game.unitManager, document.getElementById("".concat(space.id, "_french_stack")), {}, FRENCH),
                     _a);
             }
             gamedatas.units
@@ -3154,30 +3155,184 @@ var GameMap = (function () {
     };
     GameMap.prototype.setupMarkers = function (_a) {
         var gamedatas = _a.gamedatas;
+        this.yearTrack = {
+            year_track_1755: new LineStock(this.game.markerManager, document.getElementById('year_track_1755'), {
+                gap: '0px',
+                center: false,
+            }),
+            year_track_1756: new LineStock(this.game.markerManager, document.getElementById('year_track_1756'), {
+                gap: '0px',
+                center: false,
+            }),
+            year_track_1757: new LineStock(this.game.markerManager, document.getElementById('year_track_1757'), {
+                gap: '0px',
+                center: false,
+            }),
+            year_track_1758: new LineStock(this.game.markerManager, document.getElementById('year_track_1758'), {
+                gap: '0px',
+                center: false,
+            }),
+            year_track_1759: new LineStock(this.game.markerManager, document.getElementById('year_track_1759'), {
+                gap: '0px',
+                center: false,
+            }),
+        };
+        this.actionRoundTrack = {
+            action_round_track_ar1: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar1'), {
+                gap: '0px',
+                center: false,
+            }),
+            action_round_track_ar2: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar2')),
+            action_round_track_ar3: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar3'), {
+                gap: '0px',
+                center: false,
+            }),
+            action_round_track_ar4: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar4'), {
+                gap: '0px',
+                center: false,
+            }),
+            action_round_track_ar5: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar5'), {
+                gap: '0px',
+                center: false,
+            }),
+            action_round_track_ar6: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar6'), {
+                gap: '0px',
+                center: false,
+            }),
+            action_round_track_ar7: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar7'), {
+                gap: '0px',
+                center: false,
+            }),
+            action_round_track_ar8: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar8'), {
+                gap: '0px',
+                center: false,
+            }),
+            action_round_track_ar9: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar9'), {
+                gap: '0px',
+                center: false,
+            }),
+            action_round_track_fleetsArrive: new LineStock(this.game.markerManager, document.getElementById('action_round_track_fleetsArrive'), {
+                gap: '0px',
+                center: false,
+            }),
+            action_round_track_colonialsEnlist: new LineStock(this.game.markerManager, document.getElementById('action_round_track_colonialsEnlist'), {
+                gap: '0px',
+                center: false,
+            }),
+            action_round_track_winterQuarters: new LineStock(this.game.markerManager, document.getElementById('action_round_track_winterQuarters'), {
+                gap: '0px',
+                center: false,
+            }),
+        };
+        this.victoryPointsTrack = {
+            victory_points_french_10: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_10'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_french_9: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_9'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_french_8: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_8'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_french_7: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_7'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_french_6: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_6'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_french_5: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_5'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_french_4: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_4'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_french_3: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_3'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_french_2: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_2'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_french_1: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_1'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_british_1: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_1'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_british_2: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_2'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_british_3: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_3'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_british_4: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_4'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_british_5: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_5'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_british_6: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_6'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_british_7: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_7'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_british_8: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_8'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_british_9: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_9'), {
+                gap: '0px',
+                center: false,
+            }),
+            victory_points_british_10: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_10'), {
+                gap: '0px',
+                center: false,
+            }),
+        };
+        this.updateMarkers({ gamedatas: gamedatas });
+    };
+    GameMap.prototype.updateMarkers = function (_a) {
+        var gamedatas = _a.gamedatas;
         var markers = gamedatas.markers;
-        if (markers[YEAR_MARKER]) {
-            document
-                .getElementById("year_track_".concat(markers[YEAR_MARKER].location))
-                .insertAdjacentHTML('beforeend', tplMarker({ id: markers[YEAR_MARKER].id }));
+        var yearMarker = markers[YEAR_MARKER];
+        if (yearMarker && this.yearTrack[yearMarker.location]) {
+            this.yearTrack[yearMarker.location].addCard(yearMarker);
         }
-        if (markers[ROUND_MARKER]) {
-            document
-                .getElementById("action_round_track_".concat(markers[ROUND_MARKER].location))
-                .insertAdjacentHTML('beforeend', tplMarker({ id: markers[ROUND_MARKER].id }));
+        var roundMarker = markers[ROUND_MARKER];
+        if (roundMarker && this.actionRoundTrack[roundMarker.location]) {
+            this.actionRoundTrack[roundMarker.location].addCard(roundMarker);
         }
         if (markers[BRITISH_RAID_MARKER]) {
             document
                 .getElementById("".concat(markers[BRITISH_RAID_MARKER].location))
-                .insertAdjacentHTML('beforeend', tplMarker({ id: markers[BRITISH_RAID_MARKER].id }));
+                .insertAdjacentHTML('beforeend', tplMarkerSide({ id: markers[BRITISH_RAID_MARKER].id }));
         }
         if (markers[FRENCH_RAID_MARKER]) {
             document
                 .getElementById("".concat(markers[FRENCH_RAID_MARKER].location))
-                .insertAdjacentHTML('beforeend', tplMarker({ id: markers[FRENCH_RAID_MARKER].id }));
+                .insertAdjacentHTML('beforeend', tplMarkerSide({ id: markers[FRENCH_RAID_MARKER].id }));
         }
-        document
-            .getElementById(markers[VICTORY_MARKER].location)
-            .insertAdjacentHTML('beforeend', tplMarker({ id: markers[VICTORY_MARKER].id }));
+        var victoryMarker = markers[VICTORY_MARKER];
+        if (victoryMarker && this.victoryPointsTrack[victoryMarker.location]) {
+            this.victoryPointsTrack[victoryMarker.location].addCard(victoryMarker);
+        }
     };
     GameMap.prototype.updateGameMap = function (_a) {
         var gamedatas = _a.gamedatas;
@@ -3242,6 +3397,10 @@ var tplCommonMarker = function (_a) {
     var type = _a.type;
     return "<div class=\"bt_marker\" data-type=\"".concat(type, "\"></div>");
 };
+var tplMarkerSide = function (_a) {
+    var id = _a.id;
+    return "<div id=\"".concat(id, "\" class=\"bt_marker_side\" data-type=\"").concat(id, "\" data-side=\"front\"></div>");
+};
 var tplUnit = function (_a) {
     var faction = _a.faction, counterId = _a.counterId, style = _a.style;
     return "\n  <div class=\"bt_token_side\" data-counter-id=\"".concat(counterId, "\"").concat(style ? " style=\"".concat(style, "\"") : "", "></div>\n");
@@ -3256,8 +3415,8 @@ var tplSpaces = function (_a) {
     return result;
 };
 var tplMarkerSpace = function (_a) {
-    var id = _a.id, top = _a.top, left = _a.left;
-    return "<div id=\"".concat(id, "\" class=\"bt_marker_space\" style=\"top: calc(var(--btMapScale) * ").concat(top, "px); left: calc(var(--btMapScale) * ").concat(left, "px);\"></div>");
+    var id = _a.id, top = _a.top, left = _a.left, extraClasses = _a.extraClasses;
+    return "<div id=\"".concat(id, "\" class=\"bt_marker_space").concat(extraClasses ? " ".concat(extraClasses) : '', "\" style=\"top: calc(var(--btMapScale) * ").concat(top, "px); left: calc(var(--btMapScale) * ").concat(left, "px);\"></div>");
 };
 var tplLossesBox = function () {
     return "\n    <div id=\"lossesBox_french\" class=\"bt_losses_box\"></div>\n    <div id=\"lossesBox_british\" class=\"bt_losses_box\"></div>\n  ";
@@ -3274,6 +3433,7 @@ var tplRaidTrack = function () { return RAID_TRACK_CONFIG.map(function (markerSp
         id: "".concat(markerSpace.id),
         top: markerSpace.top,
         left: markerSpace.left,
+        extraClasses: 'bt_raid_track'
     });
 }).join(""); };
 var tplYearTrack = function () { return YEAR_TRACK_CONFIG.map(function (markerSpace) {
@@ -3422,6 +3582,39 @@ var tplLogTokenUnit = function (counterId) {
 var tplLogDieResult = function (dieResult) {
     return "<div class=\"bt_log_die\" data-die-result=\"".concat(dieResult, "\"></div>");
 };
+var MarkerManager = (function (_super) {
+    __extends(MarkerManager, _super);
+    function MarkerManager(game) {
+        var _this = _super.call(this, game, {
+            getId: function (card) { return "".concat(card.id); },
+            setupDiv: function (card, div) { return _this.setupDiv(card, div); },
+            setupFrontDiv: function (card, div) { return _this.setupFrontDiv(card, div); },
+            setupBackDiv: function (card, div) { return _this.setupBackDiv(card, div); },
+            isCardVisible: function (card) { return _this.isCardVisible(card); },
+            animationManager: game.animationManager,
+        }) || this;
+        _this.game = game;
+        return _this;
+    }
+    MarkerManager.prototype.clearInterface = function () { };
+    MarkerManager.prototype.setupDiv = function (marker, div) {
+        div.classList.add('bt_marker');
+    };
+    MarkerManager.prototype.setupFrontDiv = function (marker, div) {
+        div.classList.add('bt_marker_side');
+        div.setAttribute('data-side', 'front');
+        div.setAttribute('data-type', marker.type);
+    };
+    MarkerManager.prototype.setupBackDiv = function (marker, div) {
+        div.classList.add('bt_marker_side');
+        div.setAttribute('data-side', 'back');
+        div.setAttribute('data-type', marker.type);
+    };
+    MarkerManager.prototype.isCardVisible = function (marker) {
+        return marker.side === 'front';
+    };
+    return MarkerManager;
+}(CardManager));
 var NotificationManager = (function () {
     function NotificationManager(game) {
         this.game = game;
@@ -4315,7 +4508,7 @@ var ActionActivateStackState = (function () {
         var _this = this;
         var stackId = _a.stackId, stackActions = _a.stackActions;
         this.game.clearPossible();
-        this.game.setLocationSelected({ id: "".concat(stackId, "_french_stack") });
+        this.game.setLocationSelected({ id: "".concat(stackId, "_").concat(this.args.faction, "_stack") });
         this.game.clientUpdatePageTitle({
             text: _('${you} must choose an action to perform'),
             args: {
@@ -4335,7 +4528,7 @@ var ActionActivateStackState = (function () {
         var _this = this;
         var stackAction = _a.stackAction, stackId = _a.stackId;
         this.game.clearPossible();
-        this.game.setLocationSelected({ id: "".concat(stackId, "_french_stack") });
+        this.game.setLocationSelected({ id: "".concat(stackId, "_").concat(this.args.faction, "_stack") });
         this.game.clientUpdatePageTitle({
             text: _('Perform ${actionName} with stack in ${locationName}?'),
             args: {
@@ -4370,7 +4563,7 @@ var ActionActivateStackState = (function () {
         Object.entries(this.args.stacks).forEach(function (_a, index) {
             var stackId = _a[0], stackActions = _a[1];
             _this.game.setLocationSelectable({
-                id: "".concat(stackId, "_french_stack"),
+                id: "".concat(stackId, "_").concat(_this.args.faction, "_stack"),
                 callback: function () { return _this.updateInterfaceSelectAction({ stackId: stackId, stackActions: stackActions }); },
             });
         });
@@ -5071,9 +5264,9 @@ var UnitStack = (function (_super) {
     };
     return UnitStack;
 }(ManualPositionStock));
-var TokenManager = (function (_super) {
-    __extends(TokenManager, _super);
-    function TokenManager(game) {
+var UnitManager = (function (_super) {
+    __extends(UnitManager, _super);
+    function UnitManager(game) {
         var _this = _super.call(this, game, {
             getId: function (card) { return "".concat(card.id); },
             setupDiv: function (card, div) { return _this.setupDiv(card, div); },
@@ -5085,24 +5278,24 @@ var TokenManager = (function (_super) {
         _this.game = game;
         return _this;
     }
-    TokenManager.prototype.clearInterface = function () { };
-    TokenManager.prototype.setupDiv = function (card, div) {
+    UnitManager.prototype.clearInterface = function () { };
+    UnitManager.prototype.setupDiv = function (card, div) {
         div.style.position = 'relative';
         div.classList.add('bt_token');
         div.insertAdjacentHTML('beforeend', "<div id=\"spent_marker_".concat(card.id, "\" data-spent=\"").concat(card.spent === 1 ? 'true' : 'false', "\" class=\"bt_spent_marker\"></div>"));
     };
-    TokenManager.prototype.setupFrontDiv = function (card, div) {
+    UnitManager.prototype.setupFrontDiv = function (card, div) {
         div.classList.add('bt_token_side');
         div.setAttribute('data-counter-id', card.counterId);
     };
-    TokenManager.prototype.setupBackDiv = function (card, div) {
+    UnitManager.prototype.setupBackDiv = function (card, div) {
         div.classList.add('bt_token_side');
         div.setAttribute('data-counter-id', "".concat(card.counterId, "_reduced"));
     };
-    TokenManager.prototype.isCardVisible = function (card) {
+    UnitManager.prototype.isCardVisible = function (card) {
         return true;
     };
-    return TokenManager;
+    return UnitManager;
 }(CardManager));
 var tplCardTooltipContainer = function (_a) {
     var card = _a.card, content = _a.content;

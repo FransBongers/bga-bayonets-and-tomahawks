@@ -61,7 +61,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public gameMap: GameMap;
   public hand: Hand;
   public pools: Pools;
-  public tokenManager: TokenManager;
+  public markerManager: MarkerManager;
+  public unitManager: UnitManager;
   // public playAreaScale: number;
 
   public activeStates: {
@@ -132,7 +133,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     });
 
     this.cardManager = new BTCardManager(this);
-    this.tokenManager = new TokenManager(this);
+    this.unitManager = new UnitManager(this);
+    this.markerManager = new MarkerManager(this);
     this.discard = new VoidStock(
       this.cardManager,
       document.getElementById('bt_discard')
