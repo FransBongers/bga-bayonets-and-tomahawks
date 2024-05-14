@@ -17,7 +17,13 @@ class TokenManager extends CardManager<BTUnit> {
     // div.style.height = "calc(var(--btCardScale) * 179px)";
     // console.log('setup', card);
     div.style.position = 'relative';
-    div.classList.add('bt_token')
+    div.classList.add('bt_token');
+    div.insertAdjacentHTML(
+      'beforeend',
+      `<div id="spent_marker_${card.id}" data-spent="${
+        card.spent === 1 ? 'true' : 'false'
+      }" class="bt_spent_marker"></div>`
+    );
   }
 
   setupFrontDiv(card: BTUnit, div: HTMLElement) {

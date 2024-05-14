@@ -4,9 +4,6 @@ namespace BayonetsAndTomahawks\Core;
 
 class Notifications
 {
-
-
-
   // .########...#######..####.##.......########.########.
   // .##.....##.##.....##..##..##.......##.......##.....##
   // .##.....##.##.....##..##..##.......##.......##.....##
@@ -57,7 +54,7 @@ class Notifications
 
   public static function clearTurn($player, $notifIds)
   {
-    self::notifyAll('clearTurn', clienttranslate('${tkn_playerName} restarts their turn'), [
+    self::notifyAll('clearTurn', clienttranslate('${player_name} restarts their turn'), [
       'player' => $player,
       'notifIds' => $notifIds,
     ]);
@@ -125,7 +122,6 @@ class Notifications
   {
     if (isset($args['player'])) {
       $args['player_name'] = $args['player']->getName();
-      $args['tkn_playerName'] = $args['player']->getName();
       $args['playerId'] = $args['player']->getId();
       unset($args['player']);
     }
@@ -165,6 +161,16 @@ class Notifications
   // .##.....##.##..........##....##.....##.##.....##.##.....##.##....##
   // .##.....##.########....##....##.....##..#######..########...######.
 
+  public static function activateStack($player, $space, $actionName)
+  {
+    self::message(clienttranslate('${player_name} performs ${tkn_boldText_action} with stack in ${tkn_boldText_space}'), [
+      'player' => $player,
+      'tkn_boldText_action' => $actionName,
+      'tkn_boldText_space' => $space->getName(),
+      'i18n' => ['tkn_boldText_action', 'tkn_boldText_space']
+    ]);
+  }
+
   public static function drawCard($player, $card)
   {
     self::notify($player, 'drawCardPrivate', clienttranslate('Private: ${player_name} draws  ${cardId}'), [
@@ -200,11 +206,13 @@ class Notifications
     ]);
   }
 
-  public static function discardCardsInPlayMessage() {
+  public static function discardCardsInPlayMessage()
+  {
     self::message(clienttranslate('All played cards are discarded'), []);
   }
 
-  public static function discardReserveCards() {
+  public static function discardReserveCards()
+  {
     self::message(clienttranslate('Both players discard their Reserve card'), []);
   }
 
@@ -216,13 +224,36 @@ class Notifications
     ]);
   }
 
-  public static function moveRoundMarker($nextRoundStep) {
+  public static function interception($otherPlayer, $space, $dieResult, $intercepted)
+  {
+    $message = $intercepted ?
+      clienttranslate('${player_name} rolls ${tkn_dieResult} for Interception in ${tkn_boldText}. The Raid is intercepted') :
+      clienttranslate('${player_name} rolls ${tkn_dieResult} for Interception in ${tkn_boldText}. The Raid is not intercepted');
+
+    self::message($message, [
+      'player' => $otherPlayer,
+      'tkn_boldText' => $space->getName(),
+      'tkn_dieResult' => $dieResult,
+      'i18n' => ['tkn_boldText']
+    ]);
+  }
+
+  public static function moveRaidPointsMarker($raidMarker)
+  {
+    self::notifyAll("moveRaidPointsMarker", '', [
+      'marker' => $raidMarker->jsonSerialize(),
+    ]);
+  }
+
+  public static function moveRoundMarker($nextRoundStep)
+  {
     self::notifyAll("moveRoundMarker", '', [
       'nextRoundStep' => $nextRoundStep,
     ]);
   }
 
-  public static function moveStack($player, $units, $origin, $destination) {
+  public static function moveStack($player, $units, $origin, $destination)
+  {
     self::notifyAll("moveStack", clienttranslate('${player_name} moves a stack from ${originName} to ${destinationName}'), [
       'player' => $player,
       'originName' => $origin->getName(),
@@ -234,9 +265,75 @@ class Notifications
     ]);
   }
 
-  public static function moveYearMarker($year) {
+  public static function moveUnit($player, $unit, $origin, $destination)
+  {
+    self::notifyAll("moveUnit", clienttranslate('${player_name} moves ${tkn_unit} from ${tkn_boldText_1} to ${tkn_boldText_2}'), [
+      'player' => $player,
+      'tkn_boldText_1' => $origin->getName(),
+      'destination' => $destination,
+      'tkn_boldText_2' => $destination->getName(),
+      'faction' => $player->getFaction(),
+      'unit' => $unit->jsonSerialize(),
+      'tkn_unit' => $unit->getCounterId(),
+      'i18n' => ['tkn_boldText_1', 'tkn_boldText_2'],
+    ]);
+  }
+
+  public static function scoreVictoryPoints($player, $otherPlayer, $marker, $points)
+  {
+    $message = $points === 1 ? clienttranslate('${player_name} scores ${tkn_boldText_points} Victory Point') : clienttranslate('${player_name} scores ${tkn_boldText_points} Victory Points');
+
+    self::notifyAll("scoreVictoryPoints", $message, [
+      'player' => $player,
+      'marker' => $marker->jsonSerialize(),
+      'tkn_boldText_points' => $points,
+      'points' => [
+        $player->getId() => $player->getScore(),
+        $otherPlayer->getId() => $otherPlayer->getScore(),
+      ]
+    ]);
+  }
+
+  public static function moveYearMarker($year)
+  {
     self::notifyAll("moveYearMarker", '', [
       'year' => $year,
+    ]);
+  }
+
+  public static function placeUnitInLosses($player, $unit)
+  {
+    self::notifyAll("placeUnitInLosses", clienttranslate('${player_name} places ${tkn_unit} in their Losses Box'), [
+      'player' => $player,
+      'unit' => $unit,
+      'tkn_unit' => $unit->getCounterId()
+      // 'preserve' => ['playerId'],
+    ]);
+  }
+
+  public static function raidPoints($player, $space, $raidPoints)
+  {
+    $message = $raidPoints === 1 ?
+      clienttranslate('${player_name} gains ${tkn_boldText} Raid Point') :
+      clienttranslate('${player_name} gains ${tkn_boldText} Raid Points');
+
+    self::notifyAll("raidPoints", $message, [
+      'player' => $player,
+      'faction' => $player->getFaction(),
+      'space' => $space,
+      'tkn_boldText' => $raidPoints,
+    ]);
+  }
+
+  public static function raidResolution($player, $raidResolution, $raidIsSuccessful)
+  {
+    $message = $raidIsSuccessful ?
+      clienttranslate('${player_name} rolls ${tkn_dieResult} for Raid Resolution: the Raid succeeds') :
+      clienttranslate('${player_name} rolls ${tkn_dieResult} for Raid Resolution: the Raid fails');
+
+    self::message($message, [
+      'player' => $player,
+      'tkn_dieResult' => $raidResolution,
     ]);
   }
 

@@ -39,7 +39,7 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
 
   public function stActionRoundResolveBattles()
   {
-    Notifications::log('stActionRoundResolveBattles', []);
+    // Notifications::log('stActionRoundResolveBattles', []);
 
     $this->resolveAction(['automatic' => true]);
   }

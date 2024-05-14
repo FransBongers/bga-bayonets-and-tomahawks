@@ -57,7 +57,6 @@ class Connections extends \BayonetsAndTomahawks\Helpers\Pieces
     // Load list of cards
     include dirname(__FILE__) . '/../Connections/list.inc.php';
 
-    Notifications::log('connectionIds', $connectionIds);
     $connections = [];
     // Notifications::log('scenario', $scenario);
     // // return;
@@ -79,7 +78,7 @@ class Connections extends \BayonetsAndTomahawks\Helpers\Pieces
         'extra_data' => json_encode($extraData)
       ];
     }
-    Notifications::log('connections', $connections);
+
     // Add data to db
     self::create($connections, 'map');
   }

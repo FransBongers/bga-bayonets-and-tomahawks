@@ -15,12 +15,57 @@ class GameMap {
       [FRENCH]: UnitStack<BTUnit>;
     }
   > = {};
+  public losses: {
+    lossesBox_british: LineStock<BTUnit>;
+    lossesBox_french: LineStock<BTUnit>;
+  };
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
     const gamedatas = game.gamedatas;
 
     this.setupGameMap({ gamedatas });
+  }
+
+  // .##.....##.##....##.########...#######.
+  // .##.....##.###...##.##.....##.##.....##
+  // .##.....##.####..##.##.....##.##.....##
+  // .##.....##.##.##.##.##.....##.##.....##
+  // .##.....##.##..####.##.....##.##.....##
+  // .##.....##.##...###.##.....##.##.....##
+  // ..#######..##....##.########...#######.
+
+  clearInterface() {
+    this.losses.lossesBox_british.removeAll();
+    this.losses.lossesBox_french.removeAll();
+
+    Object.keys(this.stacks).forEach((spaceId) => {
+      this.stacks[spaceId][BRITISH].removeAll();
+      this.stacks[spaceId][FRENCH].removeAll();
+      const element = document.getElementById(`${spaceId}_markers`);
+      if (!element) {
+        return;
+      }
+      element.replaceChildren();
+    });
+
+    [
+      YEAR_MARKER,
+      ROUND_MARKER,
+      BRITISH_RAID_MARKER,
+      FRENCH_RAID_MARKER,
+      VICTORY_MARKER,
+    ].forEach((markerId) => {
+      const node = document.getElementById(markerId);
+      if (node) {
+        node.remove();
+      }
+    });
+  }
+
+  updateInterface({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
+    this.setupUnitsAndSpaces({ gamedatas });
+    this.setupMarkers({ gamedatas });
   }
 
   // ..######..########.########.##.....##.########.
@@ -31,8 +76,46 @@ class GameMap {
   // .##....##.##..........##....##.....##.##.......
   // ..######..########....##.....#######..##.......
 
-  setupUnits({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
+  setupUnitsAndSpaces({
+    gamedatas,
+  }: {
+    gamedatas: BayonetsAndTomahawksGamedatas;
+  }) {
+    if (!this.losses) {
+      this.losses = {
+        [LOSSES_BOX_BRITISH]: new LineStock<BTUnit>(
+          this.game.tokenManager,
+          document.getElementById(LOSSES_BOX_BRITISH),
+          {
+            center: false,
+          }
+        ),
+        [LOSSES_BOX_FRENCH]: new LineStock<BTUnit>(
+          this.game.tokenManager,
+          document.getElementById(LOSSES_BOX_FRENCH),
+          {
+            center: false,
+          }
+        ),
+      };
+    }
+    [LOSSES_BOX_BRITISH, LOSSES_BOX_FRENCH].forEach((box) => {
+      const units = gamedatas.units.filter((unit) => unit.location === box);
+      this.losses[box].addCards(units);
+    });
+
     gamedatas.spaces.forEach((space) => {
+      if (space.raided) {
+        const element = document.getElementById(`${space.id}_markers`);
+        if (!element) {
+          return;
+        }
+        element.insertAdjacentHTML(
+          'beforeend',
+          tplCommonMarker({ type: `${space.raided}_raided_marker` })
+        );
+      }
+
       if (!this.stacks[space.id]) {
         // [BRITISH, FRENCH].forEach((faction) => {
         this.stacks[space.id] = {
@@ -79,24 +162,6 @@ class GameMap {
             this.stacks[space.id][FRENCH].addUnit(unit);
           }
         });
-      // if (units.length > 0) {
-      // }
-
-      // this.stacks[space.id][BRITISH].addCards(units.filter((unit) => unit.));
-      // if (!unit) {
-      //   return;
-      // }
-      // const node = document.getElementById(space.id);
-      // if (!node) {
-      //   return;
-      // }
-      // node.insertAdjacentHTML(
-      //   "afterbegin",
-      //   tplUnit({
-      //     faction: gamedatas.staticData.units[unit.counterId].faction,
-      //     counterId: unit.counterId,
-      //   })
-      // );
     });
   }
 
@@ -118,6 +183,28 @@ class GameMap {
           tplMarker({ id: markers[ROUND_MARKER].id })
         );
     }
+    if (markers[BRITISH_RAID_MARKER]) {
+      document
+        .getElementById(`${markers[BRITISH_RAID_MARKER].location}`)
+        .insertAdjacentHTML(
+          'beforeend',
+          tplMarker({ id: markers[BRITISH_RAID_MARKER].id })
+        );
+    }
+    if (markers[FRENCH_RAID_MARKER]) {
+      document
+        .getElementById(`${markers[FRENCH_RAID_MARKER].location}`)
+        .insertAdjacentHTML(
+          'beforeend',
+          tplMarker({ id: markers[FRENCH_RAID_MARKER].id })
+        );
+    }
+    document
+      .getElementById(markers[VICTORY_MARKER].location)
+      .insertAdjacentHTML(
+        'beforeend',
+        tplMarker({ id: markers[VICTORY_MARKER].id })
+      );
   }
 
   updateGameMap({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {}
@@ -127,11 +214,9 @@ class GameMap {
     document
       .getElementById('play_area_container')
       .insertAdjacentHTML('afterbegin', tplGameMap({ gamedatas }));
-    this.setupUnits({ gamedatas });
+    this.setupUnitsAndSpaces({ gamedatas });
     this.setupMarkers({ gamedatas });
   }
-
-  clearInterface() {}
 
   // ..######...########.########.########.########.########...######.
   // .##....##..##..........##.......##....##.......##.....##.##....##
@@ -155,7 +240,7 @@ class GameMap {
       `action_round_track_${nextRoundStep}`
     );
 
-    if (!marker && toNode) {
+    if (!(marker && toNode)) {
       console.error('Unable to move round marker');
       return;
     }
@@ -170,7 +255,7 @@ class GameMap {
     const marker = document.getElementById('year_marker');
     const toNode = document.getElementById(`year_track_${year}`);
 
-    if (!marker && toNode) {
+    if (!(marker && toNode)) {
       console.error('Unable to move round marker');
       return;
     }

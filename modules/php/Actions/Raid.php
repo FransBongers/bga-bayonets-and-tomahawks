@@ -6,14 +6,14 @@ use BayonetsAndTomahawks\Core\Game;
 use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
-use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
+use BayonetsAndTomahawks\Helpers\BTDice;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\PathCalculator;
 use BayonetsAndTomahawks\Helpers\Utils;
-use BayonetsAndTomahawks\Managers\Cards;
+use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
-use BayonetsAndTomahawks\Managers\Tokens;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
@@ -124,6 +124,138 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
   public function actRaid($args)
   {
     self::checkAction('actRaid');
+    $path = $args['path'];
+    $spaceId = $args['spaceId'];
+    $unitId = $args['unitId'];
+
+    $stateArgs = $this->argsRaid();
+
+    /**
+     * Get data and validate input
+     */
+    $unit = Utils::array_find($stateArgs['units'], function ($possibleUnit) use ($unitId) {
+      return $unitId === $possibleUnit->getId();
+    });
+
+    if ($unit === null) {
+      throw new \feException("ERROR 003");
+    }
+
+    if (!isset($stateArgs['raidTargets'][$spaceId])) {
+      throw new \feException("ERROR 004");
+    }
+
+    $raidTarget = $stateArgs['raidTargets'][$spaceId];
+
+    $space = $raidTarget['space'];
+
+    $path = Utils::array_find($raidTarget['paths'], function ($targetPath) use ($path) {
+      if (count($targetPath) !== count($path)) {
+        return false;
+      }
+      $pathMatches = true;
+      for ($i = 0; $i < count($path); $i++) {
+        if ($path[$i] !== $targetPath[$i]) {
+          $pathMatches = false;
+          break;
+        }
+      }
+      return $pathMatches;
+    });
+
+    if ($path === null) {
+      throw new \feException("ERROR 005");
+    }
+
+    /**
+     * Perform raid: 
+     * - move selected unit along path
+     * - check for interception in each space
+     * - raid resolution if not intercepted
+     * - spent marker on unit
+     */
+    $player = self::getPlayer();
+    $playerFaction = $player->getFaction();
+
+    $otherPlayer = Players::getOther();
+    $otherPlayerFaction = $otherPlayer->getFaction();
+
+    // Move unit along path and check roll for interception
+    foreach ($path as $index => $spaceId) {
+      $space = Spaces::get($spaceId);
+      // 0 is start space so unit does not move
+      if ($index !== 0) {
+        // Move unit to space
+        $origin = Spaces::get($unit->getLocation());
+        Units::move($unitId, $spaceId);
+        $unit->setLocation($spaceId);
+        Notifications::moveUnit($player, $unit, $origin, $space);
+      };
+      // Check for interception
+      $unitsOnSpace = $space->getUnits();
+      $hasEnemyUnit = Utils::array_some($unitsOnSpace, function ($unitOnSpace) use ($otherPlayerFaction) {
+        return $unitOnSpace->getFaction() === $otherPlayerFaction;
+      });
+
+      if ($hasEnemyUnit) {
+        $hasEnemyLightUnit = Utils::array_some($unitsOnSpace, function ($unitOnSpace) use ($otherPlayerFaction) {
+          return $unitOnSpace->getFaction() === $otherPlayerFaction && $unitOnSpace->getType() === LIGHT;
+        });
+
+        // Roll for interception
+        $dieResult = BTDice::roll();
+        $intercepted = ($hasEnemyLightUnit && in_array($dieResult, [FLAG, HIT_TRIANGLE_CIRCLE, B_AND_T])) || $dieResult === FLAG;
+        Notifications::interception($otherPlayer, $space, $dieResult, $intercepted);
+
+        // If intercepted move unit back to starting space
+        if ($intercepted) {
+          $this->returnUnitToStartingSpace($player, $unit, $path, $space);
+          // Units::move($unitId, $path[0]);
+          // Notifications::moveUnit($player, $unit, $space, Spaces::get($path[0]));
+          $this->resolveAction($args);
+          return;
+        }
+      }
+    }
+    $raidResolution = BTDice::roll();
+    $raidIsSuccessful = in_array($raidResolution, [FLAG, HIT_TRIANGLE_CIRCLE, B_AND_T]);
+
+    Notifications::raidResolution($player, $raidResolution, $raidIsSuccessful);
+
+    // Move unit back to start
+    if (!$raidIsSuccessful || ($raidIsSuccessful && !$unit->isIndian())) {
+      $this->returnUnitToStartingSpace($player, $unit, $path, null);
+      // TODO: place spent marker
+    } else if ($raidIsSuccessful && $unit->isIndian()) {
+      // Place in friendly losses box
+      $unit->placeInLosses($player);
+    }
+
+    if ($raidIsSuccessful) {
+      $raidPoints = $space->getHomeSpace() !== null ? $space->getValue() : 1;
+
+      // Place raided marker
+      $space->setRaided($playerFaction);
+      Notifications::raidPoints($player, $space, $raidPoints);
+
+      // Award raid points
+      $raidMarker = Markers::get($playerFaction === BRITISH ? BRITISH_RAID_MARKER : FRENCH_RAID_MARKER);
+      $position = intval(explode('_', $raidMarker->getLocation())[2]);
+      $newPosition = $position + $raidPoints;
+      if ($newPosition < 8) {
+        $raidMarker->setLocation(Locations::raidTrack($newPosition));
+        Notifications::moveRaidPointsMarker($raidMarker);
+      } else {
+        $remainingRaidPoints = $newPosition - 8;
+        $raidMarker->setLocation(RAID_TRACK_8);
+        Notifications::moveRaidPointsMarker($raidMarker);
+
+        Players::scoreVictoryPoint($player, 1);
+
+        $raidMarker->setLocation(Locations::raidTrack($remainingRaidPoints));
+        Notifications::moveRaidPointsMarker($raidMarker);
+      }
+    }
 
     $this->resolveAction($args);
   }
@@ -136,7 +268,17 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  private function getMaxDistance($actionPointId) {
+  private function returnUnitToStartingSpace($player, $unit, $path, $currentSpace = null)
+  {
+    $currentSpace = $currentSpace === null ? Spaces::get($path[count($path) - 1]) : $currentSpace;
+    $unitId = $unit->getId();
+    $unit->setSpent(1);
+    Units::move($unitId, $path[0]);
+    Notifications::moveUnit($player, $unit, $currentSpace, Spaces::get($path[0]));
+  }
+
+  private function getMaxDistance($actionPointId)
+  {
     $maxDistance = 3;
     if ($actionPointId === INDIAN_AP_2X || $actionPointId === LIGHT_AP_2X) {
       $maxDistance = $maxDistance * 2;
@@ -144,7 +286,8 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
     return $maxDistance;
   }
 
-  public function getUiData() {
+  public function getUiData()
+  {
     return [
       'id' => RAID,
       'name' => clienttranslate("Raid"),
@@ -167,7 +310,7 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
 
     $destinations = $this->getAllRaidPaths($space->getId(), $maxDistance, $playerFaction);
 
-    Notifications::log('destinations', $destinations);
+    // Notifications::log('destinations', $destinations);
 
     return count($destinations) > 0;
   }
@@ -266,7 +409,17 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
 
     foreach ($visited as $spaceId => $data) {
       $space = $allSpaces[$spaceId];
-      if ($space->getHomeSpace() !== $enemyFaction || $space->getValue() === 0) {
+      // Space has already been raided
+      if ($space->getRaided() !== null) {
+        continue;
+      }
+      $homeSpace = $space->getHomeSpace();
+      if ($homeSpace === null && !Utils::array_some($space->getUnits(), function ($unit) use ($playerFaction) {
+        return $unit->getType() === FORT && $unit->getFaction() !== $playerFaction;
+      })) {
+        continue;
+      }
+      if (($homeSpace !== null && $homeSpace !== $enemyFaction)) {
         continue;
       }
       // We found shortest route without enemy units

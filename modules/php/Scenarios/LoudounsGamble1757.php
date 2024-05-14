@@ -12,6 +12,7 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
     $this->number = 2;
     $this->startYear = 1757;
     $this->duration = 1;
+    $this->victoryMarkerLocation = VICTORY_POINTS_FRENCH_1;
     $this->locations = [
       // Indian Setup
       MIRAMICHY => [

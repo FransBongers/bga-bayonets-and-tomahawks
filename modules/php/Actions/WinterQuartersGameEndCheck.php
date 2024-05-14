@@ -13,7 +13,6 @@ use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Scenarios;
-use BayonetsAndTomahawks\Managers\Tokens;
 use BayonetsAndTomahawks\Models\Player;
 use BayonetsAndTomahawks\Scenario;
 

@@ -46,7 +46,6 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
 
   public function argsActionActivateStack()
   {
-    Notifications::log('argsActionActivateStack', []);
     $actionPointId = $this->ctx->getParent()->getInfo()['actionPointId'];
     $actionPoint = ActionPoints::get($actionPointId);
     $player = self::getPlayer();
@@ -103,12 +102,8 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
 
     $actionId = $args['action'];
     $stackId = $args['stack'];
-    Notifications::log('action', $actionId);
-    Notifications::log('stack', $stackId);
 
     $args = $this->argsActionActivateStack();
-
-    Notifications::log('args', $args);
 
     if (!isset($args['stacks'][$stackId])) {
       throw new \feException("Not allowed to activate selected stack");
@@ -123,6 +118,8 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
     $actionPointId = $this->ctx->getParent()->getInfo()['actionPointId'];
     $flow = AtomicActions::get($action['id'])->getFlow(self::getPlayer()->getId(), $stackId, in_array($actionPointId, [INDIAN_AP, INDIAN_AP_2X]));
     $this->ctx->insertAsBrother(Engine::buildTree($flow));
+
+    Notifications::activateStack(self::getPlayer(), Spaces::get($stackId), $action['name']);
 
     $this->resolveAction($args);
   }

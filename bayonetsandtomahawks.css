@@ -70,7 +70,7 @@
 
 .bt_card_container.bt_selectable > .card-sides > .card-side {
   cursor: pointer;
-  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) red !important;
+  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) orange !important;
 }
 
 .bt_card_container.bt_selectable:hover > .card-sides > .card-side,
@@ -423,10 +423,11 @@
 
 .bt_marker {
   background-image: url("img/markers_2.webp");
-  height: calc(var(--btMapScale) * 41px);
-  width: calc(var(--btMapScale) * 41px);
+  min-height: calc(var(--btMapScale) * 41px);
+  max-height: calc(var(--btMapScale) * 41px);
+  min-width: calc(var(--btMapScale) * 41px);
+  max-width: calc(var(--btMapScale) * 41px);
   background-size: 800% 600%;
-  position: absolute;
   box-sizing: border-box;
   border: calc(var(--btMapScale) * 1px) solid black;
   border-radius: 5%;
@@ -440,6 +441,31 @@
 #round_marker {
   background-position-x: 42.8571428571%;
   background-position-y: 60%;
+}
+
+#british_raid_marker {
+  background-position-x: 100%;
+  background-position-y: 80%;
+}
+
+#french_raid_marker {
+  background-position-x: 0%;
+  background-position-y: 100%;
+}
+
+#victory_marker {
+  background-position-x: 71.4285714286%;
+  background-position-y: 60%;
+}
+
+.bt_marker[data-type=british_raided_marker] {
+  background-position-x: 14.2857142857%;
+  background-position-y: 100%;
+}
+
+.bt_marker[data-type=french_raided_marker] {
+  background-position-x: 28.5714285714%;
+  background-position-y: 100%;
 }
 
 .bt_marker_test {
@@ -473,7 +499,7 @@
 }
 
 .bt_space.bt_selectable {
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) red !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) orange !important;
   cursor: pointer;
 }
 
@@ -507,9 +533,23 @@
   z-index: 1;
 }
 
+.bt_token .bt_spent_marker {
+  background-image: url("img/markers_2.webp");
+  background-size: 800% 600%;
+  background-position-x: 100%;
+  background-position-y: 60%;
+  position: absolute;
+  height: calc(var(--btMapScale) * 20px);
+  width: calc(var(--btMapScale) * 20px);
+  top: calc(var(--btMapScale) * 28px);
+}
+.bt_token .bt_spent_marker[data-spent=false] {
+  display: none;
+}
+
 .bt_token.bt_selectable > .card-sides > .card-side {
   cursor: pointer;
-  filter: drop-shadow(2px 0px 0px red) drop-shadow(-2px 0px 0px red) drop-shadow(0px 2px 0px red) drop-shadow(0px -2px 0px red);
+  filter: drop-shadow(2px 0px 0px orange) drop-shadow(-2px 0px 0px orange) drop-shadow(0px 2px 0px orange) drop-shadow(0px -2px 0px orange);
 }
 
 .bt_token.bt_selectable:hover > .card-sides > .card-side,
@@ -519,13 +559,29 @@
 }
 
 .bt_stack.bt_selectable {
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) red !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) orange !important;
   cursor: pointer;
 }
 
 .bt_stack.bt_selected {
   box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #0000ff !important;
   cursor: pointer;
+}
+
+.bt_losses_box {
+  position: absolute;
+  width: calc(var(--btMapScale) * 131px);
+  height: calc(var(--btMapScale) * 318px);
+}
+
+#lossesBox_french {
+  top: calc(var(--btMapScale) * 551px);
+  left: calc(var(--btMapScale) * 30px);
+}
+
+#lossesBox_british {
+  top: calc(var(--btMapScale) * 1312px);
+  left: calc(var(--btMapScale) * 1338px);
 }
 
 #floating_hand_wrapper {
@@ -677,6 +733,36 @@
 }
 
 /* ------- LOG TOKENS ------- */
+.bt_log_die {
+  background-image: url("img/dice.webp");
+  height: calc(var(--btTokenScale) * 40px);
+  width: calc(var(--btTokenScale) * 40px);
+  background-size: 500% 100%;
+  display: inline-block;
+  border: 1px solid;
+  border-radius: 5%;
+}
+
+.bt_log_die[data-die-result=b_and_t] {
+  background-position-x: 0%;
+}
+
+.bt_log_die[data-die-result=miss] {
+  background-position-x: 25%;
+}
+
+.bt_log_die[data-die-result=flag] {
+  background-position-x: 50%;
+}
+
+.bt_log_die[data-die-result=hit_square_circle] {
+  background-position-x: 75%;
+}
+
+.bt_log_die[data-die-result=hit_triangle_circle] {
+  background-position-x: 100%;
+}
+
 #pagemaintitletext .bt_card,
 #gameaction_status .bt_card {
   display: none;
@@ -689,6 +775,23 @@
 .log > .roundedbox .bt_card,
 .log > .roundedboxinner .bt_card {
   margin-top: calc(var(--logCardScale) * 6px);
+}
+.log > .roundedbox .bt_token_side,
+.log > .roundedboxinner .bt_token_side {
+  --btTokenScale: 0.8;
+  position: relative;
+  display: inline-block;
+  top: -3px;
+  margin-top: 3px;
+  vertical-align: middle;
+}
+.log > .roundedbox .bt_log_die,
+.log > .roundedboxinner .bt_log_die {
+  --btTokenScale: 0.6;
+  position: relative;
+  top: -3px;
+  margin-top: 3px;
+  vertical-align: middle;
 }
 
 #bt_right_column {

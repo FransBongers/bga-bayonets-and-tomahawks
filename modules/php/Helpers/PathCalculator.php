@@ -13,7 +13,6 @@ class PathCalculator extends \APP_DbObject
 
   function __construct($maxLevel)
   {
-    Notifications::log('GetPaths constructor',$maxLevel);
     $this->result = [];
     $this->maxLevel = $maxLevel;
   }
@@ -65,13 +64,6 @@ class PathCalculator extends \APP_DbObject
 
   public function findAllPathsBetweenSpaces($sourceId, $destinationId, $set)
   {
-    Notifications::log('findAllPathsBetweenSpaces', [
-      'sourceId' => $sourceId,
-      'destinationId' => $destinationId,
-      'set' => $set,
-      'maxLevel' => $this->maxLevel,
-    ]);
-
     $allSpaces = Spaces::getAll();
 
     $visited = [];

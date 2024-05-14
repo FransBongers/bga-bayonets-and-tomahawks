@@ -11,7 +11,7 @@ use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
-use BayonetsAndTomahawks\Managers\Tokens;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Models\Player;
 
 class ColonialsEnlistDrawReinforcements extends \BayonetsAndTomahawks\Models\AtomicAction
@@ -39,9 +39,9 @@ class ColonialsEnlistDrawReinforcements extends \BayonetsAndTomahawks\Models\Ato
 
   public function stColonialsEnlistDrawReinforcements()
   {
-    Notifications::log('stColonialsEnlistDrawReinforcements', []);
+    // Notifications::log('stColonialsEnlistDrawReinforcements', []);
     Globals::setActionRound(ACTION_ROUND_4);
-    Tokens::move(ROUND_MARKER, ACTION_ROUND_4);
+    Markers::move(ROUND_MARKER, ACTION_ROUND_4);
     Notifications::moveRoundMarker(ACTION_ROUND_4);
 
     $this->resolveAction(['automatic' => true]);

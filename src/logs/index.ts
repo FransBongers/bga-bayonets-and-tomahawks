@@ -1,8 +1,10 @@
 const LOG_TOKEN_BOLD_TEXT = "boldText";
 const LOG_TOKEN_NEW_LINE = "newLine";
-const LOG_TOKEN_PLAYER_NAME = "playerName";
+// const LOG_TOKEN_PLAYER_NAME = "playerName";
 // Game specific
 const LOG_TOKEN_CARD = "card";
+const LOG_TOKEN_UNIT = "unit";
+const LOG_TOKEN_DIE_RESULT = "dieResult";
 
 let tooltipIdCounter = 0;
 
@@ -24,16 +26,20 @@ const getTokenDiv = ({
       return tplLogTokenCard(value);
     case LOG_TOKEN_NEW_LINE:
       return "<br>";
-    case LOG_TOKEN_PLAYER_NAME:
-      const player = game.playerManager
-        .getPlayers()
-        .find((player) => player.getName() === value);
-      return player
-        ? tplLogTokenPlayerName({
-            name: player.getName(),
-            color: player.getHexColor(),
-          })
-        : value;
+    case LOG_TOKEN_DIE_RESULT:
+      return tplLogDieResult(value);
+    case LOG_TOKEN_UNIT:
+      return tplLogTokenUnit(value);
+    // case LOG_TOKEN_PLAYER_NAME:
+    //   const player = game.playerManager
+    //     .getPlayers()
+    //     .find((player) => player.getName() === value);
+    //   return player
+    //     ? tplLogTokenPlayerName({
+    //         name: player.getName(),
+    //         color: player.getHexColor(),
+    //       })
+    //     : value;
     default:
       return value;
   }

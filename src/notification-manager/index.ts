@@ -63,10 +63,15 @@ class NotificationManager {
       'discardCardFromHandPrivate',
       'discardCardInPlay',
       'drawCardPrivate',
+      'moveRaidPointsMarker',
       'moveRoundMarker',
       'moveStack',
       'moveYearMarker',
+      'moveUnit',
+      'placeUnitInLosses',
+      'raidPoints',
       'revealCardsInPlay',
+      'scoreVictoryPoints',
       'selectReserveCard',
       'selectReserveCardPrivate',
     ];
@@ -176,6 +181,7 @@ class NotificationManager {
     this.game.clearInterface();
     this.game.gamedatas = updatedGamedatas;
     this.game.playerManager.updatePlayers({ gamedatas: updatedGamedatas });
+    this.game.gameMap.updateInterface({ gamedatas: updatedGamedatas });
   }
 
   async notif_discardCardFromHand(notif: Notif<NotifDiscardCardFromHandArgs>) {
@@ -214,6 +220,48 @@ class NotificationManager {
     return;
   }
 
+  async notif_moveRaidPointsMarker(
+    notif: Notif<NotifMoveRaidPointsMarkerArgs>
+  ) {
+    const { marker } = notif.args;
+
+    const element = document.getElementById(marker.id);
+    const toNode = document.getElementById(marker.location);
+
+    if (!(element && toNode)) {
+      console.error('Unable to move marker');
+      return;
+    }
+
+    await this.game.animationManager.attachWithAnimation(
+      new BgaSlideAnimation({ element }),
+      toNode
+    );
+  }
+
+  async notif_scoreVictoryPoints(notif: Notif<NotifScoreVictoryPointsArgs>) {
+    const { marker, points } = notif.args;
+
+    Object.entries(points).forEach(([playerId, score]) => {
+      if (this.game.framework().scoreCtrl?.[playerId]) {
+        this.game.framework().scoreCtrl[playerId].setValue(Number(score));
+      }
+    });
+
+    const element = document.getElementById(marker.id);
+    const toNode = document.getElementById(marker.location);
+
+    if (!(element && toNode)) {
+      console.error('Unable to move marker');
+      return;
+    }
+
+    await this.game.animationManager.attachWithAnimation(
+      new BgaSlideAnimation({ element }),
+      toNode
+    );
+  }
+
   async notif_moveRoundMarker(notif: Notif<NotifMoveRoundMarkerArgs>) {
     const { nextRoundStep } = notif.args;
 
@@ -221,10 +269,25 @@ class NotificationManager {
   }
 
   async notif_moveStack(notif: Notif<NotifMoveStackArgs>) {
-    const {stack, destination, faction} = notif.args;
+    const { stack, destination, faction } = notif.args;
     const unitStack = this.game.gameMap.stacks[destination.id][faction];
     if (unitStack) {
       await (unitStack as UnitStack<BTUnit>).addUnits(stack);
+    }
+  }
+
+  async notif_moveUnit(notif: Notif<NotifMoveUnitArgs>) {
+    const { unit, destination, faction } = notif.args;
+    const unitStack = this.game.gameMap.stacks[destination.id][faction];
+    if (unitStack) {
+      await (unitStack as UnitStack<BTUnit>).addUnit(unit);
+    }
+
+    if (unit.spent === 1) {
+      const element = document.getElementById(`spent_marker_${unit.id}`);
+      if (element) {
+        element.setAttribute('data-spent', 'true');
+      }
     }
   }
 
@@ -232,6 +295,25 @@ class NotificationManager {
     const { year } = notif.args;
 
     await this.game.gameMap.moveYearMarker({ year });
+  }
+
+  async notif_placeUnitInLosses(notif: Notif<NotifPlaceUnitInLossesArgs>) {
+    const { unit } = notif.args;
+
+    await this.game.gameMap.losses[unit.location].addCard(unit);
+    // await this.game.gameMap.moveYearMarker({ year });
+  }
+
+  async notif_raidPoints(notif: Notif<NotifPlaceRaidPointsArgs>) {
+    const { space, faction } = notif.args;
+    const element = document.getElementById(`${space.id}_markers`);
+    if (!element) {
+      return;
+    }
+    element.insertAdjacentHTML(
+      'beforeend',
+      tplCommonMarker({ type: `${faction}_raided_marker` })
+    );
   }
 
   async notif_revealCardsInPlay(notif: Notif<NotifRevealCardsInPlayArgs>) {

@@ -47,7 +47,7 @@ use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Connections;
 use BayonetsAndTomahawks\Managers\Scenarios;
 use BayonetsAndTomahawks\Managers\Spaces;
-use BayonetsAndTomahawks\Managers\Tokens;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Units;
 
 use const BayonetsAndTomahawks\OPTION_SCENARIO;
@@ -114,7 +114,7 @@ class bayonetsandtomahawks extends Table
         Globals::setTest($options);
         Scenarios::setup($options[OPTION_SCENARIO]);
         Cards::setupNewGame();
-        Tokens::setupNewGame();
+        Markers::setupNewGame();
 
         $this->setGameStateInitialValue('logging', false);
 
@@ -140,10 +140,7 @@ class bayonetsandtomahawks extends Table
             ],
             'spaces' => Spaces::getUiData(),
             'units' => Units::getUiData(),
-            'markers' => [
-                YEAR_MARKER => Tokens::get(YEAR_MARKER),
-                ROUND_MARKER => Tokens::get(ROUND_MARKER),
-            ]
+            'markers' => Markers::getAll(),
         ];
 
         return $data;

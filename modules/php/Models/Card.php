@@ -11,8 +11,6 @@ use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\TableauOps;
-use BayonetsAndTomahawks\Managers\Tokens;
-use PgSql\Lob;
 
 class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
 {

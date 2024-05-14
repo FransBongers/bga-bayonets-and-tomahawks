@@ -12,7 +12,7 @@ use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Spaces;
-use BayonetsAndTomahawks\Managers\Tokens;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
@@ -158,7 +158,6 @@ class LightMovement extends \BayonetsAndTomahawks\Actions\UnitMovement
   {
     self::checkAction('actLightMovement');
 
-    Notifications::log('args', $args);
     $unitIds = $args['unitIds'];
     $spaceId = $args['spaceId'];
     $space = Spaces::get($spaceId);
@@ -171,11 +170,11 @@ class LightMovement extends \BayonetsAndTomahawks\Actions\UnitMovement
     $units = array_map(function ($unitId) {
       return Units::get($unitId);
     }, $unitIds);
-    Notifications::log('units', $units);
+    // Notifications::log('units', $units);
     $stateArgsUnitIds = array_map(function ($unit) {
       return $unit->getId();
     }, $stateArgs['lightUnits']);
-    Notifications::log('stateArgsUnitIds', $stateArgsUnitIds);
+    // Notifications::log('stateArgsUnitIds', $stateArgsUnitIds);
     $hasNotAllowedUnit = Utils::array_some($units, function ($unit) use ($stateArgsUnitIds) {
       return !in_array($unit->getId(), $stateArgsUnitIds);
     });

@@ -45,7 +45,7 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
   public function argsActionRoundChooseFirstPlayer()
   {
 
-    Notifications::log('argsActionRoundChooseFirstPlayer',[]);
+    // Notifications::log('argsActionRoundChooseFirstPlayer',[]);
     return [];
   }
 
@@ -84,8 +84,8 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
     $secondPlayer = Utils::array_find($players, function ($player) use ($firstPlayerId) {
       return $player->getId() !== $firstPlayerId;
     });
-    Notifications::log('firstPlayer', $firstPlayer);
-    Notifications::log('secondPlayer', $secondPlayer);
+    // Notifications::log('firstPlayer', $firstPlayer);
+    // Notifications::log('secondPlayer', $secondPlayer);
     // TODO: AR start events
     $actionRoundFlow = [
       'children' => [

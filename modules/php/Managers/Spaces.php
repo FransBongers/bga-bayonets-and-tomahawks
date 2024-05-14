@@ -2,24 +2,38 @@
 
 namespace BayonetsAndTomahawks\Managers;
 
+use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Game;
 use BayonetsAndTomahawks\Core\Notifications;
-
-// require_once 'modules/php/Spaces/DefaultSpaces.php';
-// 
+use BayonetsAndTomahawks\Helpers\Locations;
+use BayonetsAndTomahawks\Managers\Players;
+use BayonetsAndTomahawks\Helpers\Utils;
 
 /**
- * Units
+ * Cards
  */
-class Spaces extends \BayonetsAndTomahawks\Helpers\DB_Manager
+class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
 {
   protected static $table = 'spaces';
-  protected static $primary = 'space_id';
+  protected static $prefix = 'space_';
+  protected static $customFields = [
+    'control',
+    'raided',
+    // 'extra_data'
+  ];
+  protected static $autoremovePrefix = false;
+  protected static $autoreshuffle = false;
+  protected static $autoIncrement = false;
 
   protected static function cast($row)
   {
-    $instance = self::get($row['space_id'],$row);
-    return $instance;
+    return self::getInstance($row['space_id'], $row);
+  }
+
+  public static function getInstance($id, $data = null)
+  {
+    $className = "\BayonetsAndTomahawks\Spaces\\" . $id;
+    return new $className($data);
   }
 
   // ..######..########.########.##.....##.########.
@@ -30,55 +44,24 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\DB_Manager
   // .##....##.##..........##....##.....##.##.......
   // ..######..########....##.....#######..##.......
 
+  /* Creation of the cards */
   public static function setupNewGame($players = null, $options = null)
   {
     $spaces = [];
     foreach (SPACES as $spaceId) {
-      $space = self::get($spaceId);
+      $space = self::getInstance($spaceId);
+
       $data = [
-        'space_id' => $space->getId(),
+        'id' => $spaceId,
         'control' => $space->getDefaultControl(),
+        'location' => 'default',
+        'raided' => null,
         // 'extra_data' => ['properties' => []],
       ];
-      $spaces[] = $data;
+
+      $spaces[$spaceId] = $data;
     }
-
-    // self::create($spaces);
-
-    // Create players
-    // $gameInfos = Game::get()->getGameinfos();
-    // $colors = $gameInfos['player_colors'];
-    $query = self::DB()->multipleInsert([
-      'space_id',
-      'control',
-      // 'extra_data',
-    ]);
-
-    // $values = [];
-    // foreach ($players as $pId => $player) {
-    //   $color = array_shift($colors);
-    //   $values[] = [$pId, $color, $player['player_canal'], $player['player_name'], $player['player_avatar'],0];
-    // }
-    Notifications::log('spaces',$spaces);
-    $query->values($spaces);
-  }
-
-  // protected static function cast($space)
-  // {
-  //   Notifications::log('cast in manager', $space);
-  //   return self::getSpaceInstance($space['location'], $space);
-  // }
-
-  public static function get($id, $data = null)
-  {
-    $className = "\BayonetsAndTomahawks\Spaces\\" . $id;
-    return new $className($data);
-  }
-
-  public static function getAll()
-  {
-    $spaces = self::DB()->get(false);
-    return $spaces;
+    self::create($spaces, null);
   }
 
   public static function getUiData()
@@ -87,21 +70,4 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\DB_Manager
       return $space->jsonSerialize();
     })->toArray();
   }
-
-  // public static function setupNewGame($players, $options)
-  // public static function setupNewGameDefaults()
-  // {
-  //   $spaces = [];
-  //   foreach (SPACES as $spaceId) {
-  //     $space = self::getSpaceInstance($spaceId);
-  //     $data = [
-  //       'id' => $space->getId(),
-  //       'location' => $space->getLocation(),
-  //       'control' => $space->getControl(),
-  //     ];
-  //     $spaces[] = $data;
-  //   }
-
-  //   self::create($spaces);
-  // }
 }

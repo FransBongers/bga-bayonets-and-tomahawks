@@ -1,7 +1,7 @@
 class RaidState implements State {
   private game: BayonetsAndTomahawksGame;
   private args: OnEnteringRaidStateArgs;
-  private selectedUnits = [];
+  private selectedUnit: BTUnit | null = null;
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
@@ -10,7 +10,7 @@ class RaidState implements State {
   onEnteringState(args: OnEnteringRaidStateArgs) {
     debug('Entering RaidState');
     this.args = args;
-    this.selectedUnits = [];
+    this.selectedUnit = null;
     this.updateInterfaceInitialStep();
   }
 
@@ -45,6 +45,12 @@ class RaidState implements State {
         you: '${you}',
       },
     });
+
+    if (this.args.units.length === 1) {
+      this.selectedUnit = this.args.units[0];
+      this.game.setUnitSelected({id: this.selectedUnit.id + ''})
+      
+    }
 
     this.setTargetsSelectable();
 
@@ -137,11 +143,23 @@ class RaidState implements State {
     this.game.clientUpdatePageTitle({
       text: _('Raid ${spaceName}?'),
       args: {
-        you: '${you}',
         spaceName: _(space.name)
       },
     });
 
+    this.game.addConfirmButton({
+      callback: () => {
+        this.game.clearPossible();
+        this.game.takeAction({
+          action: 'actRaid',
+          args: {
+            path,
+            spaceId: space.id,
+            unitId: this.selectedUnit.id,
+          },
+        });
+      },
+    });
     this.game.addCancelButton();
   }
 

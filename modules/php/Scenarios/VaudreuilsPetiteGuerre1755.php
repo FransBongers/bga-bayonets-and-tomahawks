@@ -12,6 +12,7 @@ class VaudreuilsPetiteGuerre1755 extends \BayonetsAndTomahawks\Models\Scenario
     $this->number = 1;
     $this->startYear = 1755;
     $this->duration = 1;
+    $this->victoryMarkerLocation = VICTORY_POINTS_FRENCH_1;
     $this->locations = [
       // Indian Setup
       MIRAMICHY => [
@@ -214,8 +215,8 @@ class VaudreuilsPetiteGuerre1755 extends \BayonetsAndTomahawks\Models\Scenario
           ONTARIO
         ]
       ],
-      KADESQUIT => [
-        'id' => KADESQUIT,
+      WILLS_CREEK => [
+        'id' => WILLS_CREEK,
         'units' => [
           WASHINGTON
         ]

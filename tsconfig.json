@@ -45,6 +45,7 @@
     "src/game-map/config.ts",
     "src/game-map/index.ts",
     "src/game-map/templates.ts",
+    "src/game-map/types.d.ts",
     "src/hand/index.ts",
     "src/hand/templates.ts",
     "src/info-panel/index.ts",

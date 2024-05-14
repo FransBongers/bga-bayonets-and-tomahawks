@@ -34,6 +34,10 @@ interface NotifDiscardCardsInPlayArgs {
   card: BTCard;
 }
 
+interface NotifMoveRaidPointsMarkerArgs {
+  marker: BTMarker;
+}
+
 interface NotifMoveRoundMarkerArgs {
   nextRoundStep: string;
 }
@@ -44,8 +48,29 @@ interface NotifMoveStackArgs {
   faction: Faction;
 }
 
+interface NotifScoreVictoryPointsArgs {
+  marker: BTMarker;
+  points: Record<number, number>;
+}
+
+interface NotifMoveUnitArgs {
+  unit: BTUnit;
+  destination: BTSpace;
+  faction: Faction;
+}
+
 interface NotifMoveYearMarkerArgs {
   year: number;
+}
+
+interface NotifPlaceUnitInLossesArgs extends NotifWithPlayerArgs {
+  unit: BTUnit;
+  faction: string;
+}
+
+interface NotifPlaceRaidPointsArgs extends NotifWithPlayerArgs {
+  space: BTSpace;
+  faction: string;
 }
 
 interface NotifRevealCardsInPlayArgs {

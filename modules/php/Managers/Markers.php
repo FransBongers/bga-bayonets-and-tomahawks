@@ -8,26 +8,28 @@ use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Managers\Scenarios;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Models\Marker;
 
 /**
  * extends
  */
-class Tokens extends \BayonetsAndTomahawks\Helpers\Pieces
+class Markers extends \BayonetsAndTomahawks\Helpers\Pieces
 {
-  protected static $table = 'tokens';
-  protected static $prefix = 'token_';
+  protected static $table = 'markers';
+  protected static $prefix = 'marker_';
   protected static $customFields = ['extra_data'];
   protected static $autoremovePrefix = false;
   protected static $autoreshuffle = false;
   protected static $autoIncrement = false;
 
-  protected static function cast($token)
+  protected static function cast($marker)
   {
-    return [
-      'id' => $token['token_id'],
-      'location' => $token['token_location'],
-      'state' => intval($token['token_state']),
-    ];
+    // return [
+    //   'id' => $token['marker_id'],
+    //   'location' => $token['marker_location'],
+    //   'state' => intval($token['marker_state']),
+    // ];
+    return new Marker($marker);
   }
 
 
@@ -92,6 +94,35 @@ class Tokens extends \BayonetsAndTomahawks\Helpers\Pieces
       'location' => ACTION_ROUND_1,
       'extra_data' => json_encode(null)
     ];
+    $tokens[BRITISH_RAID_MARKER] = [
+      'id' => BRITISH_RAID_MARKER,
+      'location' => RAID_TRACK_0,
+      'extra_data' => json_encode(null)
+    ];
+    $tokens[FRENCH_RAID_MARKER] = [
+      'id' => FRENCH_RAID_MARKER,
+      'location' => RAID_TRACK_0,
+      'extra_data' => json_encode(null)
+    ];
+    $vpMarkerLocation = $scenario->getVictoryMarkerLocation();
+    $tokens[VICTORY_MARKER] = [
+      'id' => VICTORY_MARKER,
+      'location' => $vpMarkerLocation,
+      'extra_data' => json_encode(null)
+    ];
+
+    $players = Players::getAll();
+    foreach($players as $player) {
+      if ($vpMarkerLocation === VICTORY_POINTS_FRENCH_1) {
+        if ($player->getFaction() === BRITISH) {
+          $player->setScore(-1);
+        }
+        if ($player->getFaction() === FRENCH) {
+          $player->setScore(1);
+        }
+      }
+    }
+
 
     self::create($tokens, null);
   }

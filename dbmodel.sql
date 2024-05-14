@@ -53,23 +53,27 @@ CREATE TABLE IF NOT EXISTS `units` (
   `unit_location` varchar(32) NOT NULL,
   `unit_state` int(10) DEFAULT 0,
   `counter_id` VARCHAR(255) NOT NULL,
+  `spent` int(10) DEFAULT 0,
   `extra_data` JSON NULL,
   PRIMARY KEY (`unit_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `spaces` (
   `space_id` varchar(100)  NOT NULL,
+  `space_location` varchar(32) NOT NULL,
+  `space_state` int(10) DEFAULT 0,
   `control` VARCHAR(255) NOT NULL,
+  `raided` VARCHAR(255),
   -- `extra_data` JSON NULL,
   PRIMARY KEY (`space_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `tokens` (
-  `token_id` varchar(100) NOT NULL,
-  `token_location` varchar(32) NOT NULL,
-  `token_state` int(10) DEFAULT 0,
+CREATE TABLE IF NOT EXISTS `markers` (
+  `marker_id` varchar(100) NOT NULL,
+  `marker_location` varchar(32) NOT NULL,
+  `marker_state` int(10) DEFAULT 0,
   `extra_data` JSON NULL,
-  PRIMARY KEY (`token_id`)
+  PRIMARY KEY (`marker_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 ALTER TABLE `gamelog`

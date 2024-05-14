@@ -72,8 +72,9 @@ class UnitStack<T> extends ManualPositionStock<T> {
     return promise;
   }
 
-  public unitRemoved(unit: T, settings?: RemoveCardSettings) {
+  public cardRemoved(unit: T, settings?: RemoveCardSettings) {
     super.cardRemoved(unit, settings);
+    console.log('unitRemoved', this.getCards());
     if (this.getCards().length === 0) {
       this.element.removeAttribute('data-has-unit');
     }

@@ -9,8 +9,6 @@ use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Helpers\Utils;
 
-use const BayonetsAndTomahawks\OPTION_STARTING_MAP_AGE_OF_REFORMATION_PROMO_VARIANT;
-
 /**
  * Cards
  */
@@ -157,9 +155,8 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
     // Load list of cards
     include dirname(__FILE__) . '/../Cards/list.inc.php';
 
-    Notifications::log('cardIds', $cardIds);
     $scenario = Scenarios::get();
-    Notifications::log('scenario', $scenario);
+
     // return;
     foreach ($cardIds as $cId) {
       // $card = self::getCardInstance($cId);

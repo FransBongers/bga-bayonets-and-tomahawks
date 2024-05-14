@@ -14,6 +14,7 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
   protected static $prefix = 'unit_';
   protected static $customFields = [
     'counter_id',
+    'spent',
     'extra_data',
   ];
   protected static $autoremovePrefix = false;

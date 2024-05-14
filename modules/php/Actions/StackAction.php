@@ -13,7 +13,7 @@ use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\StackActions;
-use BayonetsAndTomahawks\Managers\Tokens;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Models\Player;
 
 class StackAction extends \BayonetsAndTomahawks\Models\AtomicAction

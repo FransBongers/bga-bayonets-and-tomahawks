@@ -80,6 +80,45 @@ const OPEN_SEAS_MARKER = "open_seas_marker";
 const FRENCH_RAID_MARKER = "french_raid_marker";
 const BRITISH_RAID_MARKER = "british_raid_marker";
 
+// Raid track
+const RAID_TRACK_0 = 'raid_track_0';
+const RAID_TRACK_1 = 'raid_track_1';
+const RAID_TRACK_2 = 'raid_track_2';
+const RAID_TRACK_3 = 'raid_track_3';
+const RAID_TRACK_4 = 'raid_track_4';
+const RAID_TRACK_5 = 'raid_track_5';
+const RAID_TRACK_6 = 'raid_track_6';
+const RAID_TRACK_7 = 'raid_track_7';
+const RAID_TRACK_8 = 'raid_track_8';
+
+// Victory points track
+const VICTORY_POINTS_FRENCH_10 = 'victory_points_french_10';
+const VICTORY_POINTS_FRENCH_9 = 'victory_points_french_9';
+const VICTORY_POINTS_FRENCH_8 = 'victory_points_french_8';
+const VICTORY_POINTS_FRENCH_7 = 'victory_points_french_7';
+const VICTORY_POINTS_FRENCH_6 = 'victory_points_french_6';
+const VICTORY_POINTS_FRENCH_5 = 'victory_points_french_5';
+const VICTORY_POINTS_FRENCH_4 = 'victory_points_french_4';
+const VICTORY_POINTS_FRENCH_3 = 'victory_points_french_3';
+const VICTORY_POINTS_FRENCH_2 = 'victory_points_french_2';
+const VICTORY_POINTS_FRENCH_1 = 'victory_points_french_1';
+
+const VICTORY_POINTS_BRITISH_1 = 'victory_points_british_1';
+const VICTORY_POINTS_BRITISH_2 = 'victory_points_british_2';
+const VICTORY_POINTS_BRITISH_3 = 'victory_points_british_3';
+const VICTORY_POINTS_BRITISH_4 = 'victory_points_british_4';
+const VICTORY_POINTS_BRITISH_5 = 'victory_points_british_5';
+const VICTORY_POINTS_BRITISH_6 = 'victory_points_british_6';
+const VICTORY_POINTS_BRITISH_7 = 'victory_points_british_7';
+const VICTORY_POINTS_BRITISH_8 = 'victory_points_british_8';
+const VICTORY_POINTS_BRITISH_9 = 'victory_points_british_9';
+const VICTORY_POINTS_BRITISH_10 = 'victory_points_british_10';
+
+
+// Losses Boxes
+const LOSSES_BOX_BRITISH = 'lossesBox_british';
+const LOSSES_BOX_FRENCH = 'lossesBox_french';
+
 /**
  * Actions
  */

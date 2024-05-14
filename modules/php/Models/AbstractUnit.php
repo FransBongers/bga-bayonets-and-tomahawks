@@ -1,7 +1,11 @@
 <?php
+
 namespace BayonetsAndTomahawks\Models;
 
+use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Managers\Players;
+use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Units;
 
 class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \JsonSerializable
@@ -12,18 +16,20 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     'id' => ['unit_id', 'int'],
     'location' => ['unit_location', 'str'],
     'counterId' => ['counter_id', 'str'],
+    'spent' => ['spent', 'int'],
     'extraData' => ['extra_data', 'obj'],
   ];
 
   protected $id = null;
   protected $counterId;
+  protected $spent = 0;
   protected $faction = null;
   protected $location = null;
   protected $datas = null;
   protected $indian = false;
   protected $mpLimit = 0;
   protected $connectionTypeAllowed = [];
-  
+
   /*
    * STATIC DATA
    */
@@ -35,8 +41,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
    * UNIT PROPERTIES
    * - stored in extra datas
    */
-  protected $properties = [
-  ];
+  protected $properties = [];
 
 
   public function __construct($row)
@@ -60,6 +65,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
       'id' => $this->id,
       'counterId' => $this->counterId,
       'location' => $this->location,
+      'spent' => $this->spent,
     ];
   }
 
@@ -115,5 +121,21 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     }
 
     return $this->getProperty($method);
+  }
+
+  //  .##.....##.########.####.##.......####.########.##....##
+  //  .##.....##....##.....##..##........##.....##.....##..##.
+  //  .##.....##....##.....##..##........##.....##......####..
+  //  .##.....##....##.....##..##........##.....##.......##...
+  //  .##.....##....##.....##..##........##.....##.......##...
+  //  .##.....##....##.....##..##........##.....##.......##...
+  //  ..#######.....##....####.########.####....##.......##...
+
+  public function placeInLosses($player)
+  {
+    $lossesBox =  Locations::lossedBox($player->getFaction());
+    Units::move($this->getId(), $lossesBox);
+    $this->location = $lossesBox;
+    Notifications::placeUnitInLosses($player, $this);
   }
 }

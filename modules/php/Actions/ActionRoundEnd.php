@@ -11,7 +11,7 @@ use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
-use BayonetsAndTomahawks\Managers\Tokens;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Models\Player;
 
 class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
@@ -39,12 +39,12 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
 
   public function stActionRoundEnd()
   {
-    Notifications::log('stActionRoundEndUpdates', []);
+    // Notifications::log('stActionRoundEndUpdates', []);
 
     // 1. Discard played cards facedown.
     $cardsInPlay = Cards::getCardsInPlay();
     Notifications::discardCardsInPlayMessage();
-    Notifications::log('cardsInPlay',$cardsInPlay);
+    // Notifications::log('cardsInPlay',$cardsInPlay);
     foreach($cardsInPlay as $faction => $card) {
       if ($card !== null) {
         $card->discard();
@@ -62,7 +62,7 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     // TODO: end of year check here?
 
     $currentActionRound = Globals::getActionRound();
-    Notifications::log('currentActionRound', $currentActionRound);
+    // Notifications::log('currentActionRound', $currentActionRound);
     $nextActionRound = null;
     switch ($currentActionRound) {
       case ACTION_ROUND_1:
@@ -103,9 +103,9 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
         $nextActionRound = ACTION_ROUND_1;
         break;
     }
-    Notifications::log('nextActionRound', $nextActionRound);
+    // Notifications::log('nextActionRound', $nextActionRound);
     Globals::setActionRound($nextActionRound);
-    Tokens::move(ROUND_MARKER,$nextActionRound);
+    Markers::move(ROUND_MARKER,$nextActionRound);
     Notifications::moveRoundMarker($nextActionRound);
 
     $this->resolveAction(['automatic' => true]);

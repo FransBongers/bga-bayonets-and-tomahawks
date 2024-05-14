@@ -478,6 +478,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public clearInterface() {
     console.log('clear interface');
     this.playerManager.clearInterface();
+    this.gameMap.clearInterface();
   }
 
   clearPossible() {
@@ -584,33 +585,33 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     node.classList.add(BT_SELECTED);
   }
 
-  // setUnitSelectable({
-  //   id,
-  //   callback,
-  // }: {
-  //   id: string;
-  //   callback: (event: PointerEvent) => void;
-  // }) {
-  //   const node = $(id);
+  setUnitSelectable({
+    id,
+    callback,
+  }: {
+    id: string;
+    callback: (event: PointerEvent) => void;
+  }) {
+    const node = $(id);
 
-  //   if (node === null) {
-  //     return;
-  //   }
-  //   node.classList.add(BT_SELECTABLE);
-  //   this._connections.push(
-  //     dojo.connect(node, "onclick", this, (event: PointerEvent) =>
-  //       callback(event)
-  //     )
-  //   );
-  // }
+    if (node === null) {
+      return;
+    }
+    node.classList.add(BT_SELECTABLE);
+    this._connections.push(
+      dojo.connect(node, "onclick", this, (event: PointerEvent) =>
+        callback(event)
+      )
+    );
+  }
 
-  // setUnitSelected({ id }: { id: string }) {
-  //   const node = $(id);
-  //   if (node === null) {
-  //     return;
-  //   }
-  //   node.classList.add(BT_SELECTED);
-  // }
+  setUnitSelected({ id }: { id: string }) {
+    const node = $(id);
+    if (node === null) {
+      return;
+    }
+    node.classList.add(BT_SELECTED);
+  }
 
   // .########...#######..####.##.......########.########.
   // .##.....##.##.....##..##..##.......##.......##.....##

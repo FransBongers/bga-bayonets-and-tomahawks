@@ -5,6 +5,7 @@ namespace BayonetsAndTomahawks\Managers;
 use BayonetsAndTomahawks\Core\Game;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\PlayersExtra;
 
@@ -76,6 +77,14 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
     return self::DB()
       ->where($playerId)
       ->getSingle();
+  }
+
+  public static function getOther($playerId = null)
+  {
+    $playerId = $playerId ?: self::getActiveId();
+    return Utils::array_find(Players::getAll()->toArray(), function ($player) use ($playerId) {
+      return $player->getId() !== $playerId;
+    });
   }
 
   public static function incScore($playerId, $increment)
@@ -201,5 +210,30 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
   public function changeActive($playerId)
   {
     Game::get()->gamestate->changeActivePlayer($playerId);
+  }
+
+  public static function scoreVictoryPoint($player, $points)
+  {
+    $vpMarker = Markers::get(VICTORY_MARKER);
+    $otherPlayer = Players::getOther($player->getId());
+    // $location = $vpMarker->getLocation();
+
+    $score = $player->getScore();
+
+    $updatedScore = 0;
+    if ($score < 0) {
+      $updatedScore = $score + $points;
+      if ($updatedScore >= 0) {
+        $updatedScore += 1;
+      }
+    } else {
+      $updatedScore = $score + $points;
+    }
+    $player->setScore($updatedScore);
+    $otherPlayer->setScore($updatedScore * -1);
+
+    $vpMarker->setLocation(Locations::victoryPointsTrack($updatedScore > 0 ? $player->getFaction() : $otherPlayer->getFaction(), abs($updatedScore)));
+
+    Notifications::scoreVictoryPoints($player, $otherPlayer, $vpMarker, $points);
   }
 }

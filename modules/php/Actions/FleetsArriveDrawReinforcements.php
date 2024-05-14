@@ -11,7 +11,7 @@ use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
-use BayonetsAndTomahawks\Managers\Tokens;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Models\Player;
 
 class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Models\AtomicAction
@@ -41,7 +41,7 @@ class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Models\Atomic
   {
     Notifications::log('stFleetsArriveDrawReinforcements', []);
     Globals::setActionRound(ACTION_ROUND_3);
-    Tokens::move(ROUND_MARKER,ACTION_ROUND_3);
+    Markers::move(ROUND_MARKER,ACTION_ROUND_3);
     Notifications::moveRoundMarker(ACTION_ROUND_3);
 
     $this->resolveAction(['automatic' => true]);

@@ -24,10 +24,12 @@
 
 .bt_marker {
   background-image: url('img/markers_2.webp');
-  height: calc(var(--btMapScale) * 41px);
-  width: calc(var(--btMapScale) * 41px);
+  min-height: calc(var(--btMapScale) * 41px);
+  max-height: calc(var(--btMapScale) * 41px);
+  min-width: calc(var(--btMapScale) * 41px);
+  max-width: calc(var(--btMapScale) * 41px);
   background-size: 800% 600%;
-  position: absolute;
+  // position: absolute;
   box-sizing: border-box;
   border: calc(var(--btMapScale) * 1px) solid black;
   border-radius: 5%;
@@ -41,6 +43,31 @@
 #round_marker {
   background-position-x: math.div(3, 7) * 100%;
   background-position-y: math.div(3, 5) * 100%;
+}
+
+#british_raid_marker {
+  background-position-x: math.div(7, 7) * 100%;
+  background-position-y: math.div(4, 5) * 100%;
+}
+
+#french_raid_marker {
+  background-position-x: math.div(0, 7) * 100%;
+  background-position-y: math.div(5, 5) * 100%;
+}
+
+#victory_marker {
+  background-position-x: math.div(5, 7) * 100%;
+  background-position-y: math.div(3, 5) * 100%;
+}
+
+.bt_marker[data-type='british_raided_marker'] {
+  background-position-x: math.div(1, 7) * 100%;
+  background-position-y: math.div(5, 5) * 100%;
+}
+
+.bt_marker[data-type='french_raided_marker'] {
+  background-position-x: math.div(2, 7) * 100%;
+  background-position-y: math.div(5, 5) * 100%;
 }
 
 .bt_marker_test {
@@ -98,6 +125,7 @@
   align-items: center;
   justify-content: center;
   // background-color: yellow;
+  // opacity: 0.5;
 }
 
 .bt_stack {
@@ -115,6 +143,23 @@
 .bt_stack[data-expanded='true'] {
   .bt_token {
     z-index: 1;
+  }
+}
+
+.bt_token {
+  .bt_spent_marker {
+    background-image: url('img/markers_2.webp');
+    background-size: 800% 600%;
+    background-position-x: math.div(7, 7) * 100%;
+    background-position-y: math.div(3, 5) * 100%;
+    position: absolute;
+    height: calc(var(--btMapScale) * 20px);
+    width: calc(var(--btMapScale) * 20px);
+    top: calc(var(--btMapScale) * 28px);
+  }
+
+  .bt_spent_marker[data-spent='false'] {
+    display: none;
   }
 }
 
@@ -139,6 +184,15 @@
     drop-shadow(0px -2px 0px base.$selected-color);
 }
 
+// .bt_token[data-spent="true"]::before {
+//   background-color: yellow;
+//   width: 15px;
+//   height: 15px;
+//   position: absolute;
+//   display: block;
+//   top: calc(var(--btTokenScale) * 52px);
+// }
+
 .bt_stack.bt_selectable {
   box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) base.$selectable-color !important;
   cursor: pointer;
@@ -157,3 +211,20 @@
 //   top: 124px;
 //   left: 285px;
 // }
+.bt_losses_box {
+  position: absolute;
+  // background-color: yellow;
+  // opacity: 0.5;
+  width: calc(var(--btMapScale) * 131px);
+  height: calc(var(--btMapScale) * 318px);
+}
+
+#lossesBox_french {
+  top: calc(var(--btMapScale) * 551px);
+  left: calc(var(--btMapScale) * 30px);
+}
+
+#lossesBox_british {
+  top: calc(var(--btMapScale) * 1312px);
+  left: calc(var(--btMapScale) * 1338px);
+}

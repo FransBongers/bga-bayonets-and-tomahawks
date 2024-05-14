@@ -11,6 +11,7 @@ class Scenario implements \JsonSerializable
   protected $duration;
   protected $locations;
   protected $pools;
+  protected $victoryMarkerLocation;
 
   public function __construct()
   {
@@ -56,6 +57,11 @@ class Scenario implements \JsonSerializable
   public function getStartYear()
   {
     return $this->startYear;
+  }
+
+  public function getVictoryMarkerLocation()
+  {
+    return $this->victoryMarkerLocation;
   }
 
   /**

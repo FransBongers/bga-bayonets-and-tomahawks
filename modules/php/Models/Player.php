@@ -10,7 +10,6 @@ use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Events;
-use BayonetsAndTomahawks\Managers\Tokens;
 use BayonetsAndTomahawks\Managers\Players;
 
 /*

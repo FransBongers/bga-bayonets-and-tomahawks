@@ -12,16 +12,23 @@ use BayonetsAndTomahawks\Managers\Units;
  */
 class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
 {
+  protected $id;
   protected $table = 'spaces';
   protected $primary = 'space_id';
+  protected $raided = null;
+
   protected $attributes = [
     'id' => ['space_id', 'int'],
     'control' => ['control', 'str'],
+    'location' => ['space_location', 'str'],
+    'state' => ['space_state', 'int'],
+    'raided' => ['raided', 'str'],
     // 'extraData' => ['extra_data', 'obj'],
   ];
+
+
   protected $staticAttributes = ['battlePriority', 'homeSpace', 'name', 'value', 'victorySpace', 'defaultControl', 'top', 'left'];
 
-  protected $id = null;
   protected $battlePriority;
   protected $control = null;
   protected $defaultControl;
@@ -34,12 +41,12 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   protected $left = 0;
   protected $adjacentSpaces = [];
 
-  public function __construct($row)
-  {
-    if ($row != null) {
-      parent::__construct($row);
-    }
-  }
+  // public function __construct($row)
+  // {
+  //   if ($row != null) {
+  //     parent::__construct($row);
+  //   }
+  // }
 
   public function jsonSerialize()
   {
@@ -48,6 +55,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
       'control' => $this->control,
       'defaultControl' => $this->defaultControl,
       'name' => $this->name,
+      'raided' => $this->raided,
       'victorySpace' => $this->victorySpace,
       'top' => $this->top,
       'left' => $this->left,
@@ -57,7 +65,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   public function getAdjacentSpaces()
   {
     $result = [];
-    foreach($this->adjacentSpaces as $spaceId => $connectionId) {
+    foreach ($this->adjacentSpaces as $spaceId => $connectionId) {
       $result[$spaceId] = Connections::get($connectionId);
     };
     return $result;

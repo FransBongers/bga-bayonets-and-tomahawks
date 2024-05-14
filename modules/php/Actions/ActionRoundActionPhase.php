@@ -86,7 +86,7 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
     self::checkAction('actActionRoundActionPhase');
     $player = self::getPlayer();
     $actionPoint = $args['actionPoint'];
-    Notifications::log('actActionRoundActionPhase', $actionPoint);
+    // Notifications::log('actActionRoundActionPhase', $actionPoint);
     $this->ctx->insertAsBrother(Engine::buildTree(Flows::performAction($player, $actionPoint)));
 
     $this->resolveAction($args);
