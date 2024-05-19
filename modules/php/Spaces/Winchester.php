@@ -8,9 +8,10 @@ class Winchester extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = WINCHESTER;
     $this->battlePriority = 243;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Winchester');
+    $this->settledSpace = true;
     $this->value = 2;
     $this->victorySpace = false;
     $this->top = 2005;

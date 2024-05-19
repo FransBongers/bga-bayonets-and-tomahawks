@@ -10,7 +10,9 @@ class CharlesTown extends \BayonetsAndTomahawks\Models\Space
     $this->battlePriority = 283;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
+    $this->militia = 3;
     $this->name = clienttranslate('CHARLES TOWN');
+    $this->settledSpace = true;
     $this->value = 2;
     $this->victorySpace = true;
     $this->top = 2211;

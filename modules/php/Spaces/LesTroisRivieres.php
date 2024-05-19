@@ -8,9 +8,11 @@ class LesTroisRivieres extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = LES_TROIS_RIVIERES;
     $this->battlePriority = 101;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
+    $this->militia = 2;
     $this->name = clienttranslate('Les Trois Rivières');
+    $this->settledSpace = true;
     $this->value = 2;
     $this->victorySpace = false;
     $this->top = 1009.5;

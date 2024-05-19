@@ -18,6 +18,10 @@ type NotifSmallRefreshInterfaceArgs = Omit<
   'staticData'
 >;
 
+interface NotifBattleArgs extends NotifWithPlayerArgs {
+  space: BTSpace;
+}
+
 interface NotifDrawCardPrivateArgs extends NotifWithPlayerArgs {
   card: BTCard;
 }
@@ -32,6 +36,11 @@ interface NotifDiscardCardFromHandPrivateArgs extends NotifWithPlayerArgs {
 
 interface NotifDiscardCardsInPlayArgs {
   card: BTCard;
+}
+
+interface NotifLoseControlArgs extends NotifWithPlayerArgs {
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+  space: BTSpace;
 }
 
 interface NotifMoveRaidPointsMarkerArgs {
@@ -87,4 +96,9 @@ interface NotifSelectReserveCardArgs extends NotifWithPlayerArgs {
 
 interface NotifSelectReserveCardPrivateArgs extends NotifWithPlayerArgs {
   discardedCard: BTCard;
+}
+
+interface NotifTakeControlArgs extends NotifWithPlayerArgs {
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+  space: BTSpace;
 }

@@ -14,7 +14,7 @@ interface OnEnteringConfirmTurnArgs extends CommonArgs {}
 interface OnEnteringActionActivateStackStateArgs extends CommonArgs {
   // actionsAllowed: BTStackAction[];
   stacks: Record<string, BTStackAction[]>;
-  faction: BRITISH | FRENCH;
+  faction: BRITISH_FACTION | FRENCH_FACTION;
 }
 
 interface OnEnteringActionRoundActionPhaseStateArgs extends CommonArgs {
@@ -50,6 +50,7 @@ interface OnEnteringLightMovementStateArgs extends CommonArgs {
     space: BTSpace;
     remainingConnectionLimit: number;
   }>
+  isIndianAP: boolean;
   origin: BTSpace;
   faction: Faction;
 }

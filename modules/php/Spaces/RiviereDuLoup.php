@@ -8,9 +8,10 @@ class RiviereDuLoup extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = RIVIERE_DU_LOUP;
     $this->battlePriority = 41;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Rivière du Loup');
+    $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = false;
     $this->top = 616;

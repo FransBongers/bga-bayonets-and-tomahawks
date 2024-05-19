@@ -8,9 +8,10 @@ class LaPresentation extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = LA_PRESENTATION;
     $this->battlePriority = 151;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('La Présentation');
+    $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = false;
     $this->top = 1371.5;

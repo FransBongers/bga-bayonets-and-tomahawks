@@ -8,9 +8,10 @@ class StGeorge extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = ST_GEORGE;
     $this->battlePriority = 82;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('St. George');
+    $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = false;
     $this->top = 868.5;

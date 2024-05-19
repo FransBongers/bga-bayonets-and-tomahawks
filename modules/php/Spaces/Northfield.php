@@ -10,7 +10,9 @@ class Northfield extends \BayonetsAndTomahawks\Models\Space
     $this->battlePriority = 141;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
+    $this->militia = 3;
     $this->name = clienttranslate('NORTHFIELD');
+    $this->settledSpace = true;
     $this->value = 2;
     $this->victorySpace = true;
     $this->top = 1286;

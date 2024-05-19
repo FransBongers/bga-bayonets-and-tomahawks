@@ -33,6 +33,11 @@
   max-width: calc(var(--btMapScale) * 44px);
 }
 
+.bt_marker_side[data-type="battle_marker"][data-side="front"] {
+  background-position-x: math.div(6, 7) * 100%;
+  background-position-y: 0%;
+}
+
 .bt_marker_side[data-type="british_raid_marker"][data-side="front"] {
   background-position-x: math.div(7, 7) * 100%;
   background-position-y: math.div(4, 5) * 100%;
@@ -56,6 +61,16 @@
 .bt_marker_side[data-type='french_raided_marker'][data-side="front"] {
   background-position-x: math.div(2, 7) * 100%;
   background-position-y: math.div(5, 5) * 100%;
+}
+
+.bt_marker_side[data-type='british_control_marker'][data-side="front"] {
+  background-position-x: math.div(0, 7) * 100%;
+  background-position-y: math.div(3, 5) * 100%;
+}
+
+.bt_marker_side[data-type='french_control_marker'][data-side="front"] {
+  background-position-x: math.div(1, 7) * 100%;
+  background-position-y: math.div(3, 5) * 100%;
 }
 
 // .bt_marker_test {

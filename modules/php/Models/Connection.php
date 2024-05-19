@@ -14,7 +14,8 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
   protected $location;
   protected $state;
   protected $limit;
-  protected $limitUsed;
+  protected $britishLimit;
+  protected $frenchLimit;
   protected $type;
   protected $indianPath = false;
   protected $coastal = false;
@@ -24,7 +25,9 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
     'id' => ['connection_id', 'str'],
     'location' => 'connection_location',
     'state' => ['connection_state', 'int'],
-    'extraData' => ['extra_data', 'obj'],
+    'britishLimit' => ['british_limit', 'int'],
+    'frenchLimit' => ['french_limit', 'int'],
+    // 'extraData' => ['extra_data', 'obj'],
   ];
 
 
@@ -46,20 +49,35 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
 
   public function getLimitUsed($faction)
   {
-    $key = $faction . 'LimitUsed';
-    return $this->getExtraData($key);
+    if ($faction === BRITISH) {
+      return $this->britishLimit;
+    } else {
+      return $this->frenchLimit;
+    }
+    // $key = $faction . 'LimitUsed';
+    // return $this->getExtraData($key);
   }
 
   public function setLimitUsed($faction, $value)
   {
-    $key = $faction . 'LimitUsed';
-    return $this->setExtraData($key, $value);
+    if ($faction === BRITISH) {
+      return $this->setBritishLimit($value);
+    } else {
+      return $this->setFrenchLimit($value);
+    }
+    // $key = $faction . 'LimitUsed';
+    // return $this->setExtraData($key, $value);
   }
 
   public function incLimitUsed($faction, $increase)
   {
-    $current = $this->getLimitUsed($faction);
-    $this->setLimitUsed($faction, $current + $increase);
+    if ($faction === BRITISH) {
+      return $this->incBritishLimit($increase);
+    } else {
+      return $this->incFrenchLimit($increase);
+    }
+    // $current = $this->getLimitUsed($faction);
+    // $this->setLimitUsed($faction, $current + $increase);
   }
 
   /**

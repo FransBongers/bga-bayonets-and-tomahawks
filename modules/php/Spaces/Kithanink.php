@@ -8,9 +8,10 @@ class Kithanink extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = KITHANINK;
     $this->battlePriority = 233;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Kithanink');
+    $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = false;
     $this->top = 1923;

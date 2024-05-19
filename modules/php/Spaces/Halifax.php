@@ -10,7 +10,9 @@ class Halifax extends \BayonetsAndTomahawks\Models\Space
     $this->battlePriority = 32;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
+    $this->militia = 2;
     $this->name = clienttranslate('HALIFAX');
+    $this->settledSpace = true;
     $this->value = 2;
     $this->victorySpace = true;
     $this->top = 570;

@@ -11,6 +11,7 @@ class ForksOfTheOhio extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('FORKS OF THE OHIO');
+    $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = true;
     $this->top = 2084;

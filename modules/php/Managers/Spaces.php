@@ -17,6 +17,7 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
   protected static $table = 'spaces';
   protected static $prefix = 'space_';
   protected static $customFields = [
+    'battle',
     'control',
     'raided',
     // 'extra_data'
@@ -53,7 +54,8 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
 
       $data = [
         'id' => $spaceId,
-        'control' => $space->getDefaultControl(),
+        'battle' => 0,
+        'control' => $space->getDefaultControl(), // Use homeSpace data?
         'location' => 'default',
         'raided' => null,
         // 'extra_data' => ['properties' => []],

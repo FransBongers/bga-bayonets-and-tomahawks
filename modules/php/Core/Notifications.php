@@ -171,6 +171,16 @@ class Notifications
     ]);
   }
 
+  public static function battle($player, $space)
+  {
+    self::notifyAll('battle', clienttranslate('${player_name} attacks ${tkn_boldText_space}'), [
+      'player' => $player,
+      'tkn_boldText_space' => $space->getName(),
+      'space' => $space,
+      'i18n' => ['tkn_boldText_space']
+    ]);
+  }
+
   public static function drawCard($player, $card)
   {
     self::notify($player, 'drawCardPrivate', clienttranslate('Private: ${player_name} draws  ${cardId}'), [
@@ -238,6 +248,17 @@ class Notifications
     ]);
   }
 
+  public static function loseControl($player, $space)
+  {
+    self::notifyAll("loseControl", clienttranslate('${player_name} loses control of ${tkn_boldText_space}'), [
+      'player' => $player,
+      'faction' => $player->getFaction(),
+      'tkn_boldText_space' => $space->getName(),
+      'space' => $space,
+      'i18n' => ['tkn_boldText_space'],
+    ]);
+  }
+
   public static function moveRaidPointsMarker($raidMarker)
   {
     self::notifyAll("moveRaidPointsMarker", '', [
@@ -282,12 +303,22 @@ class Notifications
 
   public static function scoreVictoryPoints($player, $otherPlayer, $marker, $points)
   {
-    $message = $points === 1 ? clienttranslate('${player_name} scores ${tkn_boldText_points} Victory Point') : clienttranslate('${player_name} scores ${tkn_boldText_points} Victory Points');
+    $message = '';
+    if ($points === 1) {
+      $message = clienttranslate('${player_name} scores ${tkn_boldText_points} Victory Point');
+    } else if ($points > 0) {
+      $message = clienttranslate('${player_name} scores ${tkn_boldText_points} Victory Points');
+    } else if ($points === -1) {
+      $message = clienttranslate('${player_name} loses ${tkn_boldText_points} Victory Point');
+    } else if ($points < 0) {
+      $message = clienttranslate('${player_name} loses ${tkn_boldText_points} Victory Points');
+    }
+
 
     self::notifyAll("scoreVictoryPoints", $message, [
       'player' => $player,
       'marker' => $marker->jsonSerialize(),
-      'tkn_boldText_points' => $points,
+      'tkn_boldText_points' => abs($points),
       'points' => [
         $player->getId() => $player->getScore(),
         $otherPlayer->getId() => $otherPlayer->getScore(),
@@ -360,6 +391,17 @@ class Notifications
       'player' => $player,
       'faction' => $player->getFaction(),
       // 'preserve' => ['playerId'],
+    ]);
+  }
+
+  public static function takeControl($player, $space)
+  {
+    self::notifyAll("takeControl", clienttranslate('${player_name} takes control of ${tkn_boldText_space}'), [
+      'player' => $player,
+      'faction' => $player->getFaction(),
+      'tkn_boldText_space' => $space->getName(),
+      'space' => $space,
+      'i18n' => ['tkn_boldText_space'],
     ]);
   }
 }

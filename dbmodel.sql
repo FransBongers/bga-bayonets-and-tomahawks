@@ -44,7 +44,9 @@ CREATE TABLE IF NOT EXISTS `connections` (
   `connection_id` varchar(100) NOT NULL,
   `connection_location` varchar(32) NOT NULL,
   `connection_state` int(10) DEFAULT 0,
-  `extra_data` JSON NULL,
+  `british_limit` int(10) DEFAULT 0,
+  `french_limit` int(10) DEFAULT 0,
+  -- `extra_data` JSON NULL,
   PRIMARY KEY (`connection_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
@@ -62,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `spaces` (
   `space_id` varchar(100)  NOT NULL,
   `space_location` varchar(32) NOT NULL,
   `space_state` int(10) DEFAULT 0,
+  `battle` int(10) DEFAULT 0,
   `control` VARCHAR(255) NOT NULL,
   `raided` VARCHAR(255),
   -- `extra_data` JSON NULL,

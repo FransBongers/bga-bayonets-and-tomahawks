@@ -1,6 +1,8 @@
 <?php
 namespace BayonetsAndTomahawks\Spaces;
 
+use BayonetsAndTomahawks\Managers\Units;
+
 class Louisbourg extends \BayonetsAndTomahawks\Models\Space
 {
   public function __construct($row)
@@ -10,7 +12,9 @@ class Louisbourg extends \BayonetsAndTomahawks\Models\Space
     $this->battlePriority = 13;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
+    $this->militia = 2;
     $this->name = clienttranslate('LOUISBOURG');
+    $this->settledSpace = true;
     $this->value = 3;
     $this->victorySpace = true;
     $this->top = 317;
@@ -19,5 +23,10 @@ class Louisbourg extends \BayonetsAndTomahawks\Models\Space
       PORT_DAUPHIN => LOUISBOURG_PORT_DAUPHIN,
       PORT_LA_JOYE => LOUISBOURG_PORT_LA_JOYE,
     ];
+  }
+
+  public function hasBastion() 
+  {
+    return count(Units::getAll(LOUISBOURG_BASTION_1)) + count(Units::getAll(LOUISBOURG_BASTION_2)) > 0;
   }
 }

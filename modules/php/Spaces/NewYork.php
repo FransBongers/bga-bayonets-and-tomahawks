@@ -8,6 +8,7 @@ class NewYork extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = NEW_YORK;
     $this->battlePriority = 999;
+    $this->britishBase = true;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('New York');

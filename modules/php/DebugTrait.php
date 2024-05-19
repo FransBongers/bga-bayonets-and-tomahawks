@@ -80,79 +80,11 @@ trait DebugTrait
 
   function test()
   {
-    $usedActionPoints = [INDIAN_AP];
-    $result = $this->getRemainingActionPoints($usedActionPoints, Cards::get('Card43'));
-    Notifications::log('result', $result);
+    $connection = Spaces::get(GNADENHUTTEN)->getUnits();
+    Notifications::log('space', $connection);
+    // $result = AtomicActions::get(LIGHT_MOVEMENT)->checkEnemyUnitsAndOverwhelm(Spaces::get(ANNAPOLIS_ROYAL), Players::get());
 
-    // Players::scoreVictoryPoint(Players::getPlayerForFaction(FRENCH), 5);
-
-    // Spaces::setupNewGame();
-
-    // for ($i = 0; $i < 10; $i++) {
-    //   Notifications::log('die roll', BTDice::roll());
-    // }
-
-    // $ap = ActionPoints::get(LIGHT_AP);
-    // $result = $ap->canActivateStackInSpace(Spaces::get(MIRAMICHY), Players::get(2371053));
-
-    // $result = $this->getAllRaidPaths(MIRAMICHY, 3);
-    // Notifications::log('result', $result);
-
-    // $allSpaces = Spaces::getAll();
-    // Notifications::log('allSpaces', $allSpaces);
-    // $set = [];
-    // foreach($allSpaces as $spaceId => $space) {
-    //   $set[] = $spaceId;
-    // }
-    // Notifications::log('set', $set);
-    // $pathCalculator = new PathCalculator(3);
-
-    // $paths = $pathCalculator->findAllPathsBetweenSpaces(MIRAMICHY,TACONNET,$set);
-    // Notifications::log('paths', $paths);
-
-    // $distances = $this->dijkstra(POINTE_SAINTE_ANNE, array_keys($result));
-    // Notifications::log('dijkstra', $distances);
-    // Connections::setupNewGame();
-    // $connection = Connections::get(GRAND_SAULT_WOLASTOKUK);
-    // $space = Spaces::get(GRAND_SAULT);
-    // $connection->incLimitUsed(FRENCH, 2);
-
-    // Notifications::log('adjacent', $space->getAdjacentSpaces());
-
-    // $space = Spaces::get(GRAND_SAULT);
-    // Notifications::log(GRAND_SAULT, $space);
-    // $player = Players::get();
-    // Notifications::log('player', $player);
-    // ActionPoints::get(INDIAN_AP)->canActivateStackInSpace($space, $player);
-
-    // Notifications::log('lightAP', $lightAP);
-
-    // $result = $lightAP->canActivateStackInSpace($space, Players::get());
-    // Notifications::log('canActivateStackInSpace',$result);
-    // Notifications::log('canActivateStackInSpaceCount',count($result));
-
-    // Notifications::log('action', StackActions::get(LIGHT_MOVEMENT));
-    // $this->getStacks();
-
-    // Scenarios::setup($options[OPTION_SCENARIO]);
-    // Globals::setActionRound(ACTION_ROUND_9);
-    // Notifications::log('scenario',Scenarios::get(VaudreuilsPetiteGuerre1755));
-    // Globals::setScenarioId(1);
-    // Scenario::loadId($scenarioId);
-    // Notifications::log('scenario', Globals::getScenario());
-    // Units::moveAllInLocation(HALIFAX,CHIGNECTOU);
-    // $result = AtomicActions::get(ACTION_ROUND_CHOOSE_FIRST_PLAYER)->getPlayerActionsFlow(Players::get(), true);
-    // Notifications::log('result',$result);
-    // Notifications::log('british player', Players::getPlayerForFaction(BRITISH));
-    // Cards::setupNewGame();
-    // Notifications::log('test', Globals::getTest());
-    // Notifications::log('static', Units::getStaticUiData());
-    // Notifications::log('ui', Units::getUiData());
-    // Spaces::setupNewGame();
-    // Notifications::log('uiData', Spaces::getUiData());
-    // Notifications::log('all', Spaces::getAll()->toArray()[0]->getId());
-    // $this->debugLoadScenario('1');
-    // Notifications::log('units',Units::getAll());
+    // Notifications::log('checkEnemyUnitsAndOverwhelm', $result);
   }
 
   function ed()

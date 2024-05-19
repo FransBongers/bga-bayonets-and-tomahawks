@@ -11,6 +11,7 @@ class Newfoundland extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = BRITISH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('NEWFOUNDLAND');
+    $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = true;
     $this->top = 226;

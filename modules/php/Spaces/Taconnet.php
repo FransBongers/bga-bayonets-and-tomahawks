@@ -8,9 +8,10 @@ class Taconnet extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = TACONNET;
     $this->battlePriority = 91;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Taconnet');
+    $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = false;
     $this->top = 884.5;

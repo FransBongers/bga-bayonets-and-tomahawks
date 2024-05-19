@@ -10,7 +10,9 @@ class LeDetroit extends \BayonetsAndTomahawks\Models\Space
     $this->battlePriority = 261;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
+    $this->militia = 1;
     $this->name = clienttranslate('LE DÉTROIT');
+    $this->settledSpace = true;
     $this->value = 2;
     $this->victorySpace = true;
     $this->top = 2087;

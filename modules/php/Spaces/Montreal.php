@@ -10,7 +10,9 @@ class Montreal extends \BayonetsAndTomahawks\Models\Space
     $this->battlePriority = 122;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
+    $this->militia = 2;
     $this->name = clienttranslate('MONTRÉAL');
+    $this->settledSpace = true;
     $this->value = 3;
     $this->victorySpace = true;
     $this->top = 1168.5;

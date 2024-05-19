@@ -1,7 +1,7 @@
 class LightMovementState implements State {
   private game: BayonetsAndTomahawksGame;
   private args: OnEnteringLightMovementStateArgs;
-  private selectedUnits = [];
+  private selectedUnits: BTUnit[] = [];
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
@@ -46,6 +46,10 @@ class LightMovementState implements State {
       },
     });
 
+    this.game.setStackSelected({
+      faction: this.args.faction,
+      spaceId: this.args.origin.id,
+    });
     this.setSpacesSelectable();
 
     this.game.addPassButton({
@@ -65,9 +69,10 @@ class LightMovementState implements State {
     this.game.setLocationSelected({ id: space.id });
 
     this.game.clientUpdatePageTitle({
-      text: _('${you} must select units to move'),
+      text: _('${you} must select units to move to ${spaceName}'),
       args: {
         you: '${you}',
+        spaceName: _(space.name),
       },
     });
 
@@ -99,6 +104,58 @@ class LightMovementState implements State {
     });
   }
 
+  private updateInterfaceConfirm({ space }: { space: BTSpace }) {
+    this.game.clearPossible();
+
+    this.selectedUnits.forEach((unit) =>
+      this.game.setUnitSelected({ id: unit.id + '' })
+    );
+    this.game.setLocationSelected({ id: space.id });
+    this.game.clientUpdatePageTitle({
+      text:
+        this.selectedUnits.length === 1
+          ? _('Move ${unitName} to ${spaceName}?')
+          : _('Move selected units to ${spaceName}?'),
+      args: {
+        you: '${you}',
+        spaceName: _(space.name),
+        unitName: _(
+          this.game.gamedatas.staticData.units[this.selectedUnits[0].counterId]
+            .counterText
+        ),
+      },
+    });
+
+    const callback = () => {
+      this.game.clearPossible();
+      this.game.takeAction({
+        action: 'actLightMovement',
+        args: {
+          unitIds: this.selectedUnits.map((unit) => unit.id),
+          spaceId: space.id,
+        },
+      });
+    };
+
+    if (
+      this.game.settings.get({
+        id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+      }) === PREF_ENABLED
+    ) {
+      callback();
+    } else {
+      this.game.addConfirmButton({
+        callback,
+      });
+    }
+
+    this.game.addCancelButton({
+      callback: () => {
+        this.selectedUnits = [];
+      },
+    });
+  }
+
   //  .##.....##.########.####.##.......####.########.##....##
   //  .##.....##....##.....##..##........##.....##.....##..##.
   //  .##.....##....##.....##..##........##.....##......####..
@@ -112,7 +169,15 @@ class LightMovementState implements State {
       this.game.setLocationSelectable({
         id: destination.space.id,
         callback: () => {
-          this.updateInterfaceSelectUnits(destination);
+          if (
+            this.args.lightUnits.length === 1 &&
+            (this.args.commanders.length === 0 || this.args.isIndianAP)
+          ) {
+            (this.selectedUnits = this.args.lightUnits),
+              this.updateInterfaceConfirm({ space: destination.space });
+          } else {
+            this.updateInterfaceSelectUnits(destination);
+          }
         },
       });
     });

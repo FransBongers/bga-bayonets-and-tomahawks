@@ -160,6 +160,21 @@ class GameMap {
           tplMarkerOfType({ type: `${space.raided}_raided_marker` })
         );
       }
+      if (
+        space.control !== space.homeSpace &&
+        (space.control === BRITISH || space.control === FRENCH)
+      ) {
+        this.addMarkerToSpace({
+          spaceId: space.id,
+          type: `${space.control}_control_marker`,
+        });
+      }
+      if (space.battle) {
+        this.addMarkerToSpace({
+          spaceId: space.id,
+          type: 'battle_marker',
+        });
+      }
 
       if (!this.stacks[space.id]) {
         // [BRITISH, FRENCH].forEach((faction) => {
@@ -627,4 +642,35 @@ class GameMap {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  public addMarkerToSpace({
+    spaceId,
+    type,
+  }: {
+    spaceId: string;
+    type: string;
+  }) {
+    const element = document.getElementById(`${spaceId}_markers`);
+    if (!element) {
+      return;
+    }
+    element.insertAdjacentHTML(
+      'beforeend',
+      tplMarkerOfType({ id: `${spaceId}_${type}`, type })
+    );
+  }
+
+  public removeMarkerFromSpace({
+    spaceId,
+    type,
+  }: {
+    spaceId: string;
+    type: string;
+  }) {
+    const element = document.getElementById(`${spaceId}_${type}`);
+    if (!element) {
+      return;
+    }
+    element.remove();
+  }
 }

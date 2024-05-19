@@ -8,9 +8,10 @@ class Gennisheyo extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = GENNISHEYO;
     $this->battlePriority = 192;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Gennisheyo');
+    $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = false;
     $this->top = 1680;

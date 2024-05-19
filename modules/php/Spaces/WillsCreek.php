@@ -8,9 +8,10 @@ class WillsCreek extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = WILLS_CREEK;
     $this->battlePriority = 253;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Wills Creek');
+    $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = false;
     $this->top = 2061;

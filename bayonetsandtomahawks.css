@@ -2563,6 +2563,11 @@
   max-width: calc(var(--btMapScale) * 44px);
 }
 
+.bt_marker_side[data-type=battle_marker][data-side=front] {
+  background-position-x: 85.7142857143%;
+  background-position-y: 0%;
+}
+
 .bt_marker_side[data-type=british_raid_marker][data-side=front] {
   background-position-x: 100%;
   background-position-y: 80%;
@@ -2586,6 +2591,16 @@
 .bt_marker_side[data-type=french_raided_marker][data-side=front] {
   background-position-x: 28.5714285714%;
   background-position-y: 100%;
+}
+
+.bt_marker_side[data-type=british_control_marker][data-side=front] {
+  background-position-x: 0%;
+  background-position-y: 60%;
+}
+
+.bt_marker_side[data-type=french_control_marker][data-side=front] {
+  background-position-x: 14.2857142857%;
+  background-position-y: 60%;
 }
 
 #show_settings {

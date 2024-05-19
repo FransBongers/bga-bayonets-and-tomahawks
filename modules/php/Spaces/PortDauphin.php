@@ -8,9 +8,10 @@ class PortDauphin extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = PORT_DAUPHIN;
     $this->battlePriority = 12;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Port Dauphin');
+    $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = false;
     $this->top = 240;

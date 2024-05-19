@@ -59,10 +59,12 @@ class NotificationManager {
     // ];
     const notifs: string[] = [
       'log',
+      'battle',
       'discardCardFromHand',
       'discardCardFromHandPrivate',
       'discardCardInPlay',
       'drawCardPrivate',
+      'loseControl',
       'moveRaidPointsMarker',
       'moveRoundMarker',
       'moveStack',
@@ -74,6 +76,7 @@ class NotificationManager {
       'scoreVictoryPoints',
       'selectReserveCard',
       'selectReserveCardPrivate',
+      'takeControl',
     ];
 
     // example: https://github.com/thoun/knarr/blob/main/src/knarr.ts
@@ -184,6 +187,14 @@ class NotificationManager {
     this.game.gameMap.updateInterface({ gamedatas: updatedGamedatas });
   }
 
+  async notif_battle(notif: Notif<NotifBattleArgs>) {
+    const { space } = notif.args;
+    this.game.gameMap.addMarkerToSpace({
+      spaceId: space.id,
+      type: 'battle_marker',
+    });
+  }
+
   async notif_discardCardFromHand(notif: Notif<NotifDiscardCardFromHandArgs>) {
     const { faction, playerId } = notif.args;
     const fakeCard = {
@@ -220,6 +231,15 @@ class NotificationManager {
     return;
   }
 
+  async notif_loseControl(notif: Notif<NotifLoseControlArgs>) {
+    const { space, faction } = notif.args;
+
+    this.game.gameMap.removeMarkerFromSpace({
+      spaceId: space.id,
+      type: `${faction}_control_marker`,
+    });
+  }
+
   async notif_moveRaidPointsMarker(
     notif: Notif<NotifMoveRaidPointsMarkerArgs>
   ) {
@@ -239,34 +259,11 @@ class NotificationManager {
     );
   }
 
-  async notif_scoreVictoryPoints(notif: Notif<NotifScoreVictoryPointsArgs>) {
-    const { marker, points } = notif.args;
-
-    Object.entries(points).forEach(([playerId, score]) => {
-      if (this.game.framework().scoreCtrl?.[playerId]) {
-        this.game.framework().scoreCtrl[playerId].setValue(Number(score));
-      }
-    });
-
-    const element = document.getElementById(marker.id);
-    const toNode = document.getElementById(marker.location);
-
-    if (!(element && toNode)) {
-      console.error('Unable to move marker');
-      return;
-    }
-
-    await this.game.animationManager.attachWithAnimation(
-      new BgaSlideAnimation({ element }),
-      toNode
-    );
-  }
-
   async notif_moveRoundMarker(notif: Notif<NotifMoveRoundMarkerArgs>) {
     const { nextRoundStep, marker } = notif.args;
 
     await this.game.gameMap.actionRoundTrack[nextRoundStep].addCard(marker);
-      // this.game.gameMap.moveRoundMarker({ nextRoundStep });
+    // this.game.gameMap.moveRoundMarker({ nextRoundStep });
   }
 
   async notif_moveStack(notif: Notif<NotifMoveStackArgs>) {
@@ -330,6 +327,29 @@ class NotificationManager {
     }
   }
 
+  async notif_scoreVictoryPoints(notif: Notif<NotifScoreVictoryPointsArgs>) {
+    const { marker, points } = notif.args;
+
+    Object.entries(points).forEach(([playerId, score]) => {
+      if (this.game.framework().scoreCtrl?.[playerId]) {
+        this.game.framework().scoreCtrl[playerId].setValue(Number(score));
+      }
+    });
+
+    const element = document.getElementById(marker.id);
+    const toNode = document.getElementById(marker.location);
+
+    if (!(element && toNode)) {
+      console.error('Unable to move marker');
+      return;
+    }
+
+    await this.game.animationManager.attachWithAnimation(
+      new BgaSlideAnimation({ element }),
+      toNode
+    );
+  }
+
   async notif_selectReserveCard(notif: Notif<NotifSelectReserveCardArgs>) {
     const { faction } = notif.args;
     return;
@@ -341,5 +361,23 @@ class NotificationManager {
     const { discardedCard } = notif.args;
     await this.game.discard.addCard(discardedCard);
     return;
+  }
+
+  async notif_takeControl(notif: Notif<NotifTakeControlArgs>) {
+    const { space, playerId, faction } = notif.args;
+
+    if (space.control !== space.homeSpace) {
+      // Place faction marker
+      this.game.gameMap.addMarkerToSpace({
+        spaceId: space.id,
+        type: `${faction}_control_marker`,
+      });
+    } else {
+      // Remove enemy marker
+      this.game.gameMap.removeMarkerFromSpace({
+        spaceId: space.id,
+        type: `${faction}_control_marker`,
+      });
+    }
   }
 }

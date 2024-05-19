@@ -8,9 +8,10 @@ class LaPresquIsle extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = LA_PRESQU_ISLE;
     $this->battlePriority = 222;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate("La Presqu'Isle");
+    $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = false;
     $this->top = 1874;

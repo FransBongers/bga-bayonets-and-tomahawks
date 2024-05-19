@@ -104,12 +104,13 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
     $actionId = $args['action'];
     $stackId = $args['stack'];
 
-    $args = $this->argsActionActivateStack();
+    $stateArgs = $this->argsActionActivateStack();
+    
 
-    if (!isset($args['stacks'][$stackId])) {
+    if (!isset($stateArgs['stacks'][$stackId])) {
       throw new \feException("Not allowed to activate selected stack");
     }
-    $action = Utils::array_find($args['stacks'][$stackId], function ($action) use ($actionId) {
+    $action = Utils::array_find($stateArgs['stacks'][$stackId], function ($action) use ($actionId) {
       return $action['id'] === $actionId;
     });
     if ($action === null) {

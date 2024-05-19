@@ -11,6 +11,7 @@ class Tadoussac extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = NEUTRAL;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Tadoussac');
+    $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = false;
     $this->top = 634;

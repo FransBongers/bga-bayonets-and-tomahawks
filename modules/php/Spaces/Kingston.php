@@ -8,9 +8,11 @@ class Kingston extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = KINGSTON;
     $this->battlePriority = 171;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
+    $this->militia = 2;
     $this->name = clienttranslate('Kingston');
+    $this->settledSpace = true;
     $this->value = 2;
     $this->victorySpace = false;
     $this->top = 1533;

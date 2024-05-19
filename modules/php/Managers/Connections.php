@@ -18,7 +18,7 @@ class Connections extends \BayonetsAndTomahawks\Helpers\Pieces
 {
   protected static $table = 'connections';
   protected static $prefix = 'connection_';
-  protected static $customFields = ['extra_data'];
+  protected static $customFields = ['british_limit', 'french_limit'];
   protected static $autoremovePrefix = false;
   protected static $autoreshuffle = false;
   protected static $autoIncrement = false;
@@ -75,7 +75,9 @@ class Connections extends \BayonetsAndTomahawks\Helpers\Pieces
         'id' => $cId,
         'location' => null,
         'state' => 0,
-        'extra_data' => json_encode($extraData)
+        'britishLimit' => 0,
+        'frenchLimit' => 0,
+        // 'extra_data' => json_encode($extraData)
       ];
     }
 
@@ -88,5 +90,4 @@ class Connections extends \BayonetsAndTomahawks\Helpers\Pieces
   {
     self::setupLoadConnections();
   }
-
 }

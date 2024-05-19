@@ -8,9 +8,10 @@ class Shamokin extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = SHAMOKIN;
     $this->battlePriority = 221;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Shamokin');
+    $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = false;
     $this->top = 1828;

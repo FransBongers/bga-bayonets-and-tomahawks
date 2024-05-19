@@ -8,9 +8,10 @@ class CapeSable extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = CAPE_SABLE;
     $this->battlePriority = 71;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Cape Sable');
+    $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = false;
     $this->top = 738;

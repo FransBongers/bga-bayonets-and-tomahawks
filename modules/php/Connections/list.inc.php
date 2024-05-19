@@ -30,6 +30,7 @@ $connectionIds = [
   'Carlisle_Winchester',
   'Cawichnowane_Gnadenhutten',
   'Cawichnowane_Kahnistioh',
+  'Cawichnowane_Kithanink',
   'Cawichnowane_Oquaga',
   'Cawichnowane_Shamokin',
   'CharlesTown_NinetySix',

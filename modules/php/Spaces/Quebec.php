@@ -1,6 +1,8 @@
 <?php
 namespace BayonetsAndTomahawks\Spaces;
 
+use BayonetsAndTomahawks\Managers\Units;
+
 class Quebec extends \BayonetsAndTomahawks\Models\Space
 {
   public function __construct($row)
@@ -10,7 +12,9 @@ class Quebec extends \BayonetsAndTomahawks\Models\Space
     $this->battlePriority = 81;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
+    $this->militia = 3;
     $this->name = clienttranslate('QUÉBEC');
+    $this->settledSpace = true;
     $this->value = 3;
     $this->victorySpace = true;
     $this->top = 863.5;
@@ -21,5 +25,10 @@ class Quebec extends \BayonetsAndTomahawks\Models\Space
       JACQUES_CARTIER => JACQUES_CARTIER_QUEBEC,
       LES_TROIS_RIVIERES => LES_TROIS_RIVIERES_QUEBEC,
     ];
+  }
+
+  public function hasBastion() 
+  {
+    return count(Units::getAll(QUEBEC_BASTION_1)) + count(Units::getAll(QUEBEC_BASTION_2)) > 0;
   }
 }

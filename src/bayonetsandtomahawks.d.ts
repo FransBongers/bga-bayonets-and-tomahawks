@@ -42,6 +42,7 @@ interface BayonetsAndTomahawksGame extends Game {
     callback: (event: PointerEvent) => void;
   }) => void;
   setLocationSelected: (props: { id: string }) => void;
+  setStackSelected: (props: { spaceId: string; faction: string; }) => void;
   setUnitSelectable: (props: {
     id: string;
     callback: (event: PointerEvent) => void;
@@ -77,9 +78,9 @@ interface BayonetsAndTomahawksGame extends Game {
 // type INDIAN = 'indian';
 
 // type Faction = BRITISH | FRENCH | INDIAN;
-type BRITISH = 'british';
-type FRENCH = 'french';
-type Faction = BRITISH | FRENCH | 'indian';
+type BRITISH_FACTION = 'british';
+type FRENCH_FACTION = 'french';
+type Faction = BRITISH_FACTION | FRENCH_FACTION | 'indian';
 
 interface BTActionPoint {
   id: string;
@@ -110,8 +111,10 @@ interface BTMarker {
 
 interface BTSpace {
   id: string;
+  battle: boolean;
   control: string;
-  raided: BRITISH | FRENCH;
+  raided: BRITISH_FACTION | FRENCH_FACTION | null;
+  homeSpace: BRITISH_FACTION | FRENCH_FACTION | null;
   defaultControl: string;
   name: string;
   victorySpace: boolean;
@@ -146,7 +149,8 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   staticData: {
     units: {
       [counterId: string]: {
-        faction: "british" | "french" | "indian";
+        faction: "british" | "french";
+        counterText: string;
       };
     };
   };

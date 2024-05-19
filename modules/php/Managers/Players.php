@@ -212,7 +212,7 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
     Game::get()->gamestate->changeActivePlayer($playerId);
   }
 
-  public static function scoreVictoryPoint($player, $points)
+  public static function scoreVictoryPoints($player, $points)
   {
     $vpMarker = Markers::get(VICTORY_MARKER);
     $otherPlayer = Players::getOther($player->getId());

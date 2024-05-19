@@ -8,9 +8,10 @@ class RaysTown extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = RAYS_TOWN;
     $this->battlePriority = 241;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('RaysTown');
+    $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = false;
     $this->top = 1970.5;

@@ -2470,6 +2470,25 @@ var BayonetsAndTomahawks = (function () {
             return callback(event);
         }));
     };
+    BayonetsAndTomahawks.prototype.setStackSelected = function (_a) {
+        var spaceId = _a.spaceId, faction = _a.faction;
+        var node = $("".concat(spaceId, "_").concat(faction, "_stack"));
+        if (node === null) {
+            return;
+        }
+        node.classList.add(BT_SELECTED);
+    };
+    BayonetsAndTomahawks.prototype.setStackSelectable = function (_a) {
+        var id = _a.id, callback = _a.callback;
+        var node = $(id);
+        if (node === null) {
+            return;
+        }
+        node.classList.add(BT_SELECTABLE);
+        this._connections.push(dojo.connect(node, "onclick", this, function (event) {
+            return callback(event);
+        }));
+    };
     BayonetsAndTomahawks.prototype.setUnitSelected = function (_a) {
         var id = _a.id;
         var node = $(id);
@@ -3131,6 +3150,19 @@ var GameMap = (function () {
                 }
                 element.insertAdjacentHTML('beforeend', tplMarkerOfType({ type: "".concat(space.raided, "_raided_marker") }));
             }
+            if (space.control !== space.homeSpace &&
+                (space.control === BRITISH || space.control === FRENCH)) {
+                _this.addMarkerToSpace({
+                    spaceId: space.id,
+                    type: "".concat(space.control, "_control_marker"),
+                });
+            }
+            if (space.battle) {
+                _this.addMarkerToSpace({
+                    spaceId: space.id,
+                    type: 'battle_marker',
+                });
+            }
             if (!_this.stacks[space.id]) {
                 _this.stacks[space.id] = (_a = {},
                     _a[BRITISH] = new UnitStack(_this.game.unitManager, document.getElementById("".concat(space.id, "_british_stack")), {}, BRITISH),
@@ -3390,6 +3422,22 @@ var GameMap = (function () {
             });
         });
     };
+    GameMap.prototype.addMarkerToSpace = function (_a) {
+        var spaceId = _a.spaceId, type = _a.type;
+        var element = document.getElementById("".concat(spaceId, "_markers"));
+        if (!element) {
+            return;
+        }
+        element.insertAdjacentHTML('beforeend', tplMarkerOfType({ id: "".concat(spaceId, "_").concat(type), type: type }));
+    };
+    GameMap.prototype.removeMarkerFromSpace = function (_a) {
+        var spaceId = _a.spaceId, type = _a.type;
+        var element = document.getElementById("".concat(spaceId, "_").concat(type));
+        if (!element) {
+            return;
+        }
+        element.remove();
+    };
     return GameMap;
 }());
 var tplMarker = function (_a) {
@@ -3401,8 +3449,8 @@ var tplMarkerSide = function (_a) {
     return "<div id=\"".concat(id, "\" class=\"bt_marker_side\" data-type=\"").concat(id, "\" data-side=\"front\"></div>");
 };
 var tplMarkerOfType = function (_a) {
-    var type = _a.type;
-    return "<div class=\"bt_marker_side\" data-type=\"".concat(type, "\" data-side=\"front\"></div>");
+    var id = _a.id, type = _a.type;
+    return "<div ".concat(id ? "id=\"".concat(id, "\"") : '', " class=\"bt_marker_side\" data-type=\"").concat(type, "\" data-side=\"front\"></div>");
 };
 var tplUnit = function (_a) {
     var faction = _a.faction, counterId = _a.counterId, style = _a.style;
@@ -3628,10 +3676,12 @@ var NotificationManager = (function () {
         console.log('notifications subscriptions setup');
         var notifs = [
             'log',
+            'battle',
             'discardCardFromHand',
             'discardCardFromHandPrivate',
             'discardCardInPlay',
             'drawCardPrivate',
+            'loseControl',
             'moveRaidPointsMarker',
             'moveRoundMarker',
             'moveStack',
@@ -3643,6 +3693,7 @@ var NotificationManager = (function () {
             'scoreVictoryPoints',
             'selectReserveCard',
             'selectReserveCardPrivate',
+            'takeControl',
         ];
         notifs.forEach(function (notifName) {
             _this.subscriptions.push(dojo.subscribe(notifName, _this, function (notifDetails) {
@@ -3698,6 +3749,19 @@ var NotificationManager = (function () {
                 this.game.gamedatas = updatedGamedatas;
                 this.game.playerManager.updatePlayers({ gamedatas: updatedGamedatas });
                 this.game.gameMap.updateInterface({ gamedatas: updatedGamedatas });
+                return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_battle = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var space;
+            return __generator(this, function (_a) {
+                space = notif.args.space;
+                this.game.gameMap.addMarkerToSpace({
+                    spaceId: space.id,
+                    type: 'battle_marker',
+                });
                 return [2];
             });
         });
@@ -3772,6 +3836,19 @@ var NotificationManager = (function () {
             });
         });
     };
+    NotificationManager.prototype.notif_loseControl = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, space, faction;
+            return __generator(this, function (_b) {
+                _a = notif.args, space = _a.space, faction = _a.faction;
+                this.game.gameMap.removeMarkerFromSpace({
+                    spaceId: space.id,
+                    type: "".concat(faction, "_control_marker"),
+                });
+                return [2];
+            });
+        });
+    };
     NotificationManager.prototype.notif_moveRaidPointsMarker = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var marker, element, toNode;
@@ -3788,35 +3865,6 @@ var NotificationManager = (function () {
                         return [4, this.game.animationManager.attachWithAnimation(new BgaSlideAnimation({ element: element }), toNode)];
                     case 1:
                         _a.sent();
-                        return [2];
-                }
-            });
-        });
-    };
-    NotificationManager.prototype.notif_scoreVictoryPoints = function (notif) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, marker, points, element, toNode;
-            var _this = this;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        _a = notif.args, marker = _a.marker, points = _a.points;
-                        Object.entries(points).forEach(function (_a) {
-                            var _b;
-                            var playerId = _a[0], score = _a[1];
-                            if ((_b = _this.game.framework().scoreCtrl) === null || _b === void 0 ? void 0 : _b[playerId]) {
-                                _this.game.framework().scoreCtrl[playerId].setValue(Number(score));
-                            }
-                        });
-                        element = document.getElementById(marker.id);
-                        toNode = document.getElementById(marker.location);
-                        if (!(element && toNode)) {
-                            console.error('Unable to move marker');
-                            return [2];
-                        }
-                        return [4, this.game.animationManager.attachWithAnimation(new BgaSlideAnimation({ element: element }), toNode)];
-                    case 1:
-                        _b.sent();
                         return [2];
                 }
             });
@@ -3951,6 +3999,35 @@ var NotificationManager = (function () {
             });
         });
     };
+    NotificationManager.prototype.notif_scoreVictoryPoints = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, marker, points, element, toNode;
+            var _this = this;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = notif.args, marker = _a.marker, points = _a.points;
+                        Object.entries(points).forEach(function (_a) {
+                            var _b;
+                            var playerId = _a[0], score = _a[1];
+                            if ((_b = _this.game.framework().scoreCtrl) === null || _b === void 0 ? void 0 : _b[playerId]) {
+                                _this.game.framework().scoreCtrl[playerId].setValue(Number(score));
+                            }
+                        });
+                        element = document.getElementById(marker.id);
+                        toNode = document.getElementById(marker.location);
+                        if (!(element && toNode)) {
+                            console.error('Unable to move marker');
+                            return [2];
+                        }
+                        return [4, this.game.animationManager.attachWithAnimation(new BgaSlideAnimation({ element: element }), toNode)];
+                    case 1:
+                        _b.sent();
+                        return [2];
+                }
+            });
+        });
+    };
     NotificationManager.prototype.notif_selectReserveCard = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var faction;
@@ -3972,6 +4049,27 @@ var NotificationManager = (function () {
                         _a.sent();
                         return [2];
                 }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_takeControl = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, space, playerId, faction;
+            return __generator(this, function (_b) {
+                _a = notif.args, space = _a.space, playerId = _a.playerId, faction = _a.faction;
+                if (space.control !== space.homeSpace) {
+                    this.game.gameMap.addMarkerToSpace({
+                        spaceId: space.id,
+                        type: "".concat(faction, "_control_marker"),
+                    });
+                }
+                else {
+                    this.game.gameMap.removeMarkerFromSpace({
+                        spaceId: space.id,
+                        type: "".concat(faction, "_control_marker"),
+                    });
+                }
+                return [2];
             });
         });
     };
@@ -4947,6 +5045,10 @@ var LightMovementState = (function () {
                 you: '${you}',
             },
         });
+        this.game.setStackSelected({
+            faction: this.args.faction,
+            spaceId: this.args.origin.id,
+        });
         this.setSpacesSelectable();
         this.game.addPassButton({
             optionalAction: this.args.optionalAction,
@@ -4959,9 +5061,10 @@ var LightMovementState = (function () {
         this.game.clearPossible();
         this.game.setLocationSelected({ id: space.id });
         this.game.clientUpdatePageTitle({
-            text: _('${you} must select units to move'),
+            text: _('${you} must select units to move to ${spaceName}'),
             args: {
                 you: '${you}',
+                spaceName: _(space.name),
             },
         });
         var stack = this.game.gameMap.stacks[space.id][this.args.faction];
@@ -4988,13 +5091,65 @@ var LightMovementState = (function () {
             },
         });
     };
+    LightMovementState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var space = _a.space;
+        this.game.clearPossible();
+        this.selectedUnits.forEach(function (unit) {
+            return _this.game.setUnitSelected({ id: unit.id + '' });
+        });
+        this.game.setLocationSelected({ id: space.id });
+        this.game.clientUpdatePageTitle({
+            text: this.selectedUnits.length === 1
+                ? _('Move ${unitName} to ${spaceName}?')
+                : _('Move selected units to ${spaceName}?'),
+            args: {
+                you: '${you}',
+                spaceName: _(space.name),
+                unitName: _(this.game.gamedatas.staticData.units[this.selectedUnits[0].counterId]
+                    .counterText),
+            },
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actLightMovement',
+                args: {
+                    unitIds: _this.selectedUnits.map(function (unit) { return unit.id; }),
+                    spaceId: space.id,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton({
+            callback: function () {
+                _this.selectedUnits = [];
+            },
+        });
+    };
     LightMovementState.prototype.setSpacesSelectable = function () {
         var _this = this;
         Object.values(this.args.destinations).forEach(function (destination) {
             _this.game.setLocationSelectable({
                 id: destination.space.id,
                 callback: function () {
-                    _this.updateInterfaceSelectUnits(destination);
+                    if (_this.args.lightUnits.length === 1 &&
+                        (_this.args.commanders.length === 0 || _this.args.isIndianAP)) {
+                        (_this.selectedUnits = _this.args.lightUnits),
+                            _this.updateInterfaceConfirm({ space: destination.space });
+                    }
+                    else {
+                        _this.updateInterfaceSelectUnits(destination);
+                    }
                 },
             });
         });

@@ -607,6 +607,35 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     );
   }
 
+  setStackSelected({ spaceId, faction }: { spaceId: string; faction: string; }) {
+    const node = $(`${spaceId}_${faction}_stack`);
+    if (node === null) {
+      return;
+    }
+    node.classList.add(BT_SELECTED);
+  }
+
+  // TODO: implementation
+  setStackSelectable({
+    id,
+    callback,
+  }: {
+    id: string;
+    callback: (event: PointerEvent) => void;
+  }) {
+    const node = $(id);
+
+    if (node === null) {
+      return;
+    }
+    node.classList.add(BT_SELECTABLE);
+    this._connections.push(
+      dojo.connect(node, "onclick", this, (event: PointerEvent) =>
+        callback(event)
+      )
+    );
+  }
+
   setUnitSelected({ id }: { id: string }) {
     const node = $(id);
     if (node === null) {

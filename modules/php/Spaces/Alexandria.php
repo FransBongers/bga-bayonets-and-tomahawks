@@ -11,6 +11,7 @@ class Alexandria extends \BayonetsAndTomahawks\Models\Space
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Alexandria');
+    $this->britishBase = true;
     $this->victorySpace = false;
     $this->top = 2064;
     $this->left = 1198.5;

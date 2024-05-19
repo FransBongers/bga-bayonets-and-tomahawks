@@ -250,7 +250,7 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
         $raidMarker->setLocation(RAID_TRACK_8);
         Notifications::moveRaidPointsMarker($raidMarker);
 
-        Players::scoreVictoryPoint($player, 1);
+        Players::scoreVictoryPoints($player, 1);
 
         $raidMarker->setLocation(Locations::raidTrack($remainingRaidPoints));
         Notifications::moveRaidPointsMarker($raidMarker);

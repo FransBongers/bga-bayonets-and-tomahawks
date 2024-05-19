@@ -69,7 +69,9 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
       $card = Cards::getTopOf(Locations::cardInPlay($this->getPlayer()->getFaction()));
     }
 
-    $availableActionPoints = $this->getAvailableActionPoints($usedActionPoints, $card);
+    $availableActionPoints = $action === ACTION_ROUND_REACTION ?
+      [$this->ctx->getInfo()['actionPointId']] :
+      $this->getAvailableActionPoints($usedActionPoints, $card);
 
     return [
       'action' => $action,
