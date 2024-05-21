@@ -2186,6 +2186,8 @@ var BayonetsAndTomahawks = (function () {
             actionRoundChooseFirstPlayer: new ActionRoundChooseFirstPlayerState(this),
             actionRoundChooseReaction: new ActionRoundChooseReactionState(this),
             actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
+            armyMovement: new ArmyMovementState(this),
+            armyMovementDestination: new ArmyMovementDestinationState(this),
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
             lightMovement: new LightMovementState(this),
@@ -4910,6 +4912,7 @@ var ActionRoundChooseReactionState = (function () {
                 });
             },
         });
+        this.game.addCancelButton();
     };
     ActionRoundChooseReactionState.prototype.addActionPointButtons = function () {
         var _this = this;
@@ -4956,6 +4959,184 @@ var ActionRoundSailBoxLandingState = (function () {
         this.game.addUndoButtons(this.args);
     };
     return ActionRoundSailBoxLandingState;
+}());
+var ArmyMovementState = (function () {
+    function ArmyMovementState(game) {
+        this.selectedUnits = [];
+        this.game = game;
+    }
+    ArmyMovementState.prototype.onEnteringState = function (args) {
+        debug('Entering ArmyMovementState');
+        this.args = args;
+        this.selectedUnits = [];
+        this.updateInterfaceInitialStep();
+    };
+    ArmyMovementState.prototype.onLeavingState = function () {
+        debug('Leaving ArmyMovementState');
+    };
+    ArmyMovementState.prototype.setDescription = function (activePlayerId) { };
+    ArmyMovementState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select units to move'),
+            args: {
+                you: '${you}',
+            },
+        });
+        var stack = this.game.gameMap.stacks[this.args.origin.id][this.args.faction];
+        stack.open();
+        this.setUnitsSelectable();
+        this.game.addConfirmButton({
+            callback: function () {
+                _this.game.clearPossible();
+                _this.game.takeAction({
+                    action: 'actArmyMovement',
+                    args: {
+                        unitIds: _this.selectedUnits.map(function (unit) { return unit.id; }),
+                    },
+                });
+            },
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+        this.checkConfirmDisabled();
+    };
+    ArmyMovementState.prototype.setUnitsSelectable = function () {
+        var _this = this;
+        this.args.units.forEach(function (unit) {
+            _this.game.setLocationSelectable({
+                id: '' + unit.id,
+                callback: function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    _this.handleUnitClick({ unit: unit });
+                },
+            });
+        });
+    };
+    ArmyMovementState.prototype.handleUnitClick = function (_a) {
+        var unit = _a.unit;
+        var index = this.selectedUnits.findIndex(function (item) { return item.id === unit.id; });
+        var element = document.getElementById(unit.id + '');
+        if (!element) {
+            return;
+        }
+        if (index < 0) {
+            this.selectedUnits.push(unit);
+            element.classList.add(BT_SELECTED);
+            element.classList.remove(BT_SELECTABLE);
+            this.game.setUnitSelected({ id: '' + unit.id });
+        }
+        else {
+            this.selectedUnits.splice(index, 1);
+            element.classList.add(BT_SELECTABLE);
+            element.classList.remove(BT_SELECTED);
+        }
+        this.checkConfirmDisabled();
+    };
+    ArmyMovementState.prototype.checkConfirmDisabled = function () {
+        var button = document.getElementById('confirm_btn');
+        if (!button) {
+            return;
+        }
+        if (this.selectedUnits.length === 0) {
+            button.classList.add(DISABLED);
+        }
+        else {
+            button.classList.remove(DISABLED);
+        }
+    };
+    return ArmyMovementState;
+}());
+var ArmyMovementDestinationState = (function () {
+    function ArmyMovementDestinationState(game) {
+        this.selectedUnits = [];
+        this.game = game;
+    }
+    ArmyMovementDestinationState.prototype.onEnteringState = function (args) {
+        debug('Entering ArmyMovementDestinationState');
+        this.args = args;
+        this.selectedUnits = [];
+        this.updateInterfaceInitialStep();
+    };
+    ArmyMovementDestinationState.prototype.onLeavingState = function () {
+        debug('Leaving ArmyMovementDestinationState');
+    };
+    ArmyMovementDestinationState.prototype.setDescription = function (activePlayerId) { };
+    ArmyMovementDestinationState.prototype.updateInterfaceInitialStep = function () {
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a Space to move your units to'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.setUnitsSelected();
+        this.setSpacesSelectable();
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    ArmyMovementDestinationState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var space = _a.space;
+        this.game.clearPossible();
+        this.setUnitsSelected();
+        this.game.setLocationSelected({ id: space.id });
+        this.game.clientUpdatePageTitle({
+            text: this.args.units.length === 1
+                ? _('Move ${unitName} to ${spaceName}?')
+                : _('Move selected units to ${spaceName}?'),
+            args: {
+                you: '${you}',
+                spaceName: _(space.name),
+                unitName: _(this.game.gamedatas.staticData.units[this.args.units[0].counterId]
+                    .counterText),
+            },
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actArmyMovementDestination',
+                args: {
+                    spaceId: space.id,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+    };
+    ArmyMovementDestinationState.prototype.setSpacesSelectable = function () {
+        var _this = this;
+        Object.values(this.args.destinations).forEach(function (destination) {
+            console.log('destination', destination);
+            _this.game.setLocationSelectable({
+                id: destination.space.id,
+                callback: function () {
+                    return _this.updateInterfaceConfirm({ space: destination.space });
+                },
+            });
+        });
+    };
+    ArmyMovementDestinationState.prototype.setUnitsSelected = function () {
+        var _this = this;
+        this.args.units.forEach(function (unit) {
+            _this.game.setUnitSelected({ id: unit.id });
+        });
+    };
+    return ArmyMovementDestinationState;
 }());
 var ConfirmPartialTurnState = (function () {
     function ConfirmPartialTurnState(game) {

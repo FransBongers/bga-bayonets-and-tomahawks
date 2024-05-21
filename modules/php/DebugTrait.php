@@ -80,8 +80,7 @@ trait DebugTrait
 
   function test()
   {
-    $connection = Spaces::get(GNADENHUTTEN)->getUnits();
-    Notifications::log('space', $connection);
+    Notifications::log('units', Units::get('unit_1'));
     // $result = AtomicActions::get(LIGHT_MOVEMENT)->checkEnemyUnitsAndOverwhelm(Spaces::get(ANNAPOLIS_ROYAL), Players::get());
 
     // Notifications::log('checkEnemyUnitsAndOverwhelm', $result);

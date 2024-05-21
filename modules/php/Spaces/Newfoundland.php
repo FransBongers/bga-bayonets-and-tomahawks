@@ -9,7 +9,7 @@ class Newfoundland extends \BayonetsAndTomahawks\Models\Space
     $this->id = NEWFOUNDLAND;
     $this->battlePriority = 11;
     $this->defaultControl = BRITISH;
-    $this->homeSpace = FRENCH;
+    $this->homeSpace = BRITISH;
     $this->name = clienttranslate('NEWFOUNDLAND');
     $this->outpost = true;
     $this->value = 1;

@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `connections` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 CREATE TABLE IF NOT EXISTS `units` (
-  `unit_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `unit_id` varchar(100)  NOT NULL,
   `unit_location` varchar(32) NOT NULL,
   `unit_state` int(10) DEFAULT 0,
   `counter_id` VARCHAR(255) NOT NULL,

@@ -144,6 +144,9 @@ class UnitMovement extends \BayonetsAndTomahawks\Actions\StackAction
     $enemyUnits = [];
     $playerUnits = [];
     foreach ($units as $unit) {
+      if ($unit->getType() === COMMANDER) {
+        continue;
+      }
       if ($unit->getFaction() === $playerFaction) {
         $playerUnits[] = $unit;
       } else {

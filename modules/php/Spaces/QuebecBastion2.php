@@ -9,6 +9,7 @@ class QuebecBastion2 extends \BayonetsAndTomahawks\Models\Space
     $this->id = QUEBEC_BASTION_2;
     $this->battlePriority = 81;
     $this->defaultControl = FRENCH;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('QUÉBEC Bastion');
     $this->victorySpace = false;
     $this->top = 863;

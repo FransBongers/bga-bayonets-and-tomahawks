@@ -11,6 +11,7 @@ class ActionPoint implements \JsonSerializable
   protected $id;
   protected $name;
   protected $actionsAllowed = [];
+  protected $movementMultiplier = 1;
 
   public function __construct()
   {

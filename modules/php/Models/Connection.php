@@ -80,6 +80,11 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
     // $this->setLimitUsed($faction, $current + $increase);
   }
 
+  public function isCoastalConnection()
+  {
+    return $this->coastal;
+  }
+
   /**
    * Return an array of attributes
    */

@@ -71,6 +71,7 @@ class ActionRoundChooseReactionState implements State {
           },
         }),
     });
+    this.game.addCancelButton();
   }
 
   //  .##.....##.########.####.##.......####.########.##....##

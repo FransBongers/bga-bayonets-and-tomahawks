@@ -9,8 +9,15 @@ class ActionPoints
 {
   // Mapping of opId and corresponding class
   static $actionPoints = [
+    ARMY_AP => 'ArmyAP',
+    ARMY_AP_2X => 'ArmyAP_2x',
     INDIAN_AP => 'IndianAP',
+    INDIAN_AP_2X => 'IndianAP_2x',
+    FRENCH_LIGHT_ARMY_AP => 'FrenchLightArmyAP',
     LIGHT_AP => 'LightAP',
+    LIGHT_AP_2X => 'LightAP_2x',
+    SAIL_ARMY_AP => 'SailArmyAP',
+    SAIL_ARMY_AP_2X => 'SailArmyAP_2x',
   ];
 
   public static function get($actionPointId)

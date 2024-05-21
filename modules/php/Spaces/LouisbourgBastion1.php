@@ -9,6 +9,7 @@ class LouisbourgBastion1 extends \BayonetsAndTomahawks\Models\Space
     $this->id = LOUISBOURG_BASTION_1;
     $this->battlePriority = 13;
     $this->defaultControl = FRENCH;
+    $this->homeSpace = FRENCH;
     $this->name = clienttranslate('LOUISBOURG Bastion');
     $this->victorySpace = false;
     $this->top = 316;

@@ -9,6 +9,28 @@ interface CommonArgs {
   previousSteps: number[];
 }
 
+interface OnEnteringArmyMovementStateArgs extends CommonArgs {
+  // destinations: Record<string, {
+  //   space: BTSpace;
+  //   remainingConnectionLimit: number;
+  // }>
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+  origin: BTSpace;
+  units: BTUnit[];
+}
+
+interface OnEnteringArmyMovementDestinationStateArgs extends CommonArgs {
+  destinations: Record<
+    string,
+    {
+      space: BTSpace;
+    }
+  >;
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+  origin: BTSpace;
+  units: BTUnit[];
+}
+
 interface OnEnteringConfirmTurnArgs extends CommonArgs {}
 
 interface OnEnteringActionActivateStackStateArgs extends CommonArgs {
@@ -31,35 +53,37 @@ interface OnEnteringActionRoundChooseCardStateArgs {
   };
 }
 
-interface OnEnteringActionRoundChooseFirstPlayerStateArgs extends CommonArgs {
-
-}
+interface OnEnteringActionRoundChooseFirstPlayerStateArgs extends CommonArgs {}
 
 interface OnEnteringActionRoundChooseReactionStateArgs extends CommonArgs {
   actionPoints: BTActionPoint[];
 }
 
-interface OnEnteringActionRoundSailBoxLandingStateArgs extends CommonArgs {
-
-}
+interface OnEnteringActionRoundSailBoxLandingStateArgs extends CommonArgs {}
 
 interface OnEnteringLightMovementStateArgs extends CommonArgs {
   commanders: BTUnit[];
   lightUnits: BTUnit[];
-  destinations: Record<string, {
-    space: BTSpace;
-    remainingConnectionLimit: number;
-  }>
+  destinations: Record<
+    string,
+    {
+      space: BTSpace;
+      remainingConnectionLimit: number;
+    }
+  >;
   isIndianAP: boolean;
   origin: BTSpace;
   faction: Faction;
 }
 
 interface OnEnteringRaidStateArgs extends CommonArgs {
-  raidTargets: Record<string, {
-    space: BTSpace,
-    paths: string[][],
-  }>;
+  raidTargets: Record<
+    string,
+    {
+      space: BTSpace;
+      paths: string[][];
+    }
+  >;
   units: BTUnit[];
 }
 

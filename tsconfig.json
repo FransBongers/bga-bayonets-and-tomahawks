@@ -70,6 +70,8 @@
     "src/states/ActionRoundChooseFirstPlayer.ts",
     "src/states/ActionRoundChooseReaction.ts",
     "src/states/ActionRoundSailBoxLanding.ts",
+    "src/states/ArmyMovementState.ts",
+    "src/states/ArmyMovementDestinationState.ts",
     "src/states/ConfirmPartialTurn.ts",
     "src/states/ConfirmTurn.ts",
     "src/states/LightMovementState.ts",

@@ -13,7 +13,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   protected $table = 'units';
   protected $primary = 'unit_id';
   protected $attributes = [
-    'id' => ['unit_id', 'int'],
+    'id' => ['unit_id', 'str'],
     'location' => ['unit_location', 'str'],
     'counterId' => ['counter_id', 'str'],
     'spent' => ['spent', 'int'],

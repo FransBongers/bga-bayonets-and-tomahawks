@@ -123,7 +123,7 @@ interface BTSpace {
 }
 
 interface BTUnit {
-  id: number;
+  id: string;
   counterId: string;
   location: string;
   spent: number;
