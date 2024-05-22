@@ -2191,6 +2191,7 @@ var BayonetsAndTomahawks = (function () {
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
             lightMovement: new LightMovementState(this),
+            lightMovementDestination: new LightMovementDestinationState(this),
             raid: new RaidState(this),
             selectReserveCard: new SelectReserveCardState(this),
         };
@@ -5219,84 +5220,131 @@ var LightMovementState = (function () {
     };
     LightMovementState.prototype.setDescription = function (activePlayerId) { };
     LightMovementState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _('${you} must select a Space to move units to'),
+            text: _('${you} must select units to move'),
             args: {
                 you: '${you}',
             },
         });
-        this.game.setStackSelected({
-            faction: this.args.faction,
-            spaceId: this.args.origin.id,
+        var stack = this.game.gameMap.stacks[this.args.origin.id][this.args.faction];
+        stack.open();
+        this.setUnitsSelectable();
+        this.game.addConfirmButton({
+            callback: function () {
+                _this.game.clearPossible();
+                _this.game.takeAction({
+                    action: 'actLightMovement',
+                    args: {
+                        unitIds: _this.selectedUnits.map(function (unit) { return unit.id; }),
+                    },
+                });
+            },
         });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+        this.checkConfirmDisabled();
+    };
+    LightMovementState.prototype.setUnitsSelectable = function () {
+        var _this = this;
+        this.args.lightUnits.forEach(function (unit) {
+            _this.game.setLocationSelectable({
+                id: '' + unit.id,
+                callback: function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    _this.handleUnitClick({ unit: unit });
+                },
+            });
+        });
+    };
+    LightMovementState.prototype.handleUnitClick = function (_a) {
+        var unit = _a.unit;
+        var index = this.selectedUnits.findIndex(function (item) { return item.id === unit.id; });
+        var element = document.getElementById(unit.id + '');
+        if (!element) {
+            return;
+        }
+        if (index < 0) {
+            this.selectedUnits.push(unit);
+            element.classList.add(BT_SELECTED);
+            element.classList.remove(BT_SELECTABLE);
+            this.game.setUnitSelected({ id: '' + unit.id });
+        }
+        else {
+            this.selectedUnits.splice(index, 1);
+            element.classList.add(BT_SELECTABLE);
+            element.classList.remove(BT_SELECTED);
+        }
+        this.checkConfirmDisabled();
+    };
+    LightMovementState.prototype.checkConfirmDisabled = function () {
+        var button = document.getElementById('confirm_btn');
+        if (!button) {
+            return;
+        }
+        if (this.selectedUnits.length === 0) {
+            button.classList.add(DISABLED);
+        }
+        else {
+            button.classList.remove(DISABLED);
+        }
+    };
+    return LightMovementState;
+}());
+var LightMovementDestinationState = (function () {
+    function LightMovementDestinationState(game) {
+        this.game = game;
+    }
+    LightMovementDestinationState.prototype.onEnteringState = function (args) {
+        debug('Entering LightMovementDestinationState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    LightMovementDestinationState.prototype.onLeavingState = function () {
+        debug('Leaving LightMovementDestinationState');
+    };
+    LightMovementDestinationState.prototype.setDescription = function (activePlayerId) { };
+    LightMovementDestinationState.prototype.updateInterfaceInitialStep = function () {
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a Space to move your units to'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.setUnitsSelected();
         this.setSpacesSelectable();
         this.game.addPassButton({
             optionalAction: this.args.optionalAction,
         });
         this.game.addUndoButtons(this.args);
     };
-    LightMovementState.prototype.updateInterfaceSelectUnits = function (_a) {
-        var _this = this;
-        var space = _a.space, remainingConnectionLimit = _a.remainingConnectionLimit;
-        this.game.clearPossible();
-        this.game.setLocationSelected({ id: space.id });
-        this.game.clientUpdatePageTitle({
-            text: _('${you} must select units to move to ${spaceName}'),
-            args: {
-                you: '${you}',
-                spaceName: _(space.name),
-            },
-        });
-        var stack = this.game.gameMap.stacks[space.id][this.args.faction];
-        stack.open();
-        this.setUnitsSelectable();
-        this.game.addConfirmButton({
-            callback: function () {
-                if (_this.selectedUnits.length === 0) {
-                    return;
-                }
-                _this.game.clearPossible();
-                _this.game.takeAction({
-                    action: 'actLightMovement',
-                    args: {
-                        unitIds: _this.selectedUnits.map(function (unit) { return unit.id; }),
-                        spaceId: space.id,
-                    },
-                });
-            },
-        });
-        this.game.addCancelButton({
-            callback: function () {
-                _this.selectedUnits = [];
-            },
-        });
-    };
-    LightMovementState.prototype.updateInterfaceConfirm = function (_a) {
+    LightMovementDestinationState.prototype.updateInterfaceConfirm = function (_a) {
         var _this = this;
         var space = _a.space;
         this.game.clearPossible();
-        this.selectedUnits.forEach(function (unit) {
-            return _this.game.setUnitSelected({ id: unit.id + '' });
-        });
+        this.setUnitsSelected();
         this.game.setLocationSelected({ id: space.id });
         this.game.clientUpdatePageTitle({
-            text: this.selectedUnits.length === 1
+            text: this.args.units.length === 1
                 ? _('Move ${unitName} to ${spaceName}?')
                 : _('Move selected units to ${spaceName}?'),
             args: {
                 you: '${you}',
                 spaceName: _(space.name),
-                unitName: _(this.game.gamedatas.staticData.units[this.selectedUnits[0].counterId]
+                unitName: _(this.game.gamedatas.staticData.units[this.args.units[0].counterId]
                     .counterText),
             },
         });
         var callback = function () {
             _this.game.clearPossible();
             _this.game.takeAction({
-                action: 'actLightMovement',
+                action: 'actLightMovementDestination',
                 args: {
-                    unitIds: _this.selectedUnits.map(function (unit) { return unit.id; }),
                     spaceId: space.id,
                 },
             });
@@ -5311,45 +5359,26 @@ var LightMovementState = (function () {
                 callback: callback,
             });
         }
-        this.game.addCancelButton({
-            callback: function () {
-                _this.selectedUnits = [];
-            },
-        });
     };
-    LightMovementState.prototype.setSpacesSelectable = function () {
+    LightMovementDestinationState.prototype.setSpacesSelectable = function () {
         var _this = this;
         Object.values(this.args.destinations).forEach(function (destination) {
+            console.log('destination', destination);
             _this.game.setLocationSelectable({
                 id: destination.space.id,
                 callback: function () {
-                    if (_this.args.lightUnits.length === 1 &&
-                        (_this.args.commanders.length === 0 || _this.args.isIndianAP)) {
-                        (_this.selectedUnits = _this.args.lightUnits),
-                            _this.updateInterfaceConfirm({ space: destination.space });
-                    }
-                    else {
-                        _this.updateInterfaceSelectUnits(destination);
-                    }
+                    return _this.updateInterfaceConfirm({ space: destination.space });
                 },
             });
         });
     };
-    LightMovementState.prototype.setUnitsSelectable = function () {
+    LightMovementDestinationState.prototype.setUnitsSelected = function () {
         var _this = this;
-        this.args.lightUnits.forEach(function (unit) {
-            _this.game.setLocationSelectable({
-                id: '' + unit.id,
-                callback: function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    _this.selectedUnits.push(unit);
-                    _this.game.setLocationSelected({ id: '' + unit.id });
-                },
-            });
+        this.args.units.forEach(function (unit) {
+            _this.game.setUnitSelected({ id: unit.id });
         });
     };
-    return LightMovementState;
+    return LightMovementDestinationState;
 }());
 var RaidState = (function () {
     function RaidState(game) {

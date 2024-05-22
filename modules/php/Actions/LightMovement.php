@@ -81,7 +81,6 @@ class LightMovement extends \BayonetsAndTomahawks\Actions\UnitMovement
 
     $playerFaction = $player->getFaction();
     $units = $space->getUnits($playerFaction);
-    $adjacentSpaces = $space->getAdjacentSpaces();
 
     $commanders = [];
     $lightUnits = [];
@@ -101,30 +100,11 @@ class LightMovement extends \BayonetsAndTomahawks\Actions\UnitMovement
       }
     }
 
-    $destinations = [];
-
-    foreach ($adjacentSpaces as $targetSpaceId => $connection) {
-      $remainingConnectionLimit = $connection->getLimit() - $connection->getLimitUsed($playerFaction);
-
-      // TODO: add other checks
-      if ($remainingConnectionLimit > 0) {
-        $destinations[$targetSpaceId] = [
-          'space' => Spaces::get($targetSpaceId),
-          'remainingConnectionLimit' => $remainingConnectionLimit,
-        ];
-      }
-    }
-
     return [
-      'info' => $info,
-      'actionPointId' => $actionPointId,
-      'parentInfo' => $parentInfo,
-      'parentParentInfo' => $parent->getParent()->getInfo(),
       'isIndianAP' => $actionPointId === INDIAN_AP || $actionPointId === INDIAN_AP_2X,
       'commanders' => $commanders,
       'lightUnits' => $lightUnits,
       'origin' => $space,
-      'destinations' => $destinations,
       'faction' => $playerFaction,
       'numberResolved' => count($resolved),
     ];
@@ -158,24 +138,20 @@ class LightMovement extends \BayonetsAndTomahawks\Actions\UnitMovement
     self::checkAction('actLightMovement');
 
     $unitIds = $args['unitIds'];
-    $destinationId = $args['spaceId'];
-    $destination = Spaces::get($destinationId);
-    Notifications::log('args', $args);
+     Notifications::log('args', $args);
     $player = self::getPlayer();
 
     $stateArgs = $this->argsLightMovement();
-    if (!isset($stateArgs['destinations'][$destinationId])) {
-      throw new \feException("ERROR 001");
-    }
+
     // TODO: check how to do this more efficiently
     $units = array_map(function ($unitId) {
       return Units::get($unitId);
     }, $unitIds);
-    // Notifications::log('units', $units);
+
     $stateArgsUnitIds = array_map(function ($unit) {
       return $unit->getId();
     }, $stateArgs['lightUnits']);
-    // Notifications::log('stateArgsUnitIds', $stateArgsUnitIds);
+
     $hasNotAllowedUnit = Utils::array_some($units, function ($unit) use ($stateArgsUnitIds) {
       return !in_array($unit->getId(), $stateArgsUnitIds);
     });
@@ -183,36 +159,13 @@ class LightMovement extends \BayonetsAndTomahawks\Actions\UnitMovement
       throw new \feException("ERROR 002");
     }
 
-    $origin = $stateArgs['origin'];
 
-    Units::move($unitIds, $destinationId);
-
-    Notifications::moveStack(self::getPlayer(), $units, $origin, $destination);
-
-    // Check if origin was Settled space and is now empty of enemy units
-    $this->loseControlCheck($player, $origin);
-
-    // Check if players takes control of empty enemy controlled outpost
-    $this->takeControlCheck($player, $destination);
-
-    $enemyUnitsAndOverwhelm = $this->checkEnemyUnitsAndOverwhelm($destination, $player);
-    // Notifications::log('enemyUnitsAndOverwhelm', $enemyUnitsAndOverwhelm);
-    // $hasEnemyUnits = $enemyUnitsAndOverwhelm['hasEnemyUnits'];
-    // $overwhelm = $enemyUnitsAndOverwhelm['overwhelm'];
-    $battleOccurs = $enemyUnitsAndOverwhelm['battleOccurs'];
-
-    // $battle = $hasEnemyUnits && !$overwhelm;
-    // Add battle marker
-    
-
-    $resolvedMoves = count($this->ctx->getParent()->getResolvedActions([LIGHT_MOVEMENT]));
-    if (!$battleOccurs && $resolvedMoves < 2) {
-      $this->ctx->insertAsBrother(Engine::buildTree([
-        'action' => LIGHT_MOVEMENT,
-        'spaceId' => $destinationId,
-        'playerId' => self::getPlayer()->getId(),
-      ]));
-    }
+    $this->ctx->insertAsBrother(Engine::buildTree([
+      'action' => LIGHT_MOVEMENT_DESTINATION,
+      'spaceId' => $this->ctx->getInfo()['spaceId'],
+      'playerId' => $player->getId(),
+      'unitIds' => $unitIds,
+    ]));
 
     $this->resolveAction($args);
   }

@@ -67,66 +67,59 @@ class LightMovementDestination extends \BayonetsAndTomahawks\Actions\UnitMovemen
   public function argsLightMovementDestination()
   {
     $info = $this->ctx->getInfo();
-    $parent = $this->ctx->getParent();
-    $parentInfo = $parent->getInfo();
-    $actionPointId = $parent->getParent()->getInfo()['actionPointId'];
 
-    $resolved = $parent->getResolvedActions([LIGHT_MOVEMENT]);
     $player = self::getPlayer();
 
-    $isIndianActionPoint = $actionPointId === INDIAN_AP || $actionPointId === INDIAN_AP_2X;
+    // $isIndianActionPoint = $actionPointId === INDIAN_AP || $actionPointId === INDIAN_AP_2X;
 
     $spaceId = $info['spaceId'];
     $space = Spaces::get($spaceId);
 
     $playerFaction = $player->getFaction();
-    $units = $space->getUnits($playerFaction);
+    // $units = $space->getUnits($playerFaction);
     $adjacentSpaces = $space->getAdjacentSpaces();
+    $unitIds = $info['unitIds'];
 
-    $commanders = [];
-    $lightUnits = [];
+    $units = Units::getMany($unitIds)->toArray();
 
-    foreach ($units as $unit) {
-      $unitType = $unit->getType();
+    // $commanders = [];
+    // $lightUnits = [];
 
-      if ($isIndianActionPoint) {
-        if ($unit->isIndian() && $unitType === LIGHT) {
-          $lightUnits[] = $unit;
-        }
-        continue;
-      } else if ($unitType === LIGHT) {
-        $lightUnits[] = $unit;
-      } else if ($unitType === COMMANDER) {
-        $commanders[] = $unit;
-      }
-    }
+    // foreach ($units as $unit) {
+    //   $unitType = $unit->getType();
+
+    //   if ($isIndianActionPoint) {
+    //     if ($unit->isIndian() && $unitType === LIGHT) {
+    //       $lightUnits[] = $unit;
+    //     }
+    //     continue;
+    //   } else if ($unitType === LIGHT) {
+    //     $lightUnits[] = $unit;
+    //   } else if ($unitType === COMMANDER) {
+    //     $commanders[] = $unit;
+    //   }
+    // }
 
     $destinations = [];
 
     foreach ($adjacentSpaces as $targetSpaceId => $connection) {
       $remainingConnectionLimit = $connection->getLimit() - $connection->getLimitUsed($playerFaction);
-
       // TODO: add other checks
-      if ($remainingConnectionLimit > 0) {
-        $destinations[$targetSpaceId] = [
-          'space' => Spaces::get($targetSpaceId),
-          'remainingConnectionLimit' => $remainingConnectionLimit,
-        ];
+      // TODO: commanders
+      if ($remainingConnectionLimit < count($unitIds)) {
+        continue;
       }
+
+      $destinations[$targetSpaceId] = [
+        'space' => Spaces::get($targetSpaceId),
+        'connection' => $connection,
+      ];
     }
 
     return [
-      'info' => $info,
-      'actionPointId' => $actionPointId,
-      'parentInfo' => $parentInfo,
-      'parentParentInfo' => $parent->getParent()->getInfo(),
-      'isIndianAP' => $actionPointId === INDIAN_AP || $actionPointId === INDIAN_AP_2X,
-      'commanders' => $commanders,
-      'lightUnits' => $lightUnits,
-      'origin' => $space,
+      'units' => $units,
       'destinations' => $destinations,
       'faction' => $playerFaction,
-      'numberResolved' => count($resolved),
     ];
   }
 
@@ -157,7 +150,7 @@ class LightMovementDestination extends \BayonetsAndTomahawks\Actions\UnitMovemen
   {
     self::checkAction('actLightMovementDestination');
 
-    $unitIds = $args['unitIds'];
+    // $unitIds = $args['unitIds'];
     $destinationId = $args['spaceId'];
     $destination = Spaces::get($destinationId);
     Notifications::log('args', $args);
@@ -167,23 +160,11 @@ class LightMovementDestination extends \BayonetsAndTomahawks\Actions\UnitMovemen
     if (!isset($stateArgs['destinations'][$destinationId])) {
       throw new \feException("ERROR 001");
     }
-    // TODO: check how to do this more efficiently
-    $units = array_map(function ($unitId) {
-      return Units::get($unitId);
-    }, $unitIds);
-    // Notifications::log('units', $units);
-    $stateArgsUnitIds = array_map(function ($unit) {
-      return $unit->getId();
-    }, $stateArgs['lightUnits']);
-    // Notifications::log('stateArgsUnitIds', $stateArgsUnitIds);
-    $hasNotAllowedUnit = Utils::array_some($units, function ($unit) use ($stateArgsUnitIds) {
-      return !in_array($unit->getId(), $stateArgsUnitIds);
-    });
-    if ($hasNotAllowedUnit) {
-      throw new \feException("ERROR 002");
-    }
 
-    $origin = $stateArgs['origin'];
+    $info = $this->ctx->getInfo();
+    $origin = Spaces::get($info['spaceId']);
+    $unitIds = $info['unitIds'];
+    $units = Units::getMany($unitIds)->toArray();
 
     Units::move($unitIds, $destinationId);
 
@@ -196,17 +177,11 @@ class LightMovementDestination extends \BayonetsAndTomahawks\Actions\UnitMovemen
     $this->takeControlCheck($player, $destination);
 
     $enemyUnitsAndOverwhelm = $this->checkEnemyUnitsAndOverwhelm($destination, $player);
-    // Notifications::log('enemyUnitsAndOverwhelm', $enemyUnitsAndOverwhelm);
-    // $hasEnemyUnits = $enemyUnitsAndOverwhelm['hasEnemyUnits'];
-    // $overwhelm = $enemyUnitsAndOverwhelm['overwhelm'];
+
     $battleOccurs = $enemyUnitsAndOverwhelm['battleOccurs'];
 
-    // $battle = $hasEnemyUnits && !$overwhelm;
-    // Add battle marker
-    
-
     $resolvedMoves = count($this->ctx->getParent()->getResolvedActions([LIGHT_MOVEMENT]));
-    if (!$battleOccurs && $resolvedMoves < 2) {
+    if (!$battleOccurs && $resolvedMoves < 3) {
       $this->ctx->insertAsBrother(Engine::buildTree([
         'action' => LIGHT_MOVEMENT,
         'spaceId' => $destinationId,

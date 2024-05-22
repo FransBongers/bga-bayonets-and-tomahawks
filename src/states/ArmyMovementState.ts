@@ -46,12 +46,6 @@ class ArmyMovementState implements State {
       },
     });
 
-    // this.game.setStackSelected({
-    //   faction: this.args.faction,
-    //   spaceId: this.args.origin.id,
-    // });
-    // this.setSpacesSelectable();
-
     const stack: UnitStack<BTUnit> =
       this.game.gameMap.stacks[this.args.origin.id][this.args.faction];
     stack.open();

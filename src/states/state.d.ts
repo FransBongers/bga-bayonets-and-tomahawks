@@ -64,6 +64,22 @@ interface OnEnteringActionRoundSailBoxLandingStateArgs extends CommonArgs {}
 interface OnEnteringLightMovementStateArgs extends CommonArgs {
   commanders: BTUnit[];
   lightUnits: BTUnit[];
+  // destinations: Record<
+  //   string,
+  //   {
+  //     space: BTSpace;
+  //     remainingConnectionLimit: number;
+  //   }
+  // >;
+  isIndianAP: boolean;
+  origin: BTSpace;
+  faction: Faction;
+}
+
+interface OnEnteringLightMovementDestinationStateArgs extends CommonArgs {
+  // commanders: BTUnit[];
+  // lightUnits: BTUnit[];
+  units: BTUnit[];
   destinations: Record<
     string,
     {
@@ -71,8 +87,8 @@ interface OnEnteringLightMovementStateArgs extends CommonArgs {
       remainingConnectionLimit: number;
     }
   >;
-  isIndianAP: boolean;
-  origin: BTSpace;
+  // isIndianAP: boolean;
+  // origin: BTSpace;
   faction: Faction;
 }
 

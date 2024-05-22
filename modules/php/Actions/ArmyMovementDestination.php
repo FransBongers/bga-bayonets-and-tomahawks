@@ -199,7 +199,7 @@ class ArmyMovementDestination extends \BayonetsAndTomahawks\Actions\UnitMovement
 
 
     $resolvedMoves = count($this->ctx->getParent()->getResolvedActions([ARMY_MOVEMENT_DESTINATION]));
-    if (!$battleOccurs && $resolvedMoves < 1) {
+    if (!$battleOccurs && $resolvedMoves < 2) {
       $this->ctx->insertAsBrother(Engine::buildTree([
         'action' => ARMY_MOVEMENT,
         'spaceId' => $destinationId,
