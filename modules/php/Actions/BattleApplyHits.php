@@ -10,15 +10,16 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Models\Player;
 
-class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicAction
+class BattleApplyHits extends \BayonetsAndTomahawks\Actions\Battle
 {
   public function getState()
   {
-    return ST_ACTION_ROUND_RESOLVE_BATTLES;
+    return ST_BATTLE_APPLY_HITS;
   }
 
   // ..######..########....###....########.########
@@ -37,34 +38,9 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stActionRoundResolveBattles()
+  public function stBattleApplyHits()
   {
-    $battleLocations = Spaces::getBattleLocations();
-    $playerId = self::getPlayer()->getId();
 
-    $battleNodes = [
-      'children' => []
-    ];
-
-    foreach ($battleLocations as $space) {
-      $battleNodes['children'][] = [
-        'spaceId' => $space->getId(),
-        'children' => [
-          [
-            'action' => BATTLE_PREPARATION,
-            'playerId' => $playerId,
-          ],
-          // [
-          //   'action' => BATTLE_CLEANUP,
-          //   'playerId' => $playerId,
-          // ]
-        ]
-      ];
-    }
-    $this->ctx->insertAsBrother(Engine::buildTree($battleNodes));
-    // Notifications::log('stActionRoundResolveBattles', []);
-
-    $this->resolveAction(['automatic' => true]);
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##
@@ -75,7 +51,7 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreActionRoundResolveBattles()
+  public function stPreBattleApplyHits()
   {
   }
 
@@ -88,7 +64,7 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsActionRoundResolveBattles()
+  public function argsBattleApplyHits()
   {
 
 
@@ -111,16 +87,16 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassActionRoundResolveBattles()
+  public function actPassBattleApplyHits()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actActionRoundResolveBattles($args)
+  public function actBattleApplyHits($args)
   {
-    self::checkAction('actActionRoundResolveBattles');
+    self::checkAction('actBattleApplyHits');
 
 
 

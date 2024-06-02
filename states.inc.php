@@ -264,12 +264,22 @@ $machinestates = array(
     ],
 
     ST_ACTION_ROUND_END => [
-        'name' => 'actionRoundResolveBattles',
+        'name' => 'actionRoundEnd',
         'description' => '',
         'type' => 'game',
         'action' => 'stAtomicAction',
         'transitions' => [],
     ],
+
+    // ST_ACTION_ROUND_END => [
+    //     'name' => 'actionRoundEnd',
+    //     'description' => clienttranslate('${actplayer} may perform actions'),
+    //     'descriptionmyturn' => clienttranslate('${you}'),
+    //     'type' => 'activeplayer',
+    //     'args' => 'argsAtomicAction',
+    //     'action' => 'stAtomicAction',
+    //     'possibleactions' => ['actActionRoundEnd', 'actPassOptionalAction', 'actRestart'],
+    // ],
 
     ST_ACTION_ROUND_SAIL_BOX_LANDING => [
         'name' => 'actionRoundSailBoxLanding',
@@ -413,5 +423,49 @@ $machinestates = array(
         'args' => 'argsAtomicAction',
         'action' => 'stAtomicAction',
         'possibleactions' => ['actConstruction', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_BATTLE_APPLY_HITS => [
+        'name' => 'battleApplyHits',
+        'description' => clienttranslate('${actplayer} must apply Hits'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actBattleApplyHits', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_BATTLE_CLEANUP => [
+        'name' => 'battleCleanup',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_BATTLE_PREPARATION => [
+        'name' => 'battlePreparation',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_BATTLE_ROLLS => [
+        'name' => 'battleRolls',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_BATTLE_SELECT_COMMANDER => [
+        'name' => 'battleSelectCommander',
+        'description' => clienttranslate('${actplayer} must select a Commander'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actBattleSelectCommander', 'actPassOptionalAction', 'actRestart'],
     ],
 );

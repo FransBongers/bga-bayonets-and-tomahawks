@@ -31,6 +31,12 @@ interface OnEnteringArmyMovementDestinationStateArgs extends CommonArgs {
   units: BTUnit[];
 }
 
+interface OnEnteringBattleSelectCommanderStateArgs extends CommonArgs {
+  space: BTSpace;
+  commanders: BTUnit[];
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+}
+
 interface OnEnteringConfirmTurnArgs extends CommonArgs {}
 
 interface OnEnteringActionActivateStackStateArgs extends CommonArgs {
@@ -101,6 +107,8 @@ interface OnEnteringRaidStateArgs extends CommonArgs {
     }
   >;
   units: BTUnit[];
+  originId: string;
+  faction: Faction;
 }
 
 interface OnEnteringSelectReserveCardStateArgs {

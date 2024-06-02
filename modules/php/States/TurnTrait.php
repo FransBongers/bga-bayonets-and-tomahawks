@@ -10,12 +10,8 @@ use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Log;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Players;
-use BayonetsAndTomahawks\Managers\ActionCards;
-use BayonetsAndTomahawks\Managers\Market;
-use BayonetsAndTomahawks\Managers\Meeples;
-use BayonetsAndTomahawks\Managers\Scores;
 use BayonetsAndTomahawks\Managers\AtomicActions;
-use BayonetsAndTomahawks\Managers\ZooCards;
+
 
 trait TurnTrait
 {

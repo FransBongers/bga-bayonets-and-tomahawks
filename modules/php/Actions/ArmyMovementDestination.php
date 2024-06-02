@@ -204,6 +204,7 @@ class ArmyMovementDestination extends \BayonetsAndTomahawks\Actions\UnitMovement
         'action' => ARMY_MOVEMENT,
         'spaceId' => $destinationId,
         'playerId' => self::getPlayer()->getId(),
+        'optional' => true,
       ]));
     }
 
@@ -243,32 +244,32 @@ class ArmyMovementDestination extends \BayonetsAndTomahawks\Actions\UnitMovement
     return $units;
   }
 
-  public function getUiData()
-  {
-    return [
-      'id' => ARMY_MOVEMENT,
-      'name' => clienttranslate("Army Movement"),
-    ];
-  }
+  // public function getUiData()
+  // {
+  //   return [
+  //     'id' => ARMY_MOVEMENT,
+  //     'name' => clienttranslate("Army Movement"),
+  //   ];
+  // }
 
-  public function canBePerformedBy($units, $space, $actionPoint, $playerFaction)
-  {
-    return count($units) > 0 && Utils::array_some($units, function ($unit) {
-      return $unit->getType() !== FORT && $unit->getType() !== BASTION;
-    });
-  }
+  // public function canBePerformedBy($units, $space, $actionPoint, $playerFaction)
+  // {
+  //   return count($units) > 0 && Utils::array_some($units, function ($unit) {
+  //     return $unit->getType() !== FORT && $unit->getType() !== BASTION;
+  //   });
+  // }
 
-  public function getFlow($playerId, $originId)
-  {
-    return [
-      'originId' => $originId,
-      'children' => [
-        [
-          'action' => ARMY_MOVEMENT,
-          'spaceId' => $originId,
-          'playerId' => $playerId,
-        ],
-      ],
-    ];
-  }
+  // public function getFlow($playerId, $originId)
+  // {
+  //   return [
+  //     'originId' => $originId,
+  //     'children' => [
+  //       [
+  //         'action' => ARMY_MOVEMENT,
+  //         'spaceId' => $originId,
+  //         'playerId' => $playerId,
+  //       ],
+  //     ],
+  //   ];
+  // }
 }

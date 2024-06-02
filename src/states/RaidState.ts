@@ -1,7 +1,7 @@
 class RaidState implements State {
   private game: BayonetsAndTomahawksGame;
   private args: OnEnteringRaidStateArgs;
-  private selectedUnit: BTUnit | null = null;
+  // private selectedUnit: BTUnit | null = null;
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
@@ -10,7 +10,7 @@ class RaidState implements State {
   onEnteringState(args: OnEnteringRaidStateArgs) {
     debug('Entering RaidState');
     this.args = args;
-    this.selectedUnit = null;
+    // this.selectedUnit = null;
     this.updateInterfaceInitialStep();
   }
 
@@ -46,12 +46,6 @@ class RaidState implements State {
       },
     });
 
-    if (this.args.units.length === 1) {
-      this.selectedUnit = this.args.units[0];
-      this.game.setUnitSelected({id: this.selectedUnit.id + ''})
-      
-    }
-
     this.setTargetsSelectable();
 
     this.game.addPassButton({
@@ -68,7 +62,7 @@ class RaidState implements State {
     paths: string[][];
   }) {
     if (paths.length === 1) {
-      this.updateInterfaceConfirm({ space, path: paths[0] });
+      this.updateInterfaceSelectUnit({ space, path: paths[0] });
       return;
     }
 
@@ -96,8 +90,6 @@ class RaidState implements State {
       });
     });
 
-    console.log('counts', counts);
-
     Object.entries(counts).forEach(([id, count]) => {
       if (count.count > 1) {
         this.game.setLocationSelected({ id });
@@ -105,7 +97,10 @@ class RaidState implements State {
         this.game.setLocationSelectable({
           id,
           callback: () => {
-            this.updateInterfaceConfirm({ path: paths[count.paths[0]], space });
+            this.updateInterfaceSelectUnit({
+              path: paths[count.paths[0]],
+              space,
+            });
           },
         });
       }
@@ -125,16 +120,58 @@ class RaidState implements State {
     // });
   }
 
-  private updateInterfaceConfirm({
+  private updateInterfaceSelectUnit({
     space,
     path,
   }: {
     space: BTSpace;
     path: string[];
   }) {
+    if (this.args.units.length === 1) {
+      this.updateInterfaceConfirm({ space, path, unit: this.args.units[0] });
+      return;
+    }
+
+    this.game.clearPossible();
+
+    this.game.clientUpdatePageTitle({
+      text: _('${you} must select a unit to Raid with'),
+      args: {
+        you: '${you}',
+      },
+    });
+
+    this.game.setLocationSelected({ id: space.id });
+
+    path.forEach((spaceId) => {
+      this.game.setLocationSelected({ id: spaceId });
+    });
+
+    const stack: UnitStack =
+      this.game.gameMap.stacks[this.args.originId][this.args.faction];
+    stack.open();
+    this.args.units.forEach((unit) => {
+      this.game.setUnitSelectable({
+        id: unit.id,
+        callback: () => this.updateInterfaceConfirm({ space, path, unit }),
+      });
+    });
+    this.game.addCancelButton();
+  }
+
+  private updateInterfaceConfirm({
+    space,
+    path,
+    unit,
+  }: {
+    space: BTSpace;
+    path: string[];
+    unit: BTUnit;
+  }) {
     this.game.clearPossible();
 
     this.game.setLocationSelected({ id: space.id });
+    this.game.setUnitSelected({ id: unit.id });
 
     path.forEach((spaceId) => {
       this.game.setLocationSelected({ id: spaceId });
@@ -143,10 +180,10 @@ class RaidState implements State {
     this.game.clientUpdatePageTitle({
       text: _('Raid ${spaceName}?'),
       args: {
-        spaceName: _(space.name)
+        spaceName: _(space.name),
       },
     });
-
+    // console.log('selectedUnit', this.selectedUnit);
     this.game.addConfirmButton({
       callback: () => {
         this.game.clearPossible();
@@ -155,7 +192,7 @@ class RaidState implements State {
           args: {
             path,
             spaceId: space.id,
-            unitId: this.selectedUnit.id,
+            unitId: unit.id,
           },
         });
       },

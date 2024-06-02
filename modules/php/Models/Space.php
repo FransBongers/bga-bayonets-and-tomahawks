@@ -24,6 +24,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     'id' => ['space_id', 'int'],
     'battle' => ['battle', 'int'],
     'control' => ['control', 'str'],
+    'defender' => ['defender', 'str'],
     'location' => ['space_location', 'str'],
     'state' => ['space_state', 'int'],
     'raided' => ['raided', 'str'],

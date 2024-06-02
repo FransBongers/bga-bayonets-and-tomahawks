@@ -52,7 +52,6 @@
     "src/info-panel/templates.ts",
     "src/logs/index.ts",
     "src/logs/templates.ts",
-    "src/marker-manager/index.ts",
     "src/notification-manager/types.d.ts",
     "src/notification-manager/index.ts",
     "src/player-manager/index.ts",
@@ -72,6 +71,7 @@
     "src/states/ActionRoundSailBoxLanding.ts",
     "src/states/ArmyMovementState.ts",
     "src/states/ArmyMovementDestinationState.ts",
+    "src/states/BattleSelectCommanderState.ts",
     "src/states/ConfirmPartialTurn.ts",
     "src/states/ConfirmTurn.ts",
     "src/states/LightMovementState.ts",
@@ -79,9 +79,9 @@
     "src/states/RaidState.ts",
     "src/states/SelectReserveCard.ts",
     "src/states/state.d.ts",
-    "src/unit-stack/index.ts",
-    "src/unit-manager/index.ts",
+    "src/token-manager/index.ts",
     "src/tooltip-manager/templates.ts",
-    "src/tooltip-manager/index.ts"
+    "src/tooltip-manager/index.ts",
+    "src/unit-stack/index.ts"
   ]
 }

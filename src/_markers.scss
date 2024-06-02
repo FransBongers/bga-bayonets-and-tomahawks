@@ -3,10 +3,14 @@
 
 
 .bt_marker {
-
+  min-height: calc(var(--btMapScale)* 44px);
+  max-height: calc(var(--btMapScale)* 44px);
+  min-width: calc(var(--btMapScale)* 44px);
+  max-width: calc(var(--btMapScale)* 44px);
 }
 
 .bt_marker_side {
+  // position: relative !important;
   background-image: url('img/markers_2.webp');
   min-height: calc(var(--btMapScale) * 44px);
   max-height: calc(var(--btMapScale) * 44px);
@@ -71,6 +75,26 @@
 .bt_marker_side[data-type='french_control_marker'][data-side="front"] {
   background-position-x: math.div(1, 7) * 100%;
   background-position-y: math.div(3, 5) * 100%;
+}
+
+.bt_marker_side[data-type="british_battle_marker"][data-side="front"] {
+  background-position-x: math.div(1, 7) * 100%;
+  background-position-y: math.div(1, 5) * 100%;
+}
+
+.bt_marker_side[data-type="french_battle_marker"][data-side="front"] {
+  background-position-x: math.div(2, 7) * 100%;
+  background-position-y: math.div(1, 5) * 100%;
+}
+
+.bt_marker_side[data-type="british_battle_marker"][data-side="back"] {
+  background-position-x: math.div(3, 7) * 100%;
+  background-position-y: math.div(1, 5) * 100%;
+}
+
+.bt_marker_side[data-type="french_battle_marker"][data-side="back"] {
+  background-position-x: math.div(4, 7) * 100%;
+  background-position-y: math.div(1, 5) * 100%;
 }
 
 // .bt_marker_test {

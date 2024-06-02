@@ -66,6 +66,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
       'counterId' => $this->counterId,
       'location' => $this->location,
       'spent' => $this->spent,
+      'manager' => UNITS,
     ];
   }
 

@@ -1,7 +1,7 @@
 /**
  * A stock with manually placed units
  */
-class UnitStack<T> extends ManualPositionStock<T> {
+class UnitStack extends ManualPositionStock<BTToken> {
   private hovering: boolean = false;
   private faction: 'british' | 'french';
   private isOpen: boolean = false;
@@ -11,7 +11,7 @@ class UnitStack<T> extends ManualPositionStock<T> {
    * @param element the stock element (should be an empty HTML Element)
    */
   constructor(
-    protected manager: CardManager<T>,
+    protected manager: CardManager<BTToken>,
     protected element: HTMLElement,
     settings: CardStockSettings,
     faction: 'british' | 'french'
@@ -28,9 +28,9 @@ class UnitStack<T> extends ManualPositionStock<T> {
       settings,
       (
         element: HTMLElement,
-        cards: T[],
-        lastCard: T,
-        stock: ManualPositionStock<T>
+        cards: BTToken[],
+        lastCard: BTToken,
+        stock: ManualPositionStock<BTToken>
       ) => this.updateStackDisplay(element, cards, stock)
     );
     this.element.classList.add('bt_stack');
@@ -53,8 +53,8 @@ class UnitStack<T> extends ManualPositionStock<T> {
    * @returns the promise when the animation is done (true if it was animated, false if it wasn't)
    */
   public addUnit(
-    unit: T,
-    animation?: CardAnimation<T>,
+    unit: BTToken,
+    animation?: CardAnimation<BTToken>,
     settings?: AddCardSettings
   ): Promise<boolean> {
     const promise = super.addCard(unit, animation, settings);
@@ -63,8 +63,8 @@ class UnitStack<T> extends ManualPositionStock<T> {
   }
 
   public addUnits(
-    units: T[],
-    animation?: CardAnimation<T>,
+    units: BTToken[],
+    animation?: CardAnimation<BTToken>,
     settings?: AddCardSettings
   ) {
     const promise = super.addCards(units, animation, settings);
@@ -72,9 +72,14 @@ class UnitStack<T> extends ManualPositionStock<T> {
     return promise;
   }
 
-  public cardRemoved(unit: T, settings?: RemoveCardSettings) {
+  public cardRemoved(unit: BTToken, settings?: RemoveCardSettings) {
+    // if (unit.manager === 'units') {
+    //   const element = document.getElementById(unit.id);
+    //   console.log('element in cardRemoved', element);
+    //   element.style.position = '';
+    // }
+
     super.cardRemoved(unit, settings);
-    console.log('unitRemoved', this.getCards());
     if (this.getCards().length === 0) {
       this.element.removeAttribute('data-has-unit');
     }
@@ -97,8 +102,8 @@ class UnitStack<T> extends ManualPositionStock<T> {
 
   private updateStackDisplay(
     element: HTMLElement,
-    cards: T[],
-    stock: ManualPositionStock<T>
+    cards: BTToken[],
+    stock: ManualPositionStock<BTToken>
   ) {
     const expanded = this.isOpen || this.hovering;
     if (expanded) {

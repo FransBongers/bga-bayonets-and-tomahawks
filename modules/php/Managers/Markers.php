@@ -112,6 +112,16 @@ class Markers extends \BayonetsAndTomahawks\Helpers\Pieces
       'location' => $vpMarkerLocation,
       // 'extra_data' => json_encode(null)
     ];
+    $tokens[BRITISH_BATTLE_MARKER] = [
+      'id' => BRITISH_BATTLE_MARKER,
+      'location' => BATTLE_MARKERS_POOL,
+      // 'extra_data' => json_encode(null)
+    ];
+    $tokens[FRENCH_BATTLE_MARKER] = [
+      'id' => FRENCH_BATTLE_MARKER,
+      'location' => BATTLE_MARKERS_POOL,
+      // 'extra_data' => json_encode(null)
+    ];
 
     $players = Players::getAll();
     foreach ($players as $player) {

@@ -80,7 +80,19 @@ trait DebugTrait
 
   function test()
   {
-    Notifications::log('units', Units::get('unit_1'));
+    $space = Spaces::get(LAKE_GEORGE);
+    $defendingFaction = $space->getDefender();
+    $attackingFaction = Players::otherFaction($defendingFaction);
+
+    $players = Players::getAll()->toArray();
+    $attackingPlayer = Utils::array_find($players, function ($player) use ($attackingFaction) {
+      return $player->getFaction() === $attackingFaction;
+    });
+    $defendingPlayer = Utils::array_find($players, function ($player) use ($defendingFaction) {
+      return $player->getFaction() === $defendingFaction;
+    });
+   
+    // Notifications::log('battles', Spaces::getBattleLocations());
     // $result = AtomicActions::get(LIGHT_MOVEMENT)->checkEnemyUnitsAndOverwhelm(Spaces::get(ANNAPOLIS_ROYAL), Players::get());
 
     // Notifications::log('checkEnemyUnitsAndOverwhelm', $result);

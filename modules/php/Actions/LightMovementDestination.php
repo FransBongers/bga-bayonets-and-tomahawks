@@ -233,6 +233,7 @@ class LightMovementDestination extends \BayonetsAndTomahawks\Actions\UnitMovemen
           'action' => LIGHT_MOVEMENT,
           'spaceId' => $originId,
           'playerId' => $playerId,
+          'optional' => true,
         ],
       ],
     ];

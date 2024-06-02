@@ -31,6 +31,7 @@ class Marker extends \BayonetsAndTomahawks\Helpers\DB_Model implements \JsonSeri
       'location' => $this->location,
       'type' => $this->id,
       'side' => $this->state === 0 ? 'front' : 'back',
+      'manager' => MARKERS,
     ];
   }
 

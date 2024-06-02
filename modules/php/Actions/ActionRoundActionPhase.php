@@ -10,6 +10,7 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\ActionPoints;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Models\Player;
@@ -70,7 +71,11 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
     }
 
     $availableActionPoints = $action === ACTION_ROUND_REACTION ?
-      [$this->ctx->getInfo()['actionPointId']] :
+      [
+        [
+          'id' => $this->ctx->getInfo()['actionPointId']
+        ]
+      ] :
       $this->getAvailableActionPoints($usedActionPoints, $card);
 
     return [

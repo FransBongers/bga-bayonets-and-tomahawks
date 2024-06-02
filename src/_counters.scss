@@ -26,6 +26,11 @@
   box-shadow: none !important;
 }
 
+.bt_token_side[data-commander=true] {
+  height: calc(var(--btTokenScale) * 40px);
+  width: calc(var(--btTokenScale) * 40px);
+}
+
 $indian-units: (
   1: 'Abenaki',
   2: 'Chaouanon',

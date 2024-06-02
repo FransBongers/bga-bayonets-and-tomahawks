@@ -61,9 +61,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public gameMap: GameMap;
   public hand: Hand;
   public pools: Pools;
-  public markerManager: MarkerManager;
-  public unitManager: UnitManager;
-  // public playAreaScale: number;
+  public tokenManager: TokenManager;
 
   public activeStates: {
     actionActivateStack: ActionActivateStackState;
@@ -74,6 +72,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     actionRoundSailBoxLanding: ActionRoundSailBoxLandingState;
     armyMovement: ArmyMovementState;
     armyMovementDestination: ArmyMovementDestinationState;
+    battleSelectCommander: BattleSelectCommanderState;
     confirmPartialTurn: ConfirmPartialTurnState;
     confirmTurn: ConfirmTurnState;
     lightMovement: LightMovementState;
@@ -120,6 +119,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
       armyMovement: new ArmyMovementState(this),
       armyMovementDestination: new ArmyMovementDestinationState(this),
+      battleSelectCommander: new BattleSelectCommanderState(this),
       confirmPartialTurn: new ConfirmPartialTurnState(this),
       confirmTurn: new ConfirmTurnState(this),
       lightMovement: new LightMovementState(this),
@@ -139,8 +139,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     });
 
     this.cardManager = new BTCardManager(this);
-    this.unitManager = new UnitManager(this);
-    this.markerManager = new MarkerManager(this);
+    this.tokenManager = new TokenManager(this);
     this.discard = new VoidStock(
       this.cardManager,
       document.getElementById('bt_discard')

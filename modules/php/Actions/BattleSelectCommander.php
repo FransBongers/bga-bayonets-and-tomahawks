@@ -10,15 +10,16 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Models\Player;
 
-class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicAction
+class BattleSelectCommander extends \BayonetsAndTomahawks\Actions\Battle
 {
   public function getState()
   {
-    return ST_ACTION_ROUND_RESOLVE_BATTLES;
+    return ST_BATTLE_SELECT_COMMANDER;
   }
 
   // ..######..########....###....########.########
@@ -37,34 +38,8 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stActionRoundResolveBattles()
+  public function stBattleSelectCommander()
   {
-    $battleLocations = Spaces::getBattleLocations();
-    $playerId = self::getPlayer()->getId();
-
-    $battleNodes = [
-      'children' => []
-    ];
-
-    foreach ($battleLocations as $space) {
-      $battleNodes['children'][] = [
-        'spaceId' => $space->getId(),
-        'children' => [
-          [
-            'action' => BATTLE_PREPARATION,
-            'playerId' => $playerId,
-          ],
-          // [
-          //   'action' => BATTLE_CLEANUP,
-          //   'playerId' => $playerId,
-          // ]
-        ]
-      ];
-    }
-    $this->ctx->insertAsBrother(Engine::buildTree($battleNodes));
-    // Notifications::log('stActionRoundResolveBattles', []);
-
-    $this->resolveAction(['automatic' => true]);
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##
@@ -75,7 +50,7 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreActionRoundResolveBattles()
+  public function stPreBattleSelectCommander()
   {
   }
 
@@ -88,11 +63,21 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsActionRoundResolveBattles()
+  public function argsBattleSelectCommander()
   {
+    $space = Spaces::get($this->ctx->getParent()->getInfo()['spaceId']);
+    $player = self::getPlayer();
 
+    $units = $space->getUnits();
+    $commanders = Utils::filter($units, function ($unit) use ($player) {
+      return $unit->getType() === COMMANDER && $unit->getFaction() === $player->getFaction();
+    });
 
-    return [];
+    return [
+      'commanders' => $commanders,
+      'space' => $space,
+      'faction' => $player->getFaction(),
+    ];
   }
 
   //  .########..##..........###....##....##.########.########.
@@ -111,20 +96,39 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassActionRoundResolveBattles()
+  public function actPassBattleSelectCommander()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actActionRoundResolveBattles($args)
+  public function actBattleSelectCommander($args)
   {
-    self::checkAction('actActionRoundResolveBattles');
+    self::checkAction('actBattleSelectCommander');
 
+    Notifications::log('args', $args);
 
+    $unitId = $args['unitId'];
+    $stateArgs = $this->argsBattleSelectCommander();
+    $space = $stateArgs['space'];
 
-    $this->resolveAction($args, true);
+    $commander = Utils::array_find($stateArgs['commanders'], function ($unit) use ($unitId) {
+      return $unit->getId() === $unitId;
+    });
+
+    if ($commander === null) {
+      throw new \feException("ERROR 010");
+    }
+
+    $player = self::getPlayer();
+    $isDefender = $space->getDefender() === $player->getFaction();
+
+    $commander->setLocation(Locations::commanderRerollsTrack($isDefender, $commander->getRating()));
+
+    Notifications::battleSelectCommander($player, $commander);
+
+    $this->resolveAction($args);
   }
 
   //  .##.....##.########.####.##.......####.########.##....##

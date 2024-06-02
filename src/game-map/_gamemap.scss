@@ -22,6 +22,14 @@
   --btTokenScale: var(--leftColumnScale);
 }
 
+#battle_markers_pool {
+  position: absolute;
+  height: calc(var(--btMapScale) * 44px);
+  width: calc(var(--btMapScale) * 96px);
+  top: calc(var(--btMapScale) * 192px);
+  left: calc(var(--btMapScale) * 282px);
+}
+
 .bt_space {
   position: absolute !important;
   border-radius: 50%;
@@ -35,6 +43,16 @@
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
+}
+
+.bt_commander_rerolls_track {
+  .bt_token {
+    // TODO: check how to properly solve it.
+    // We need to be able to move units from position absolute stock
+    // to other stock
+    position: unset !important;
+    // position: relative !important;
+  }
 }
 
 .bt_space.bt_selectable {

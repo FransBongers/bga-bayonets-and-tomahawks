@@ -212,6 +212,11 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
     Game::get()->gamestate->changeActivePlayer($playerId);
   }
 
+  public static function otherFaction($playerFaction)
+  {
+    return $playerFaction === BRITISH ? FRENCH : BRITISH;
+  }
+
   public static function scoreVictoryPoints($player, $points)
   {
     $vpMarker = Markers::get(VICTORY_MARKER);

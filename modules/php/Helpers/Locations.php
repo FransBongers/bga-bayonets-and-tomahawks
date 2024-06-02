@@ -4,6 +4,13 @@ namespace BayonetsAndTomahawks\Helpers;
 
 abstract class Locations extends \APP_DbObject
 {
+  public static function battleTrack($isAttacker, $value)
+  {
+    $sign = $value < 0 ? 'minus' : 'plus';
+    $side = $isAttacker ? 'attacker' : 'defender';
+    return implode('_', ['battle', 'track', $side, $sign, abs($value)]);
+  }
+
   public static function buildUpDeck($faction)
   {
     return 'buildUpDeck_' . $faction;
@@ -17,6 +24,12 @@ abstract class Locations extends \APP_DbObject
   public static function cardPool()
   {
     return 'cardPool';
+  }
+
+  public static function commanderRerollsTrack($isDefender, $value)
+  {
+    $side = !$isDefender ? 'attacker' : 'defender';
+    return implode('_', ['commander', 'rerolls', 'track', $side, $value]);
   }
 
   public static function discard()

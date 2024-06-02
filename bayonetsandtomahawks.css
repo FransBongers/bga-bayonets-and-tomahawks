@@ -421,6 +421,14 @@
   --btTokenScale: var(--leftColumnScale);
 }
 
+#battle_markers_pool {
+  position: absolute;
+  height: calc(var(--btMapScale) * 44px);
+  width: calc(var(--btMapScale) * 96px);
+  top: calc(var(--btMapScale) * 192px);
+  left: calc(var(--btMapScale) * 282px);
+}
+
 .bt_space {
   position: absolute !important;
   border-radius: 50%;
@@ -430,6 +438,10 @@
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
+}
+
+.bt_commander_rerolls_track .bt_token {
+  position: unset !important;
 }
 
 .bt_space.bt_selectable {
@@ -764,6 +776,11 @@
   position: absolute;
   z-index: 1;
   box-shadow: none !important;
+}
+
+.bt_token_side[data-commander=true] {
+  height: calc(var(--btTokenScale) * 40px);
+  width: calc(var(--btTokenScale) * 40px);
 }
 
 .bt_token_side[data-counter-id=Abenaki] {
@@ -2537,6 +2554,13 @@
   background-size: 1200% 700%;
 }
 
+.bt_marker {
+  min-height: calc(var(--btMapScale) * 44px);
+  max-height: calc(var(--btMapScale) * 44px);
+  min-width: calc(var(--btMapScale) * 44px);
+  max-width: calc(var(--btMapScale) * 44px);
+}
+
 .bt_marker_side {
   background-image: url("img/markers_2.webp");
   min-height: calc(var(--btMapScale) * 44px);
@@ -2601,6 +2625,26 @@
 .bt_marker_side[data-type=french_control_marker][data-side=front] {
   background-position-x: 14.2857142857%;
   background-position-y: 60%;
+}
+
+.bt_marker_side[data-type=british_battle_marker][data-side=front] {
+  background-position-x: 14.2857142857%;
+  background-position-y: 20%;
+}
+
+.bt_marker_side[data-type=french_battle_marker][data-side=front] {
+  background-position-x: 28.5714285714%;
+  background-position-y: 20%;
+}
+
+.bt_marker_side[data-type=british_battle_marker][data-side=back] {
+  background-position-x: 42.8571428571%;
+  background-position-y: 20%;
+}
+
+.bt_marker_side[data-type=french_battle_marker][data-side=back] {
+  background-position-x: 57.1428571429%;
+  background-position-y: 20%;
 }
 
 #show_settings {

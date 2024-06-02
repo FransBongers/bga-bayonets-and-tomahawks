@@ -72,6 +72,17 @@ const ST_SAIL_MOVEMENT_DESTINATION = 67;
 const ST_MARSHAL_TROOPS = 68;
 const ST_CONSTRUCTION = 69;
 
+const ST_BATTLE_PREPARATION = 80;
+const ST_BATTLE_SELECT_COMMANDER = 81;
+const ST_BATTLE_ROLLS = 82;
+const ST_BATTLE_APPLY_HITS = 83;
+const ST_BATTLE_CLEANUP = 89;
+
+
+
+
+
+
 /**
  * Scenario Ids
  */
@@ -94,6 +105,11 @@ const ACTION_ROUND_RESOLVE_BATTLES = 'ACTION_ROUND_RESOLVE_BATTLES';
 const ACTION_ROUND_END = 'ACTION_ROUND_END';
 const ACTION_ROUND_SAIL_BOX_LANDING = 'ACTION_ROUND_SAIL_BOX_LANDING';
 const ACTION_ROUND_CHOOSE_REACTION = 'ACTION_ROUND_CHOOSE_REACTION';
+const BATTLE_APPLY_HITS = 'BATTLE_APPLY_HITS';
+const BATTLE_CLEANUP = 'BATTLE_CLEANUP';
+const BATTLE_PREPARATION = 'BATTLE_PREPARATION';
+const BATTLE_ROLLS = 'BATTLE_ROLLS';
+const BATTLE_SELECT_COMMANDER = 'BATTLE_SELECT_COMMANDER';
 const COLONIALS_ENLIST_DRAW_REINFORCEMENTS = 'COLONIALS_ENLIST_DRAW_REINFORCEMENTS';
 const FLEETS_ARRIVE_DRAW_REINFORCEMENTS = 'FLEETS_ARRIVE_DRAW_REINFORCEMENTS';
 const FLEETS_ARRIVE_ACTION = 'FLEETS_ARRIVE_ACTION';
@@ -160,6 +176,8 @@ const VICTORY_POINTS_BRITISH_7 = 'victory_points_british_7';
 const VICTORY_POINTS_BRITISH_8 = 'victory_points_british_8';
 const VICTORY_POINTS_BRITISH_9 = 'victory_points_british_9';
 const VICTORY_POINTS_BRITISH_10 = 'victory_points_british_10';
+
+const BATTLE_MARKERS_POOL = 'battle_markers_pool';
 
 // Die faces
 const FLAG = 'flag';
@@ -228,6 +246,12 @@ const VICTORY_MARKER = 'victory_marker';
 const OPEN_SEAS_MARKER = 'open_seas_marker';
 const FRENCH_RAID_MARKER = 'french_raid_marker';
 const BRITISH_RAID_MARKER = 'british_raid_marker';
+const FRENCH_BATTLE_MARKER = 'french_battle_marker';
+const BRITISH_BATTLE_MARKER = 'british_battle_marker';
+
+
+const MARKERS = 'markers';
+const UNITS = 'units';
 
 /**
  * Pools
@@ -761,3 +785,15 @@ const ST_GEORGE_YORK = 'StGeorge_York';
 const TACONNET_YORK = 'Taconnet_York';
 const WILLS_CREEK_WINCHESTER = 'WillsCreek_Winchester';
 const YORK_ZAWAKWTEGOK = 'York_Zawakwtegok';
+
+/**
+ * Battle roll sequence
+ */
+const NON_INDIAN_LIGHT = 'NON_INDIAN_LIGHT';
+// const INDIAN = 'INDIAN'; // Already defined
+const HIGHLAND_BRIGADES = 'HIGHLAND_BRIGADES';
+const METROPOLITAN_BRIGADES = 'METROPOLITAN_BRIGADES';
+const NON_METROPOLITAN_BRIGADES = 'NON_METROPOLITAN_BRIGADES';
+const FLEETS = 'FLEETS';
+const BASTIONS_OR_FORT = 'BASTIONS_OR_FORT';
+// const ARTILLERY = 'ARTILLERY'; // Already defined

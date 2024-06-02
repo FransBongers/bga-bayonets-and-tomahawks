@@ -60,6 +60,9 @@ class NotificationManager {
     const notifs: string[] = [
       'log',
       'battle',
+      'battleCleanup',
+      'battleStart',
+      'battleSelectCommander',
       'discardCardFromHand',
       'discardCardFromHandPrivate',
       'discardCardInPlay',
@@ -195,6 +198,46 @@ class NotificationManager {
     });
   }
 
+  async notif_battleCleanup(notif: Notif<NotifBattleCleanupArgs>) {
+    const { attackerMarker, defenderMarker, space } = notif.args;
+
+    await Promise.all([
+      this.game.gameMap.battleTrack[attackerMarker.location].addCard(
+        attackerMarker
+      ),
+      this.game.gameMap.battleTrack[defenderMarker.location].addCard(
+        defenderMarker
+      ),
+    ]);
+
+    this.game.gameMap.removeMarkerFromSpace({
+      spaceId: space.id,
+      type: 'battle_marker',
+    });
+  }
+
+  async notif_battleStart(notif: Notif<NotifBattleStartArgs>) {
+    const { attackerMarker, defenderMarker } = notif.args;
+
+    await Promise.all([
+      this.game.gameMap.battleTrack[attackerMarker.location].addCard(
+        attackerMarker
+      ),
+      this.game.gameMap.battleTrack[defenderMarker.location].addCard(
+        defenderMarker
+      ),
+    ]);
+  }
+
+  async notif_battleSelectCommander(
+    notif: Notif<NotifBattleSelectCommanderArgs>
+  ) {
+    const { commander } = notif.args;
+    await this.game.gameMap.commanderRerollsTrack[commander.location].addCard(
+      commander
+    );
+  }
+
   async notif_discardCardFromHand(notif: Notif<NotifDiscardCardFromHandArgs>) {
     const { faction, playerId } = notif.args;
     const fakeCard = {
@@ -245,18 +288,20 @@ class NotificationManager {
   ) {
     const { marker } = notif.args;
 
-    const element = document.getElementById(marker.id);
-    const toNode = document.getElementById(marker.location);
+    // const element = document.getElementById(marker.id);
+    // const toNode = document.getElementById(marker.location);
 
-    if (!(element && toNode)) {
-      console.error('Unable to move marker');
-      return;
-    }
+    // if (!(element && toNode)) {
+    //   console.error('Unable to move marker');
+    //   return;
+    // }
 
-    await this.game.animationManager.attachWithAnimation(
-      new BgaSlideAnimation({ element }),
-      toNode
-    );
+    // await this.game.animationManager.attachWithAnimation(
+    //   new BgaSlideAnimation({ element }),
+    //   toNode
+    // );
+
+    this.game.gameMap.raidTrack[marker.location].addCard(marker);
   }
 
   async notif_moveRoundMarker(notif: Notif<NotifMoveRoundMarkerArgs>) {
@@ -270,7 +315,7 @@ class NotificationManager {
     const { stack, destination, faction } = notif.args;
     const unitStack = this.game.gameMap.stacks[destination.id][faction];
     if (unitStack) {
-      await (unitStack as UnitStack<BTUnit>).addUnits(stack);
+      await (unitStack as UnitStack).addUnits(stack);
     }
   }
 
@@ -278,7 +323,7 @@ class NotificationManager {
     const { unit, destination, faction } = notif.args;
     const unitStack = this.game.gameMap.stacks[destination.id][faction];
     if (unitStack) {
-      await (unitStack as UnitStack<BTUnit>).addUnit(unit);
+      await (unitStack as UnitStack).addUnit(unit);
     }
 
     if (unit.spent === 1) {

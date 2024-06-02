@@ -2077,6 +2077,7 @@ var FRENCH = "french";
 var INDIAN = "indian";
 var NEUTRAL = "neutral";
 var FACTIONS = [BRITISH, FRENCH, INDIAN];
+var COMMANDER = 'commander';
 var POOL_FLEETS = "poolFleets";
 var POOL_BRITISH_COMMANDERS = "poolBritishCommanders";
 var POOL_BRITISH_LIGHT = "poolBritishLight";
@@ -2111,6 +2112,8 @@ var VICTORY_MARKER = "victory_marker";
 var OPEN_SEAS_MARKER = "open_seas_marker";
 var FRENCH_RAID_MARKER = "french_raid_marker";
 var BRITISH_RAID_MARKER = "british_raid_marker";
+var FRENCH_BATTLE_MARKER = 'french_battle_marker';
+var BRITISH_BATTLE_MARKER = 'british_battle_marker';
 var RAID_TRACK_0 = 'raid_track_0';
 var RAID_TRACK_1 = 'raid_track_1';
 var RAID_TRACK_2 = 'raid_track_2';
@@ -2140,8 +2143,51 @@ var VICTORY_POINTS_BRITISH_7 = 'victory_points_british_7';
 var VICTORY_POINTS_BRITISH_8 = 'victory_points_british_8';
 var VICTORY_POINTS_BRITISH_9 = 'victory_points_british_9';
 var VICTORY_POINTS_BRITISH_10 = 'victory_points_british_10';
+var BATTLE_TRACK_ATTACKER_MINUS_5 = 'battle_track_attacker_minus_5';
+var BATTLE_TRACK_ATTACKER_MINUS_4 = 'battle_track_attacker_minus_4';
+var BATTLE_TRACK_ATTACKER_MINUS_3 = 'battle_track_attacker_minus_3';
+var BATTLE_TRACK_ATTACKER_MINUS_2 = 'battle_track_attacker_minus_2';
+var BATTLE_TRACK_ATTACKER_MINUS_1 = 'battle_track_attacker_minus_1';
+var BATTLE_TRACK_ATTACKER_PLUS_0 = 'battle_track_attacker_plus_0';
+var BATTLE_TRACK_ATTACKER_PLUS_1 = 'battle_track_attacker_plus_1';
+var BATTLE_TRACK_ATTACKER_PLUS_2 = 'battle_track_attacker_plus_2';
+var BATTLE_TRACK_ATTACKER_PLUS_3 = 'battle_track_attacker_plus_3';
+var BATTLE_TRACK_ATTACKER_PLUS_4 = 'battle_track_attacker_plus_4';
+var BATTLE_TRACK_ATTACKER_PLUS_5 = 'battle_track_attacker_plus_5';
+var BATTLE_TRACK_ATTACKER_PLUS_6 = 'battle_track_attacker_plus_6';
+var BATTLE_TRACK_ATTACKER_PLUS_7 = 'battle_track_attacker_plus_7';
+var BATTLE_TRACK_ATTACKER_PLUS_8 = 'battle_track_attacker_plus_8';
+var BATTLE_TRACK_ATTACKER_PLUS_9 = 'battle_track_attacker_plus_9';
+var BATTLE_TRACK_ATTACKER_PLUS_10 = 'battle_track_attacker_plus_10';
+var BATTLE_TRACK_DEFENDER_MINUS_5 = 'battle_track_defender_minus_5';
+var BATTLE_TRACK_DEFENDER_MINUS_4 = 'battle_track_defender_minus_4';
+var BATTLE_TRACK_DEFENDER_MINUS_3 = 'battle_track_defender_minus_3';
+var BATTLE_TRACK_DEFENDER_MINUS_2 = 'battle_track_defender_minus_2';
+var BATTLE_TRACK_DEFENDER_MINUS_1 = 'battle_track_defender_minus_1';
+var BATTLE_TRACK_DEFENDER_PLUS_0 = 'battle_track_defender_plus_0';
+var BATTLE_TRACK_DEFENDER_PLUS_1 = 'battle_track_defender_plus_1';
+var BATTLE_TRACK_DEFENDER_PLUS_2 = 'battle_track_defender_plus_2';
+var BATTLE_TRACK_DEFENDER_PLUS_3 = 'battle_track_defender_plus_3';
+var BATTLE_TRACK_DEFENDER_PLUS_4 = 'battle_track_defender_plus_4';
+var BATTLE_TRACK_DEFENDER_PLUS_5 = 'battle_track_defender_plus_5';
+var BATTLE_TRACK_DEFENDER_PLUS_6 = 'battle_track_defender_plus_6';
+var BATTLE_TRACK_DEFENDER_PLUS_7 = 'battle_track_defender_plus_7';
+var BATTLE_TRACK_DEFENDER_PLUS_8 = 'battle_track_defender_plus_8';
+var BATTLE_TRACK_DEFENDER_PLUS_9 = 'battle_track_defender_plus_9';
+var BATTLE_TRACK_DEFENDER_PLUS_10 = 'battle_track_defender_plus_10';
+var BATTLE_MARKERS_POOL = 'battle_markers_pool';
+var COMMANDER_REROLLS_TRACK_ATTACKER_0 = 'commander_rerolls_track_attacker_0';
+var COMMANDER_REROLLS_TRACK_ATTACKER_1 = 'commander_rerolls_track_attacker_1';
+var COMMANDER_REROLLS_TRACK_ATTACKER_2 = 'commander_rerolls_track_attacker_2';
+var COMMANDER_REROLLS_TRACK_ATTACKER_3 = 'commander_rerolls_track_attacker_3';
+var COMMANDER_REROLLS_TRACK_DEFENDER_0 = 'commander_rerolls_track_defender_0';
+var COMMANDER_REROLLS_TRACK_DEFENDER_1 = 'commander_rerolls_track_defender_1';
+var COMMANDER_REROLLS_TRACK_DEFENDER_2 = 'commander_rerolls_track_defender_2';
+var COMMANDER_REROLLS_TRACK_DEFENDER_3 = 'commander_rerolls_track_defender_3';
 var LOSSES_BOX_BRITISH = 'lossesBox_british';
 var LOSSES_BOX_FRENCH = 'lossesBox_french';
+var MARKERS = 'markers';
+var UNITS = 'units';
 var ACTION_ROUND_INDIAN_ACTIONS = 'ACTION_ROUND_INDIAN_ACTIONS';
 define([
     'dojo',
@@ -2188,6 +2234,7 @@ var BayonetsAndTomahawks = (function () {
             actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
             armyMovement: new ArmyMovementState(this),
             armyMovementDestination: new ArmyMovementDestinationState(this),
+            battleSelectCommander: new BattleSelectCommanderState(this),
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
             lightMovement: new LightMovementState(this),
@@ -2203,8 +2250,7 @@ var BayonetsAndTomahawks = (function () {
                 : 2100 - this.settings.get({ id: PREF_ANIMATION_SPEED }),
         });
         this.cardManager = new BTCardManager(this);
-        this.unitManager = new UnitManager(this);
-        this.markerManager = new MarkerManager(this);
+        this.tokenManager = new TokenManager(this);
         this.discard = new VoidStock(this.cardManager, document.getElementById('bt_discard'));
         this.deck = new LineStock(this.cardManager, document.getElementById('bt_deck'));
         this.gameMap = new GameMap(this);
@@ -3088,9 +3134,219 @@ var VICTORY_POINTS_TRACK_CONFIG = [
         left: 1023,
     },
 ];
+var BATTLE_TRACK_CONFIG = [
+    {
+        id: BATTLE_TRACK_ATTACKER_MINUS_5,
+        top: 94,
+        left: 111,
+    },
+    {
+        id: BATTLE_TRACK_ATTACKER_MINUS_4,
+        top: 94,
+        left: 153,
+    },
+    {
+        id: BATTLE_TRACK_ATTACKER_MINUS_3,
+        top: 94,
+        left: 196,
+    },
+    {
+        id: BATTLE_TRACK_ATTACKER_MINUS_2,
+        top: 94,
+        left: 240,
+    },
+    {
+        id: BATTLE_TRACK_ATTACKER_MINUS_1,
+        top: 94,
+        left: 282,
+    },
+    {
+        id: BATTLE_TRACK_ATTACKER_PLUS_0,
+        top: 94,
+        left: 325,
+    },
+    {
+        id: BATTLE_TRACK_ATTACKER_PLUS_1,
+        top: 94,
+        left: 372,
+    },
+    {
+        id: BATTLE_TRACK_ATTACKER_PLUS_2,
+        top: 94,
+        left: 415,
+    },
+    {
+        id: BATTLE_TRACK_ATTACKER_PLUS_3,
+        top: 94,
+        left: 458,
+    },
+    {
+        id: BATTLE_TRACK_ATTACKER_PLUS_4,
+        top: 94,
+        left: 501,
+    },
+    {
+        id: BATTLE_TRACK_ATTACKER_PLUS_5,
+        top: 94,
+        left: 544,
+    },
+    {
+        id: BATTLE_TRACK_ATTACKER_PLUS_6,
+        top: 94,
+        left: 587,
+    },
+    {
+        id: BATTLE_TRACK_ATTACKER_PLUS_7,
+        top: 94,
+        left: 630,
+    },
+    {
+        id: BATTLE_TRACK_ATTACKER_PLUS_8,
+        top: 94,
+        left: 673,
+    },
+    {
+        id: BATTLE_TRACK_ATTACKER_PLUS_9,
+        top: 94,
+        left: 715,
+    },
+    {
+        id: BATTLE_TRACK_ATTACKER_PLUS_10,
+        top: 94,
+        left: 759,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_MINUS_5,
+        top: 138,
+        left: 111,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_MINUS_4,
+        top: 138,
+        left: 153,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_MINUS_3,
+        top: 138,
+        left: 196,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_MINUS_2,
+        top: 138,
+        left: 240,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_MINUS_1,
+        top: 138,
+        left: 282,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_PLUS_0,
+        top: 138,
+        left: 325,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_PLUS_1,
+        top: 138,
+        left: 372,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_PLUS_2,
+        top: 138,
+        left: 415,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_PLUS_3,
+        top: 138,
+        left: 458,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_PLUS_4,
+        top: 138,
+        left: 501,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_PLUS_5,
+        top: 138,
+        left: 544,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_PLUS_6,
+        top: 138,
+        left: 587,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_PLUS_7,
+        top: 138,
+        left: 630,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_PLUS_8,
+        top: 138,
+        left: 673,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_PLUS_9,
+        top: 138,
+        left: 715,
+    },
+    {
+        id: BATTLE_TRACK_DEFENDER_PLUS_10,
+        top: 138,
+        left: 759,
+    },
+];
+var COMMANDER_REROLLS_TRACK_CONFIG = [
+    {
+        id: COMMANDER_REROLLS_TRACK_ATTACKER_0,
+        top: 94,
+        left: 816,
+    },
+    {
+        id: COMMANDER_REROLLS_TRACK_ATTACKER_1,
+        top: 94,
+        left: 859,
+    },
+    {
+        id: COMMANDER_REROLLS_TRACK_ATTACKER_2,
+        top: 94,
+        left: 902,
+    },
+    {
+        id: COMMANDER_REROLLS_TRACK_ATTACKER_3,
+        top: 94,
+        left: 945,
+    },
+    {
+        id: COMMANDER_REROLLS_TRACK_DEFENDER_0,
+        top: 138,
+        left: 816,
+    },
+    {
+        id: COMMANDER_REROLLS_TRACK_DEFENDER_1,
+        top: 138,
+        left: 859,
+    },
+    {
+        id: COMMANDER_REROLLS_TRACK_DEFENDER_2,
+        top: 138,
+        left: 902,
+    },
+    {
+        id: COMMANDER_REROLLS_TRACK_DEFENDER_3,
+        top: 138,
+        left: 945,
+    },
+];
 var GameMap = (function () {
     function GameMap(game) {
         this.stacks = {};
+        this.yearTrack = {};
+        this.actionRoundTrack = {};
+        this.victoryPointsTrack = {};
+        this.battleTrack = {};
+        this.raidTrack = {};
+        this.commanderRerollsTrack = {};
         this.game = game;
         var gamedatas = game.gamedatas;
         this.setupGameMap({ gamedatas: gamedatas });
@@ -3132,10 +3388,10 @@ var GameMap = (function () {
         var gamedatas = _a.gamedatas;
         if (!this.losses) {
             this.losses = (_b = {},
-                _b[LOSSES_BOX_BRITISH] = new LineStock(this.game.unitManager, document.getElementById(LOSSES_BOX_BRITISH), {
+                _b[LOSSES_BOX_BRITISH] = new LineStock(this.game.tokenManager, document.getElementById(LOSSES_BOX_BRITISH), {
                     center: false,
                 }),
-                _b[LOSSES_BOX_FRENCH] = new LineStock(this.game.unitManager, document.getElementById(LOSSES_BOX_FRENCH), {
+                _b[LOSSES_BOX_FRENCH] = new LineStock(this.game.tokenManager, document.getElementById(LOSSES_BOX_FRENCH), {
                     center: false,
                 }),
                 _b);
@@ -3168,8 +3424,8 @@ var GameMap = (function () {
             }
             if (!_this.stacks[space.id]) {
                 _this.stacks[space.id] = (_a = {},
-                    _a[BRITISH] = new UnitStack(_this.game.unitManager, document.getElementById("".concat(space.id, "_british_stack")), {}, BRITISH),
-                    _a[FRENCH] = new UnitStack(_this.game.unitManager, document.getElementById("".concat(space.id, "_french_stack")), {}, FRENCH),
+                    _a[BRITISH] = new UnitStack(_this.game.tokenManager, document.getElementById("".concat(space.id, "_british_stack")), {}, BRITISH),
+                    _a[FRENCH] = new UnitStack(_this.game.tokenManager, document.getElementById("".concat(space.id, "_french_stack")), {}, FRENCH),
                     _a);
             }
             gamedatas.units
@@ -3189,164 +3445,68 @@ var GameMap = (function () {
         });
     };
     GameMap.prototype.setupMarkers = function (_a) {
+        var _this = this;
         var gamedatas = _a.gamedatas;
-        this.yearTrack = {
-            year_track_1755: new LineStock(this.game.markerManager, document.getElementById('year_track_1755'), {
-                gap: '0px',
-                center: false,
-            }),
-            year_track_1756: new LineStock(this.game.markerManager, document.getElementById('year_track_1756'), {
-                gap: '0px',
-                center: false,
-            }),
-            year_track_1757: new LineStock(this.game.markerManager, document.getElementById('year_track_1757'), {
-                gap: '0px',
-                center: false,
-            }),
-            year_track_1758: new LineStock(this.game.markerManager, document.getElementById('year_track_1758'), {
-                gap: '0px',
-                center: false,
-            }),
-            year_track_1759: new LineStock(this.game.markerManager, document.getElementById('year_track_1759'), {
-                gap: '0px',
-                center: false,
-            }),
+        [1755, 1756, 1757, 1758, 1759].forEach(function (year) {
+            _this.yearTrack["year_track_".concat(year)] = new LineStock(_this.game.tokenManager, document.getElementById("year_track_".concat(year)));
+        });
+        for (var i = 1; i <= 9; i++) {
+            this.actionRoundTrack["action_round_track_ar".concat(i)] =
+                new LineStock(this.game.tokenManager, document.getElementById("action_round_track_ar".concat(i)), {
+                    gap: '0px',
+                    center: false,
+                });
+        }
+        this.actionRoundTrack.action_round_track_fleetsArrive =
+            new LineStock(this.game.tokenManager, document.getElementById('action_round_track_fleetsArrive'));
+        this.actionRoundTrack.action_round_track_colonialsEnlist =
+            new LineStock(this.game.tokenManager, document.getElementById('action_round_track_colonialsEnlist'));
+        this.actionRoundTrack.action_round_track_winterQuarters =
+            new LineStock(this.game.tokenManager, document.getElementById('action_round_track_winterQuarters'));
+        var _loop_3 = function (j) {
+            [BRITISH, FRENCH].forEach(function (faction) {
+                _this.victoryPointsTrack["victory_points_".concat(faction, "_").concat(j)] =
+                    new LineStock(_this.game.tokenManager, document.getElementById("victory_points_".concat(faction, "_").concat(j)));
+            });
         };
-        this.actionRoundTrack = {
-            action_round_track_ar1: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar1'), {
-                gap: '0px',
-                center: false,
-            }),
-            action_round_track_ar2: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar2'), {
-                gap: '0px',
-                center: false,
-            }),
-            action_round_track_ar3: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar3'), {
-                gap: '0px',
-                center: false,
-            }),
-            action_round_track_ar4: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar4'), {
-                gap: '0px',
-                center: false,
-            }),
-            action_round_track_ar5: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar5'), {
-                gap: '0px',
-                center: false,
-            }),
-            action_round_track_ar6: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar6'), {
-                gap: '0px',
-                center: false,
-            }),
-            action_round_track_ar7: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar7'), {
-                gap: '0px',
-                center: false,
-            }),
-            action_round_track_ar8: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar8'), {
-                gap: '0px',
-                center: false,
-            }),
-            action_round_track_ar9: new LineStock(this.game.markerManager, document.getElementById('action_round_track_ar9'), {
-                gap: '0px',
-                center: false,
-            }),
-            action_round_track_fleetsArrive: new LineStock(this.game.markerManager, document.getElementById('action_round_track_fleetsArrive'), {
-                gap: '0px',
-                center: false,
-            }),
-            action_round_track_colonialsEnlist: new LineStock(this.game.markerManager, document.getElementById('action_round_track_colonialsEnlist'), {
-                gap: '0px',
-                center: false,
-            }),
-            action_round_track_winterQuarters: new LineStock(this.game.markerManager, document.getElementById('action_round_track_winterQuarters'), {
-                gap: '0px',
-                center: false,
-            }),
+        for (var j = 1; j <= 10; j++) {
+            _loop_3(j);
+        }
+        var _loop_4 = function (i) {
+            ['attacker', 'defender'].forEach(function (side) {
+                var sideId = "battle_track_".concat(side, "_").concat(i < 0 ? 'minus' : 'plus', "_").concat(Math.abs(i));
+                _this.battleTrack[sideId] = new LineStock(_this.game.tokenManager, document.getElementById(sideId));
+            });
         };
-        this.victoryPointsTrack = {
-            victory_points_french_10: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_10'), {
+        for (var i = -5; i <= 10; i++) {
+            _loop_4(i);
+        }
+        this.battleTrack[BATTLE_MARKERS_POOL] = new LineStock(this.game.tokenManager, document.getElementById(BATTLE_MARKERS_POOL), {
+            gap: '4px',
+            center: false,
+            wrap: 'nowrap',
+        });
+        for (var k = 0; k <= 8; k++) {
+            this.raidTrack["raid_track_".concat(k)] = new LineStock(this.game.tokenManager, document.getElementById("raid_track_".concat(k)), {
+                wrap: 'nowrap',
                 gap: '0px',
-                center: false,
-            }),
-            victory_points_french_9: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_9'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_french_8: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_8'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_french_7: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_7'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_french_6: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_6'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_french_5: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_5'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_french_4: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_4'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_french_3: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_3'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_french_2: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_2'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_french_1: new LineStock(this.game.markerManager, document.getElementById('victory_points_french_1'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_british_1: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_1'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_british_2: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_2'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_british_3: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_3'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_british_4: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_4'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_british_5: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_5'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_british_6: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_6'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_british_7: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_7'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_british_8: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_8'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_british_9: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_9'), {
-                gap: '0px',
-                center: false,
-            }),
-            victory_points_british_10: new LineStock(this.game.markerManager, document.getElementById('victory_points_british_10'), {
-                gap: '0px',
-                center: false,
-            }),
+            });
+        }
+        var _loop_5 = function (l) {
+            ['attacker', 'defender'].forEach(function (side) {
+                _this.commanderRerollsTrack["commander_rerolls_track_".concat(side, "_").concat(l)] =
+                    new LineStock(_this.game.tokenManager, document.getElementById("commander_rerolls_track_".concat(side, "_").concat(l)), {
+                        center: false,
+                    });
+            });
         };
+        for (var l = 0; l <= 3; l++) {
+            _loop_5(l);
+        }
         this.updateMarkers({ gamedatas: gamedatas });
     };
     GameMap.prototype.updateMarkers = function (_a) {
+        var _this = this;
         var gamedatas = _a.gamedatas;
         var markers = gamedatas.markers;
         var yearMarker = markers[YEAR_MARKER];
@@ -3357,20 +3517,35 @@ var GameMap = (function () {
         if (roundMarker && this.actionRoundTrack[roundMarker.location]) {
             this.actionRoundTrack[roundMarker.location].addCard(roundMarker);
         }
-        if (markers[BRITISH_RAID_MARKER]) {
-            document
-                .getElementById("".concat(markers[BRITISH_RAID_MARKER].location))
-                .insertAdjacentHTML('beforeend', tplMarkerSide({ id: markers[BRITISH_RAID_MARKER].id }));
+        var britishRaidMarker = markers[BRITISH_RAID_MARKER];
+        if (britishRaidMarker && this.raidTrack[britishRaidMarker.location]) {
+            this.raidTrack[britishRaidMarker.location].addCard(britishRaidMarker);
         }
-        if (markers[FRENCH_RAID_MARKER]) {
-            document
-                .getElementById("".concat(markers[FRENCH_RAID_MARKER].location))
-                .insertAdjacentHTML('beforeend', tplMarkerSide({ id: markers[FRENCH_RAID_MARKER].id }));
+        var frenchRaidMarker = markers[FRENCH_RAID_MARKER];
+        if (frenchRaidMarker && this.raidTrack[frenchRaidMarker.location]) {
+            this.raidTrack[frenchRaidMarker.location].addCard(frenchRaidMarker);
+        }
+        var bBattleMarker = markers[BRITISH_BATTLE_MARKER];
+        if (bBattleMarker && this.battleTrack[bBattleMarker.location]) {
+            this.battleTrack[bBattleMarker.location].addCard(bBattleMarker);
+        }
+        var fBattleMarker = markers[FRENCH_BATTLE_MARKER];
+        console.log('fBattleMarker', fBattleMarker);
+        if (fBattleMarker && this.battleTrack[fBattleMarker.location]) {
+            console.log('placeMarker', fBattleMarker);
+            this.battleTrack[fBattleMarker.location].addCard(fBattleMarker);
         }
         var victoryMarker = markers[VICTORY_MARKER];
         if (victoryMarker && this.victoryPointsTrack[victoryMarker.location]) {
             this.victoryPointsTrack[victoryMarker.location].addCard(victoryMarker);
         }
+        gamedatas.units
+            .filter(function (unit) {
+            return unit.location.startsWith('commander_rerolls_track');
+        })
+            .forEach(function (commander) {
+            _this.commanderRerollsTrack[commander.location].addCard(commander);
+        });
     };
     GameMap.prototype.updateGameMap = function (_a) {
         var gamedatas = _a.gamedatas;
@@ -3457,7 +3632,7 @@ var tplMarkerOfType = function (_a) {
 };
 var tplUnit = function (_a) {
     var faction = _a.faction, counterId = _a.counterId, style = _a.style;
-    return "\n  <div class=\"bt_token_side\" data-counter-id=\"".concat(counterId, "\"").concat(style ? " style=\"".concat(style, "\"") : "", "></div>\n");
+    return "\n  <div class=\"bt_token_side\" data-counter-id=\"".concat(counterId, "\"").concat(style ? " style=\"".concat(style, "\"") : '', "></div>\n");
 };
 var tplSpaces = function (_a) {
     var spaces = _a.spaces;
@@ -3465,7 +3640,7 @@ var tplSpaces = function (_a) {
     var mappedSpaces = filteredSpaces.map(function (space) {
         return "<div id=\"".concat(space.id, "\" class=\"bt_space\" style=\"top: calc(var(--btMapScale) * ").concat(space.top - 26, "px); left: calc(var(--btMapScale) * ").concat(space.left - 26, "px);\">\n        <div id=\"").concat(space.id, "_french_stack\"></div>\n        <div id=\"").concat(space.id, "_markers\"></div>\n        <div id=\"").concat(space.id, "_british_stack\"></div>\n      </div>");
     });
-    var result = mappedSpaces.join("");
+    var result = mappedSpaces.join('');
     return result;
 };
 var tplMarkerSpace = function (_a) {
@@ -3475,39 +3650,67 @@ var tplMarkerSpace = function (_a) {
 var tplLossesBox = function () {
     return "\n    <div id=\"lossesBox_french\" class=\"bt_losses_box\"></div>\n    <div id=\"lossesBox_british\" class=\"bt_losses_box\"></div>\n  ";
 };
-var tplActionRoundTrack = function () { return ACTION_ROUND_TRACK_CONFIG.map(function (markerSpace) {
-    return tplMarkerSpace({
-        id: "action_round_track_".concat(markerSpace.id),
-        top: markerSpace.top,
-        left: markerSpace.left,
-    });
-}).join(""); };
-var tplRaidTrack = function () { return RAID_TRACK_CONFIG.map(function (markerSpace) {
-    return tplMarkerSpace({
-        id: "".concat(markerSpace.id),
-        top: markerSpace.top,
-        left: markerSpace.left,
-        extraClasses: 'bt_raid_track'
-    });
-}).join(""); };
-var tplYearTrack = function () { return YEAR_TRACK_CONFIG.map(function (markerSpace) {
-    return tplMarkerSpace({
-        id: "year_track_".concat(markerSpace.id),
-        top: markerSpace.top,
-        left: markerSpace.left,
-    });
-}).join(""); };
-var tplVictoryPointsTrack = function () { return VICTORY_POINTS_TRACK_CONFIG.map(function (markerSpace) {
-    return tplMarkerSpace({
-        id: "".concat(markerSpace.id),
-        top: markerSpace.top,
-        left: markerSpace.left,
-    });
-}).join(""); };
+var tplActionRoundTrack = function () {
+    return ACTION_ROUND_TRACK_CONFIG.map(function (markerSpace) {
+        return tplMarkerSpace({
+            id: "action_round_track_".concat(markerSpace.id),
+            top: markerSpace.top,
+            left: markerSpace.left,
+        });
+    }).join('');
+};
+var tplRaidTrack = function () {
+    return RAID_TRACK_CONFIG.map(function (markerSpace) {
+        return tplMarkerSpace({
+            id: "".concat(markerSpace.id),
+            top: markerSpace.top,
+            left: markerSpace.left,
+            extraClasses: 'bt_raid_track',
+        });
+    }).join('');
+};
+var tplYearTrack = function () {
+    return YEAR_TRACK_CONFIG.map(function (markerSpace) {
+        return tplMarkerSpace({
+            id: "year_track_".concat(markerSpace.id),
+            top: markerSpace.top,
+            left: markerSpace.left,
+        });
+    }).join('');
+};
+var tplVictoryPointsTrack = function () {
+    return VICTORY_POINTS_TRACK_CONFIG.map(function (markerSpace) {
+        return tplMarkerSpace({
+            id: "".concat(markerSpace.id),
+            top: markerSpace.top,
+            left: markerSpace.left,
+        });
+    }).join('');
+};
+var tplBattleTrack = function () {
+    return BATTLE_TRACK_CONFIG.map(function (markerSpace) {
+        return tplMarkerSpace({
+            id: markerSpace.id,
+            top: markerSpace.top,
+            left: markerSpace.left,
+        });
+    }).join('');
+};
+var tplCommanderTrack = function () {
+    return COMMANDER_REROLLS_TRACK_CONFIG.map(function (markerSpace) {
+        return tplMarkerSpace({
+            id: markerSpace.id,
+            top: markerSpace.top,
+            left: markerSpace.left,
+            extraClasses: 'bt_commander_rerolls_track'
+        });
+    }).join('');
+};
+var tplBattleMarkersPool = function () { return '<div id="battle_markers_pool"></div>'; };
 var tplGameMap = function (_a) {
     var gamedatas = _a.gamedatas;
     var spaces = gamedatas.spaces;
-    return "\n  <div id=\"bt_game_map\">\n\n    ".concat(tplLossesBox(), "\n    ").concat(tplSpaces({ spaces: spaces }), "\n    ").concat(tplVictoryPointsTrack(), "\n    ").concat(tplRaidTrack(), "\n    ").concat(tplYearTrack(), "\n    ").concat(tplActionRoundTrack(), "\n\n  </div>");
+    return "\n  <div id=\"bt_game_map\">\n\n    ".concat(tplLossesBox(), "\n    ").concat(tplSpaces({ spaces: spaces }), "\n    ").concat(tplVictoryPointsTrack(), "\n    ").concat(tplBattleTrack(), "\n    ").concat(tplBattleMarkersPool(), "\n    ").concat(tplCommanderTrack(), "\n    ").concat(tplRaidTrack(), "\n    ").concat(tplYearTrack(), "\n    ").concat(tplActionRoundTrack(), "\n\n  </div>");
 };
 var Hand = (function () {
     function Hand(game) {
@@ -3636,39 +3839,6 @@ var tplLogTokenUnit = function (counterId) {
 var tplLogDieResult = function (dieResult) {
     return "<div class=\"bt_log_die\" data-die-result=\"".concat(dieResult, "\"></div>");
 };
-var MarkerManager = (function (_super) {
-    __extends(MarkerManager, _super);
-    function MarkerManager(game) {
-        var _this = _super.call(this, game, {
-            getId: function (card) { return "".concat(card.id); },
-            setupDiv: function (card, div) { return _this.setupDiv(card, div); },
-            setupFrontDiv: function (card, div) { return _this.setupFrontDiv(card, div); },
-            setupBackDiv: function (card, div) { return _this.setupBackDiv(card, div); },
-            isCardVisible: function (card) { return _this.isCardVisible(card); },
-            animationManager: game.animationManager,
-        }) || this;
-        _this.game = game;
-        return _this;
-    }
-    MarkerManager.prototype.clearInterface = function () { };
-    MarkerManager.prototype.setupDiv = function (marker, div) {
-        div.classList.add('bt_marker');
-    };
-    MarkerManager.prototype.setupFrontDiv = function (marker, div) {
-        div.classList.add('bt_marker_side');
-        div.setAttribute('data-side', 'front');
-        div.setAttribute('data-type', marker.type);
-    };
-    MarkerManager.prototype.setupBackDiv = function (marker, div) {
-        div.classList.add('bt_marker_side');
-        div.setAttribute('data-side', 'back');
-        div.setAttribute('data-type', marker.type);
-    };
-    MarkerManager.prototype.isCardVisible = function (marker) {
-        return marker.side === 'front';
-    };
-    return MarkerManager;
-}(CardManager));
 var NotificationManager = (function () {
     function NotificationManager(game) {
         this.game = game;
@@ -3680,6 +3850,9 @@ var NotificationManager = (function () {
         var notifs = [
             'log',
             'battle',
+            'battleCleanup',
+            'battleStart',
+            'battleSelectCommander',
             'discardCardFromHand',
             'discardCardFromHandPrivate',
             'discardCardInPlay',
@@ -3769,6 +3942,61 @@ var NotificationManager = (function () {
             });
         });
     };
+    NotificationManager.prototype.notif_battleCleanup = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, attackerMarker, defenderMarker, space;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = notif.args, attackerMarker = _a.attackerMarker, defenderMarker = _a.defenderMarker, space = _a.space;
+                        return [4, Promise.all([
+                                this.game.gameMap.battleTrack[attackerMarker.location].addCard(attackerMarker),
+                                this.game.gameMap.battleTrack[defenderMarker.location].addCard(defenderMarker),
+                            ])];
+                    case 1:
+                        _b.sent();
+                        this.game.gameMap.removeMarkerFromSpace({
+                            spaceId: space.id,
+                            type: 'battle_marker',
+                        });
+                        return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_battleStart = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, attackerMarker, defenderMarker;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = notif.args, attackerMarker = _a.attackerMarker, defenderMarker = _a.defenderMarker;
+                        return [4, Promise.all([
+                                this.game.gameMap.battleTrack[attackerMarker.location].addCard(attackerMarker),
+                                this.game.gameMap.battleTrack[defenderMarker.location].addCard(defenderMarker),
+                            ])];
+                    case 1:
+                        _b.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_battleSelectCommander = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var commander;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        commander = notif.args.commander;
+                        return [4, this.game.gameMap.commanderRerollsTrack[commander.location].addCard(commander)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
     NotificationManager.prototype.notif_discardCardFromHand = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, faction, playerId, fakeCard, fromElement;
@@ -3854,22 +4082,11 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_moveRaidPointsMarker = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var marker, element, toNode;
+            var marker;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        marker = notif.args.marker;
-                        element = document.getElementById(marker.id);
-                        toNode = document.getElementById(marker.location);
-                        if (!(element && toNode)) {
-                            console.error('Unable to move marker');
-                            return [2];
-                        }
-                        return [4, this.game.animationManager.attachWithAnimation(new BgaSlideAnimation({ element: element }), toNode)];
-                    case 1:
-                        _a.sent();
-                        return [2];
-                }
+                marker = notif.args.marker;
+                this.game.gameMap.raidTrack[marker.location].addCard(marker);
+                return [2];
             });
         });
     };
@@ -5139,6 +5356,83 @@ var ArmyMovementDestinationState = (function () {
     };
     return ArmyMovementDestinationState;
 }());
+var BattleSelectCommanderState = (function () {
+    function BattleSelectCommanderState(game) {
+        this.game = game;
+    }
+    BattleSelectCommanderState.prototype.onEnteringState = function (args) {
+        debug('Entering BattleSelectCommanderState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    BattleSelectCommanderState.prototype.onLeavingState = function () {
+        debug('Leaving BattleSelectCommanderState');
+    };
+    BattleSelectCommanderState.prototype.setDescription = function (activePlayerId) { };
+    BattleSelectCommanderState.prototype.updateInterfaceInitialStep = function () {
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a Commander'),
+            args: {
+                you: '${you}',
+            },
+        });
+        var stack = this.game.gameMap.stacks[this.args.space.id][this.args.faction];
+        stack.open();
+        this.setUnitsSelectable();
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    BattleSelectCommanderState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var unit = _a.unit;
+        this.game.clearPossible();
+        this.game.setUnitSelected({ id: unit.id });
+        this.game.clientUpdatePageTitle({
+            text: _('Select ${unitName}?'),
+            args: {
+                you: '${you}',
+                unitName: _(this.game.gamedatas.staticData.units[unit.counterId].counterText),
+            },
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actBattleSelectCommander',
+                args: {
+                    unitId: unit.id,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    BattleSelectCommanderState.prototype.setUnitsSelectable = function () {
+        var _this = this;
+        this.args.commanders.forEach(function (unit) {
+            _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    _this.updateInterfaceConfirm({ unit: unit });
+                },
+            });
+        });
+    };
+    return BattleSelectCommanderState;
+}());
 var ConfirmPartialTurnState = (function () {
     function ConfirmPartialTurnState(game) {
         this.game = game;
@@ -5382,13 +5676,11 @@ var LightMovementDestinationState = (function () {
 }());
 var RaidState = (function () {
     function RaidState(game) {
-        this.selectedUnit = null;
         this.game = game;
     }
     RaidState.prototype.onEnteringState = function (args) {
         debug('Entering RaidState');
         this.args = args;
-        this.selectedUnit = null;
         this.updateInterfaceInitialStep();
     };
     RaidState.prototype.onLeavingState = function () {
@@ -5403,10 +5695,6 @@ var RaidState = (function () {
                 you: '${you}',
             },
         });
-        if (this.args.units.length === 1) {
-            this.selectedUnit = this.args.units[0];
-            this.game.setUnitSelected({ id: this.selectedUnit.id + '' });
-        }
         this.setTargetsSelectable();
         this.game.addPassButton({
             optionalAction: this.args.optionalAction,
@@ -5417,7 +5705,7 @@ var RaidState = (function () {
         var _this = this;
         var space = _a.space, paths = _a.paths;
         if (paths.length === 1) {
-            this.updateInterfaceConfirm({ space: space, path: paths[0] });
+            this.updateInterfaceSelectUnit({ space: space, path: paths[0] });
             return;
         }
         this.game.clearPossible();
@@ -5436,7 +5724,6 @@ var RaidState = (function () {
                 }
             });
         });
-        console.log('counts', counts);
         Object.entries(counts).forEach(function (_a) {
             var id = _a[0], count = _a[1];
             if (count.count > 1) {
@@ -5446,7 +5733,10 @@ var RaidState = (function () {
                 _this.game.setLocationSelectable({
                     id: id,
                     callback: function () {
-                        _this.updateInterfaceConfirm({ path: paths[count.paths[0]], space: space });
+                        _this.updateInterfaceSelectUnit({
+                            path: paths[count.paths[0]],
+                            space: space,
+                        });
                     },
                 });
             }
@@ -5458,18 +5748,47 @@ var RaidState = (function () {
             },
         });
     };
-    RaidState.prototype.updateInterfaceConfirm = function (_a) {
+    RaidState.prototype.updateInterfaceSelectUnit = function (_a) {
         var _this = this;
         var space = _a.space, path = _a.path;
+        if (this.args.units.length === 1) {
+            this.updateInterfaceConfirm({ space: space, path: path, unit: this.args.units[0] });
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a unit to Raid with'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.game.setLocationSelected({ id: space.id });
+        path.forEach(function (spaceId) {
+            _this.game.setLocationSelected({ id: spaceId });
+        });
+        var stack = this.game.gameMap.stacks[this.args.originId][this.args.faction];
+        stack.open();
+        this.args.units.forEach(function (unit) {
+            _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () { return _this.updateInterfaceConfirm({ space: space, path: path, unit: unit }); },
+            });
+        });
+        this.game.addCancelButton();
+    };
+    RaidState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var space = _a.space, path = _a.path, unit = _a.unit;
         this.game.clearPossible();
         this.game.setLocationSelected({ id: space.id });
+        this.game.setUnitSelected({ id: unit.id });
         path.forEach(function (spaceId) {
             _this.game.setLocationSelected({ id: spaceId });
         });
         this.game.clientUpdatePageTitle({
             text: _('Raid ${spaceName}?'),
             args: {
-                spaceName: _(space.name)
+                spaceName: _(space.name),
             },
         });
         this.game.addConfirmButton({
@@ -5480,7 +5799,7 @@ var RaidState = (function () {
                     args: {
                         path: path,
                         spaceId: space.id,
-                        unitId: _this.selectedUnit.id,
+                        unitId: unit.id,
                     },
                 });
             },
@@ -5565,6 +5884,95 @@ var SelectReserveCardState = (function () {
     };
     return SelectReserveCardState;
 }());
+var TokenManager = (function (_super) {
+    __extends(TokenManager, _super);
+    function TokenManager(game) {
+        var _this = _super.call(this, game, {
+            getId: function (card) { return "".concat(card.id); },
+            setupDiv: function (card, div) { return _this.setupDiv(card, div); },
+            setupFrontDiv: function (card, div) { return _this.setupFrontDiv(card, div); },
+            setupBackDiv: function (card, div) { return _this.setupBackDiv(card, div); },
+            isCardVisible: function (card) { return _this.isCardVisible(card); },
+            animationManager: game.animationManager,
+        }) || this;
+        _this.game = game;
+        return _this;
+    }
+    TokenManager.prototype.clearInterface = function () { };
+    TokenManager.prototype.setupDiv = function (token, div) {
+        if (token.manager === UNITS) {
+            div.style.position = 'relative';
+            div.classList.add('bt_token');
+            div.insertAdjacentHTML('beforeend', "<div id=\"spent_marker_".concat(token.id, "\" data-spent=\"").concat(token.spent === 1 ? 'true' : 'false', "\" class=\"bt_spent_marker\"></div>"));
+        }
+        else if (token.manager === MARKERS) {
+            div.classList.add('bt_marker');
+        }
+    };
+    TokenManager.prototype.setupFrontDiv = function (token, div) {
+        var _a;
+        if (token.manager === UNITS) {
+            div.classList.add('bt_token_side');
+            div.setAttribute('data-counter-id', token.counterId);
+            var isCommander = ((_a = this.game.gamedatas.staticData.units[token.counterId]) === null || _a === void 0 ? void 0 : _a.type) ===
+                COMMANDER;
+            if (isCommander) {
+                div.setAttribute('data-commander', 'true');
+            }
+        }
+        else if (token.manager === MARKERS) {
+            div.classList.add('bt_marker_side');
+            div.setAttribute('data-side', 'front');
+            div.setAttribute('data-type', token.type);
+        }
+    };
+    TokenManager.prototype.setupBackDiv = function (token, div) {
+        var _a;
+        if (token.manager === UNITS) {
+            div.classList.add('bt_token_side');
+            div.setAttribute('data-counter-id', "".concat(token.counterId, "_reduced"));
+            var isCommander = ((_a = this.game.gamedatas.staticData.units[token.counterId]) === null || _a === void 0 ? void 0 : _a.type) ===
+                COMMANDER;
+            if (isCommander) {
+                div.setAttribute('data-commander', 'true');
+            }
+        }
+        else if (token.manager === MARKERS) {
+            div.classList.add('bt_marker_side');
+            div.setAttribute('data-side', 'back');
+            div.setAttribute('data-type', token.type);
+        }
+    };
+    TokenManager.prototype.isCardVisible = function (token) {
+        if (token.manager === UNITS) {
+            return true;
+        }
+        else if (token.manager === MARKERS) {
+            return token.side === 'front';
+        }
+    };
+    return TokenManager;
+}(CardManager));
+var tplCardTooltipContainer = function (_a) {
+    var card = _a.card, content = _a.content;
+    return "<div class=\"bt_card_tooltip\">\n  <div class=\"bt_card_tooltip_inner_container\">\n    ".concat(content, "\n  </div>\n  ").concat(card, "\n</div>");
+};
+var TooltipManager = (function () {
+    function TooltipManager(game) {
+        this.idRegex = /id="[a-z]*_[0-9]*_[0-9]*"/;
+        this.game = game;
+    }
+    TooltipManager.prototype.addTextToolTip = function (_a) {
+        var nodeId = _a.nodeId, text = _a.text;
+        this.game.framework().addTooltip(nodeId, _(text), '', 500);
+    };
+    TooltipManager.prototype.removeTooltip = function (nodeId) {
+        this.game.framework().removeTooltip(nodeId);
+    };
+    TooltipManager.prototype.setupTooltips = function () {
+    };
+    return TooltipManager;
+}());
 var UnitStack = (function (_super) {
     __extends(UnitStack, _super);
     function UnitStack(manager, element, settings, faction) {
@@ -5596,7 +6004,6 @@ var UnitStack = (function (_super) {
     };
     UnitStack.prototype.cardRemoved = function (unit, settings) {
         _super.prototype.cardRemoved.call(this, unit, settings);
-        console.log('unitRemoved', this.getCards());
         if (this.getCards().length === 0) {
             this.element.removeAttribute('data-has-unit');
         }
@@ -5632,56 +6039,3 @@ var UnitStack = (function (_super) {
     };
     return UnitStack;
 }(ManualPositionStock));
-var UnitManager = (function (_super) {
-    __extends(UnitManager, _super);
-    function UnitManager(game) {
-        var _this = _super.call(this, game, {
-            getId: function (card) { return "".concat(card.id); },
-            setupDiv: function (card, div) { return _this.setupDiv(card, div); },
-            setupFrontDiv: function (card, div) { return _this.setupFrontDiv(card, div); },
-            setupBackDiv: function (card, div) { return _this.setupBackDiv(card, div); },
-            isCardVisible: function (card) { return _this.isCardVisible(card); },
-            animationManager: game.animationManager,
-        }) || this;
-        _this.game = game;
-        return _this;
-    }
-    UnitManager.prototype.clearInterface = function () { };
-    UnitManager.prototype.setupDiv = function (card, div) {
-        div.style.position = 'relative';
-        div.classList.add('bt_token');
-        div.insertAdjacentHTML('beforeend', "<div id=\"spent_marker_".concat(card.id, "\" data-spent=\"").concat(card.spent === 1 ? 'true' : 'false', "\" class=\"bt_spent_marker\"></div>"));
-    };
-    UnitManager.prototype.setupFrontDiv = function (card, div) {
-        div.classList.add('bt_token_side');
-        div.setAttribute('data-counter-id', card.counterId);
-    };
-    UnitManager.prototype.setupBackDiv = function (card, div) {
-        div.classList.add('bt_token_side');
-        div.setAttribute('data-counter-id', "".concat(card.counterId, "_reduced"));
-    };
-    UnitManager.prototype.isCardVisible = function (card) {
-        return true;
-    };
-    return UnitManager;
-}(CardManager));
-var tplCardTooltipContainer = function (_a) {
-    var card = _a.card, content = _a.content;
-    return "<div class=\"bt_card_tooltip\">\n  <div class=\"bt_card_tooltip_inner_container\">\n    ".concat(content, "\n  </div>\n  ").concat(card, "\n</div>");
-};
-var TooltipManager = (function () {
-    function TooltipManager(game) {
-        this.idRegex = /id="[a-z]*_[0-9]*_[0-9]*"/;
-        this.game = game;
-    }
-    TooltipManager.prototype.addTextToolTip = function (_a) {
-        var nodeId = _a.nodeId, text = _a.text;
-        this.game.framework().addTooltip(nodeId, _(text), '', 500);
-    };
-    TooltipManager.prototype.removeTooltip = function (nodeId) {
-        this.game.framework().removeTooltip(nodeId);
-    };
-    TooltipManager.prototype.setupTooltips = function () {
-    };
-    return TooltipManager;
-}());

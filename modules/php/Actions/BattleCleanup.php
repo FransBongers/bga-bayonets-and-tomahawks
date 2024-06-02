@@ -10,15 +10,17 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Models\Player;
 
-class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicAction
+class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
 {
+
   public function getState()
   {
-    return ST_ACTION_ROUND_RESOLVE_BATTLES;
+    return ST_BATTLE_CLEANUP;
   }
 
   // ..######..########....###....########.########
@@ -37,32 +39,23 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stActionRoundResolveBattles()
+  public function stBattleCleanup()
   {
-    $battleLocations = Spaces::getBattleLocations();
-    $playerId = self::getPlayer()->getId();
+    $parentInfo = $this->ctx->getParent()->getInfo();
+    $space = Spaces::get($parentInfo['spaceId']);
+    Notifications::log('stBattleCleanup', $parentInfo);
 
-    $battleNodes = [
-      'children' => []
-    ];
+    $defender = $space->getDefender();
+    $attacker = Players::otherFaction($defender);
 
-    foreach ($battleLocations as $space) {
-      $battleNodes['children'][] = [
-        'spaceId' => $space->getId(),
-        'children' => [
-          [
-            'action' => BATTLE_PREPARATION,
-            'playerId' => $playerId,
-          ],
-          // [
-          //   'action' => BATTLE_CLEANUP,
-          //   'playerId' => $playerId,
-          // ]
-        ]
-      ];
-    }
-    $this->ctx->insertAsBrother(Engine::buildTree($battleNodes));
-    // Notifications::log('stActionRoundResolveBattles', []);
+    $attackerMarker = Markers::get($this->factionBattleMarkerMap[$attacker]);
+    $attackerMarker->setLocation(BATTLE_MARKERS_POOL);
+    $defenderMarker = Markers::get($this->factionBattleMarkerMap[$defender]);
+    $defenderMarker->setLocation(BATTLE_MARKERS_POOL);
+    $space->setBattle(0);
+    $space->setDefender(null);
+
+    Notifications::battleCleanup($space, $attackerMarker, $defenderMarker);
 
     $this->resolveAction(['automatic' => true]);
   }
@@ -75,7 +68,7 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreActionRoundResolveBattles()
+  public function stPreBattleCleanup()
   {
   }
 
@@ -88,7 +81,7 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsActionRoundResolveBattles()
+  public function argsBattleCleanup()
   {
 
 
@@ -111,16 +104,16 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassActionRoundResolveBattles()
+  public function actPassBattleCleanup()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actActionRoundResolveBattles($args)
+  public function actBattleCleanup($args)
   {
-    self::checkAction('actActionRoundResolveBattles');
+    self::checkAction('actBattleCleanup');
 
 
 

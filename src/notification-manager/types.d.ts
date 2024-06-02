@@ -22,6 +22,22 @@ interface NotifBattleArgs extends NotifWithPlayerArgs {
   space: BTSpace;
 }
 
+interface NotifBattleCleanupArgs {
+  space: BTSpace;
+  attackerMarker: BTMarker;
+  defenderMarker: BTMarker;
+}
+
+interface NotifBattleStartArgs {
+  // space: BTSpace;
+  attackerMarker: BTMarker;
+  defenderMarker: BTMarker;
+}
+
+interface NotifBattleSelectCommanderArgs extends NotifWithPlayerArgs {
+  commander: BTUnit;
+}
+
 interface NotifDrawCardPrivateArgs extends NotifWithPlayerArgs {
   card: BTCard;
 }

@@ -59,13 +59,10 @@ interface BayonetsAndTomahawksGame extends Game {
   cardsInPlay: CardsInPlay;
   hand: Hand;
   gameMap: GameMap;
-  // updatePlayAreaSize: () => void;
   notificationManager: NotificationManager;
-  // playAreaScale: number;
   playerManager: PlayerManager;
   settings: Settings;
-  markerManager: MarkerManager;
-  unitManager: UnitManager;
+  tokenManager: TokenManager;
   tooltipManager: TooltipManager;
 
   cardManager: BTCardManager;
@@ -102,6 +99,7 @@ interface BTCard {
 }
 
 interface BTMarker {
+  manager: 'markers';
   id: string;
   location: string;
   state: number;
@@ -123,11 +121,14 @@ interface BTSpace {
 }
 
 interface BTUnit {
+  manager: 'units';
   id: string;
   counterId: string;
   location: string;
   spent: number;
 }
+
+type BTToken = BTMarker | BTUnit;
 
 interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   canceledNotifIds: string[];
@@ -151,6 +152,7 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
       [counterId: string]: {
         faction: "british" | "french";
         counterText: string;
+        type: string;
       };
     };
   };

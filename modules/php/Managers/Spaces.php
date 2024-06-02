@@ -18,6 +18,7 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
   protected static $prefix = 'space_';
   protected static $customFields = [
     'battle',
+    'defender',
     'control',
     'raided',
     // 'extra_data'
@@ -35,6 +36,19 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
   {
     $className = "\BayonetsAndTomahawks\Spaces\\" . $id;
     return new $className($data);
+  }
+
+  public static function getBattleLocations()
+  {
+    $locations = self::getSelectQuery()
+      ->where('battle', '=', 1)
+      ->get()
+      ->toArray();
+
+    usort($locations, function ($a, $b) {
+      return $a->getBattlePriority() - $b->getBattlePriority();
+    });
+    return $locations;
   }
 
   // ..######..########.########.##.....##.########.
@@ -56,6 +70,7 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
         'id' => $spaceId,
         'battle' => 0,
         'control' => $space->getDefaultControl(), // Use homeSpace data?
+        'defender' => null,
         'location' => 'default',
         'raided' => null,
         // 'extra_data' => ['properties' => []],

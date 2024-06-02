@@ -82,6 +82,9 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
     $allUnits = Spaces::get($spaceId)->getUnits();
 
     $units = Utils::filter($allUnits, function ($unit) use ($actionPointId, $playerFaction) {
+      if ($unit->getType() !== LIGHT) {
+        return false;
+      }
       $unitFaction = $unit->getFaction();
       if (($actionPointId === INDIAN_AP || $actionPointId === INDIAN_AP_2X) && !$unit->isIndian()) {
         return false;
@@ -93,8 +96,10 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
       // 'info' => $info,
       // 'parentInfo' => $parentInfo,
       // 'actionPointId' => $actionPointId,
+      'originId' => $spaceId,
       'units' => $units,
       'raidTargets' => $raidTargets,
+      'faction' => $playerFaction,
     ];
   }
 

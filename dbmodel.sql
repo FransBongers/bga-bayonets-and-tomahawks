@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `connections` (
 
 CREATE TABLE IF NOT EXISTS `units` (
   `unit_id` varchar(100)  NOT NULL,
-  `unit_location` varchar(32) NOT NULL,
+  `unit_location` varchar(64) NOT NULL,
   `unit_state` int(10) DEFAULT 0,
   `counter_id` VARCHAR(255) NOT NULL,
   `spent` int(10) DEFAULT 0,
@@ -65,8 +65,9 @@ CREATE TABLE IF NOT EXISTS `spaces` (
   `space_location` varchar(32) NOT NULL,
   `space_state` int(10) DEFAULT 0,
   `battle` int(10) DEFAULT 0,
-  `control` VARCHAR(255) NOT NULL,
-  `raided` VARCHAR(255),
+  `defender` VARCHAR(10),
+  `control` VARCHAR(10) NOT NULL,
+  `raided` VARCHAR(10),
   -- `extra_data` JSON NULL,
   PRIMARY KEY (`space_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

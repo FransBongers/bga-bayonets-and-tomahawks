@@ -46,7 +46,7 @@ class ArmyMovementState implements State {
       },
     });
 
-    const stack: UnitStack<BTUnit> =
+    const stack: UnitStack =
       this.game.gameMap.stacks[this.args.origin.id][this.args.faction];
     stack.open();
     this.setUnitsSelectable();

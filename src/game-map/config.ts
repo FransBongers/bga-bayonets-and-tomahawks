@@ -239,24 +239,209 @@ const VICTORY_POINTS_TRACK_CONFIG: TrackConfig[] = [
     left: 1023,
   },
 ];
-// const VICTORY_POINTS_FRENCH_10 = 'victory_points_french_10';
-// const VICTORY_POINTS_FRENCH_9 = 'victory_points_french_9';
-// const VICTORY_POINTS_FRENCH_8 = 'victory_points_french_8';
-// const VICTORY_POINTS_FRENCH_7 = 'victory_points_french_7';
-// const VICTORY_POINTS_FRENCH_6 = 'victory_points_french_6';
-// const VICTORY_POINTS_FRENCH_5 = 'victory_points_french_5';
-// const VICTORY_POINTS_FRENCH_4 = 'victory_points_french_4';
-// const VICTORY_POINTS_FRENCH_3 = 'victory_points_french_3';
-// const VICTORY_POINTS_FRENCH_2 = 'victory_points_french_2';
-// const VICTORY_POINTS_FRENCH_1 = 'victory_points_french_1';
 
-// const VICTORY_POINTS_BRITISH_1 = 'victory_points_british_1';
-// const VICTORY_POINTS_BRITISH_2 = 'victory_points_british_2';
-// const VICTORY_POINTS_BRITISH_3 = 'victory_points_british_3';
-// const VICTORY_POINTS_BRITISH_4 = 'victory_points_british_4';
-// const VICTORY_POINTS_BRITISH_5 = 'victory_points_british_5';
-// const VICTORY_POINTS_BRITISH_6 = 'victory_points_british_6';
-// const VICTORY_POINTS_BRITISH_7 = 'victory_points_british_7';
-// const VICTORY_POINTS_BRITISH_8 = 'victory_points_british_8';
-// const VICTORY_POINTS_BRITISH_9 = 'victory_points_british_9';
-// const VICTORY_POINTS_BRITISH_10 = 'victory_points_british_10';
+const BATTLE_TRACK_CONFIG: TrackConfig[] = [
+  {
+    id: BATTLE_TRACK_ATTACKER_MINUS_5,
+    top: 94,
+    left: 111,
+  },
+  {
+    id: BATTLE_TRACK_ATTACKER_MINUS_4,
+    top: 94,
+    left: 153,
+  },
+  {
+    id: BATTLE_TRACK_ATTACKER_MINUS_3,
+    top: 94,
+    left: 196,
+  },
+  {
+    id: BATTLE_TRACK_ATTACKER_MINUS_2,
+    top: 94,
+    left: 240,
+  },
+  {
+    id: BATTLE_TRACK_ATTACKER_MINUS_1,
+    top: 94,
+    left: 282,
+  },
+  {
+    id: BATTLE_TRACK_ATTACKER_PLUS_0,
+    top: 94,
+    left: 325,
+  },
+  {
+    id: BATTLE_TRACK_ATTACKER_PLUS_1,
+    top: 94,
+    left: 372,
+  },
+  {
+    id: BATTLE_TRACK_ATTACKER_PLUS_2,
+    top: 94,
+    left: 415,
+  },
+  {
+    id: BATTLE_TRACK_ATTACKER_PLUS_3,
+    top: 94,
+    left: 458,
+  },
+  {
+    id: BATTLE_TRACK_ATTACKER_PLUS_4,
+    top: 94,
+    left: 501,
+  },
+  {
+    id: BATTLE_TRACK_ATTACKER_PLUS_5,
+    top: 94,
+    left: 544,
+  },
+  {
+    id: BATTLE_TRACK_ATTACKER_PLUS_6,
+    top: 94,
+    left: 587,
+  },
+  {
+    id: BATTLE_TRACK_ATTACKER_PLUS_7,
+    top: 94,
+    left: 630,
+  },
+  {
+    id: BATTLE_TRACK_ATTACKER_PLUS_8,
+    top: 94,
+    left: 673,
+  },
+  {
+    id: BATTLE_TRACK_ATTACKER_PLUS_9,
+    top: 94,
+    left: 715,
+  },
+  {
+    id: BATTLE_TRACK_ATTACKER_PLUS_10,
+    top: 94,
+    left: 759,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_MINUS_5,
+    top: 138,
+    left: 111,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_MINUS_4,
+    top: 138,
+    left: 153,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_MINUS_3,
+    top: 138,
+    left: 196,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_MINUS_2,
+    top: 138,
+    left: 240,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_MINUS_1,
+    top: 138,
+    left: 282,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_PLUS_0,
+    top: 138,
+    left: 325,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_PLUS_1,
+    top: 138,
+    left: 372,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_PLUS_2,
+    top: 138,
+    left: 415,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_PLUS_3,
+    top: 138,
+    left: 458,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_PLUS_4,
+    top: 138,
+    left: 501,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_PLUS_5,
+    top: 138,
+    left: 544,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_PLUS_6,
+    top: 138,
+    left: 587,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_PLUS_7,
+    top: 138,
+    left: 630,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_PLUS_8,
+    top: 138,
+    left: 673,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_PLUS_9,
+    top: 138,
+    left: 715,
+  },
+  {
+    id: BATTLE_TRACK_DEFENDER_PLUS_10,
+    top: 138,
+    left: 759,
+  },
+];
+
+const COMMANDER_REROLLS_TRACK_CONFIG: TrackConfig[] = [
+  {
+    id: COMMANDER_REROLLS_TRACK_ATTACKER_0,
+    top: 94,
+    left: 816,
+  },
+  {
+    id: COMMANDER_REROLLS_TRACK_ATTACKER_1,
+    top: 94,
+    left: 859,
+  },
+  {
+    id: COMMANDER_REROLLS_TRACK_ATTACKER_2,
+    top: 94,
+    left: 902,
+  },
+  {
+    id: COMMANDER_REROLLS_TRACK_ATTACKER_3,
+    top: 94,
+    left: 945,
+  },
+  {
+    id: COMMANDER_REROLLS_TRACK_DEFENDER_0,
+    top: 138,
+    left: 816,
+  },
+  {
+    id: COMMANDER_REROLLS_TRACK_DEFENDER_1,
+    top: 138,
+    left: 859,
+  },
+  {
+    id: COMMANDER_REROLLS_TRACK_DEFENDER_2,
+    top: 138,
+    left: 902,
+  },
+  {
+    id: COMMANDER_REROLLS_TRACK_DEFENDER_3,
+    top: 138,
+    left: 945,
+  },
+];

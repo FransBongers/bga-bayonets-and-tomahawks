@@ -35,6 +35,17 @@ const INDIAN = "indian";
 const NEUTRAL = "neutral";
 const FACTIONS: Faction[] = [BRITISH, FRENCH, INDIAN];
 
+/*
+ * Units types
+ */
+// const ARTILLERY = 'artillery';
+// const BASTION_UNIT_TYPE = 'bastion';
+// const BRIGADE = 'brigade';
+const COMMANDER = 'commander';
+// const FLEET = 'fleet';
+// const FORT = 'fort';
+// const LIGHT = 'light';
+
 /**
  * Pools
  */
@@ -79,6 +90,8 @@ const VICTORY_MARKER = "victory_marker";
 const OPEN_SEAS_MARKER = "open_seas_marker";
 const FRENCH_RAID_MARKER = "french_raid_marker";
 const BRITISH_RAID_MARKER = "british_raid_marker";
+const FRENCH_BATTLE_MARKER = 'french_battle_marker';
+const BRITISH_BATTLE_MARKER = 'british_battle_marker';
 
 // Raid track
 const RAID_TRACK_0 = 'raid_track_0';
@@ -114,10 +127,59 @@ const VICTORY_POINTS_BRITISH_8 = 'victory_points_british_8';
 const VICTORY_POINTS_BRITISH_9 = 'victory_points_british_9';
 const VICTORY_POINTS_BRITISH_10 = 'victory_points_british_10';
 
+// Battle track
+const BATTLE_TRACK_ATTACKER_MINUS_5 = 'battle_track_attacker_minus_5';
+const BATTLE_TRACK_ATTACKER_MINUS_4 = 'battle_track_attacker_minus_4';
+const BATTLE_TRACK_ATTACKER_MINUS_3 = 'battle_track_attacker_minus_3';
+const BATTLE_TRACK_ATTACKER_MINUS_2 = 'battle_track_attacker_minus_2';
+const BATTLE_TRACK_ATTACKER_MINUS_1 = 'battle_track_attacker_minus_1';
+const BATTLE_TRACK_ATTACKER_PLUS_0 = 'battle_track_attacker_plus_0';
+const BATTLE_TRACK_ATTACKER_PLUS_1 = 'battle_track_attacker_plus_1';
+const BATTLE_TRACK_ATTACKER_PLUS_2 = 'battle_track_attacker_plus_2';
+const BATTLE_TRACK_ATTACKER_PLUS_3 = 'battle_track_attacker_plus_3';
+const BATTLE_TRACK_ATTACKER_PLUS_4 = 'battle_track_attacker_plus_4';
+const BATTLE_TRACK_ATTACKER_PLUS_5 = 'battle_track_attacker_plus_5';
+const BATTLE_TRACK_ATTACKER_PLUS_6 = 'battle_track_attacker_plus_6';
+const BATTLE_TRACK_ATTACKER_PLUS_7 = 'battle_track_attacker_plus_7';
+const BATTLE_TRACK_ATTACKER_PLUS_8 = 'battle_track_attacker_plus_8';
+const BATTLE_TRACK_ATTACKER_PLUS_9 = 'battle_track_attacker_plus_9';
+const BATTLE_TRACK_ATTACKER_PLUS_10 = 'battle_track_attacker_plus_10';
+
+const BATTLE_TRACK_DEFENDER_MINUS_5 = 'battle_track_defender_minus_5';
+const BATTLE_TRACK_DEFENDER_MINUS_4 = 'battle_track_defender_minus_4';
+const BATTLE_TRACK_DEFENDER_MINUS_3 = 'battle_track_defender_minus_3';
+const BATTLE_TRACK_DEFENDER_MINUS_2 = 'battle_track_defender_minus_2';
+const BATTLE_TRACK_DEFENDER_MINUS_1 = 'battle_track_defender_minus_1';
+const BATTLE_TRACK_DEFENDER_PLUS_0 = 'battle_track_defender_plus_0';
+const BATTLE_TRACK_DEFENDER_PLUS_1 = 'battle_track_defender_plus_1';
+const BATTLE_TRACK_DEFENDER_PLUS_2 = 'battle_track_defender_plus_2';
+const BATTLE_TRACK_DEFENDER_PLUS_3 = 'battle_track_defender_plus_3';
+const BATTLE_TRACK_DEFENDER_PLUS_4 = 'battle_track_defender_plus_4';
+const BATTLE_TRACK_DEFENDER_PLUS_5 = 'battle_track_defender_plus_5';
+const BATTLE_TRACK_DEFENDER_PLUS_6 = 'battle_track_defender_plus_6';
+const BATTLE_TRACK_DEFENDER_PLUS_7 = 'battle_track_defender_plus_7';
+const BATTLE_TRACK_DEFENDER_PLUS_8 = 'battle_track_defender_plus_8';
+const BATTLE_TRACK_DEFENDER_PLUS_9 = 'battle_track_defender_plus_9';
+const BATTLE_TRACK_DEFENDER_PLUS_10 = 'battle_track_defender_plus_10';
+
+const BATTLE_MARKERS_POOL = 'battle_markers_pool';
+
+const COMMANDER_REROLLS_TRACK_ATTACKER_0 = 'commander_rerolls_track_attacker_0';
+const COMMANDER_REROLLS_TRACK_ATTACKER_1 = 'commander_rerolls_track_attacker_1';
+const COMMANDER_REROLLS_TRACK_ATTACKER_2 = 'commander_rerolls_track_attacker_2';
+const COMMANDER_REROLLS_TRACK_ATTACKER_3 = 'commander_rerolls_track_attacker_3';
+
+const COMMANDER_REROLLS_TRACK_DEFENDER_0 = 'commander_rerolls_track_defender_0';
+const COMMANDER_REROLLS_TRACK_DEFENDER_1 = 'commander_rerolls_track_defender_1';
+const COMMANDER_REROLLS_TRACK_DEFENDER_2 = 'commander_rerolls_track_defender_2';
+const COMMANDER_REROLLS_TRACK_DEFENDER_3 = 'commander_rerolls_track_defender_3';
 
 // Losses Boxes
 const LOSSES_BOX_BRITISH = 'lossesBox_british';
 const LOSSES_BOX_FRENCH = 'lossesBox_french';
+
+const MARKERS = 'markers';
+const UNITS = 'units';
 
 /**
  * Actions

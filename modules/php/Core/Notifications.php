@@ -181,6 +181,37 @@ class Notifications
     ]);
   }
 
+  public static function battleStart($space, $attackerMarker, $defenderMarker)
+  {
+    self::notifyAll('battleStart', clienttranslate('Battle in ${tkn_boldText_space}'), [
+      'tkn_boldText_space' => $space->getName(),
+      // 'space' => $space,
+      'attackerMarker' => $attackerMarker->jsonSerialize(),
+      'defenderMarker' => $defenderMarker->jsonSerialize(),
+      'i18n' => ['tkn_boldText_space']
+    ]);
+  }
+
+  public static function battleCleanup($space, $attackerMarker, $defenderMarker)
+  {
+    self::notifyAll('battleCleanup', '', [
+      'space' => $space,
+      'attackerMarker' => $attackerMarker->jsonSerialize(),
+      'defenderMarker' => $defenderMarker->jsonSerialize(),
+    ]);
+  }
+
+  public static function battleSelectCommander($player, $commander)
+  {
+    self::notifyAll('battleSelectCommander', clienttranslate('${player_name} selects ${tkn_boldText_commanderName} to use in the Battle'), [
+      'player' => $player,
+      'tkn_boldText_commanderName' => $commander->getCounterText(),
+      'commander' => $commander->jsonSerialize(),
+      'i18n' => ['tkn_boldText_commanderName']
+    ]);
+  }
+  
+
   public static function drawCard($player, $card)
   {
     self::notify($player, 'drawCardPrivate', clienttranslate('Private: ${player_name} draws  ${cardId}'), [

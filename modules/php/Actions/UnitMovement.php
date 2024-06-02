@@ -169,6 +169,7 @@ class UnitMovement extends \BayonetsAndTomahawks\Actions\StackAction
     // Battle notif
     if ($battleOccurs && $space->getBattle() === 0) {
       $space->setBattle(1);
+      $space->setDefender(Players::otherFaction($playerFaction));
       Notifications::battle($player, $space);
     }
     

@@ -3,6 +3,9 @@ namespace BayonetsAndTomahawks\Models;
 
 class Commander extends AbstractUnit
 {
+  protected $rating = 0;
+  protected $rerollShapes = [];
+
   public function __construct($row)
   {
     $this->type = COMMANDER;
@@ -11,4 +14,8 @@ class Commander extends AbstractUnit
     $this->connectionTypeAllowed = [ROAD, HIGHWAY];
   }
 
+  public function getRating()
+  {
+    return $this->rating;
+  }
 }
