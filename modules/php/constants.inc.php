@@ -8,7 +8,7 @@ require_once 'gameoptions.inc.php';
 const STAT_TURN = 12;
 
 /**
- * Carc locations
+ * Card locations -
  */
 const DISCARD = 'discard';
 

@@ -4,15 +4,15 @@ class Settings {
   private modal: Modal;
   public settings: Record<string, string | number> = {};
 
-  private selectedTab: SettingsTabId = "layout";
+  private selectedTab: SettingsTabId = 'layout';
   private tabs: { id: SettingsTabId; name: string }[] = [
     {
-      id: "layout",
-      name: _("Layout"),
+      id: 'layout',
+      name: _('Layout'),
     },
     {
-      id: "gameplay",
-      name: _("Gameplay"),
+      id: 'gameplay',
+      name: _('Gameplay'),
     },
   ];
 
@@ -52,9 +52,9 @@ class Settings {
   }: {
     gamedatas: BayonetsAndTomahawksGamedatas;
   }) {
-    const configPanel = document.getElementById("info_panel");
+    const configPanel = document.getElementById('info_panel');
     if (configPanel) {
-      configPanel.insertAdjacentHTML("beforeend", tplSettingsButton());
+      configPanel.insertAdjacentHTML('beforeend', tplSettingsButton());
     }
   }
 
@@ -64,16 +64,16 @@ class Settings {
     gamedatas: BayonetsAndTomahawksGamedatas;
   }) {
     this.modal = new Modal(`settings_modal`, {
-      class: "settings_modal",
-      closeIcon: "fa-times",
+      class: 'settings_modal',
+      closeIcon: 'fa-times',
       titleTpl:
         '<h2 id="popin_${id}_title" class="${class}_title">${title}</h2>',
-      title: _("Settings"),
+      title: _('Settings'),
       contents: tplSettingsModalContent({
         tabs: this.tabs,
       }),
-      closeAction: "hide",
-      verticalAlign: "flex-start",
+      closeAction: 'hide',
+      verticalAlign: 'flex-start',
       breakpoint: 740,
     });
   }
@@ -85,9 +85,9 @@ class Settings {
     this.setupModalContent();
     this.changeTab({ id: this.selectedTab });
 
-    dojo.connect($(`show_settings`), "onclick", () => this.open());
+    dojo.connect($(`show_settings`), 'onclick', () => this.open());
     this.tabs.forEach(({ id }) => {
-      dojo.connect($(`settings_modal_tab_${id}`), "onclick", () =>
+      dojo.connect($(`settings_modal_tab_${id}`), 'onclick', () =>
         this.changeTab({ id })
       );
     });
@@ -111,14 +111,14 @@ class Settings {
 
   private setupModalContent() {
     const config = getSettingsConfig();
-    const node = document.getElementById("setting_modal_content");
+    const node = document.getElementById('setting_modal_content');
     if (!node) {
       return;
     }
 
     Object.entries(config).forEach(([tabId, tabConfig]) => {
       node.insertAdjacentHTML(
-        "beforeend",
+        'beforeend',
         tplSettingsModalTabContent({ id: tabId })
       );
 
@@ -145,7 +145,7 @@ class Settings {
         }
 
         // Add content to modal
-        if (setting.type === "select") {
+        if (setting.type === 'select') {
           const visible =
             !visibleCondition ||
             (visibleCondition &&
@@ -154,7 +154,7 @@ class Settings {
               ));
 
           tabContentNode.insertAdjacentHTML(
-            "beforeend",
+            'beforeend',
             tplPlayerPrefenceSelectRow({
               setting,
               currentValue: this.settings[setting.id] as string,
@@ -162,11 +162,11 @@ class Settings {
             })
           );
           const controlId = `setting_${setting.id}`;
-          $(controlId).addEventListener("change", () => {
+          $(controlId).addEventListener('change', () => {
             const value = $(controlId).value;
             this.changeSetting({ id: setting.id, value });
           });
-        } else if (setting.type === "slider") {
+        } else if (setting.type === 'slider') {
           const visible =
             !visibleCondition ||
             (visibleCondition &&
@@ -175,7 +175,7 @@ class Settings {
               ));
 
           tabContentNode.insertAdjacentHTML(
-            "beforeend",
+            'beforeend',
             tplPlayerPrefenceSliderRow({
               id: setting.id,
               label: setting.label,
@@ -187,8 +187,8 @@ class Settings {
             start: this.settings[setting.id],
           };
 
-          noUiSlider.create($("setting_" + setting.id), sliderConfig);
-          $("setting_" + setting.id).noUiSlider.on("slide", (arg) =>
+          noUiSlider.create($('setting_' + setting.id), sliderConfig);
+          $('setting_' + setting.id).noUiSlider.on('slide', (arg) =>
             this.changeSetting({ id: setting.id, value: arg[0] as string })
           );
         }
@@ -217,9 +217,9 @@ class Settings {
 
   public onChangeTwoColumnsLayoutSetting(value: string) {
     this.checkColumnSizesVisisble();
-    const node = document.getElementById("play_area_container");
+    const node = document.getElementById('play_area_container');
     if (node) {
-      node.setAttribute("data-two-columns", value);
+      node.setAttribute('data-two-columns', value);
     }
     this.game.updateLayout();
     // document.documentElement.setAttribute("data-background-pref", value);
@@ -229,15 +229,19 @@ class Settings {
     this.game.updateLayout();
   }
 
+  public onChangeSingleColumnMapSizeSetting(value: string) {
+    this.game.updateLayout();
+  }
+
   public onChangeCardSizeInLogSetting(value: number) {
     // console.log("onChangeCardSizeInLogSetting", value);
     const ROOT = document.documentElement;
-    ROOT.style.setProperty("--logCardScale", `${Number(value) / 100}`);
+    ROOT.style.setProperty('--logCardScale', `${Number(value) / 100}`);
   }
 
   public onChangeAnimationSpeedSetting(value: number) {
     const duration = 2100 - value;
-    debug("onChangeAnimationSpeedSetting", duration);
+    debug('onChangeAnimationSpeedSetting', duration);
     this.game.animationManager.getSettings().duration = duration;
   }
 
@@ -275,9 +279,9 @@ class Settings {
     const currentTabContent = document.getElementById(
       `settings_modal_tab_content_${this.selectedTab}`
     );
-    currentTab.removeAttribute("data-state");
+    currentTab.removeAttribute('data-state');
     if (currentTabContent) {
-      currentTabContent.style.display = "none";
+      currentTabContent.style.display = 'none';
     }
 
     this.selectedTab = id;
@@ -285,33 +289,39 @@ class Settings {
     const tabContent = document.getElementById(
       `settings_modal_tab_content_${this.selectedTab}`
     );
-    tab.setAttribute("data-state", "selected");
+    tab.setAttribute('data-state', 'selected');
     if (tabContent) {
-      tabContent.style.display = "";
+      tabContent.style.display = '';
     }
   }
 
   private checkAnmimationSpeedVisisble() {
-    const sliderNode = document.getElementById("setting_row_animationSpeed");
+    const sliderNode = document.getElementById('setting_row_animationSpeed');
     if (!sliderNode) {
       return;
     }
     if (this.settings[PREF_SHOW_ANIMATIONS] === PREF_ENABLED) {
-      sliderNode.style.display = "";
+      sliderNode.style.display = '';
     } else {
-      sliderNode.style.display = "none";
+      sliderNode.style.display = 'none';
     }
   }
 
   private checkColumnSizesVisisble() {
-    const sliderNode = document.getElementById("setting_row_columnSizes");
-    if (!sliderNode) {
+    const sliderNode = document.getElementById('setting_row_columnSizes');
+    const mapSizeSliderNode = document.getElementById(
+      'setting_row_singleColumnMapSize'
+    );
+
+    if (!(sliderNode && mapSizeSliderNode)) {
       return;
     }
-    if (this.settings["twoColumnsLayout"] === PREF_ENABLED) {
-      sliderNode.style.display = "";
+    if (this.settings['twoColumnsLayout'] === PREF_ENABLED) {
+      sliderNode.style.display = '';
+      mapSizeSliderNode.style.display = 'none';
     } else {
-      sliderNode.style.display = "none";
+      sliderNode.style.display = 'none';
+      mapSizeSliderNode.style.display = '';
     }
   }
 

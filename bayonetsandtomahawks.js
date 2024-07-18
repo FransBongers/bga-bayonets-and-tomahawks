@@ -2072,6 +2072,7 @@ var PREF_ANIMATION_SPEED = "animationSpeed";
 var PREF_CARD_SIZE_IN_LOG = "cardSizeInLog";
 var PREF_DISABLED = "disabled";
 var PREF_ENABLED = "enabled";
+var PREF_SINGLE_COLUMN_MAP_SIZE = 'singleColumnMapSize';
 var BRITISH = "british";
 var FRENCH = "french";
 var INDIAN = "indian";
@@ -2598,6 +2599,7 @@ var BayonetsAndTomahawks = (function () {
             var LEFT_SIZE = (proportions[0] * WIDTH) / 100;
             var leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
             ROOT.style.setProperty('--leftColumnScale', "".concat(leftColumnScale));
+            ROOT.style.setProperty("--mapSizeMultiplier", '1');
             var RIGHT_SIZE = (proportions[1] * WIDTH) / 100;
             var rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
             ROOT.style.setProperty('--rightColumnScale', "".concat(rightColumnScale));
@@ -2607,9 +2609,10 @@ var BayonetsAndTomahawks = (function () {
             var LEFT_SIZE = WIDTH;
             var leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
             ROOT.style.setProperty('--leftColumnScale', "".concat(leftColumnScale));
+            ROOT.style.setProperty("--mapSizeMultiplier", "".concat(Number(this.settings.get({ id: PREF_SINGLE_COLUMN_MAP_SIZE })) / 100));
             var RIGHT_SIZE = WIDTH;
             var rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
-            ROOT.style.setProperty('--leftColumnScale', "".concat(rightColumnScale));
+            ROOT.style.setProperty('--rightColumnScale', "".concat(rightColumnScale));
         }
     };
     BayonetsAndTomahawks.prototype.onAddingNewUndoableStepToLog = function (notif) {
@@ -4474,6 +4477,25 @@ var getSettingsConfig = function () {
                         type: "slider",
                     }
                 },
+                _a[PREF_SINGLE_COLUMN_MAP_SIZE] = {
+                    id: PREF_SINGLE_COLUMN_MAP_SIZE,
+                    onChangeInSetup: true,
+                    label: _("Map size"),
+                    defaultValue: 100,
+                    visibleCondition: {
+                        id: "twoColumnsLayout",
+                        values: [DISABLED],
+                    },
+                    sliderConfig: {
+                        step: 5,
+                        padding: 0,
+                        range: {
+                            min: 30,
+                            max: 100,
+                        },
+                    },
+                    type: "slider",
+                },
                 _a[PREF_CARD_SIZE_IN_LOG] = {
                     id: PREF_CARD_SIZE_IN_LOG,
                     onChangeInSetup: true,
@@ -4554,15 +4576,15 @@ var getSettingsConfig = function () {
 var Settings = (function () {
     function Settings(game) {
         this.settings = {};
-        this.selectedTab = "layout";
+        this.selectedTab = 'layout';
         this.tabs = [
             {
-                id: "layout",
-                name: _("Layout"),
+                id: 'layout',
+                name: _('Layout'),
             },
             {
-                id: "gameplay",
-                name: _("Gameplay"),
+                id: 'gameplay',
+                name: _('Gameplay'),
             },
         ];
         this.game = game;
@@ -4575,23 +4597,23 @@ var Settings = (function () {
     };
     Settings.prototype.addButton = function (_a) {
         var gamedatas = _a.gamedatas;
-        var configPanel = document.getElementById("info_panel");
+        var configPanel = document.getElementById('info_panel');
         if (configPanel) {
-            configPanel.insertAdjacentHTML("beforeend", tplSettingsButton());
+            configPanel.insertAdjacentHTML('beforeend', tplSettingsButton());
         }
     };
     Settings.prototype.setupModal = function (_a) {
         var gamedatas = _a.gamedatas;
         this.modal = new Modal("settings_modal", {
-            class: "settings_modal",
-            closeIcon: "fa-times",
+            class: 'settings_modal',
+            closeIcon: 'fa-times',
             titleTpl: '<h2 id="popin_${id}_title" class="${class}_title">${title}</h2>',
-            title: _("Settings"),
+            title: _('Settings'),
             contents: tplSettingsModalContent({
                 tabs: this.tabs,
             }),
-            closeAction: "hide",
-            verticalAlign: "flex-start",
+            closeAction: 'hide',
+            verticalAlign: 'flex-start',
             breakpoint: 740,
         });
     };
@@ -4602,10 +4624,10 @@ var Settings = (function () {
         this.setupModal({ gamedatas: gamedatas });
         this.setupModalContent();
         this.changeTab({ id: this.selectedTab });
-        dojo.connect($("show_settings"), "onclick", function () { return _this.open(); });
+        dojo.connect($("show_settings"), 'onclick', function () { return _this.open(); });
         this.tabs.forEach(function (_a) {
             var id = _a.id;
-            dojo.connect($("settings_modal_tab_".concat(id)), "onclick", function () {
+            dojo.connect($("settings_modal_tab_".concat(id)), 'onclick', function () {
                 return _this.changeTab({ id: id });
             });
         });
@@ -4613,13 +4635,13 @@ var Settings = (function () {
     Settings.prototype.setupModalContent = function () {
         var _this = this;
         var config = getSettingsConfig();
-        var node = document.getElementById("setting_modal_content");
+        var node = document.getElementById('setting_modal_content');
         if (!node) {
             return;
         }
         Object.entries(config).forEach(function (_a) {
             var tabId = _a[0], tabConfig = _a[1];
-            node.insertAdjacentHTML("beforeend", tplSettingsModalTabContent({ id: tabId }));
+            node.insertAdjacentHTML('beforeend', tplSettingsModalTabContent({ id: tabId }));
             var tabContentNode = document.getElementById("settings_modal_tab_content_".concat(tabId));
             if (!tabContentNode) {
                 return;
@@ -4632,33 +4654,33 @@ var Settings = (function () {
                 if (setting.onChangeInSetup && localValue && _this[methodName]) {
                     _this[methodName](localValue);
                 }
-                if (setting.type === "select") {
+                if (setting.type === 'select') {
                     var visible = !visibleCondition ||
                         (visibleCondition &&
                             visibleCondition.values.includes(_this.settings[visibleCondition.id]));
-                    tabContentNode.insertAdjacentHTML("beforeend", tplPlayerPrefenceSelectRow({
+                    tabContentNode.insertAdjacentHTML('beforeend', tplPlayerPrefenceSelectRow({
                         setting: setting,
                         currentValue: _this.settings[setting.id],
                         visible: visible,
                     }));
                     var controlId_1 = "setting_".concat(setting.id);
-                    $(controlId_1).addEventListener("change", function () {
+                    $(controlId_1).addEventListener('change', function () {
                         var value = $(controlId_1).value;
                         _this.changeSetting({ id: setting.id, value: value });
                     });
                 }
-                else if (setting.type === "slider") {
+                else if (setting.type === 'slider') {
                     var visible = !visibleCondition ||
                         (visibleCondition &&
                             visibleCondition.values.includes(_this.settings[visibleCondition.id]));
-                    tabContentNode.insertAdjacentHTML("beforeend", tplPlayerPrefenceSliderRow({
+                    tabContentNode.insertAdjacentHTML('beforeend', tplPlayerPrefenceSliderRow({
                         id: setting.id,
                         label: setting.label,
                         visible: visible,
                     }));
                     var sliderConfig = __assign(__assign({}, setting.sliderConfig), { start: _this.settings[setting.id] });
-                    noUiSlider.create($("setting_" + setting.id), sliderConfig);
-                    $("setting_" + setting.id).noUiSlider.on("slide", function (arg) {
+                    noUiSlider.create($('setting_' + setting.id), sliderConfig);
+                    $('setting_' + setting.id).noUiSlider.on('slide', function (arg) {
                         return _this.changeSetting({ id: setting.id, value: arg[0] });
                     });
                 }
@@ -4677,22 +4699,25 @@ var Settings = (function () {
     };
     Settings.prototype.onChangeTwoColumnsLayoutSetting = function (value) {
         this.checkColumnSizesVisisble();
-        var node = document.getElementById("play_area_container");
+        var node = document.getElementById('play_area_container');
         if (node) {
-            node.setAttribute("data-two-columns", value);
+            node.setAttribute('data-two-columns', value);
         }
         this.game.updateLayout();
     };
     Settings.prototype.onChangeColumnSizesSetting = function (value) {
         this.game.updateLayout();
     };
+    Settings.prototype.onChangeSingleColumnMapSizeSetting = function (value) {
+        this.game.updateLayout();
+    };
     Settings.prototype.onChangeCardSizeInLogSetting = function (value) {
         var ROOT = document.documentElement;
-        ROOT.style.setProperty("--logCardScale", "".concat(Number(value) / 100));
+        ROOT.style.setProperty('--logCardScale', "".concat(Number(value) / 100));
     };
     Settings.prototype.onChangeAnimationSpeedSetting = function (value) {
         var duration = 2100 - value;
-        debug("onChangeAnimationSpeedSetting", duration);
+        debug('onChangeAnimationSpeedSetting', duration);
         this.game.animationManager.getSettings().duration = duration;
     };
     Settings.prototype.onChangeShowAnimationsSetting = function (value) {
@@ -4708,40 +4733,43 @@ var Settings = (function () {
         var id = _a.id;
         var currentTab = document.getElementById("settings_modal_tab_".concat(this.selectedTab));
         var currentTabContent = document.getElementById("settings_modal_tab_content_".concat(this.selectedTab));
-        currentTab.removeAttribute("data-state");
+        currentTab.removeAttribute('data-state');
         if (currentTabContent) {
-            currentTabContent.style.display = "none";
+            currentTabContent.style.display = 'none';
         }
         this.selectedTab = id;
         var tab = document.getElementById("settings_modal_tab_".concat(id));
         var tabContent = document.getElementById("settings_modal_tab_content_".concat(this.selectedTab));
-        tab.setAttribute("data-state", "selected");
+        tab.setAttribute('data-state', 'selected');
         if (tabContent) {
-            tabContent.style.display = "";
+            tabContent.style.display = '';
         }
     };
     Settings.prototype.checkAnmimationSpeedVisisble = function () {
-        var sliderNode = document.getElementById("setting_row_animationSpeed");
+        var sliderNode = document.getElementById('setting_row_animationSpeed');
         if (!sliderNode) {
             return;
         }
         if (this.settings[PREF_SHOW_ANIMATIONS] === PREF_ENABLED) {
-            sliderNode.style.display = "";
+            sliderNode.style.display = '';
         }
         else {
-            sliderNode.style.display = "none";
+            sliderNode.style.display = 'none';
         }
     };
     Settings.prototype.checkColumnSizesVisisble = function () {
-        var sliderNode = document.getElementById("setting_row_columnSizes");
-        if (!sliderNode) {
+        var sliderNode = document.getElementById('setting_row_columnSizes');
+        var mapSizeSliderNode = document.getElementById('setting_row_singleColumnMapSize');
+        if (!(sliderNode && mapSizeSliderNode)) {
             return;
         }
-        if (this.settings["twoColumnsLayout"] === PREF_ENABLED) {
-            sliderNode.style.display = "";
+        if (this.settings['twoColumnsLayout'] === PREF_ENABLED) {
+            sliderNode.style.display = '';
+            mapSizeSliderNode.style.display = 'none';
         }
         else {
-            sliderNode.style.display = "none";
+            sliderNode.style.display = 'none';
+            mapSizeSliderNode.style.display = '';
         }
     };
     Settings.prototype.getMethodName = function (_a) {
