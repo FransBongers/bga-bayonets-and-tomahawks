@@ -72,6 +72,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     actionRoundSailBoxLanding: ActionRoundSailBoxLandingState;
     armyMovement: ArmyMovementState;
     armyMovementDestination: ArmyMovementDestinationState;
+    battleApplyHits: BattleApplyHitsState;
+    battleRetreat: BattleRetreatState;
     battleSelectCommander: BattleSelectCommanderState;
     confirmPartialTurn: ConfirmPartialTurnState;
     confirmTurn: ConfirmTurnState;
@@ -119,6 +121,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
       armyMovement: new ArmyMovementState(this),
       armyMovementDestination: new ArmyMovementDestinationState(this),
+      battleApplyHits: new BattleApplyHitsState(this);
+      battleRetreat: new BattleRetreatState(this);
       battleSelectCommander: new BattleSelectCommanderState(this),
       confirmPartialTurn: new ConfirmPartialTurnState(this),
       confirmTurn: new ConfirmTurnState(this),

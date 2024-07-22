@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS `units` (
   `unit_location` varchar(64) NOT NULL,
   `unit_state` int(10) DEFAULT 0,
   `counter_id` VARCHAR(255) NOT NULL,
+  `previous_location` varchar(64) DEFAULT NULL,
   `spent` int(10) DEFAULT 0,
   `extra_data` JSON NULL,
   PRIMARY KEY (`unit_id`)

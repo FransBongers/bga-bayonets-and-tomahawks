@@ -79,7 +79,7 @@ class ArmyMovement extends \BayonetsAndTomahawks\Actions\UnitMovement
 
     $playerFaction = $player->getFaction();
     // $unitsOnSpace = $space->getUnits($playerFaction);
-    // $adjacentSpaces = $space->getAdjacentSpaces();
+    // $adjacentSpaces = $space->getAdjacentConnections();
 
     $units = $this->getUnitsThatCanMove();
 

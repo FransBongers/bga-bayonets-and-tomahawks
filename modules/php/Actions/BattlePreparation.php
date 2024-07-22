@@ -53,6 +53,9 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     $defendingFaction = $space->getDefender();
     $attackingFaction = Players::otherFaction($defendingFaction);
 
+    $this->ctx->getParent()->updateInfo('attacker', $attackingFaction);
+    $this->ctx->getParent()->updateInfo('defender', $defendingFaction);
+
     $players = Players::getAll()->toArray();
     $attackingPlayer = Utils::array_find($players, function ($player) use ($attackingFaction) {
       return $player->getFaction() === $attackingFaction;
@@ -157,7 +160,7 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
         // Place commander
       } else if ($numberOfCommanders > 1) {
         // Insert state to select commander
-        $this->ctx->getParent()->pushChild(
+        $this->ctx->insertAsBrother(
           Engine::buildTree([
             'playerId' => $player->getId(),
             'action' => BATTLE_SELECT_COMMANDER,

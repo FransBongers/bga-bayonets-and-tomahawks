@@ -2079,6 +2079,7 @@ var INDIAN = "indian";
 var NEUTRAL = "neutral";
 var FACTIONS = [BRITISH, FRENCH, INDIAN];
 var COMMANDER = 'commander';
+var REMOVED_FROM_PLAY = 'removedFromPlay';
 var POOL_FLEETS = "poolFleets";
 var POOL_BRITISH_COMMANDERS = "poolBritishCommanders";
 var POOL_BRITISH_LIGHT = "poolBritishLight";
@@ -2235,6 +2236,8 @@ var BayonetsAndTomahawks = (function () {
             actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
             armyMovement: new ArmyMovementState(this),
             armyMovementDestination: new ArmyMovementDestinationState(this),
+            battleApplyHits: new BattleApplyHitsState(this),
+            battleRetreat: new BattleRetreatState(this),
             battleSelectCommander: new BattleSelectCommanderState(this),
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
@@ -3542,6 +3545,15 @@ var GameMap = (function () {
         if (victoryMarker && this.victoryPointsTrack[victoryMarker.location]) {
             this.victoryPointsTrack[victoryMarker.location].addCard(victoryMarker);
         }
+        Object.entries(markers)
+            .filter(function (_a) {
+            var id = _a[0], marker = _a[1];
+            return id.startsWith('routeMarker') && !marker.location.startsWith('supply');
+        })
+            .forEach(function (_a) {
+            var id = _a[0], marker = _a[1];
+            _this.addMarkerToStack(marker);
+        });
         gamedatas.units
             .filter(function (unit) {
             return unit.location.startsWith('commander_rerolls_track');
@@ -3600,6 +3612,16 @@ var GameMap = (function () {
                         _b.sent();
                         return [2];
                 }
+            });
+        });
+    };
+    GameMap.prototype.addMarkerToStack = function (marker) {
+        return __awaiter(this, void 0, void 0, function () {
+            var splitLocation;
+            return __generator(this, function (_a) {
+                splitLocation = marker.location.split('_');
+                this.stacks[splitLocation[0]][splitLocation[1]].addCard(marker);
+                return [2];
             });
         });
     };
@@ -3800,23 +3822,26 @@ var InfoPanel = (function () {
     return InfoPanel;
 }());
 var tplInfoPanel = function () { return "<div class='player-board' id=\"info_panel\"></div>"; };
-var LOG_TOKEN_BOLD_TEXT = "boldText";
-var LOG_TOKEN_NEW_LINE = "newLine";
-var LOG_TOKEN_CARD = "card";
-var LOG_TOKEN_UNIT = "unit";
-var LOG_TOKEN_DIE_RESULT = "dieResult";
+var LOG_TOKEN_BOLD_TEXT = 'boldText';
+var LOG_TOKEN_NEW_LINE = 'newLine';
+var LOG_TOKEN_CARD = 'card';
+var LOG_TOKEN_MARKER = 'marker';
+var LOG_TOKEN_UNIT = 'unit';
+var LOG_TOKEN_DIE_RESULT = 'dieResult';
 var tooltipIdCounter = 0;
 var getTokenDiv = function (_a) {
     var key = _a.key, value = _a.value, game = _a.game;
-    var splitKey = key.split("_");
+    var splitKey = key.split('_');
     var type = splitKey[1];
     switch (type) {
         case LOG_TOKEN_BOLD_TEXT:
             return tlpLogTokenBoldText({ text: value });
         case LOG_TOKEN_CARD:
             return tplLogTokenCard(value);
+        case LOG_TOKEN_MARKER:
+            return tplLogTokenMarker(value);
         case LOG_TOKEN_NEW_LINE:
-            return "<br>";
+            return '<br>';
         case LOG_TOKEN_DIE_RESULT:
             return tplLogDieResult(value);
         case LOG_TOKEN_UNIT:
@@ -3836,6 +3861,9 @@ var tplLogTokenPlayerName = function (_a) {
 var tplLogTokenCard = function (id) {
     return "<div class=\"bt_log_card bt_card\" data-card-id=\"".concat(id, "\"></div>");
 };
+var tplLogTokenMarker = function (type) {
+    return "<div class=\"bt_marker_side\" data-type=\"".concat(type, "\"></div>");
+};
 var tplLogTokenUnit = function (counterId) {
     return "<div class=\"bt_token_side\" data-counter-id=\"".concat(counterId, "\"></div>");
 };
@@ -3852,6 +3880,7 @@ var NotificationManager = (function () {
         console.log('notifications subscriptions setup');
         var notifs = [
             'log',
+            'advanceBattleVictoryMarker',
             'battle',
             'battleCleanup',
             'battleStart',
@@ -3860,14 +3889,17 @@ var NotificationManager = (function () {
             'discardCardFromHandPrivate',
             'discardCardInPlay',
             'drawCardPrivate',
+            'eliminateUnit',
             'loseControl',
             'moveRaidPointsMarker',
             'moveRoundMarker',
             'moveStack',
             'moveYearMarker',
             'moveUnit',
+            'placeStackMarker',
             'placeUnitInLosses',
             'raidPoints',
+            'reduceUnit',
             'revealCardsInPlay',
             'scoreVictoryPoints',
             'selectReserveCard',
@@ -3929,6 +3961,21 @@ var NotificationManager = (function () {
                 this.game.playerManager.updatePlayers({ gamedatas: updatedGamedatas });
                 this.game.gameMap.updateInterface({ gamedatas: updatedGamedatas });
                 return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_advanceBattleVictoryMarker = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var marker;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        marker = notif.args.marker;
+                        return [4, this.game.gameMap.battleTrack[marker.location].addCard(marker)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
             });
         });
     };
@@ -4070,6 +4117,33 @@ var NotificationManager = (function () {
             });
         });
     };
+    NotificationManager.prototype.notif_eliminateUnit = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var unit;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        unit = notif.args.unit;
+                        if (!unit.location.startsWith('lossesBox_')) return [3, 2];
+                        return [4, this.game.gameMap.losses[unit.location].addCard(unit)];
+                    case 1:
+                        _a.sent();
+                        return [3, 5];
+                    case 2:
+                        if (!(unit.location === REMOVED_FROM_PLAY)) return [3, 4];
+                        return [4, this.game.tokenManager.removeCard(unit)];
+                    case 3:
+                        _a.sent();
+                        return [3, 5];
+                    case 4:
+                        if (unit.location === POOL_FLEETS) {
+                        }
+                        _a.label = 5;
+                    case 5: return [2];
+                }
+            });
+        });
+    };
     NotificationManager.prototype.notif_loseControl = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, space, faction;
@@ -4166,6 +4240,21 @@ var NotificationManager = (function () {
             });
         });
     };
+    NotificationManager.prototype.notif_placeStackMarker = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var marker;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        marker = notif.args.marker;
+                        return [4, this.game.gameMap.addMarkerToStack(marker)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
     NotificationManager.prototype.notif_placeUnitInLosses = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var unit;
@@ -4191,6 +4280,16 @@ var NotificationManager = (function () {
                     return [2];
                 }
                 element.insertAdjacentHTML('beforeend', tplMarkerOfType({ type: "".concat(faction, "_raided_marker") }));
+                return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_reduceUnit = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var unit;
+            return __generator(this, function (_a) {
+                unit = notif.args.unit;
+                this.game.tokenManager.updateCardInformations(unit);
                 return [2];
             });
         });
@@ -4934,10 +5033,9 @@ var ActionRoundActionPhaseState = (function () {
     ActionRoundActionPhaseState.prototype.setDescription = function (activePlayerId) { };
     ActionRoundActionPhaseState.prototype.updateInterfaceInitialStep = function () {
         this.game.clearPossible();
-        var indianActions = this.args.action === ACTION_ROUND_INDIAN_ACTIONS;
         this.game.setCardSelected({ id: this.args.card.id });
         this.game.clientUpdatePageTitle({
-            text: indianActions
+            text: this.args.isIndianActions
                 ? _('${you} may use the Indian card for actions')
                 : _('${you} may perform actions'),
             args: {
@@ -4966,7 +5064,7 @@ var ActionRoundActionPhaseState = (function () {
             _this.game.takeAction({
                 action: 'actActionRoundActionPhase',
                 args: {
-                    actionPoint: actionPointId,
+                    actionPointId: actionPointId,
                 },
             });
         };
@@ -5383,6 +5481,149 @@ var ArmyMovementDestinationState = (function () {
         });
     };
     return ArmyMovementDestinationState;
+}());
+var BattleApplyHitsState = (function () {
+    function BattleApplyHitsState(game) {
+        this.game = game;
+    }
+    BattleApplyHitsState.prototype.onEnteringState = function (args) {
+        debug('Entering BattleApplyHitsState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    BattleApplyHitsState.prototype.onLeavingState = function () {
+        debug('Leaving BattleApplyHitsState');
+    };
+    BattleApplyHitsState.prototype.setDescription = function (activePlayerId) { };
+    BattleApplyHitsState.prototype.updateInterfaceInitialStep = function () {
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: this.args.eliminate ? _('${you} must select a unit to eliminate') : _('${you} must select a unit to apply a Hit to'),
+            args: {
+                you: '${you}',
+            },
+        });
+        var stack = this.game.gameMap.stacks[this.args.spaceId][this.args.faction];
+        stack.open();
+        this.setUnitsSelectable();
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    BattleApplyHitsState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var unit = _a.unit;
+        this.game.clearPossible();
+        this.game.setUnitSelected({ id: unit.id });
+        this.game.clientUpdatePageTitle({
+            text: this.args.eliminate ? _('Eliminate ${unitName}?') : _('Apply Hit to ${unitName}?'),
+            args: {
+                unitName: _(this.game.gamedatas.staticData.units[unit.counterId].counterText),
+            },
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actBattleApplyHits',
+                args: {
+                    unitId: unit.id,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    BattleApplyHitsState.prototype.setUnitsSelectable = function () {
+        var _this = this;
+        this.args.units.forEach(function (unit) {
+            _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    _this.updateInterfaceConfirm({ unit: unit });
+                },
+            });
+        });
+    };
+    return BattleApplyHitsState;
+}());
+var BattleRetreatState = (function () {
+    function BattleRetreatState(game) {
+        this.game = game;
+    }
+    BattleRetreatState.prototype.onEnteringState = function (args) {
+        debug('Entering BattleRetreatState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    BattleRetreatState.prototype.onLeavingState = function () {
+        debug('Leaving BattleRetreatState');
+    };
+    BattleRetreatState.prototype.setDescription = function (activePlayerId) { };
+    BattleRetreatState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a Space to retreat to'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.args.retreatOptions.forEach(function (space) {
+            _this.game.setLocationSelectable({
+                id: space.id,
+                callback: function () { return _this.updateInterfaceConfirm({ space: space }); },
+            });
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    BattleRetreatState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var space = _a.space;
+        this.game.clearPossible();
+        this.game.setLocationSelected({ id: space.id });
+        this.game.clientUpdatePageTitle({
+            text: _('Retreat to ${spaceName}?'),
+            args: {
+                spaceName: _(space.name),
+            },
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actBattleRetreat',
+                args: {
+                    spaceId: space.id,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    return BattleRetreatState;
 }());
 var BattleSelectCommanderState = (function () {
     function BattleSelectCommanderState(game) {
@@ -5973,7 +6214,7 @@ var TokenManager = (function (_super) {
     };
     TokenManager.prototype.isCardVisible = function (token) {
         if (token.manager === UNITS) {
-            return true;
+            return !token.reduced;
         }
         else if (token.manager === MARKERS) {
             return token.side === 'front';

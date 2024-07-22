@@ -13,24 +13,24 @@
  *
  */
 
- 
-@use "sass:math";
+@use '../node_modules/bga-cards/bga-cards'; // Does importing this like this first lead to any issues?
+@use 'sass:math';
 @use 'base';
-@use "card-managers/cards";
-@use "cards-in-play/cardsInPlay";
+@use 'card-managers/cards';
+@use 'cards-in-play/cardsInPlay';
 @use 'game-map/gamemap';
-@use "hand/hand";
-@use "info-panel/infoPanel";
-@use "logs/logs";
+@use 'hand/hand';
+@use 'info-panel/infoPanel';
+@use 'logs/logs';
 @use 'pools/pools';
 @use 'counters';
 @use 'markers';
-@use "settings/settingsModal";
-@use "nouislider";
-@import "../node_modules/bga-cards/bga-cards";
+@use 'settings/settingsModal';
+@use 'nouislider';
+// @import "../node_modules/bga-cards/bga-cards";
 
 html {
-  background: url("") rgb(192, 192, 192);
+  background: url('') rgb(192, 192, 192);
 }
 
 :root {
@@ -47,7 +47,7 @@ html {
   display: none !important;
 }
 
-#play_area_container {  
+#play_area_container {
   padding: 4px;
   display: grid;
   grid-template-columns: auto auto;
@@ -74,13 +74,14 @@ html {
 
 /* make space between buttons on touch devices */
 @media (hover: none) {
-  #page-title .action-button.bgabutton, #page-title .bgabutton {
+  #page-title .action-button.bgabutton,
+  #page-title .bgabutton {
     margin-bottom: 8px;
     margin-top: 8px;
   }
 }
 
-#play_area_container[data-two-columns="disabled"] {
+#play_area_container[data-two-columns='disabled'] {
   display: flex;
   flex-flow: column;
   align-items: center;

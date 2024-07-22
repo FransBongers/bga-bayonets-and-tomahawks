@@ -10,17 +10,17 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
-use BayonetsAndTomahawks\Managers\Units;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Models\Player;
 
-// Rename to select unit?
-class BattleApplyHits extends \BayonetsAndTomahawks\Actions\Battle
+class BattleRout extends \BayonetsAndTomahawks\Actions\Battle
 {
+
   public function getState()
   {
-    return ST_BATTLE_APPLY_HITS;
+    return ST_BATTLE_ROUT;
   }
 
   // ..######..########....###....########.########
@@ -39,8 +39,45 @@ class BattleApplyHits extends \BayonetsAndTomahawks\Actions\Battle
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stBattleApplyHits()
+  public function stBattleRout()
   {
+    $info = $this->ctx->getInfo();
+
+    $player = self::getPlayer();
+    $faction = $info['faction'];
+    $spaceId = $info['spaceId'];
+    $space = Spaces::get($spaceId);
+
+    Notifications::battleRout($faction);
+
+    $markerLocation = Locations::stackMarker($space->getId(), $faction);
+    $existingMarker = Markers::getOfTypeInLocation(ROUTE_MARKER, $markerLocation);
+    if (count($existingMarker) === 0) {
+      $marker = Markers::getMarkerFromSupply(ROUTE_MARKER);
+      $marker->setLocation($markerLocation);
+  
+      Notifications::placeStackMarker($player, $marker, $space);
+    }
+
+    $unitsToEliminate = $this->getUnitsToEliminate($space, $faction);
+
+    if (count($unitsToEliminate) === 1) {
+      $unitsToEliminate[0]->eliminate($player);
+    } else if (count($unitsToEliminate) > 1) {
+      $this->ctx->insertAsBrother(new LeafNode([
+        'action' => BATTLE_APPLY_HITS,
+        'playerId' => $player->getId(),
+        'unitIds' => array_map(function ($unit) {
+          return $unit->getId();
+        }, $unitsToEliminate),
+        'spaceId' => $spaceId,
+        'faction' => $faction,
+        'eliminate' => true,
+      ]));
+    }
+    // REPLACE frienly fort
+
+    $this->resolveAction(['automatic' => true]);
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##
@@ -51,7 +88,7 @@ class BattleApplyHits extends \BayonetsAndTomahawks\Actions\Battle
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreBattleApplyHits()
+  public function stPreBattleRout()
   {
   }
 
@@ -64,20 +101,11 @@ class BattleApplyHits extends \BayonetsAndTomahawks\Actions\Battle
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsBattleApplyHits()
+  public function argsBattleRout()
   {
-    $info = $this->ctx->getInfo();
-    $unitIds = $info['unitIds'];
-    $spaceId = $info['spaceId'];
-    $faction = $info['faction'];
-    $eliminate = isset($info['eliminate']) && $info['eliminate'];
 
-    return [
-      'units' => Units::getMany($unitIds)->toArray(),
-      'spaceId' => $spaceId,
-      'faction' => $faction,
-      'eliminate' => $eliminate,
-    ];
+
+    return [];
   }
 
   //  .########..##..........###....##....##.########.########.
@@ -96,36 +124,20 @@ class BattleApplyHits extends \BayonetsAndTomahawks\Actions\Battle
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassBattleApplyHits()
+  public function actPassBattleRout()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actBattleApplyHits($args)
+  public function actBattleRout($args)
   {
-    self::checkAction('actBattleApplyHits');
+    self::checkAction('actBattleRout');
 
-    $unitId = $args['unitId'];
-    $stateArgs = $this->argsBattleApplyHits();
 
-    $unit = Utils::array_find($stateArgs['units'], function ($possibleUnit) use ($unitId) {
-      return $possibleUnit->getId() === $unitId;
-    });
 
-    if ($unit === null) {
-      throw new \feException("ERROR 012");
-    }
-
-    if ($stateArgs['eliminate']) {
-      $unit->eliminate(self::getPlayer());
-    } else {
-      $unit->applyHit();
-    }
-    
-
-    $this->resolveAction($args);
+    $this->resolveAction($args, true);
   }
 
   //  .##.....##.########.####.##.......####.########.##....##
@@ -136,5 +148,31 @@ class BattleApplyHits extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  private function getUnitsToEliminate($space, $faction)
+  {
+    $units = $space->getUnits();
+    /**
+     * Priority:
+     * 1. Artillery
+     * 2. Non indian units
+     * 4. Indian units
+     * // Not fort
+     */
 
+    $artillery = Utils::filter($units, function ($unit) use ($faction) {
+      return $unit->getFaction() === $faction && $unit->isArtillery();
+    });
+    if (count($artillery) > 0) {
+      return $artillery;
+    }
+    $nonIndian = Utils::filter($units, function ($unit) use ($faction) {
+      return $unit->getFaction() === $faction && !$unit->isIndian() && !$unit->isFort();
+    });
+    if (count($nonIndian) > 0) {
+      return $nonIndian;
+    }
+    return Utils::filter($units, function ($unit) use ($faction) {
+      return $unit->getFaction() === $faction && $unit->isIndian();
+    });
+  }
 }

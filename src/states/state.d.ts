@@ -31,6 +31,18 @@ interface OnEnteringArmyMovementDestinationStateArgs extends CommonArgs {
   units: BTUnit[];
 }
 
+interface OnEnteringBattleApplyHitsStateArgs extends CommonArgs {
+  units: BTUnit[];
+  // space: BTSpace;
+  spaceId: string;
+  faction: string;
+  eliminate: boolean;
+}
+
+interface OnEnteringBattleRetreatStateArgs extends CommonArgs {
+  retreatOptions: BTSpace[];
+}
+
 interface OnEnteringBattleSelectCommanderStateArgs extends CommonArgs {
   space: BTSpace;
   commanders: BTUnit[];
@@ -46,9 +58,10 @@ interface OnEnteringActionActivateStackStateArgs extends CommonArgs {
 }
 
 interface OnEnteringActionRoundActionPhaseStateArgs extends CommonArgs {
-  action: string;
+  // action: string;
   card: BTCard;
   availableActionPoints: string[];
+  isIndianActions: boolean;
 }
 
 interface OnEnteringActionRoundChooseCardStateArgs {

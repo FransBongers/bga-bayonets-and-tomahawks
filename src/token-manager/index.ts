@@ -22,6 +22,9 @@ class TokenManager extends CardManager<BTToken> {
           token.spent === 1 ? 'true' : 'false'
         }" class="bt_spent_marker"></div>`
       );
+      // if (token.reduced) {
+      //   div.setAttribute('data-reduced','true');
+      // }
     } else if (token.manager === MARKERS) {
       div.classList.add('bt_marker');
     }
@@ -65,7 +68,7 @@ class TokenManager extends CardManager<BTToken> {
 
   isCardVisible(token: BTToken) {
     if (token.manager === UNITS) {
-      return true;
+      return !token.reduced;
     } else if (token.manager === MARKERS) {
       return token.side === 'front';
     }

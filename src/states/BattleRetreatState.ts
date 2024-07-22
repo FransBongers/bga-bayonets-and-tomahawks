@@ -1,19 +1,19 @@
-class ActionRoundActionPhaseState implements State {
+class BattleRetreatState implements State {
   private game: BayonetsAndTomahawksGame;
-  private args: OnEnteringActionRoundActionPhaseStateArgs;
+  private args: OnEnteringBattleRetreatStateArgs;
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
   }
 
-  onEnteringState(args: OnEnteringActionRoundActionPhaseStateArgs) {
-    debug('Entering ActionRoundActionPhaseState');
+  onEnteringState(args: OnEnteringBattleRetreatStateArgs) {
+    debug('Entering BattleRetreatState');
     this.args = args;
     this.updateInterfaceInitialStep();
   }
 
   onLeavingState() {
-    debug('Leaving ActionRoundActionPhaseState');
+    debug('Leaving BattleRetreatState');
   }
 
   setDescription(activePlayerId: number) {}
@@ -37,18 +37,19 @@ class ActionRoundActionPhaseState implements State {
   private updateInterfaceInitialStep() {
     this.game.clearPossible();
 
-    this.game.setCardSelected({ id: this.args.card.id });
-
     this.game.clientUpdatePageTitle({
-      text: this.args.isIndianActions
-        ? _('${you} may use the Indian card for actions')
-        : _('${you} may perform actions'),
+      text: _('${you} must select a Space to retreat to'),
       args: {
         you: '${you}',
       },
     });
 
-    this.addActionButtons();
+    this.args.retreatOptions.forEach((space) => {
+      this.game.setLocationSelectable({
+        id: space.id,
+        callback: () => this.updateInterfaceConfirm({ space }),
+      });
+    });
 
     this.game.addPassButton({
       optionalAction: this.args.optionalAction,
@@ -56,27 +57,24 @@ class ActionRoundActionPhaseState implements State {
     this.game.addUndoButtons(this.args);
   }
 
-  private updateInterfaceConfirm({
-    actionPointId,
-  }: {
-    actionPointId: string;
-  }) {
+  private updateInterfaceConfirm({ space }: { space: BTSpace }) {
     this.game.clearPossible();
-    this.game.setCardSelected({ id: this.args.card.id });
+
+    this.game.setLocationSelected({ id: space.id });
 
     this.game.clientUpdatePageTitle({
-      text: _('Use ${tkn_actionPoint} to perform an Action?'),
+      text: _('Retreat to ${spaceName}?'),
       args: {
-        tkn_actionPoint: actionPointId,
+        spaceName: _(space.name),
       },
     });
 
     const callback = () => {
       this.game.clearPossible();
       this.game.takeAction({
-        action: 'actActionRoundActionPhase',
+        action: 'actBattleRetreat',
         args: {
-          actionPointId: actionPointId,
+          spaceId: space.id,
         },
       });
     };
@@ -103,16 +101,6 @@ class ActionRoundActionPhaseState implements State {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
-
-  private addActionButtons() {
-    this.args.availableActionPoints.forEach((actionPointId, index) => {
-      this.game.addPrimaryActionButton({
-        id: `ap_${actionPointId}_${index}`,
-        text: actionPointId,
-        callback: () => this.updateInterfaceConfirm({ actionPointId }),
-      });
-    });
-  }
 
   //  ..######..##.......####..######..##....##
   //  .##....##.##........##..##....##.##...##.

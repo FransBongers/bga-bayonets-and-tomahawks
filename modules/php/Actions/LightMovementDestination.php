@@ -77,7 +77,7 @@ class LightMovementDestination extends \BayonetsAndTomahawks\Actions\UnitMovemen
 
     $playerFaction = $player->getFaction();
     // $units = $space->getUnits($playerFaction);
-    $adjacentSpaces = $space->getAdjacentSpaces();
+    $adjacentSpaces = $space->getAdjacentConnections();
     $unitIds = $info['unitIds'];
 
     $units = Units::getMany($unitIds)->toArray();

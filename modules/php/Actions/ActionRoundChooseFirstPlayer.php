@@ -80,33 +80,42 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
 
     $players = Players::getAll()->toArray();
 
-    $firstPlayer = Players::get($firstPlayerId);
+    // $firstPlayer = Players::get($firstPlayerId);
+    $firstPlayer = Utils::array_find($players, function ($player) use ($firstPlayerId) {
+      return $player->getId() === $firstPlayerId;
+    });
     $secondPlayer = Utils::array_find($players, function ($player) use ($firstPlayerId) {
       return $player->getId() !== $firstPlayerId;
     });
+
+    Globals::setFirstPlayerId($firstPlayer->getId());
+    Globals::setSecondPlayerId($secondPlayer->getId());
+    // TODO: AR Start events?
+
+    //
     // Notifications::log('firstPlayer', $firstPlayer);
     // Notifications::log('secondPlayer', $secondPlayer);
     // TODO: AR start events
-    $actionRoundFlow = [
-      'children' => [
-        $this->getPlayerActionsFlow($firstPlayer, true),
-        $this->getPlayerActionsFlow($secondPlayer, false),
-        // [
-        //   'action' => ACTION_ROUND_REACTION,
-        //   'playerId' => $firstPlayerId,
-        // ],
-        [
-          'action' => ACTION_ROUND_RESOLVE_BATTLES,
-          'playerId' => $firstPlayerId,
-        ],
-        [
-          'action' => ACTION_ROUND_END,
-          'playerId' => $firstPlayerId,
-        ]
-      ]
-    ];
+    // $actionRoundFlow = [
+    //   'children' => [
+    //     $this->getPlayerActionsFlow($firstPlayer, true),
+    //     $this->getPlayerActionsFlow($secondPlayer, false),
+    //     // [
+    //     //   'action' => ACTION_ROUND_REACTION,
+    //     //   'playerId' => $firstPlayerId,
+    //     // ],
+    //     [
+    //       'action' => ACTION_ROUND_RESOLVE_BATTLES,
+    //       'playerId' => $firstPlayerId,
+    //     ],
+    //     [
+    //       'action' => ACTION_ROUND_END,
+    //       'playerId' => $firstPlayerId,
+    //     ]
+    //   ]
+    // ];
 
-    $this->ctx->insertAsBrother(Engine::buildTree($actionRoundFlow));
+    // $this->ctx->insertAsBrother(Engine::buildTree($actionRoundFlow));
 
     $this->resolveAction($args);
   }

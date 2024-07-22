@@ -25,6 +25,9 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'test' => 'obj',
     'year' => 'int',
     'actionRound' => 'str',
+    'firstPlayerId' => 'int',
+    'secondPlayerId' => 'int',
+    'reactionActionPointId' => 'str',
   ];
 
   protected static $table = 'global_variables';

@@ -171,6 +171,18 @@ class Notifications
     ]);
   }
 
+  public static function advanceBattleVictoryMarker($player, $marker, $numberOfPositions)
+  {
+    $text = $numberOfPositions === 1 ?
+      clienttranslate('${player_name} advances their Battle Victory Marker 1 position') :
+      clienttranslate('${player_name} advances their Battle Victory Marker ${numberOfPositions} positions');
+    self::notifyAll('advanceBattleVictoryMarker', $text, [
+      'player' => $player,
+      'marker' => $marker->jsonSerialize(),
+      'numberOfPositions' => $numberOfPositions,
+    ]);
+  }
+
   public static function battle($player, $space)
   {
     self::notifyAll('battle', clienttranslate('${player_name} attacks ${tkn_boldText_space}'), [
@@ -178,6 +190,44 @@ class Notifications
       'tkn_boldText_space' => $space->getName(),
       'space' => $space,
       'i18n' => ['tkn_boldText_space']
+    ]);
+  }
+
+  public static function battleNoUnitsLeft($player)
+  {
+    self::message(clienttranslate('${player_name} has no units left'), [
+      'player' => $player
+    ]);
+  }
+
+  public static function battleRolls($player, $battleRollsSequenceStep, $diceResults, $unitIds)
+  {
+    // ${tkn_dieResult}
+    $diceResultsLog = [];
+    $diceResultsArgs = [];
+    foreach ($diceResults as $index => $dieResult) {
+      $key = 'tkn_dieResult_' . $index;
+      $diceResultsLog[] = '${' . $key . '}';
+      $diceResultsArgs[$key] = $dieResult;
+    };
+
+    self::notifyAll('battleRolls', clienttranslate('${player_name} rolls ${diceResultsLog} with ${battleRollsSequenceStep}'), [
+      'player' => $player,
+      // 'tkn_boldText_space' => $space->getName(),
+      // 'space' => $space,
+      'diceResultsLog' => [
+        'log' => implode('', $diceResultsLog),
+        'args' => $diceResultsArgs,
+      ],
+      'battleRollsSequenceStep' => $battleRollsSequenceStep,
+      // 'i18n' => ['tkn_boldText_space']
+    ]);
+  }
+
+  public static function battleRout($faction)
+  {
+    self::message(clienttranslate('${faction_name} stack is routed'), [
+      'faction_name' => self::getFactionName($faction),
     ]);
   }
 
@@ -210,7 +260,15 @@ class Notifications
       'i18n' => ['tkn_boldText_commanderName']
     ]);
   }
-  
+
+  public static function battleWinner($player, $space)
+  {
+    self::message(clienttranslate('${player_name} wins the Battle in ${tkn_boldText_spaceName}'), [
+      'player' => $player,
+      'tkn_boldText_spaceName' => $space->getName(),
+      'i18n' => ['tkn_boldText_spaceName']
+    ]);
+  }
 
   public static function drawCard($player, $card)
   {
@@ -255,6 +313,15 @@ class Notifications
   public static function discardReserveCards()
   {
     self::message(clienttranslate('Both players discard their Reserve card'), []);
+  }
+
+  public static function eliminateUnit($player, $unit)
+  {
+    self::notifyAll("eliminateUnit", clienttranslate('${player_name} eliminates ${tkn_unit}'), [
+      'player' => $player,
+      'unit' => $unit->jsonSerialize(),
+      'tkn_unit' => $unit->getCounterId()
+    ]);
   }
 
   public static function gainInitiative($faction)
@@ -305,16 +372,20 @@ class Notifications
     ]);
   }
 
-  public static function moveStack($player, $units, $origin, $destination)
+  public static function moveStack($player, $units, $origin, $destination, $isRetreat = false)
   {
-    self::notifyAll("moveStack", clienttranslate('${player_name} moves a stack from ${originName} to ${destinationName}'), [
+    $text = $isRetreat ?
+      clienttranslate('${player_name} retreats their stack from ${tkn_boldText_from} to ${tkn_boldText_to}') :
+      clienttranslate('${player_name} moves a stack from ${tkn_boldText_from} to ${tkn_boldText_to}');
+
+    self::notifyAll("moveStack", $text, [
       'player' => $player,
-      'originName' => $origin->getName(),
+      'tkn_boldText_from' => $origin->getName(),
       'destination' => $destination,
-      'destinationName' => $destination->getName(),
+      'tkn_boldText_to' => $destination->getName(),
       'faction' => $player->getFaction(),
       'stack' => $units,
-      'i18n' => ['originName', 'destinationName'],
+      'i18n' => ['tkn_boldText_from', 'tkn_boldText_to'],
     ]);
   }
 
@@ -329,6 +400,26 @@ class Notifications
       'unit' => $unit->jsonSerialize(),
       'tkn_unit' => $unit->getCounterId(),
       'i18n' => ['tkn_boldText_1', 'tkn_boldText_2'],
+    ]);
+  }
+
+  public static function placeStackMarker($player, $marker, $space)
+  {
+    self::notifyAll("placeStackMarker", clienttranslate('${player_name} places ${tkn_marker} on their stack in  ${tkn_boldText_spaceName}'), [
+      'player' => $player,
+      'marker' => $marker->jsonSerialize(),
+      'tkn_marker' => $marker->getType(),
+      'tkn_boldText_spaceName' => $space->getName(),
+      'i18n' => ['tkn_boldText_spaceName'],
+    ]);
+  }
+
+  public static function reduceUnit($player, $unit)
+  {
+    self::notifyAll("reduceUnit", clienttranslate('${player_name} flips ${tkn_unit} to Reduced'), [
+      'player' => $player,
+      'unit' => $unit->jsonSerialize(),
+      'tkn_unit' => $unit->getCounterId(),
     ]);
   }
 

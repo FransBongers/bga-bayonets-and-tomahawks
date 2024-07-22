@@ -29,7 +29,7 @@ class Marker extends \BayonetsAndTomahawks\Helpers\DB_Model implements \JsonSeri
     return [
       'id' => $this->id,
       'location' => $this->location,
-      'type' => $this->id,
+      'type' => $this->getType(),
       'side' => $this->state === 0 ? 'front' : 'back',
       'manager' => MARKERS,
     ];
@@ -51,4 +51,14 @@ class Marker extends \BayonetsAndTomahawks\Helpers\DB_Model implements \JsonSeri
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  public function getType()
+  {
+    // TODO: rename IDs so we can explode for all markers?
+    if (in_array($this->id,NAMED_MARKERS)) {
+      return $this->id;
+    } else {
+      return explode('_', $this->id)[0];
+    }
+  }
 }

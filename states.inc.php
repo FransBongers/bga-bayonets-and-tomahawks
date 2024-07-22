@@ -427,7 +427,7 @@ $machinestates = array(
 
     ST_BATTLE_APPLY_HITS => [
         'name' => 'battleApplyHits',
-        'description' => clienttranslate('${actplayer} must apply Hits'),
+        'description' => clienttranslate('${actplayer} must apply Hit'),
         'descriptionmyturn' => clienttranslate('${you}'),
         'type' => 'activeplayer',
         'args' => 'argsAtomicAction',
@@ -467,5 +467,48 @@ $machinestates = array(
         'args' => 'argsAtomicAction',
         'action' => 'stAtomicAction',
         'possibleactions' => ['actBattleSelectCommander', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_BATTLE_ROLLS_ROLL_DICE => [
+        'name' => 'battleRollsRollDice',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_BATTLE_OUTCOME => [
+        'name' => 'battleOutcome',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    
+    ST_BATTLE_ROUT => [
+        'name' => 'battleRout',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_BATTLE_ROLLS_EFFECTS => [
+        'name' => 'battleRollsEffects',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_BATTLE_RETREAT => [
+        'name' => 'battleRetreat',
+        'description' => clienttranslate('${actplayer} must retreat their force'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actBattleRetreat', 'actPassOptionalAction', 'actRestart'],
     ],
 );

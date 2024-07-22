@@ -71,6 +71,8 @@
     "src/states/ActionRoundSailBoxLanding.ts",
     "src/states/ArmyMovementState.ts",
     "src/states/ArmyMovementDestinationState.ts",
+    "src/states/BattleApplyHitsState.ts",
+    "src/states/BattleRetreatState.ts",
     "src/states/BattleSelectCommanderState.ts",
     "src/states/ConfirmPartialTurn.ts",
     "src/states/ConfirmTurn.ts",

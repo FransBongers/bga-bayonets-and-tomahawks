@@ -126,6 +126,7 @@ interface BTUnit {
   counterId: string;
   location: string;
   spent: number;
+  reduced: boolean;
 }
 
 type BTToken = BTMarker | BTUnit;
@@ -144,7 +145,7 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
     open_seas_marker: BTMarker;
     french_raid_marker: BTMarker;
     british_raid_marker: BTMarker;
-  };
+  } & Record<string, BTMarker>;
   playerOrder: number[];
   players: Record<number, BayonetsAndTomahawksPlayerData>;
   staticData: {

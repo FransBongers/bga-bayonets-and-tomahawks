@@ -31,6 +31,16 @@
   width: calc(var(--btTokenScale) * 40px);
 }
 
+// TODO: find better solution for this. The unit flips on the left side
+// Should be center center but that leads to wrong positioning?
+.bt_token {
+  .card-sides {
+    .card-side {
+      transform-origin: left center;
+    }
+  }
+}
+
 $indian-units: (
   1: 'Abenaki',
   2: 'Chaouanon',

@@ -16,13 +16,14 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
   protected static $prefix = 'unit_';
   protected static $customFields = [
     'counter_id',
+    'previous_location',
     'spent',
     'extra_data',
   ];
   protected static $autoremovePrefix = false;
   protected static $autoreshuffle = false;
   protected static $autoIncrement = false;
-  
+
   protected static function cast($row)
   {
     // Notifications::log('cast',$row);
@@ -33,6 +34,46 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
   {
     $className = '\BayonetsAndTomahawks\Units\\' . $counterId;
     return new $className($row);
+  }
+
+  /*
+   * Move one (or many) pieces to given location
+   */
+  public static function move($ids, $location, $state = 0, $previousLocation = null)
+  {
+    if (!is_array($ids)) {
+      $ids = [$ids];
+    }
+    if (empty($ids)) {
+      return [];
+    }
+
+    self::checkLocation($location);
+    self::checkState($state);
+    self::checkIdArray($ids);
+    return self::getUpdateQueryWithOrigin($ids, $location, $state,  $previousLocation)->run();
+  }
+
+  private static function getUpdateQueryWithOrigin($ids = [], $location = null, $state = null, $previousLocation = null)
+  {
+    $data = [];
+    if (!is_null($location)) {
+      $data[static::$prefix . 'location'] = $location;
+    }
+    if (!is_null($state)) {
+      $data[static::$prefix . 'state'] = $state;
+    }
+    if (!is_null($previousLocation)) {
+      $data['previous_location'] = $previousLocation;
+    }
+
+    $query = self::DB()->update($data);
+    if (!is_null($ids)) {
+      $query = $query->whereIn(static::$prefix . 'id', is_array($ids) ? $ids : [$ids]);
+    }
+
+    static::addBaseFilter($query);
+    return $query;
   }
 
   // ..######...########.########.########.########.########...######.

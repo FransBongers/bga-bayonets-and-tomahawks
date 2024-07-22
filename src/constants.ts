@@ -47,6 +47,8 @@ const COMMANDER = 'commander';
 // const FORT = 'fort';
 // const LIGHT = 'light';
 
+const REMOVED_FROM_PLAY = 'removedFromPlay';
+
 /**
  * Pools
  */

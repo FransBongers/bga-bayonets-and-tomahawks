@@ -1,19 +1,19 @@
-class ActionRoundActionPhaseState implements State {
+class BattleApplyHitsState implements State {
   private game: BayonetsAndTomahawksGame;
-  private args: OnEnteringActionRoundActionPhaseStateArgs;
+  private args: OnEnteringBattleApplyHitsStateArgs;
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
   }
 
-  onEnteringState(args: OnEnteringActionRoundActionPhaseStateArgs) {
-    debug('Entering ActionRoundActionPhaseState');
+  onEnteringState(args: OnEnteringBattleApplyHitsStateArgs) {
+    debug('Entering BattleApplyHitsState');
     this.args = args;
     this.updateInterfaceInitialStep();
   }
 
   onLeavingState() {
-    debug('Leaving ActionRoundActionPhaseState');
+    debug('Leaving BattleApplyHitsState');
   }
 
   setDescription(activePlayerId: number) {}
@@ -37,18 +37,17 @@ class ActionRoundActionPhaseState implements State {
   private updateInterfaceInitialStep() {
     this.game.clearPossible();
 
-    this.game.setCardSelected({ id: this.args.card.id });
-
     this.game.clientUpdatePageTitle({
-      text: this.args.isIndianActions
-        ? _('${you} may use the Indian card for actions')
-        : _('${you} may perform actions'),
+      text: this.args.eliminate ? _('${you} must select a unit to eliminate') : _('${you} must select a unit to apply a Hit to'),
       args: {
         you: '${you}',
       },
     });
 
-    this.addActionButtons();
+    const stack: UnitStack =
+      this.game.gameMap.stacks[this.args.spaceId][this.args.faction];
+    stack.open();
+    this.setUnitsSelectable();
 
     this.game.addPassButton({
       optionalAction: this.args.optionalAction,
@@ -56,27 +55,26 @@ class ActionRoundActionPhaseState implements State {
     this.game.addUndoButtons(this.args);
   }
 
-  private updateInterfaceConfirm({
-    actionPointId,
-  }: {
-    actionPointId: string;
-  }) {
+  private updateInterfaceConfirm({ unit }: { unit: BTUnit }) {
     this.game.clearPossible();
-    this.game.setCardSelected({ id: this.args.card.id });
+
+    this.game.setUnitSelected({ id: unit.id });
 
     this.game.clientUpdatePageTitle({
-      text: _('Use ${tkn_actionPoint} to perform an Action?'),
+      text: this.args.eliminate ? _('Eliminate ${unitName}?') : _('Apply Hit to ${unitName}?'),
       args: {
-        tkn_actionPoint: actionPointId,
+        unitName: _(
+          this.game.gamedatas.staticData.units[unit.counterId].counterText
+        ),
       },
     });
 
     const callback = () => {
       this.game.clearPossible();
       this.game.takeAction({
-        action: 'actActionRoundActionPhase',
+        action: 'actBattleApplyHits',
         args: {
-          actionPointId: actionPointId,
+          unitId: unit.id,
         },
       });
     };
@@ -104,12 +102,15 @@ class ActionRoundActionPhaseState implements State {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  private addActionButtons() {
-    this.args.availableActionPoints.forEach((actionPointId, index) => {
-      this.game.addPrimaryActionButton({
-        id: `ap_${actionPointId}_${index}`,
-        text: actionPointId,
-        callback: () => this.updateInterfaceConfirm({ actionPointId }),
+  private setUnitsSelectable() {
+    this.args.units.forEach((unit) => {
+      this.game.setUnitSelectable({
+        id: unit.id,
+        callback: (event: PointerEvent) => {
+          event.preventDefault();
+          event.stopPropagation();
+          this.updateInterfaceConfirm({ unit });
+        },
       });
     });
   }

@@ -19,6 +19,7 @@
   box-shadow: 1px 1px 5px #000;
   // transform-origin: top left;
   --btMapScale: var(--leftColumnScale) * var(--mapSizeMultiplier);
+  --btMarkerScale: var(--leftColumnScale) * var(--mapSizeMultiplier);
   --btTokenScale: var(--leftColumnScale) * var(--mapSizeMultiplier);
 }
 

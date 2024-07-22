@@ -334,6 +334,15 @@ class GameMap {
       this.victoryPointsTrack[victoryMarker.location].addCard(victoryMarker);
     }
 
+    Object.entries(markers)
+      .filter(
+        ([id, marker]) =>
+          id.startsWith('routeMarker') && !marker.location.startsWith('supply')
+      )
+      .forEach(([id, marker]) => {
+        this.addMarkerToStack(marker);
+      });
+
     // TODO: loop once through all units and place in correct stock?
     gamedatas.units
       .filter((unit) => {
@@ -408,6 +417,12 @@ class GameMap {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  public async addMarkerToStack(marker: BTMarker)
+  {
+    const splitLocation = marker.location.split('_');
+    this.stacks[splitLocation[0]][splitLocation[1]].addCard(marker);
+  }
 
   public addMarkerToSpace({
     spaceId,

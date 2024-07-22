@@ -78,7 +78,7 @@ class UnitMovement extends \BayonetsAndTomahawks\Actions\StackAction
 
   //   $units = $stackAction->getUnitThatCanPerformAction($space->getUnits($player->getFaction()),$indianActionPoint);
 
-  //   $adjacentSpaces = $space->getAdjacentSpaces();
+  //   $adjacentSpaces = $space->getAdjacentConnections();
 
   //   foreach ($adjacentSpaces as $targetSpaceId => $connection) {
 

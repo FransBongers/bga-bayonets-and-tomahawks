@@ -19,6 +19,7 @@ use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Models\AtomicAction;
 use BayonetsAndTomahawks\Models\Space;
 use BayonetsAndTomahawks\Helpers\BTDice;
+use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Helpers\PathCalculator;
 use BayonetsAndTomahawks\Models\ActionPoint;
@@ -78,36 +79,47 @@ trait DebugTrait
 
 
 
-  function test()
+  function debug_test()
   {
-    $space = Spaces::get(LAKE_GEORGE);
-    $defendingFaction = $space->getDefender();
-    $attackingFaction = Players::otherFaction($defendingFaction);
+    // Markers::get(FRENCH_BATTLE_MARKER)->setLocation(Locations::battleTrack(false, 5));
+    Notifications::log('adjacent', Spaces::get(TICONDEROGA)->getAdjacentSpacesIds());
 
-    $players = Players::getAll()->toArray();
-    $attackingPlayer = Utils::array_find($players, function ($player) use ($attackingFaction) {
-      return $player->getFaction() === $attackingFaction;
-    });
-    $defendingPlayer = Utils::array_find($players, function ($player) use ($defendingFaction) {
-      return $player->getFaction() === $defendingFaction;
-    });
-   
-    // Notifications::log('battles', Spaces::getBattleLocations());
+    // $space = Spaces::get(LAKE_GEORGE);
+    // $defendingFaction = $space->getDefender();
+    // $attackingFaction = Players::otherFaction($defendingFaction);
+
+    // $players = Players::getAll()->toArray();
+    // $attackingPlayer = Utils::array_find($players, function ($player) use ($attackingFaction) {
+    //   return $player->getFaction() === $attackingFaction;
+    // });
+    // $defendingPlayer = Utils::array_find($players, function ($player) use ($defendingFaction) {
+    //   return $player->getFaction() === $defendingFaction;
+    // });
+    // $marker = Markers::getMarkerFromSupply(ROUTE_MARKER);
+    // $marker->setLocation(Locations::stackMarker(TICONDEROGA, BRITISH));
+
+    // Notifications::log('getMarkerFromSupply', $marker);
     // $result = AtomicActions::get(LIGHT_MOVEMENT)->checkEnemyUnitsAndOverwhelm(Spaces::get(ANNAPOLIS_ROYAL), Players::get());
 
     // Notifications::log('checkEnemyUnitsAndOverwhelm', $result);
   }
 
-  function ed()
-  {
-    $this->engineDisplay();
-  }
+  // function ed()
+  // {
+  //   $this->engineDisplay();
+  // }
 
-  function engineDisplay()
+  function debug_engineDisplay()
   {
     Notifications::log('engine', Globals::getEngine());
   }
 
+  function debug_globalsDisplay()
+  {
+    Notifications::log('firstPlayerId', Globals::getFirstPlayerId());
+    Notifications::log('secondPlayerId', Globals::getSecondPlayerId());
+    Notifications::log('reactionActionPointId', Globals::getReactionActionPointId());
+  }
 
   // /**
   //  * TODO: just make one db call to get all spaces data?

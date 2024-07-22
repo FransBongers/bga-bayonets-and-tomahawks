@@ -79,7 +79,7 @@ class ArmyMovementDestination extends \BayonetsAndTomahawks\Actions\UnitMovement
 
     $playerFaction = $player->getFaction();
     // $unitsOnSpace = $space->getUnits($playerFaction);
-    $adjacentSpaces = $space->getAdjacentSpaces();
+    $adjacentSpaces = $space->getAdjacentConnections();
     $unitIds = $info['unitIds'];
 
     $units = Units::getMany($unitIds)->toArray();
@@ -173,11 +173,12 @@ class ArmyMovementDestination extends \BayonetsAndTomahawks\Actions\UnitMovement
     }
   
     $info = $this->ctx->getInfo();
+    $originId = $info['spaceId'];
     $origin = Spaces::get($info['spaceId']);
     $unitIds = $info['unitIds'];
     $units = Units::getMany($unitIds)->toArray();
 
-    Units::move($unitIds, $destinationId);
+    Units::move($unitIds, $destinationId, 0, $originId);
 
 
     Notifications::moveStack(self::getPlayer(), $units, $origin, $destination);

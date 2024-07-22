@@ -8,6 +8,9 @@ abstract class Locations extends \APP_DbObject
   {
     $sign = $value < 0 ? 'minus' : 'plus';
     $side = $isAttacker ? 'attacker' : 'defender';
+    if ($value > 10) {
+      $value = $value % 10;
+    }
     return implode('_', ['battle', 'track', $side, $sign, abs($value)]);
   }
 
@@ -42,10 +45,16 @@ abstract class Locations extends \APP_DbObject
     return 'hand_' . $faction;
   }
 
-  public static function lossedBox($faction)
+  public static function lossesBox($faction)
   {
     return 'lossesBox_' . $faction;
   }
+
+  public static function markerSupply($type)
+  {
+    return 'supply_' . $type;
+  }
+
 
   public static function raidTrack($position)
   {
@@ -55,6 +64,11 @@ abstract class Locations extends \APP_DbObject
   public static function selected($faction)
   {
     return 'selected_' . $faction;
+  }
+
+  public static function stackMarker($spaceId, $faction)
+  {
+    return $spaceId . '_' . $faction;
   }
 
   public static function yearTrack($year)

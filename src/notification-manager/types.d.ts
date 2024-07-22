@@ -18,6 +18,10 @@ type NotifSmallRefreshInterfaceArgs = Omit<
   'staticData'
 >;
 
+interface NotifAdvanceBattleVictoryMarkerArgs {
+  marker: BTMarker;
+}
+
 interface NotifBattleArgs extends NotifWithPlayerArgs {
   space: BTSpace;
 }
@@ -52,6 +56,10 @@ interface NotifDiscardCardFromHandPrivateArgs extends NotifWithPlayerArgs {
 
 interface NotifDiscardCardsInPlayArgs {
   card: BTCard;
+}
+
+interface NotifEliminateUnitArgs extends NotifWithPlayerArgs {
+  unit: BTUnit;
 }
 
 interface NotifLoseControlArgs extends NotifWithPlayerArgs {
@@ -90,6 +98,11 @@ interface NotifMoveYearMarkerArgs {
   marker: BTMarker;
 }
 
+interface NotifPlaceStackMarkerArgs extends NotifWithPlayerArgs {
+  marker: BTMarker;
+}
+
+
 interface NotifPlaceUnitInLossesArgs extends NotifWithPlayerArgs {
   unit: BTUnit;
   faction: string;
@@ -98,6 +111,10 @@ interface NotifPlaceUnitInLossesArgs extends NotifWithPlayerArgs {
 interface NotifPlaceRaidPointsArgs extends NotifWithPlayerArgs {
   space: BTSpace;
   faction: string;
+}
+
+interface NotifReduceUnitArgs {
+  unit: BTUnit;
 }
 
 interface NotifRevealCardsInPlayArgs {

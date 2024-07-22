@@ -35,20 +35,51 @@ class Markers extends \BayonetsAndTomahawks\Helpers\Pieces
   }
 
 
-  //////////////////////////////////
-  //////////////////////////////////
-  //////////// GETTERS //////////////
-  //////////////////////////////////
-  //////////////////////////////////
+  // ..######...########.########.########.########.########...######.
+  // .##....##..##..........##.......##....##.......##.....##.##....##
+  // .##........##..........##.......##....##.......##.....##.##......
+  // .##...####.######......##.......##....######...########...######.
+  // .##....##..##..........##.......##....##.......##...##.........##
+  // .##....##..##..........##.......##....##.......##....##..##....##
+  // ..######...########....##.......##....########.##.....##..######.
 
-  // public static function getOfTypeInLocation($type, $location)
-  // {
-  //   return self::getSelectQuery()
-  //     ->where(static::$prefix . 'id', 'LIKE', $type . '%')
-  //     ->where(static::$prefix . 'location', 'LIKE', $location . '%')
-  //     ->get()
-  //     ->toArray();
-  // }
+  public static function getMarkerFromSupply($type)
+  {
+    $marker = self::getTopOf(Locations::markerSupply($type));
+    if ($marker !== null) {
+      return $marker;
+    }
+
+    // Out of markers, add extra to supply
+    $extraMarkers = [
+      [
+        "id" => $type . "_{INDEX}",
+        "nbr" => 10,
+        "nbrStart" => count(self::getMarkersOfType($type)) + 1,
+        "location" => Locations::markerSupply($type),
+      ]
+    ];
+
+    self::create($extraMarkers, null);
+    return self::getTopOf(Locations::markerSupply($type));
+  }
+
+  public static function getMarkersOfType($type)
+  {
+    return self::getSelectQuery()
+      ->where(static::$prefix . 'id', 'LIKE', $type . '%')
+      ->get()
+      ->toArray();
+  }
+
+  public static function getOfTypeInLocation($type, $location)
+  {
+    return self::getSelectQuery()
+      ->where(static::$prefix . 'id', 'LIKE', $type . '%')
+      ->where(static::$prefix . 'location', 'LIKE', $location . '%')
+      ->get()
+      ->toArray();
+  }
 
   // public static function getUiData()
   // {

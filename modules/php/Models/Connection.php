@@ -85,6 +85,28 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
     return $this->coastal;
   }
 
+  public function canBeUsedByUnits($units, $ignoreLimit = false)
+  {
+    // TODO: connection limits
+    $hasFleet = Utils::array_some($units, function ($unit) {
+      return $unit->isFleet();
+    });
+    if ($hasFleet && !$this->isCoastalConnection()) {
+      return false;
+    }
+
+    $requiresRoadOrHighway = Utils::array_some($units, function ($unit) {
+      // TODO: check commander and light units only?
+      return $unit->isBrigade() || $unit->isCommander() || $unit->isArtillery();
+    });
+
+    if ($requiresRoadOrHighway && !in_array($this->getType(), [HIGHWAY, ROAD])) {
+      return false;
+    }
+
+    return true;
+  }
+
   /**
    * Return an array of attributes
    */

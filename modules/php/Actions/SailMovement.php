@@ -81,7 +81,7 @@ class SailMovement extends \BayonetsAndTomahawks\Actions\UnitMovement
 
     // $playerFaction = $player->getFaction();
     // $units = $space->getUnits($playerFaction);
-    // $adjacentSpaces = $space->getAdjacentSpaces();
+    // $adjacentSpaces = $space->getAdjacentConnections();
 
     // $commanders = [];
     // $lightUnits = [];

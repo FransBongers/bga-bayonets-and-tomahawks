@@ -35,7 +35,7 @@ trait TurnTrait
 
     // TODO: check how we should handle giving extra time
     $players = Players::getAll();
-    foreach($players as $player) {
+    foreach ($players as $player) {
       self::giveExtraTime($player->getId());
     }
 
@@ -52,7 +52,8 @@ trait TurnTrait
     Engine::proceed();
   }
 
-  function stSetupActionRound() {
+  function stSetupActionRound()
+  {
     $player = Players::getActive();
     self::giveExtraTime($player->getId());
 
@@ -60,8 +61,8 @@ trait TurnTrait
     // Stats::incTurnCount(1);
     $node = [];
     $currentRoundStep = Globals::getActionRound();
-    Notifications::log('currentRoundStep',$currentRoundStep);
-    if (in_array($currentRoundStep,[
+    Notifications::log('currentRoundStep', $currentRoundStep);
+    $isActionRound = in_array($currentRoundStep, [
       ACTION_ROUND_1,
       ACTION_ROUND_2,
       ACTION_ROUND_3,
@@ -71,7 +72,10 @@ trait TurnTrait
       ACTION_ROUND_7,
       ACTION_ROUND_8,
       ACTION_ROUND_9,
-    ])) {
+    ]);
+
+    $engineCallback = null;
+    if ($isActionRound) {
       $node = [
         'children' => [
           [
@@ -80,6 +84,7 @@ trait TurnTrait
           ],
         ],
       ];
+      $engineCallback = ['method' => 'stFirstPlayerActionPhase'];
     } else if ($currentRoundStep === FLEETS_ARRIVE) {
       $node = [
         'children' => [
@@ -89,6 +94,7 @@ trait TurnTrait
           ],
         ],
       ];
+      $engineCallback = ['method' => 'stSetupActionRound'];
     } else if ($currentRoundStep === COLONIALS_ENLIST) {
       $node = [
         'children' => [
@@ -98,6 +104,7 @@ trait TurnTrait
           ],
         ],
       ];
+      $engineCallback = ['method' => 'stSetupActionRound'];
     } else if ($currentRoundStep === WINTER_QUARTERS) {
       $node = [
         'children' => [
@@ -107,15 +114,89 @@ trait TurnTrait
           ],
         ],
       ];
+      $engineCallback = ['method' => 'stSetupYear'];
     }
 
     // Inserting leaf Action card
-    Engine::setup($node, ['method' => $currentRoundStep === WINTER_QUARTERS ? 'stSetupYear' : 'stSetupActionRound']); // End of action round
+    Engine::setup($node, $engineCallback); // End of action round
+    Engine::proceed();
+  }
+
+  function stFirstPlayerActionPhase()
+  {
+    Notifications::log('stFirstPlayerActionPhase',[]);
+    $playerId = Globals::getFirstPlayerId();
+    self::giveExtraTime($playerId);
+
+    $node = $this->getPlayerActionsPhaseFlow($playerId, true);
+
+    Engine::setup($node, ['method' => 'stSecondPlayerActionPhase']); // End of action round
+    Engine::proceed();
+  }
+
+  function stSecondPlayerActionPhase()
+  {
+    Notifications::log('stSecondPlayerActionPhase',[]);
+    $playerId = Globals::getSecondPlayerId();
+    self::giveExtraTime($playerId);
+
+    $node = $this->getPlayerActionsPhaseFlow($playerId, false);
+
+    Engine::setup($node, ['method' => 'stReaction']); // End of action round
+    Engine::proceed();
+  }
+
+  function stReaction()
+  {
+    $playerId = Globals::getFirstPlayerId();
+    self::giveExtraTime($playerId);
+
+    $reactionActionPointId = Globals::getReactionActionPointId();
+
+    if ($reactionActionPointId === '') {
+      $this->stBattlesAndEndOfActionRound();
+      return;
+    }
+
+    $node = [
+      'children' => [
+        [
+          'action' => ACTION_ROUND_ACTION_PHASE,
+          'playerId' => $playerId,
+          'optional' => true,
+          'isReaction' => true,
+          'actionPointId' => $reactionActionPointId,
+        ]
+      ]
+    ];
+
+    Engine::setup($node, ['method' => 'stBattlesAndEndOfActionRound']);
+    Engine::proceed();
+  }
+
+  function stBattlesAndEndOfActionRound()
+  {
+    $playerId = Globals::getFirstPlayerId();
+    $node = [
+      'children' => [
+        [
+          'action' => ACTION_ROUND_RESOLVE_BATTLES,
+          'playerId' => $playerId,
+        ],
+        [
+          'action' => ACTION_ROUND_END,
+          'playerId' => $playerId,
+        ]
+      ]
+    ];
+
+    Engine::setup($node, ['method' => 'stSetupActionRound']); // End of action round
     Engine::proceed();
   }
 
   /**
    * Activate next player
+   * TODO: is this even used?
    */
   function stTurnAction()
   {
@@ -171,7 +252,7 @@ trait TurnTrait
     // if ($unableToRefresh) {
     //   Game::get()->gamestate->jumpToState(ST_PATRON_VICTORY);
     // } else {
-      $this->nextPlayerCustomOrder('default');
+    $this->nextPlayerCustomOrder('default');
     // }
   }
 
@@ -247,4 +328,57 @@ trait TurnTrait
     $this->gamestate->jumpToState(\ST_END_GAME);
   }
   */
+
+  //  .##.....##.########.####.##.......####.########.##....##
+  //  .##.....##....##.....##..##........##.....##.....##..##.
+  //  .##.....##....##.....##..##........##.....##......####..
+  //  .##.....##....##.....##..##........##.....##.......##...
+  //  .##.....##....##.....##..##........##.....##.......##...
+  //  .##.....##....##.....##..##........##.....##.......##...
+  //  ..#######.....##....####.########.####....##.......##...
+
+  public function getPlayerActionsPhaseFlow($playerId, $isFirstplayer)
+  {
+    $player = Players::get($playerId);
+
+    $flow = [
+      'children' => [
+        [
+          'action' => ACTION_ROUND_SAIL_BOX_LANDING,
+          'playerId' => $playerId,
+        ]
+      ]
+    ];
+
+    if ($player->getFaction() === FRENCH) {
+      $flow['children'][] = [
+        'children' => [
+          [
+            'action' => ACTION_ROUND_ACTION_PHASE,
+            'playerId' => $playerId,
+            'optional' => true,
+            'isIndianActions' => true,
+          ]
+        ]
+      ];
+    }
+    if ($isFirstplayer) {
+      $flow['children'][] = [
+        'action' => ACTION_ROUND_CHOOSE_REACTION,
+        'playerId' => $playerId,
+        'optional' => true,
+      ];
+    }
+    $flow['children'][] = [
+      'children' => [
+        [
+          'action' => ACTION_ROUND_ACTION_PHASE,
+          'playerId' => $playerId,
+          'optional' => true,
+          'isFirstPlayer' => $isFirstplayer,
+        ]
+      ]
+    ];
+    return $flow;
+  }
 }

@@ -59,6 +59,7 @@ class NotificationManager {
     // ];
     const notifs: string[] = [
       'log',
+      'advanceBattleVictoryMarker',
       'battle',
       'battleCleanup',
       'battleStart',
@@ -67,14 +68,17 @@ class NotificationManager {
       'discardCardFromHandPrivate',
       'discardCardInPlay',
       'drawCardPrivate',
+      'eliminateUnit',
       'loseControl',
       'moveRaidPointsMarker',
       'moveRoundMarker',
       'moveStack',
       'moveYearMarker',
       'moveUnit',
+      'placeStackMarker',
       'placeUnitInLosses',
       'raidPoints',
+      'reduceUnit',
       'revealCardsInPlay',
       'scoreVictoryPoints',
       'selectReserveCard',
@@ -190,6 +194,14 @@ class NotificationManager {
     this.game.gameMap.updateInterface({ gamedatas: updatedGamedatas });
   }
 
+  async notif_advanceBattleVictoryMarker(
+    notif: Notif<NotifAdvanceBattleVictoryMarkerArgs>
+  ) {
+    const { marker } = notif.args;
+
+    await this.game.gameMap.battleTrack[marker.location].addCard(marker);
+  }
+
   async notif_battle(notif: Notif<NotifBattleArgs>) {
     const { space } = notif.args;
     this.game.gameMap.addMarkerToSpace({
@@ -274,6 +286,18 @@ class NotificationManager {
     return;
   }
 
+  async notif_eliminateUnit(notif: Notif<NotifEliminateUnitArgs>) {
+    const { unit } = notif.args;
+
+    if (unit.location.startsWith('lossesBox_')) {
+      await this.game.gameMap.losses[unit.location].addCard(unit);
+    } else if (unit.location === REMOVED_FROM_PLAY) {
+      await this.game.tokenManager.removeCard(unit);
+    } else if (unit.location === POOL_FLEETS) {
+      // TODO: move to pool
+    }
+  }
+
   async notif_loseControl(notif: Notif<NotifLoseControlArgs>) {
     const { space, faction } = notif.args;
 
@@ -341,6 +365,11 @@ class NotificationManager {
     // await this.game.gameMap.moveYearMarker({ year });
   }
 
+  async notif_placeStackMarker(notif: Notif<NotifPlaceStackMarkerArgs>) {
+    const { marker } = notif.args;
+    await this.game.gameMap.addMarkerToStack(marker);
+  }
+
   async notif_placeUnitInLosses(notif: Notif<NotifPlaceUnitInLossesArgs>) {
     const { unit } = notif.args;
 
@@ -358,6 +387,11 @@ class NotificationManager {
       'beforeend',
       tplMarkerOfType({ type: `${faction}_raided_marker` })
     );
+  }
+
+  async notif_reduceUnit(notif: Notif<NotifReduceUnitArgs>) {
+    const { unit } = notif.args;
+    this.game.tokenManager.updateCardInformations(unit);
   }
 
   async notif_revealCardsInPlay(notif: Notif<NotifRevealCardsInPlayArgs>) {

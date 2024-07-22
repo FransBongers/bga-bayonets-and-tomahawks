@@ -39,6 +39,7 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
 
   public function stActionRoundResolveBattles()
   {
+    Notifications::log('stActionRoundResolveBattles', []);
     $battleLocations = Spaces::getBattleLocations();
     $playerId = self::getPlayer()->getId();
 
@@ -54,15 +55,27 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
             'action' => BATTLE_PREPARATION,
             'playerId' => $playerId,
           ],
-          // [
-          //   'action' => BATTLE_CLEANUP,
-          //   'playerId' => $playerId,
-          // ]
+          [
+            'action' => BATTLE_ROLLS,
+            'playerId' => $playerId,
+          ],
+          [
+            'action' => BATTLE_OUTCOME,
+            'playerId' => $playerId,
+          ],
+          [
+            'action' => BATTLE_CLEANUP,
+            'playerId' => $playerId,
+          ]
         ]
       ];
     }
-    $this->ctx->insertAsBrother(Engine::buildTree($battleNodes));
-    // Notifications::log('stActionRoundResolveBattles', []);
+    Notifications::log('engine', $battleNodes);
+    if (count($battleNodes['children']) > 0) {
+      $this->ctx->insertAsBrother(Engine::buildTree($battleNodes));
+    }
+
+
 
     $this->resolveAction(['automatic' => true]);
   }

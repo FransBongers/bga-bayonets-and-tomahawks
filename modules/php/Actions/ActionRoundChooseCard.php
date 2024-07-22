@@ -126,7 +126,7 @@ class ActionRoundChooseCard extends \BayonetsAndTomahawks\Models\AtomicAction
     });
 
     if ($selectedCard === null) {
-      throw new \BgaVisibleSystemException('This card cannot be selected');
+      throw new \feException("ERROR 011");
     }
 
     $selectedCard->select();
