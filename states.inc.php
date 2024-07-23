@@ -511,4 +511,14 @@ $machinestates = array(
         'action' => 'stAtomicAction',
         'possibleactions' => ['actBattleRetreat', 'actPassOptionalAction', 'actRestart'],
     ],
+
+    ST_BATTLE_ROLLS_REROLLS => [
+        'name' => 'battleRollsRerolls',
+        'description' => clienttranslate('${actplayer} may reroll dice'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actBattleRollsRerolls', 'actPassOptionalAction', 'actRestart'],
+    ],
 );

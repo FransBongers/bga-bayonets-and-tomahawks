@@ -38,6 +38,14 @@ interface NotifBattleStartArgs {
   defenderMarker: BTMarker;
 }
 
+interface NotifBattleRerollArgs extends NotifWithPlayerArgs {
+  commander: BTUnit | null;
+}
+
+interface NotifBattleReturnCommanderArgs extends NotifWithPlayerArgs {
+  commander: BTUnit;
+}
+
 interface NotifBattleSelectCommanderArgs extends NotifWithPlayerArgs {
   commander: BTUnit;
 }
@@ -80,6 +88,7 @@ interface NotifMoveStackArgs {
   stack: BTUnit[];
   destination: BTSpace;
   faction: Faction;
+  markers: BTMarker[];
 }
 
 interface NotifScoreVictoryPointsArgs {

@@ -193,6 +193,14 @@ class Notifications
     ]);
   }
 
+  public static function battleCommanderCasualtyRoll($player, $commanderCasualtyRoll)
+  {
+    self::message(clienttranslate('${player_name} checks for Commander Casualty and rolls ${tkn_dieResult}'), [
+      'player' => $player,
+      'tkn_dieResult' => $commanderCasualtyRoll
+    ]);
+  }
+
   public static function battleNoUnitsLeft($player)
   {
     self::message(clienttranslate('${player_name} has no units left'), [
@@ -224,6 +232,25 @@ class Notifications
     ]);
   }
 
+  public static function battleRollsResultAfterRerolls($diceResults)
+  {
+    // ${tkn_dieResult}
+    $diceResultsLog = [];
+    $diceResultsArgs = [];
+    foreach ($diceResults as $index => $dieResult) {
+      $key = 'tkn_dieResult_' . $index;
+      $diceResultsLog[] = '${' . $key . '}';
+      $diceResultsArgs[$key] = $dieResult;
+    };
+
+    self::message(clienttranslate('Result after rerolls: ${diceResultsLog}'), [
+      'diceResultsLog' => [
+        'log' => implode('', $diceResultsLog),
+        'args' => $diceResultsArgs,
+      ],
+    ]);
+  }
+
   public static function battleRout($faction)
   {
     self::message(clienttranslate('${faction_name} stack is routed'), [
@@ -248,6 +275,28 @@ class Notifications
       'space' => $space,
       'attackerMarker' => $attackerMarker->jsonSerialize(),
       'defenderMarker' => $defenderMarker->jsonSerialize(),
+    ]);
+  }
+
+  public static function battleReroll($player, $oldResult, $newResult, $rerollSource, $commander = null)
+  {
+    self::notifyAll('battleReroll', clienttranslate('${player_name} rerolls ${tkn_dieResult_old} to ${tkn_dieResult_new}'), [
+      'player' => $player,
+      'tkn_dieResult_old' => $oldResult,
+      'tkn_dieResult_new' => $newResult,
+      'rerollSource' => $rerollSource,
+      'commander' => $commander === null ? null : $commander->jsonSerialize(),
+    ]);
+  }
+
+  public static function battleReturnCommander($player, $commander, $spaceId)
+  {
+    self::notifyAll('battleReturnCommander', clienttranslate('${player_name} returns ${tkn_boldText_commanderName} from the Commander Rerolls track'), [
+      'player' => $player,
+      'tkn_boldText_commanderName' => $commander->getCounterText(),
+      'commander' => $commander->jsonSerialize(),
+      'spaceId' => $spaceId,
+      'i18n' => ['tkn_boldText_commanderName']
     ]);
   }
 
@@ -315,9 +364,13 @@ class Notifications
     self::message(clienttranslate('Both players discard their Reserve card'), []);
   }
 
-  public static function eliminateUnit($player, $unit)
+  public static function eliminateUnit($player, $unit, $removeFromPlayTest = false)
   {
-    self::notifyAll("eliminateUnit", clienttranslate('${player_name} eliminates ${tkn_unit}'), [
+    $text = $removeFromPlayTest ?
+      clienttranslate('${player_name} removes ${tkn_unit} from play') :
+      clienttranslate('${player_name} eliminates ${tkn_unit}');
+
+    self::notifyAll("eliminateUnit", $text, [
       'player' => $player,
       'unit' => $unit->jsonSerialize(),
       'tkn_unit' => $unit->getCounterId()
@@ -372,7 +425,7 @@ class Notifications
     ]);
   }
 
-  public static function moveStack($player, $units, $origin, $destination, $isRetreat = false)
+  public static function moveStack($player, $units, $markers, $origin, $destination, $isRetreat = false)
   {
     $text = $isRetreat ?
       clienttranslate('${player_name} retreats their stack from ${tkn_boldText_from} to ${tkn_boldText_to}') :
@@ -385,6 +438,7 @@ class Notifications
       'tkn_boldText_to' => $destination->getName(),
       'faction' => $player->getFaction(),
       'stack' => $units,
+      'markers' => $markers,
       'i18n' => ['tkn_boldText_from', 'tkn_boldText_to'],
     ]);
   }

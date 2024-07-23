@@ -9,5 +9,7 @@ class Montcalm extends \BayonetsAndTomahawks\Models\Commander
     $this->counterId = MONTCALM;
     $this->counterText = clienttranslate('Montcalm');
     $this->faction = FRENCH;
+    $this->rating = 3;
+    $this->rerollShapes = [SQUARE];
   }
 }

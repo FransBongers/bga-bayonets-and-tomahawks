@@ -1,5 +1,5 @@
 @use 'sass:math';
-@use "sass:map";
+@use 'sass:map';
 
 // .bt_token[data-faction=british] {
 //   background-image: url('img/unit_tokens_bri.webp');
@@ -16,17 +16,27 @@
 //   background-size: 500% 300%;
 // }
 
+.bt_token {
+  height: calc(var(--btTokenScale) * 52px);
+  width: calc(var(--btTokenScale) * 52px);
+}
+
+.bt_token[data-commander='true'] {
+  height: calc(var(--btTokenScale) * 40px);
+  width: calc(var(--btTokenScale) * 40px);
+}
+
 .bt_token_side {
   // width: 52px;
   // height: 52px;
   height: calc(var(--btTokenScale) * 52px);
   width: calc(var(--btTokenScale) * 52px);
   position: absolute;
-  z-index: 1;
+  z-index: 1; // Why is this needed?
   box-shadow: none !important;
 }
 
-.bt_token_side[data-commander=true] {
+.bt_token_side[data-commander='true'] {
   height: calc(var(--btTokenScale) * 40px);
   width: calc(var(--btTokenScale) * 40px);
 }
@@ -36,7 +46,7 @@
 .bt_token {
   .card-sides {
     .card-side {
-      transform-origin: left center;
+      // transform-origin: left center;
     }
   }
 }
@@ -44,10 +54,12 @@
 $indian-units: (
   1: 'Abenaki',
   2: 'Chaouanon',
-  3: 'Cherokee',//'Cherokee_french',
+  3: 'Cherokee',
+  //'Cherokee_french',
   4: 'Cherokee_british',
   5: 'Delaware',
-  6: 'Iroquois', // 'Iroquois_french',
+  6: 'Iroquois',
+  // 'Iroquois_french',
   7: 'Iroquois_british',
   8: 'Kahnawake',
   9: 'Malecite',
@@ -60,7 +72,7 @@ $indian-units: (
 );
 
 @for $i from 1 through 15 {
-  .bt_token_side[data-counter-id="#{map.get($indian-units,$i)}"] {
+  .bt_token_side[data-counter-id='#{map.get($indian-units,$i)}'] {
     background-position-x: math.div((($i - 1) % 5 * 100%), 4);
     background-position-y: math.div(math.floor(calc(($i - 1) / 5)) * 100%, 2);
     background-image: url('img/unit_tokens_ind.webp');
@@ -187,15 +199,15 @@ $british-units: (
   116: 'B1stRoyalAmerican_reduced',
   117: 'B1stRoyalAmerican',
   118: 'RoyalScots17th_reduced',
-  119: 'RoyalScots17th'
+  119: 'RoyalScots17th',
 );
 
 @for $i from 1 through 119 {
-  .bt_token_side[data-counter-id="#{map.get($british-units,$i)}"] {
+  .bt_token_side[data-counter-id='#{map.get($british-units,$i)}'] {
     background-position-x: math.div((($i - 1) % 12 * 100%), 11);
     background-position-y: math.div(math.floor(calc(($i - 1) / 12)) * 100%, 10);
     background-image: url('img/unit_tokens_bri.webp');
-    background-size: 1200% 1100%
+    background-size: 1200% 1100%;
   }
 }
 
@@ -276,11 +288,11 @@ $french-units: (
   74: 'LanguedocLaReine_reduced',
   75: 'LanguedocLaReine',
   76: 'DeLaMarine_reduced',
-  77: 'DeLaMarine'
+  77: 'DeLaMarine',
 );
 
 @for $i from 1 through 119 {
-  .bt_token_side[data-counter-id="#{map.get($french-units,$i)}"] {
+  .bt_token_side[data-counter-id='#{map.get($french-units,$i)}'] {
     background-position-x: math.div((($i - 1) % 12 * 100%), 11);
     background-position-y: math.div(math.floor(calc(($i - 1) / 12)) * 100%, 6);
     background-image: url('img/unit_tokens_fre.webp');
@@ -309,4 +321,3 @@ $french-units: (
 //   left: 700px;
 //   filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
 // }
-

@@ -70,6 +70,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     return [
       'id' => $this->id,
       'counterId' => $this->counterId,
+      'faction' => $this->getFaction(),
       'location' => $this->location,
       'previousLocation' => $this->previousLocation,
       'spent' => $this->spent,

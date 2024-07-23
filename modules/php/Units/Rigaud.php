@@ -10,6 +10,6 @@ class Rigaud extends \BayonetsAndTomahawks\Models\Commander
     $this->counterText = clienttranslate('Rigaud');
     $this->faction = FRENCH;
     $this->rating = 2;
-    
+    $this->rerollShapes = [TRIANGLE];
   }
 }

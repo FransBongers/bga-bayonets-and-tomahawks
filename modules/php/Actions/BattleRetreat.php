@@ -10,6 +10,7 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
@@ -53,6 +54,18 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
 
   public function stPreBattleRetreat()
   {
+    // Return commanders to their stacks
+    Units::getInLocationLike(COMMANDER, 'commander_rerolls_track');
+    $commanders = $this->getCommandersOnRerollsTrack();
+    $spaceId = Globals::getActiveBattleSpaceId();
+
+    foreach($commanders as $faction => $unit) {
+      if ($unit === null) {
+        continue;
+      }
+      $unit->setLocation($spaceId);
+      Notifications::battleReturnCommander(Players::getPlayerForFaction($faction), $unit, $spaceId);
+    }
   }
 
 
@@ -122,7 +135,12 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
       return $unit->getId();
     }, $units), $spaceId);
 
-    Notifications::moveStack(self::getPlayer(), $units, $fromSpace, $space, true);
+    $markers = Markers::getInLocation(Locations::stackMarker($fromSpace->getId(), $faction))->toArray();
+    Markers::move(array_map(function ($marker) {
+      return $marker->getId();
+    }, $markers), Locations::stackMarker($space->getId(), $faction));
+
+    Notifications::moveStack(self::getPlayer(), $units, $markers, $fromSpace, $space, true);
 
     $this->resolveAction($args);
   }
@@ -135,16 +153,11 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  private function filterConnectionRestrictions($possibleConnections, $units)
+  private function filterConnectionRestrictions($possibleRetreatOptions, $units)
   {
-    $result = [];
-
-    foreach ($possibleConnections as $spaceId => $connection) {
-      if ($connection->canBeUsedByUnits($units, true)) {
-        $result[$spaceId] = $connection;
-      }
-    }
-    return $result;
+    return Utils::filter($possibleRetreatOptions, function ($data) use ($units) {
+      return $data['connection']->canBeUsedByUnits($units, true);
+    });
   }
 
   private function getRetreatOptions()
@@ -155,11 +168,17 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
     $isAttacker = $info['isAttacker'];
 
     $space = Spaces::get($spaceId);
-    $units = $space->getUnits($faction);
-
-    $hasFleets = Utils::array_some($units, function ($unit) {
+    $attackerUnits = $isAttacker ? $space->getUnits($faction) : $space->getUnits(Players::otherFaction($faction));
+    $defenderUnits = !$isAttacker ? $space->getUnits($faction) : $space->getUnits(Players::otherFaction($faction));
+    $spaceIdsAttackersEnteredFrom = array_map(function ($unit) {
+      return $unit->getPreviousLocation();
+    }, $attackerUnits);
+    // $units = $space->getUnits($faction);
+    $hasFleets = Utils::array_some($isAttacker ? $attackerUnits : $defenderUnits, function ($unit) {
       return $unit->isFleet();
     });
+
+    $possibleRetreatOptions = $space->getAdjacentConnectionsAndSpaces();
 
     if ($hasFleets) {
       // Fleet retreat priorities
@@ -167,23 +186,27 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
     } else if ($isAttacker) {
       // Attacker retreat priorities
       Notifications::log('Attacker retreat', []);
+      $optionsFriendlyStackEnteredFrom = Utils::filter($possibleRetreatOptions, function ($data) use ($spaceIdsAttackersEnteredFrom) {
+        return in_array($data['space']->getId(), $spaceIdsAttackersEnteredFrom);
+      });
+      $optionsFriendlyStackEnteredFrom = $this->filterConnectionRestrictions($optionsFriendlyStackEnteredFrom, $attackerUnits);
+
+      return array_map(function ($data) {
+        return $data['space'];
+      }, $optionsFriendlyStackEnteredFrom);
     } else {
       // Defender retreat priorities
       Notifications::log('Defender retreat', []);
-      $attackerUnits = $space->getUnits(Players::otherFaction($faction));
-      $spaceIdsAttackersEnteredFrom = array_map(function ($unit) {
-        return $unit->getPreviousLocation();
-      }, $attackerUnits);
 
-      $possibleConnections = $space->getAdjacentConnections();
-      foreach ($spaceIdsAttackersEnteredFrom as $attackerSpaceId) {
-        unset($possibleConnections[$attackerSpaceId]);
-      }
+      $possibleRetreatOptions = Utils::filter($possibleRetreatOptions, function ($data) use ($spaceIdsAttackersEnteredFrom) {
+        return !in_array($data['space']->getId(), $spaceIdsAttackersEnteredFrom);
+      });
 
-      $possibleConnections = $this->filterConnectionRestrictions($possibleConnections, $units);
+      $possibleRetreatOptions = $this->filterConnectionRestrictions($possibleRetreatOptions, $isAttacker ? $attackerUnits : $defenderUnits);
 
-      return $this->getSpacesBasedOnAdjacentSpaceRetreatPriorities($possibleConnections, $faction);
+      return $this->getSpacesBasedOnAdjacentSpaceRetreatPriorities($possibleRetreatOptions, $faction);
     }
+    return [];
   }
 
   private function getSpacesBasedOnAdjacentSpaceRetreatPriorities($possibleConnections, $faction)

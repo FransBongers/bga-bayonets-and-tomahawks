@@ -1,4 +1,4 @@
-@use "sass:math";
+@use 'sass:math';
 /* ------- UNDO TURN ------- */
 
 /* Cancelled notification messages */
@@ -30,7 +30,7 @@
 
     &::before,
     &::after {
-      content: "\f0e2";
+      content: '\f0e2';
       font: normal normal normal 12px/1 FontAwesome;
       margin: 0px 10px;
     }
@@ -58,7 +58,7 @@
 
       &::before,
       &::after {
-        content: "\f0e2";
+        content: '\f0e2';
         font: normal normal normal 12px/1 FontAwesome;
         margin: 0px 10px;
       }
@@ -82,27 +82,36 @@
   border-radius: 5%;
 }
 
-.bt_log_die[data-die-result=b_and_t] {
+.bt_log_die[data-die-result='b_and_t'] {
   background-position-x: 0%;
 }
 
-.bt_log_die[data-die-result=miss] {
+.bt_log_die[data-die-result='miss'] {
   background-position-x: 25%;
 }
 
-.bt_log_die[data-die-result=flag] {
+.bt_log_die[data-die-result='flag'] {
   background-position-x: 50%;
 }
 
-.bt_log_die[data-die-result=hit_square_circle] {
+.bt_log_die[data-die-result='hit_square_circle'] {
   background-position-x: 75%;
 }
 
-
-.bt_log_die[data-die-result=hit_triangle_circle] {
+.bt_log_die[data-die-result='hit_triangle_circle'] {
   background-position-x: 100%;
 }
 
+#customActions {
+  .bt_log_die {
+    // display: inline-block;
+    // position: relative;
+    --btTokenScale: 0.7;
+    // vertical-align: middle;
+    // top: -3px;
+    // margin-top: 3px;
+  }
+}
 
 #pagemaintitletext,
 #gameaction_status {
@@ -127,6 +136,15 @@
     margin-top: 3px;
     vertical-align: middle;
     border: 1px solid black;
+  }
+
+  .bt_log_die {
+    // display: inline-block;
+    position: relative;
+    --btTokenScale: 0.7;
+    vertical-align: middle;
+    top: -3px;
+    margin-top: 3px;
   }
 }
 

@@ -43,6 +43,17 @@ interface OnEnteringBattleRetreatStateArgs extends CommonArgs {
   retreatOptions: BTSpace[];
 }
 
+interface BTDieResultWithRerollSources {
+  availableRerollSources: string[];
+  result: string;
+  usedRerollSources: string[];
+  index: number;
+}
+
+interface OnEnteringBattleRollsRerollsStateArgs extends CommonArgs {
+  diceResults: BTDieResultWithRerollSources[];
+}
+
 interface OnEnteringBattleSelectCommanderStateArgs extends CommonArgs {
   space: BTSpace;
   commanders: BTUnit[];

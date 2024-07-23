@@ -9,5 +9,7 @@ class Forbes extends \BayonetsAndTomahawks\Models\Commander
     $this->counterId = FORBES;
     $this->counterText = clienttranslate('Forbes');
     $this->faction = BRITISH;
+    $this->rerollShapes = [SQUARE];
+    $this->rating = 1;
   }
 }

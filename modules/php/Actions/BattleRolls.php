@@ -48,8 +48,6 @@ class BattleRolls extends \BayonetsAndTomahawks\Actions\Battle
 
     $space = Spaces::get($spaceId);
 
-
-
     $units = $space->getUnits();
 
     // Defender / attacker in reverse order here because we insertAsBrother and want

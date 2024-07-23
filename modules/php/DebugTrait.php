@@ -82,7 +82,7 @@ trait DebugTrait
   function debug_test()
   {
     // Markers::get(FRENCH_BATTLE_MARKER)->setLocation(Locations::battleTrack(false, 5));
-    Notifications::log('adjacent', Spaces::get(TICONDEROGA)->getAdjacentSpacesIds());
+    Notifications::log('commanders', $this->getCommandersOnRerollTrack());
 
     // $space = Spaces::get(LAKE_GEORGE);
     // $defendingFaction = $space->getDefender();

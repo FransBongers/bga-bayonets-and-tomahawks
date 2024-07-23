@@ -180,8 +180,9 @@ class ArmyMovementDestination extends \BayonetsAndTomahawks\Actions\UnitMovement
 
     Units::move($unitIds, $destinationId, 0, $originId);
 
+    // TODO: move markers
 
-    Notifications::moveStack(self::getPlayer(), $units, $origin, $destination);
+    Notifications::moveStack(self::getPlayer(), $units, [], $origin, $destination);
 
     // Check if origin was Settled space and is now empty of enemy units
     $this->loseControlCheck($player, $origin);

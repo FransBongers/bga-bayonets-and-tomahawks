@@ -53,6 +53,11 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     $defendingFaction = $space->getDefender();
     $attackingFaction = Players::otherFaction($defendingFaction);
 
+    Globals::setActiveBattleSpaceId($parentInfo['spaceId']);
+    Globals::setActiveBattleAttackerFaction($attackingFaction);
+    Globals::setActiveBattleDefenderFaction($defendingFaction);
+    Globals::setActiveBattleHighlandBrigadeHit(false);
+
     $this->ctx->getParent()->updateInfo('attacker', $attackingFaction);
     $this->ctx->getParent()->updateInfo('defender', $defendingFaction);
 
@@ -66,7 +71,7 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
 
     $this->placeMarkers($space, $attackingFaction, $defendingFaction);
 
-    $this->selectCommanders($units, $attackingPlayer, $defendingPlayer);
+    $this->selectCommanders($units,[$attackingPlayer, $defendingPlayer], $space);
 
     $this->resolveAction(['automatic' => true]);
   }
@@ -147,26 +152,5 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     $defenderMarker->setLocation(Locations::battleTrack(false, 0));
 
     Notifications::battleStart($space, $attackerMarker, $defenderMarker);
-  }
-
-  private function selectCommanders($units, $attackingPlayer, $defendingPlayer)
-  {
-    foreach ([$attackingPlayer, $defendingPlayer] as $index => $player) {
-      $commanders = Utils::filter($units, function ($unit) use ($player) {
-        return $unit->getType() === COMMANDER && $unit->getFaction() === $player->getFaction();
-      });
-      $numberOfCommanders = count($commanders);
-      if ($numberOfCommanders === 1) {
-        // Place commander
-      } else if ($numberOfCommanders > 1) {
-        // Insert state to select commander
-        $this->ctx->insertAsBrother(
-          Engine::buildTree([
-            'playerId' => $player->getId(),
-            'action' => BATTLE_SELECT_COMMANDER,
-          ])
-        );
-      }
-    }
   }
 }

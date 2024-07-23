@@ -8,10 +8,12 @@
 
 class Pools {
   protected game: BayonetsAndTomahawksGame;
-  
+
+  public stocks: Record<string, LineStock<BTToken>> = {};
+
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
-      const gamedatas = game.gamedatas;
+    const gamedatas = game.gamedatas;
 
     this.setupPools({ gamedatas });
   }
@@ -24,35 +26,48 @@ class Pools {
   // .##....##.##..........##....##.....##.##.......
   // ..######..########....##.....#######..##.......
 
-  setupUnits({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
-    POOLS.forEach((pool: string) => {
-      const units = gamedatas.units.filter((unit) => unit.location === pool);
+  setupPoolsStocks({
+    gamedatas,
+  }: {
+    gamedatas: BayonetsAndTomahawksGamedatas;
+  }) {
+    POOLS.forEach((poolId: string) => {
+      this.stocks[poolId] = new LineStock<BTToken>(
+        this.game.tokenManager,
+        document.getElementById(poolId),
+        {center: false, gap: '2px'}
+      );
+    });
+
+    this.updatePools({ gamedatas });
+  }
+
+  updatePools({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
+    POOLS.forEach((poolId: string) => {
+      const units = gamedatas.units.filter((unit) => unit.location === poolId);
       // console.log('units ' + pool,units);
       if (units.length === 0) {
         return;
       }
-      const node = document.querySelectorAll(`[data-pool-id="${pool}"]`);
-      if (node.length === 0) {
-        return;
-      }
-      
-      units.forEach((unit) => {
-        node[0].insertAdjacentHTML('beforeend', tplUnit({counterId: unit.counterId, style: 'position: relative;'}));
-      })
-    });
-    // 
-  }
 
-  updatePools({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {}
+      this.stocks[poolId].addCards(units);
+
+      // units.forEach((unit) => {
+      //   node[0].insertAdjacentHTML(
+      //     'beforeend',
+      //     tplUnit({ counterId: unit.counterId, style: 'position: relative;' })
+      //   );
+      // });
+    });
+  }
 
   // Setup functions
   setupPools({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
     document
-    .getElementById("play_area_container")
-    .insertAdjacentHTML("beforeend", tplPoolsContainer());
-    this.setupUnits({gamedatas})
+      .getElementById('play_area_container')
+      .insertAdjacentHTML('beforeend', tplPoolsContainer());
+    this.setupPoolsStocks({ gamedatas });
   }
-
 
   clearInterface() {}
 
@@ -72,7 +87,6 @@ class Pools {
   // .##....##.##..........##.......##....##.......##....##..##....##
   // ..######..########....##.......##....########.##.....##..######.
 
-
   //  .##.....##.########.####.##.......####.########.##....##
   //  .##.....##....##.....##..##........##.....##.....##..##.
   //  .##.....##....##.....##..##........##.....##......####..
@@ -80,5 +94,4 @@ class Pools {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
-
 }

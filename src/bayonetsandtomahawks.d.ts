@@ -124,6 +124,7 @@ interface BTUnit {
   manager: 'units';
   id: string;
   counterId: string;
+  faction: string;
   location: string;
   spent: number;
   reduced: boolean;

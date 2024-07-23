@@ -925,6 +925,10 @@ body > .card {
   background-position-x: 100%;
 }
 
+#customActions .bt_log_die {
+  --btTokenScale: 0.7;
+}
+
 #pagemaintitletext .bt_card,
 #gameaction_status .bt_card {
   display: none;
@@ -947,6 +951,14 @@ body > .card {
   margin-top: 3px;
   vertical-align: middle;
   border: 1px solid black;
+}
+#pagemaintitletext .bt_log_die,
+#gameaction_status .bt_log_die {
+  position: relative;
+  --btTokenScale: 0.7;
+  vertical-align: middle;
+  top: -3px;
+  margin-top: 3px;
 }
 
 .log > .roundedbox .bt_log_card,
@@ -1003,6 +1015,7 @@ body > .card {
   background-color: ivory;
   padding: 4px;
   box-shadow: 1px 1px 5px #000;
+  --btTokenScale: 1;
 }
 
 .bt_unit_pool {
@@ -1013,6 +1026,16 @@ body > .card {
 
 .bt_unit_pool_section_title {
   margin-top: 8px;
+}
+
+.bt_token {
+  height: calc(var(--btTokenScale) * 52px);
+  width: calc(var(--btTokenScale) * 52px);
+}
+
+.bt_token[data-commander=true] {
+  height: calc(var(--btTokenScale) * 40px);
+  width: calc(var(--btTokenScale) * 40px);
 }
 
 .bt_token_side {
@@ -1026,10 +1049,6 @@ body > .card {
 .bt_token_side[data-commander=true] {
   height: calc(var(--btTokenScale) * 40px);
   width: calc(var(--btTokenScale) * 40px);
-}
-
-.bt_token .card-sides .card-side {
-  transform-origin: left center;
 }
 
 .bt_token_side[data-counter-id=Abenaki] {
@@ -3389,6 +3408,17 @@ html {
   top: -400px;
   left: 0px;
   --btCardScale: 1;
+}
+
+#page-title {
+  min-height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#pagemaintitle_wrap {
+  flex-grow: 1;
 }
 
 /* make space between buttons on touch devices */

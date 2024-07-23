@@ -108,6 +108,14 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
     })->toArray();
   }
 
+  public static function getInLocationLike($location)
+  {
+    return self::getSelectQuery()
+      ->where(static::$prefix . 'location', 'LIKE', $location . '%')
+      ->get()
+      ->toArray();
+  }
+
   // public static function get($id, $raiseExceptionIfNotEnough = true)
   // {
   //   $result = self::getMany($id, $raiseExceptionIfNotEnough);

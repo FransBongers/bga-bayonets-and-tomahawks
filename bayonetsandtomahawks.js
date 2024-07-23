@@ -2238,6 +2238,7 @@ var BayonetsAndTomahawks = (function () {
             armyMovementDestination: new ArmyMovementDestinationState(this),
             battleApplyHits: new BattleApplyHitsState(this),
             battleRetreat: new BattleRetreatState(this),
+            battleRollsRerolls: new BattleRollsRerollsState(this),
             battleSelectCommander: new BattleSelectCommanderState(this),
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
@@ -3880,9 +3881,12 @@ var NotificationManager = (function () {
         console.log('notifications subscriptions setup');
         var notifs = [
             'log',
+            'message',
             'advanceBattleVictoryMarker',
             'battle',
             'battleCleanup',
+            'battleReroll',
+            'battleReturnCommander',
             'battleStart',
             'battleSelectCommander',
             'discardCardFromHand',
@@ -3951,6 +3955,13 @@ var NotificationManager = (function () {
             });
         });
     };
+    NotificationManager.prototype.notif_message = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2];
+            });
+        });
+    };
     NotificationManager.prototype.notif_smallRefreshInterface = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var updatedGamedatas;
@@ -4014,20 +4025,38 @@ var NotificationManager = (function () {
             });
         });
     };
-    NotificationManager.prototype.notif_battleStart = function (notif) {
+    NotificationManager.prototype.notif_battleReroll = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, attackerMarker, defenderMarker;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var commander;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _a = notif.args, attackerMarker = _a.attackerMarker, defenderMarker = _a.defenderMarker;
-                        return [4, Promise.all([
-                                this.game.gameMap.battleTrack[attackerMarker.location].addCard(attackerMarker),
-                                this.game.gameMap.battleTrack[defenderMarker.location].addCard(defenderMarker),
-                            ])];
+                        commander = notif.args.commander;
+                        if (commander === null) {
+                            return [2];
+                        }
+                        return [4, this.game.gameMap.commanderRerollsTrack[commander.location].addCard(commander)];
                     case 1:
-                        _b.sent();
+                        _a.sent();
                         return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_battleReturnCommander = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var commander, unitStack;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        commander = notif.args.commander;
+                        unitStack = this.game.gameMap.stacks[commander.location][commander.faction];
+                        if (!unitStack) return [3, 2];
+                        return [4, unitStack.addUnit(commander)];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [2];
                 }
             });
         });
@@ -4042,6 +4071,24 @@ var NotificationManager = (function () {
                         return [4, this.game.gameMap.commanderRerollsTrack[commander.location].addCard(commander)];
                     case 1:
                         _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_battleStart = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, attackerMarker, defenderMarker;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = notif.args, attackerMarker = _a.attackerMarker, defenderMarker = _a.defenderMarker;
+                        return [4, Promise.all([
+                                this.game.gameMap.battleTrack[attackerMarker.location].addCard(attackerMarker),
+                                this.game.gameMap.battleTrack[defenderMarker.location].addCard(defenderMarker),
+                            ])];
+                    case 1:
+                        _b.sent();
                         return [2];
                 }
             });
@@ -4184,14 +4231,17 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_moveStack = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, stack, destination, faction, unitStack;
+            var _a, stack, destination, faction, markers, unitStack;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = notif.args, stack = _a.stack, destination = _a.destination, faction = _a.faction;
+                        _a = notif.args, stack = _a.stack, destination = _a.destination, faction = _a.faction, markers = _a.markers;
                         unitStack = this.game.gameMap.stacks[destination.id][faction];
                         if (!unitStack) return [3, 2];
-                        return [4, unitStack.addUnits(stack)];
+                        return [4, Promise.all([
+                                unitStack.addUnits(stack),
+                                unitStack.addUnits(markers),
+                            ])];
                     case 1:
                         _b.sent();
                         _b.label = 2;
@@ -4489,35 +4539,36 @@ var BatPlayer = (function () {
 }());
 var Pools = (function () {
     function Pools(game) {
+        this.stocks = {};
         this.game = game;
         var gamedatas = game.gamedatas;
         this.setupPools({ gamedatas: gamedatas });
     }
-    Pools.prototype.setupUnits = function (_a) {
+    Pools.prototype.setupPoolsStocks = function (_a) {
+        var _this = this;
         var gamedatas = _a.gamedatas;
-        POOLS.forEach(function (pool) {
-            var units = gamedatas.units.filter(function (unit) { return unit.location === pool; });
+        POOLS.forEach(function (poolId) {
+            _this.stocks[poolId] = new LineStock(_this.game.tokenManager, document.getElementById(poolId), { center: false, gap: '2px' });
+        });
+        this.updatePools({ gamedatas: gamedatas });
+    };
+    Pools.prototype.updatePools = function (_a) {
+        var _this = this;
+        var gamedatas = _a.gamedatas;
+        POOLS.forEach(function (poolId) {
+            var units = gamedatas.units.filter(function (unit) { return unit.location === poolId; });
             if (units.length === 0) {
                 return;
             }
-            var node = document.querySelectorAll("[data-pool-id=\"".concat(pool, "\"]"));
-            if (node.length === 0) {
-                return;
-            }
-            units.forEach(function (unit) {
-                node[0].insertAdjacentHTML('beforeend', tplUnit({ counterId: unit.counterId, style: 'position: relative;' }));
-            });
+            _this.stocks[poolId].addCards(units);
         });
-    };
-    Pools.prototype.updatePools = function (_a) {
-        var gamedatas = _a.gamedatas;
     };
     Pools.prototype.setupPools = function (_a) {
         var gamedatas = _a.gamedatas;
         document
-            .getElementById("play_area_container")
-            .insertAdjacentHTML("beforeend", tplPoolsContainer());
-        this.setupUnits({ gamedatas: gamedatas });
+            .getElementById('play_area_container')
+            .insertAdjacentHTML('beforeend', tplPoolsContainer());
+        this.setupPoolsStocks({ gamedatas: gamedatas });
     };
     Pools.prototype.clearInterface = function () { };
     return Pools;
@@ -4525,10 +4576,10 @@ var Pools = (function () {
 var tplPoolsContainer = function () {
     return "\n  <div id=\"bt_right_column\">\n    ".concat(tplPoolFleets(), "\n    ").concat(tplPoolNeutralIndians(), "\n    ").concat(tplPoolBritish(), "\n    ").concat(tplPoolFrench(), "\n  </div>");
 };
-var tplPoolFleets = function () { return "\n<div id=\"bt_pool_fleets\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Fleets'), "</span></div>\n  <div data-pool-id=\"poolFleets\" class=\"bt_unit_pool\"></div>\n</div>"); };
-var tplPoolNeutralIndians = function () { return "\n<div id=\"bt_pool_neutralIndians\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Neutral Indians'), "</span></div>\n  <div data-pool-id=\"poolNeutralIndians\" class=\"bt_unit_pool\"></div>\n</div>"); };
-var tplPoolBritish = function () { return "\n<div id=\"bt_pool_british\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('British'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Commanders'), "</span></div>\n    <div data-pool-id=\"poolBritishCommanders\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Light'), "</span></div>\n    <div data-pool-id=\"poolBritishLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Artillery'), "</span></div>\n    <div data-pool-id=\"poolBritishArtillery\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Forts'), "</span></div>\n    <div data-pool-id=\"poolBritishForts\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Metropolitan Brigades & VoW'), "</span></div>\n    <div data-pool-id=\"poolBritishMetropolitanVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial Brigades & VoW'), "</span></div>\n    <div data-pool-id=\"poolBritishColonialVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
-var tplPoolFrench = function () { return "\n<div id=\"bt_pool_french\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('French'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Commanders'), "</span></div>\n    <div data-pool-id=\"poolFrenchCommanders\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Light'), "</span></div>\n    <div data-pool-id=\"poolFrenchLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Artillery'), "</span></div>\n    <div data-pool-id=\"poolFrenchArtillery\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Forts'), "</span></div>\n    <div data-pool-id=\"poolFrenchForts\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Metropolitan Brigades & VoW'), "</span></div>\n    <div data-pool-id=\"poolFrenchMetropolitanVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
+var tplPoolFleets = function () { return "\n<div id=\"bt_pool_fleets\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Fleets'), "</span></div>\n  <div id=\"poolFleets\" class=\"bt_unit_pool\"></div>\n</div>"); };
+var tplPoolNeutralIndians = function () { return "\n<div id=\"bt_pool_neutralIndians\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Neutral Indians'), "</span></div>\n  <div id=\"poolNeutralIndians\" class=\"bt_unit_pool\"></div>\n</div>"); };
+var tplPoolBritish = function () { return "\n<div id=\"bt_pool_british\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('British'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Commanders'), "</span></div>\n    <div id=\"poolBritishCommanders\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Light'), "</span></div>\n    <div id=\"poolBritishLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Artillery'), "</span></div>\n    <div id=\"poolBritishArtillery\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Forts'), "</span></div>\n    <div id=\"poolBritishForts\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Metropolitan Brigades & VoW'), "</span></div>\n    <div id=\"poolBritishMetropolitanVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial Brigades & VoW'), "</span></div>\n    <div id=\"poolBritishColonialVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
+var tplPoolFrench = function () { return "\n<div id=\"bt_pool_french\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('French'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Commanders'), "</span></div>\n    <div id=\"poolFrenchCommanders\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Light'), "</span></div>\n    <div id=\"poolFrenchLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Artillery'), "</span></div>\n    <div id=\"poolFrenchArtillery\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Forts'), "</span></div>\n    <div id=\"poolFrenchForts\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Metropolitan Brigades & VoW'), "</span></div>\n    <div id=\"poolFrenchMetropolitanVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
 var tplPool = function (_a) {
     var type = _a.type;
     return "<div id=\"bt_pool_".concat(type, "\" class=\"bt_unit_pool\">\n  </div>");
@@ -5625,6 +5676,76 @@ var BattleRetreatState = (function () {
     };
     return BattleRetreatState;
 }());
+var BattleRollsRerollsState = (function () {
+    function BattleRollsRerollsState(game) {
+        this.game = game;
+    }
+    BattleRollsRerollsState.prototype.onEnteringState = function (args) {
+        debug('Entering BattleRollsRerollsState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    BattleRollsRerollsState.prototype.onLeavingState = function () {
+        debug('Leaving BattleRollsRerollsState');
+    };
+    BattleRollsRerollsState.prototype.setDescription = function (activePlayerId) { };
+    BattleRollsRerollsState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} may select a die to reroll'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.args.diceResults.forEach(function (dieResult) {
+            return _this.game.addPrimaryActionButton({
+                id: "die_result_".concat(dieResult.index, "_btn"),
+                text: _this.game.format_string_recursive('${tkn_dieResult}', {
+                    tkn_dieResult: dieResult.result,
+                }),
+                callback: function () { return _this.updateInterfaceConfirm({ dieResult: dieResult }); },
+            });
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    BattleRollsRerollsState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var dieResult = _a.dieResult;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Reroll ${tkn_dieResult} ?'),
+            args: {
+                tkn_dieResult: dieResult.result,
+            },
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actBattleRollsRerolls',
+                args: {
+                    dieResult: dieResult,
+                    rerollSource: dieResult.availableRerollSources[0]
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    return BattleRollsRerollsState;
+}());
 var BattleSelectCommanderState = (function () {
     function BattleSelectCommanderState(game) {
         this.game = game;
@@ -6169,10 +6290,16 @@ var TokenManager = (function (_super) {
     }
     TokenManager.prototype.clearInterface = function () { };
     TokenManager.prototype.setupDiv = function (token, div) {
+        var _a;
         if (token.manager === UNITS) {
             div.style.position = 'relative';
             div.classList.add('bt_token');
             div.insertAdjacentHTML('beforeend', "<div id=\"spent_marker_".concat(token.id, "\" data-spent=\"").concat(token.spent === 1 ? 'true' : 'false', "\" class=\"bt_spent_marker\"></div>"));
+            var isCommander = ((_a = this.game.gamedatas.staticData.units[token.counterId]) === null || _a === void 0 ? void 0 : _a.type) ===
+                COMMANDER;
+            if (isCommander) {
+                div.setAttribute('data-commander', 'true');
+            }
         }
         else if (token.manager === MARKERS) {
             div.classList.add('bt_marker');

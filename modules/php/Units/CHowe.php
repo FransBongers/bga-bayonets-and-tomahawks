@@ -9,5 +9,7 @@ class CHowe extends \BayonetsAndTomahawks\Models\Commander
     $this->counterId = C_HOWE;
     $this->counterText = clienttranslate('Howe');
     $this->faction = BRITISH;
+    $this->rerollShapes = [TRIANGLE, SQUARE];
+    $this->rating = 2;
   }
 }

@@ -329,6 +329,14 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
         break;
       case HIGHLAND_BRIGADES:
       case METROPOLITAN_BRIGADES:
+        if (!Globals::getActiveBattleHighlandBrigadeHit()) {
+          $units = Utils::filter($enemyUnits, function ($unit) {
+            return $unit->isHighlandBrigade();
+          });
+          if (count($units) > 0) {
+            return $units;
+          }
+        }
         $units = Utils::filter($enemyUnits, function ($unit) {
           return $unit->isMetropolitanBrigade();
         });
@@ -347,6 +355,14 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
         if (count($units) > 0) {
           return $units;
         } else {
+          if (!Globals::getActiveBattleHighlandBrigadeHit()) {
+            $units = Utils::filter($enemyUnits, function ($unit) {
+              return $unit->isHighlandBrigade();
+            });
+            if (count($units) > 0) {
+              return $units;
+            }
+          }
           return Utils::filter($enemyUnits, function ($unit) {
             return $unit->isMetropolitanBrigade();
           });

@@ -9,5 +9,7 @@ class CLevis extends \BayonetsAndTomahawks\Models\Commander
     $this->counterId = C_LEVIS;
     $this->counterText = clienttranslate('Lévis');
     $this->faction = FRENCH;
+    $this->rating = 3;
+    $this->rerollShapes = [TRIANGLE, SQUARE];
   }
 }

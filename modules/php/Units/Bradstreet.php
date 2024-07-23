@@ -1,4 +1,5 @@
 <?php
+
 namespace BayonetsAndTomahawks\Units;
 
 class Bradstreet extends \BayonetsAndTomahawks\Models\Commander
@@ -9,5 +10,7 @@ class Bradstreet extends \BayonetsAndTomahawks\Models\Commander
     $this->counterId = BRADSTREET;
     $this->counterText = clienttranslate('Bradstreet');
     $this->faction = BRITISH;
+    $this->rerollShapes = [SQUARE];
+    $this->rating = 2;
   }
 }

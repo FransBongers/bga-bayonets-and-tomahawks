@@ -1,6 +1,8 @@
 <?php
 namespace BayonetsAndTomahawks\Models;
 
+use BayonetsAndTomahawks\Core\Notifications;
+
 class Commander extends AbstractUnit
 {
   protected $rating = 0;
@@ -17,5 +19,16 @@ class Commander extends AbstractUnit
   public function getRating()
   {
     return $this->rating;
+  }
+
+  public function getRerollShapes()
+  {
+    return $this->rerollShapes;
+  }
+
+  public function eliminate($player)
+  {
+    $this->setLocation(REMOVED_FROM_PLAY);
+    Notifications::eliminateUnit($player, $this);
   }
 }

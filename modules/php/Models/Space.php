@@ -88,11 +88,29 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   public function getAdjacentConnections()
   {
     $result = [];
-    $spaces = Spaces::getMany($this->getAdjacentSpacesIds());
+    // $spaces = Spaces::getMany($this->getAdjacentSpacesIds());
 
     foreach ($this->adjacentSpaces as $spaceId => $connectionId) {
       // TODO: query all connections in one go?
       $result[$spaceId] = Connections::get($connectionId);
+      // TODO: check where this is used and refactor to use space data
+      // $result[$spaceId]['space'] = $spaces[$spaceId];
+    };
+    return $result;
+  }
+
+  // TODO: refactor to use this and above unit everywhere
+  public function getAdjacentConnectionsAndSpaces()
+  {
+    $result = [];
+    $spaces = Spaces::getMany($this->getAdjacentSpacesIds());
+
+    foreach ($this->adjacentSpaces as $spaceId => $connectionId) {
+      // TODO: query all connections in one go?
+      $result[] = [
+        'space' => $spaces[$spaceId],
+        'connection' => Connections::get($connectionId)
+      ];
       // TODO: check where this is used and refactor to use space data
       // $result[$spaceId]['space'] = $spaces[$spaceId];
     };

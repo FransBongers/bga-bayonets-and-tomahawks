@@ -59,9 +59,12 @@ class NotificationManager {
     // ];
     const notifs: string[] = [
       'log',
+      'message',
       'advanceBattleVictoryMarker',
       'battle',
       'battleCleanup',
+      'battleReroll',
+      'battleReturnCommander',
       'battleStart',
       'battleSelectCommander',
       'discardCardFromHand',
@@ -174,6 +177,10 @@ class NotificationManager {
     debug('notif_log', notif.args);
   }
 
+  async notif_message(notif: Notif<unknown>) {
+    // Only here so messages get displayed in title bar
+  }
+
   // notif_smallRefreshHand(notif: Notif<NotifSmallRefreshHandArgs>) {
   //   const { hand, playerId } = notif.args;
   //   const player = this.getPlayer({ playerId });
@@ -228,6 +235,36 @@ class NotificationManager {
     });
   }
 
+  async notif_battleReroll(notif: Notif<NotifBattleRerollArgs>) {
+    const { commander } = notif.args;
+    if (commander === null) {
+      return;
+    }
+    await this.game.gameMap.commanderRerollsTrack[commander.location].addCard(
+      commander
+    );
+  }
+
+  async notif_battleReturnCommander(
+    notif: Notif<NotifBattleReturnCommanderArgs>
+  ) {
+    const { commander } = notif.args;
+    const unitStack =
+      this.game.gameMap.stacks[commander.location][commander.faction];
+    if (unitStack) {
+      await (unitStack as UnitStack).addUnit(commander);
+    }
+  }
+
+  async notif_battleSelectCommander(
+    notif: Notif<NotifBattleSelectCommanderArgs>
+  ) {
+    const { commander } = notif.args;
+    await this.game.gameMap.commanderRerollsTrack[commander.location].addCard(
+      commander
+    );
+  }
+
   async notif_battleStart(notif: Notif<NotifBattleStartArgs>) {
     const { attackerMarker, defenderMarker } = notif.args;
 
@@ -239,15 +276,6 @@ class NotificationManager {
         defenderMarker
       ),
     ]);
-  }
-
-  async notif_battleSelectCommander(
-    notif: Notif<NotifBattleSelectCommanderArgs>
-  ) {
-    const { commander } = notif.args;
-    await this.game.gameMap.commanderRerollsTrack[commander.location].addCard(
-      commander
-    );
   }
 
   async notif_discardCardFromHand(notif: Notif<NotifDiscardCardFromHandArgs>) {
@@ -336,10 +364,13 @@ class NotificationManager {
   }
 
   async notif_moveStack(notif: Notif<NotifMoveStackArgs>) {
-    const { stack, destination, faction } = notif.args;
+    const { stack, destination, faction, markers } = notif.args;
     const unitStack = this.game.gameMap.stacks[destination.id][faction];
     if (unitStack) {
-      await (unitStack as UnitStack).addUnits(stack);
+      await Promise.all([
+        unitStack.addUnits(stack),
+        unitStack.addUnits(markers),
+      ]);
     }
   }
 

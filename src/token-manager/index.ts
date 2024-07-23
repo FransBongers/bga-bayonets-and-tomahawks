@@ -22,6 +22,12 @@ class TokenManager extends CardManager<BTToken> {
           token.spent === 1 ? 'true' : 'false'
         }" class="bt_spent_marker"></div>`
       );
+      const isCommander =
+        this.game.gamedatas.staticData.units[token.counterId]?.type ===
+        COMMANDER;
+      if (isCommander) {
+        div.setAttribute('data-commander', 'true');
+      }
       // if (token.reduced) {
       //   div.setAttribute('data-reduced','true');
       // }

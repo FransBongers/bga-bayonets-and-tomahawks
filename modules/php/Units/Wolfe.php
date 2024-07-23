@@ -9,5 +9,7 @@ class Wolfe extends \BayonetsAndTomahawks\Models\Commander
     $this->counterId = WOLFE;
     $this->counterText = clienttranslate('Wolfe');
     $this->faction = BRITISH;
+    $this->rating = 3;
+    $this->rerollShapes = [SQUARE];
   }
 }

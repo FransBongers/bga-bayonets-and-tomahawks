@@ -28,6 +28,11 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'firstPlayerId' => 'int',
     'secondPlayerId' => 'int',
     'reactionActionPointId' => 'str',
+    // Used in battle
+    'activeBattleSpaceId' => 'str',
+    'activeBattleAttackerFaction' => 'str',
+    'activeBattleDefenderFaction' => 'str',
+    'activeBattleHighlandBrigadeHit' => 'bool',
   ];
 
   protected static $table = 'global_variables';

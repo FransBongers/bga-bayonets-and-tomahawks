@@ -123,8 +123,9 @@ class BattleSelectCommander extends \BayonetsAndTomahawks\Actions\Battle
 
     $player = self::getPlayer();
     $isDefender = $space->getDefender() === $player->getFaction();
+    $maxRating = $this->ctx->getInfo()['maxRating']; // Used when a commander needs to be replaced on the reroll track after becoming a casualty
 
-    $commander->setLocation(Locations::commanderRerollsTrack($isDefender, $commander->getRating()));
+    $commander->setLocation(Locations::commanderRerollsTrack($isDefender, min($maxRating, $commander->getRating())));
 
     Notifications::battleSelectCommander($player, $commander);
 

@@ -33,6 +33,7 @@ class AtomicActions
     BATTLE_RETREAT => 'BattleRetreat',
     BATTLE_ROLLS => 'BattleRolls',
     BATTLE_ROLLS_EFFECTS => 'BattleRollsEffects',
+    BATTLE_ROLLS_REROLLS => 'BattleRollsRerolls',
     BATTLE_ROLLS_ROLL_DICE => 'BattleRollsRollDice',
     BATTLE_ROUT => 'BattleRout',
     BATTLE_SELECT_COMMANDER => 'BattleSelectCommander',

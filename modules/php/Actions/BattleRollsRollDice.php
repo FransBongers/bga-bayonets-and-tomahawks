@@ -56,17 +56,36 @@ class BattleRollsRollDice extends \BayonetsAndTomahawks\Actions\Battle
 
     Notifications::battleRolls($player, $battleRollsSequenceStep, $diceResults, $unitIds);
 
-    // If commander, allow re-rolls
+    $diceResultsWithRerollSources = array_map(function ($dieResult) {
+      return [
+        'result' => $dieResult,
+        'usedRerollSources' => [],
+      ];
+    }, $diceResults);
 
-    // Else, apply results
-    $this->ctx->insertAsBrother(new LeafNode([
-      'action' => BATTLE_ROLLS_EFFECTS,
-      'playerId' => $player->getId(),
-      'battleRollsSequenceStep' => $battleRollsSequenceStep,
-      // 'unitIds' => $unitIds,
-      'diceResults' => $diceResults,
-      'faction' => $faction,
-    ]));
+    // Check if possible to reroll
+    $rerollOptions = $this->getRerollOptions($diceResultsWithRerollSources, $battleRollsSequenceStep, $faction);
+    if (Utils::array_some($rerollOptions, function ($rerollOption) {
+      return count($rerollOption['availableRerollSources']) > 0;
+    })) {
+      $this->ctx->insertAsBrother(new LeafNode([
+        'action' => BATTLE_ROLLS_REROLLS,
+        'playerId' => $player->getId(),
+        'battleRollsSequenceStep' => $battleRollsSequenceStep,
+        'diceResultsWithRerollSources' => $diceResultsWithRerollSources,
+        'faction' => $faction,
+        'optional' => true,
+      ]));
+    } else {
+      // Else, apply results
+      $this->ctx->insertAsBrother(new LeafNode([
+        'action' => BATTLE_ROLLS_EFFECTS,
+        'playerId' => $player->getId(),
+        'battleRollsSequenceStep' => $battleRollsSequenceStep,
+        'diceResults' => $diceResults,
+        'faction' => $faction,
+      ]));
+    }
 
     $this->resolveAction(['automatic' => true], true);
   }
