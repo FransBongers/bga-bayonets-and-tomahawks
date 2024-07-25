@@ -12,6 +12,7 @@ use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Markers;
+use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
 class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
@@ -53,6 +54,9 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     // Notifications::discardCardInPlay($cardsInPlay);
 
     // 2. Remove Spent markers, as well as any remaning Landing and Marshall markers.
+    $spentUnits = Units::getSpent();
+    Units::removeAllSpentMarkers();
+    Notifications::removeMarkersEndOfActionRound($spentUnits);
 
     // 3. Supply Check (14.1)
 

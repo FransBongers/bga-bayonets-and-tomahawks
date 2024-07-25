@@ -82,6 +82,7 @@ class NotificationManager {
       'placeUnitInLosses',
       'raidPoints',
       'reduceUnit',
+      'removeMarkersEndOfActionRound',
       'revealCardsInPlay',
       'scoreVictoryPoints',
       'selectReserveCard',
@@ -423,6 +424,19 @@ class NotificationManager {
   async notif_reduceUnit(notif: Notif<NotifReduceUnitArgs>) {
     const { unit } = notif.args;
     this.game.tokenManager.updateCardInformations(unit);
+  }
+
+  async notif_removeMarkersEndOfActionRound(
+    notif: Notif<NotifRemoveMarkersEndOfActionRoundArgs>
+  ) {
+    const { spentUnits } = notif.args;
+
+    spentUnits.forEach((unit) => {
+      const element = document.getElementById(`spent_marker_${unit.id}`);
+      if (element) {
+        element.setAttribute('data-spent', 'false');
+      }
+    });
   }
 
   async notif_revealCardsInPlay(notif: Notif<NotifRevealCardsInPlayArgs>) {

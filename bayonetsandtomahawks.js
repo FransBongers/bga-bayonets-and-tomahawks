@@ -3905,6 +3905,7 @@ var NotificationManager = (function () {
             'placeUnitInLosses',
             'raidPoints',
             'reduceUnit',
+            'removeMarkersEndOfActionRound',
             'revealCardsInPlay',
             'scoreVictoryPoints',
             'selectReserveCard',
@@ -4341,6 +4342,21 @@ var NotificationManager = (function () {
             return __generator(this, function (_a) {
                 unit = notif.args.unit;
                 this.game.tokenManager.updateCardInformations(unit);
+                return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_removeMarkersEndOfActionRound = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var spentUnits;
+            return __generator(this, function (_a) {
+                spentUnits = notif.args.spentUnits;
+                spentUnits.forEach(function (unit) {
+                    var element = document.getElementById("spent_marker_".concat(unit.id));
+                    if (element) {
+                        element.setAttribute('data-spent', 'false');
+                    }
+                });
                 return [2];
             });
         });

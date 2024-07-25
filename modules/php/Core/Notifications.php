@@ -477,6 +477,13 @@ class Notifications
     ]);
   }
 
+  public static function removeMarkersEndOfActionRound($spentUnits)
+  {
+    self::notifyAll("removeMarkersEndOfActionRound", clienttranslate('All Spent, Landing and Marshal markers are removed'), [
+      'spentUnits' => $spentUnits,
+    ]);
+  }
+
   public static function scoreVictoryPoints($player, $otherPlayer, $marker, $points)
   {
     $message = '';

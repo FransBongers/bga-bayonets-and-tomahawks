@@ -126,6 +126,10 @@ interface NotifReduceUnitArgs {
   unit: BTUnit;
 }
 
+interface NotifRemoveMarkersEndOfActionRoundArgs {
+  spentUnits: BTUnit[];
+}
+
 interface NotifRevealCardsInPlayArgs {
   british: BTCard;
   french: BTCard;

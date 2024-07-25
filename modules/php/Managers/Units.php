@@ -116,6 +116,19 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
       ->toArray();
   }
 
+  public static function getSpent()
+  {
+    return self::getSelectQuery()
+      ->where('spent', '=', 1)
+      ->get()
+      ->toArray();
+  }
+
+  public static function removeAllSpentMarkers()
+  {
+    self::DB()->update(['spent' => 0])->where('spent', '=', 1)->run();
+  }
+
   // public static function get($id, $raiseExceptionIfNotEnough = true)
   // {
   //   $result = self::getMany($id, $raiseExceptionIfNotEnough);
@@ -176,6 +189,7 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
           'id' => 'unit_' . $unitIdIndex,
           'location' => $location['id'],
           'counter_id' => $unit,
+          'spent' => 0,
           // 'type' => $unit,
         ];
         $data['extra_data'] = ['properties' => []];
@@ -199,6 +213,7 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
           'id' => $id,
           'location' => $poolId,
           'counter_id' => $unit,
+          'spent' => 0,
           // 'type' => $unit,
         ];
         $data['extra_data'] = ['properties' => []];
