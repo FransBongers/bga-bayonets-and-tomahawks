@@ -200,9 +200,21 @@ $british-units: (
   117: 'B1stRoyalAmerican',
   118: 'RoyalScots17th_reduced',
   119: 'RoyalScots17th',
+  120: 'VOWPickTwoArtilleryBritish',
+  121: 'VOWPickTwoArtilleryOrLightBritish',
+  122: 'VOWBackBritish',
+  123: 'VOWPickOneColonialLightPutBack',
+  124: 'VOWPickOneColonialLight',
+  125: 'VOWBackColonial',
+  126: 'VOWFewerTroopsPutBackColonial',
+  127: 'VOWFewerTroopsColonial',
+  128: 'VOWPennsylvaniaMusters',
+  129: 'VOWPittSubsidies',
+  130: 'VOWFewerTroopsPutBackBritish',
+  131: 'VOWFewerTroopsBritish',
 );
 
-@for $i from 1 through 119 {
+@for $i from 1 through 131 {
   .bt_token_side[data-counter-id='#{map.get($british-units,$i)}'] {
     background-position-x: math.div((($i - 1) % 12 * 100%), 11);
     background-position-y: math.div(math.floor(calc(($i - 1) / 12)) * 100%, 10);
@@ -289,9 +301,15 @@ $french-units: (
   75: 'LanguedocLaReine',
   76: 'DeLaMarine_reduced',
   77: 'DeLaMarine',
+  78: 'VOWPickOneArtilleryFrench',
+  79: 'VOWBackFrench',
+  80: 'VOWFewerTroopsPutBackFrench',
+  81: 'VOWFewerTroopsFrench',
+  82: 'VOWFrenchNavyLossedPutBack',
+  83: 'VOWCircleBackFrench',
 );
 
-@for $i from 1 through 119 {
+@for $i from 1 through 83 {
   .bt_token_side[data-counter-id='#{map.get($french-units,$i)}'] {
     background-position-x: math.div((($i - 1) % 12 * 100%), 11);
     background-position-y: math.div(math.floor(calc(($i - 1) / 12)) * 100%, 6);

@@ -51,6 +51,10 @@ const tplPoolBritish = () => `
     <div class="bt_unit_pool_section_title"><span>${_('Colonial Brigades & VoW')}</span></div>
     <div id="poolBritishColonialVoW" class="bt_unit_pool"></div>
   </div>
+  <div>
+    <div class="bt_unit_pool_section_title"><span>${_('Colonial VoW Bonus')}</span></div>
+    <div id="poolBritishColonialVoWBonus" class="bt_unit_pool"></div>
+  </div>
 </div>
 `
 

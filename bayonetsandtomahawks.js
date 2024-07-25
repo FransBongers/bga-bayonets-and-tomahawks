@@ -2062,37 +2062,38 @@ var CardManager = (function () {
 }());
 var MIN_PLAY_AREA_WIDTH = 1500;
 var MIN_NOTIFICATION_MS = 1200;
-var DISABLED = "disabled";
-var BT_SELECTABLE = "bt_selectable";
-var BT_SELECTED = "bt_selected";
-var DISCARD = "discard";
-var PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY = "confirmEndOfTurnPlayerSwitchOnly";
-var PREF_SHOW_ANIMATIONS = "showAnimations";
-var PREF_ANIMATION_SPEED = "animationSpeed";
-var PREF_CARD_SIZE_IN_LOG = "cardSizeInLog";
-var PREF_DISABLED = "disabled";
-var PREF_ENABLED = "enabled";
+var DISABLED = 'disabled';
+var BT_SELECTABLE = 'bt_selectable';
+var BT_SELECTED = 'bt_selected';
+var DISCARD = 'discard';
+var PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY = 'confirmEndOfTurnPlayerSwitchOnly';
+var PREF_SHOW_ANIMATIONS = 'showAnimations';
+var PREF_ANIMATION_SPEED = 'animationSpeed';
+var PREF_CARD_SIZE_IN_LOG = 'cardSizeInLog';
+var PREF_DISABLED = 'disabled';
+var PREF_ENABLED = 'enabled';
 var PREF_SINGLE_COLUMN_MAP_SIZE = 'singleColumnMapSize';
-var BRITISH = "british";
-var FRENCH = "french";
-var INDIAN = "indian";
-var NEUTRAL = "neutral";
+var BRITISH = 'british';
+var FRENCH = 'french';
+var INDIAN = 'indian';
+var NEUTRAL = 'neutral';
 var FACTIONS = [BRITISH, FRENCH, INDIAN];
 var COMMANDER = 'commander';
 var REMOVED_FROM_PLAY = 'removedFromPlay';
-var POOL_FLEETS = "poolFleets";
-var POOL_BRITISH_COMMANDERS = "poolBritishCommanders";
-var POOL_BRITISH_LIGHT = "poolBritishLight";
-var POOL_BRITISH_ARTILLERY = "poolBritishArtillery";
-var POOL_BRITISH_FORTS = "poolBritishForts";
-var POOL_BRITISH_METROPOLITAN_VOW = "poolBritishMetropolitanVoW";
-var POOL_BRITISH_COLONIAL_VOW = "poolBritishColonialVoW";
-var POOL_FRENCH_COMMANDERS = "poolFrenchCommanders";
-var POOL_FRENCH_LIGHT = "poolFrenchLight";
-var POOL_FRENCH_ARTILLERY = "poolFrenchArtillery";
-var POOL_FRENCH_FORTS = "poolFrenchForts";
-var POOL_FRENCH_METROPOLITAN_VOW = "poolFrenchMetropolitanVoW";
-var POOL_NEUTRAL_INDIANS = "poolNeutralIndians";
+var POOL_FLEETS = 'poolFleets';
+var POOL_BRITISH_COMMANDERS = 'poolBritishCommanders';
+var POOL_BRITISH_LIGHT = 'poolBritishLight';
+var POOL_BRITISH_ARTILLERY = 'poolBritishArtillery';
+var POOL_BRITISH_FORTS = 'poolBritishForts';
+var POOL_BRITISH_METROPOLITAN_VOW = 'poolBritishMetropolitanVoW';
+var POOL_BRITISH_COLONIAL_VOW = 'poolBritishColonialVoW';
+var POOL_BRITISH_COLONIAL_VOW_BONUS = 'poolBritishColonialVoWBonus';
+var POOL_FRENCH_COMMANDERS = 'poolFrenchCommanders';
+var POOL_FRENCH_LIGHT = 'poolFrenchLight';
+var POOL_FRENCH_ARTILLERY = 'poolFrenchArtillery';
+var POOL_FRENCH_FORTS = 'poolFrenchForts';
+var POOL_FRENCH_METROPOLITAN_VOW = 'poolFrenchMetropolitanVoW';
+var POOL_NEUTRAL_INDIANS = 'poolNeutralIndians';
 var POOLS = [
     POOL_FLEETS,
     POOL_BRITISH_COMMANDERS,
@@ -2101,6 +2102,7 @@ var POOLS = [
     POOL_BRITISH_FORTS,
     POOL_BRITISH_METROPOLITAN_VOW,
     POOL_BRITISH_COLONIAL_VOW,
+    POOL_BRITISH_COLONIAL_VOW_BONUS,
     POOL_FRENCH_COMMANDERS,
     POOL_FRENCH_LIGHT,
     POOL_FRENCH_ARTILLERY,
@@ -2108,12 +2110,12 @@ var POOLS = [
     POOL_FRENCH_METROPOLITAN_VOW,
     POOL_NEUTRAL_INDIANS,
 ];
-var YEAR_MARKER = "year_marker";
-var ROUND_MARKER = "round_marker";
-var VICTORY_MARKER = "victory_marker";
-var OPEN_SEAS_MARKER = "open_seas_marker";
-var FRENCH_RAID_MARKER = "french_raid_marker";
-var BRITISH_RAID_MARKER = "british_raid_marker";
+var YEAR_MARKER = 'year_marker';
+var ROUND_MARKER = 'round_marker';
+var VICTORY_MARKER = 'victory_marker';
+var OPEN_SEAS_MARKER = 'open_seas_marker';
+var FRENCH_RAID_MARKER = 'french_raid_marker';
+var BRITISH_RAID_MARKER = 'british_raid_marker';
 var FRENCH_BATTLE_MARKER = 'french_battle_marker';
 var BRITISH_BATTLE_MARKER = 'british_battle_marker';
 var RAID_TRACK_0 = 'raid_track_0';
@@ -2448,6 +2450,11 @@ var BayonetsAndTomahawks = (function () {
         dojo.empty('customActions');
         dojo.forEach(this._connections, dojo.disconnect);
         this._connections = [];
+        this._selectableNodes.forEach(function (node) {
+            if ($(node))
+                dojo.removeClass(node, 'selectable selected');
+        });
+        this._selectableNodes = [];
         dojo.query(".".concat(BT_SELECTABLE)).removeClass(BT_SELECTABLE);
         dojo.query(".".concat(BT_SELECTED)).removeClass(BT_SELECTED);
     };
@@ -2520,7 +2527,7 @@ var BayonetsAndTomahawks = (function () {
             return;
         }
         node.classList.add(BT_SELECTABLE);
-        this._connections.push(dojo.connect(node, "onclick", this, function (event) {
+        this._connections.push(dojo.connect(node, 'onclick', this, function (event) {
             return callback(event);
         }));
     };
@@ -2539,7 +2546,7 @@ var BayonetsAndTomahawks = (function () {
             return;
         }
         node.classList.add(BT_SELECTABLE);
-        this._connections.push(dojo.connect(node, "onclick", this, function (event) {
+        this._connections.push(dojo.connect(node, 'onclick', this, function (event) {
             return callback(event);
         }));
     };
@@ -2603,7 +2610,7 @@ var BayonetsAndTomahawks = (function () {
             var LEFT_SIZE = (proportions[0] * WIDTH) / 100;
             var leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
             ROOT.style.setProperty('--leftColumnScale', "".concat(leftColumnScale));
-            ROOT.style.setProperty("--mapSizeMultiplier", '1');
+            ROOT.style.setProperty('--mapSizeMultiplier', '1');
             var RIGHT_SIZE = (proportions[1] * WIDTH) / 100;
             var rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
             ROOT.style.setProperty('--rightColumnScale', "".concat(rightColumnScale));
@@ -2613,7 +2620,7 @@ var BayonetsAndTomahawks = (function () {
             var LEFT_SIZE = WIDTH;
             var leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
             ROOT.style.setProperty('--leftColumnScale', "".concat(leftColumnScale));
-            ROOT.style.setProperty("--mapSizeMultiplier", "".concat(Number(this.settings.get({ id: PREF_SINGLE_COLUMN_MAP_SIZE })) / 100));
+            ROOT.style.setProperty('--mapSizeMultiplier', "".concat(Number(this.settings.get({ id: PREF_SINGLE_COLUMN_MAP_SIZE })) / 100));
             var RIGHT_SIZE = WIDTH;
             var rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
             ROOT.style.setProperty('--rightColumnScale', "".concat(rightColumnScale));
@@ -2780,13 +2787,7 @@ var BayonetsAndTomahawks = (function () {
             this.actionError(action);
             return;
         }
-        var data = {
-            lock: true,
-            actionName: actionName,
-            args: JSON.stringify(args),
-        };
-        var gameName = this.framework().game_name;
-        this.framework().ajaxcall("/".concat(gameName, "/").concat(gameName, "/").concat(atomicAction ? 'actTakeAtomicAction' : action, ".html"), data, this, function () { });
+        this.framework().bgaPerformAction(atomicAction ? 'actTakeAtomicAction' : action, { args: JSON.stringify(args), actionName: actionName }, { lock: true, checkAction: false });
     };
     return BayonetsAndTomahawks;
 }());
@@ -4578,7 +4579,7 @@ var tplPoolsContainer = function () {
 };
 var tplPoolFleets = function () { return "\n<div id=\"bt_pool_fleets\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Fleets'), "</span></div>\n  <div id=\"poolFleets\" class=\"bt_unit_pool\"></div>\n</div>"); };
 var tplPoolNeutralIndians = function () { return "\n<div id=\"bt_pool_neutralIndians\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Neutral Indians'), "</span></div>\n  <div id=\"poolNeutralIndians\" class=\"bt_unit_pool\"></div>\n</div>"); };
-var tplPoolBritish = function () { return "\n<div id=\"bt_pool_british\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('British'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Commanders'), "</span></div>\n    <div id=\"poolBritishCommanders\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Light'), "</span></div>\n    <div id=\"poolBritishLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Artillery'), "</span></div>\n    <div id=\"poolBritishArtillery\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Forts'), "</span></div>\n    <div id=\"poolBritishForts\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Metropolitan Brigades & VoW'), "</span></div>\n    <div id=\"poolBritishMetropolitanVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial Brigades & VoW'), "</span></div>\n    <div id=\"poolBritishColonialVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
+var tplPoolBritish = function () { return "\n<div id=\"bt_pool_british\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('British'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Commanders'), "</span></div>\n    <div id=\"poolBritishCommanders\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Light'), "</span></div>\n    <div id=\"poolBritishLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Artillery'), "</span></div>\n    <div id=\"poolBritishArtillery\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Forts'), "</span></div>\n    <div id=\"poolBritishForts\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Metropolitan Brigades & VoW'), "</span></div>\n    <div id=\"poolBritishMetropolitanVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial Brigades & VoW'), "</span></div>\n    <div id=\"poolBritishColonialVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial VoW Bonus'), "</span></div>\n    <div id=\"poolBritishColonialVoWBonus\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
 var tplPoolFrench = function () { return "\n<div id=\"bt_pool_french\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('French'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Commanders'), "</span></div>\n    <div id=\"poolFrenchCommanders\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Light'), "</span></div>\n    <div id=\"poolFrenchLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Artillery'), "</span></div>\n    <div id=\"poolFrenchArtillery\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Forts'), "</span></div>\n    <div id=\"poolFrenchForts\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Metropolitan Brigades & VoW'), "</span></div>\n    <div id=\"poolFrenchMetropolitanVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
 var tplPool = function (_a) {
     var type = _a.type;

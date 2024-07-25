@@ -500,6 +500,10 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
 
     dojo.forEach(this._connections, dojo.disconnect);
     this._connections = [];
+    this._selectableNodes.forEach((node) => {
+      if ($(node)) dojo.removeClass(node, 'selectable selected');
+    });
+    this._selectableNodes = [];
 
     dojo.query(`.${BT_SELECTABLE}`).removeClass(BT_SELECTABLE);
     dojo.query(`.${BT_SELECTED}`).removeClass(BT_SELECTED);
@@ -612,13 +616,13 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     }
     node.classList.add(BT_SELECTABLE);
     this._connections.push(
-      dojo.connect(node, "onclick", this, (event: PointerEvent) =>
+      dojo.connect(node, 'onclick', this, (event: PointerEvent) =>
         callback(event)
       )
     );
   }
 
-  setStackSelected({ spaceId, faction }: { spaceId: string; faction: string; }) {
+  setStackSelected({ spaceId, faction }: { spaceId: string; faction: string }) {
     const node = $(`${spaceId}_${faction}_stack`);
     if (node === null) {
       return;
@@ -641,7 +645,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     }
     node.classList.add(BT_SELECTABLE);
     this._connections.push(
-      dojo.connect(node, "onclick", this, (event: PointerEvent) =>
+      dojo.connect(node, 'onclick', this, (event: PointerEvent) =>
         callback(event)
       )
     );
@@ -736,7 +740,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       const LEFT_SIZE = (proportions[0] * WIDTH) / 100;
       const leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
       ROOT.style.setProperty('--leftColumnScale', `${leftColumnScale}`);
-      ROOT.style.setProperty("--mapSizeMultiplier", '1');
+      ROOT.style.setProperty('--mapSizeMultiplier', '1');
       const RIGHT_SIZE = (proportions[1] * WIDTH) / 100;
       const rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
       ROOT.style.setProperty('--rightColumnScale', `${rightColumnScale}`);
@@ -748,7 +752,12 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       const LEFT_SIZE = WIDTH;
       const leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
       ROOT.style.setProperty('--leftColumnScale', `${leftColumnScale}`);
-      ROOT.style.setProperty("--mapSizeMultiplier", `${Number(this.settings.get({ id: PREF_SINGLE_COLUMN_MAP_SIZE })) / 100}`);
+      ROOT.style.setProperty(
+        '--mapSizeMultiplier',
+        `${
+          Number(this.settings.get({ id: PREF_SINGLE_COLUMN_MAP_SIZE })) / 100
+        }`
+      );
       const RIGHT_SIZE = WIDTH;
       const rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
       ROOT.style.setProperty('--rightColumnScale', `${rightColumnScale}`);
@@ -1024,21 +1033,26 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       this.actionError(action);
       return;
     }
-    const data = {
-      lock: true,
-      actionName,
-      args: JSON.stringify(args),
-    };
+    // const data = {
+    //   lock: true,
+    //   actionName,
+    //   args: JSON.stringify(args),
+    // };
     // data.
-    const gameName = this.framework().game_name;
-    this.framework().ajaxcall(
-      `/${gameName}/${gameName}/${
-        atomicAction ? 'actTakeAtomicAction' : action
-      }.html`,
-      data,
-      this,
-      () => {}
+    // const gameName = this.framework().game_name;
+    this.framework().bgaPerformAction(
+      atomicAction ? 'actTakeAtomicAction' : action,
+      { args: JSON.stringify(args), actionName },
+      { lock: true, checkAction: false }
     );
+    // this.framework().ajaxcall(
+    //   `/${gameName}/${gameName}/${
+    //     atomicAction ? 'actTakeAtomicAction' : action
+    //   }.html`,
+    //   data,
+    //   this,
+    //   () => {}
+    // );
   }
 
   // // Generic call for Atomic Action that encode args as a JSON to be decoded by backend

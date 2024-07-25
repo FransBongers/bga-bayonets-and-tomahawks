@@ -29,6 +29,7 @@ interface Framework {
     ajax_method?: string
   ) => void;
   attachToNewParent: (mobile_obj: string | Element, target_obj: string | Element) => void;
+  bgaPerformAction: (action: string, args?: object, params?: object) => Promise<void>;
   checkAction: (action: string) => boolean;
   dontPreloadImage: (filename: string) => void;
   format_block: (jstpl: string, args: Record<string, unknown>) => string;

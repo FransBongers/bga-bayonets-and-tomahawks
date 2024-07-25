@@ -1989,6 +1989,90 @@ body > .card {
   background-size: 1200% 1100%;
 }
 
+.bt_token_side[data-counter-id=VOWPickTwoArtilleryBritish] {
+  background-position-x: 100%;
+  background-position-y: 90%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token_side[data-counter-id=VOWPickTwoArtilleryOrLightBritish] {
+  background-position-x: 0%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token_side[data-counter-id=VOWBackBritish] {
+  background-position-x: 9.0909090909%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token_side[data-counter-id=VOWPickOneColonialLightPutBack] {
+  background-position-x: 18.1818181818%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token_side[data-counter-id=VOWPickOneColonialLight] {
+  background-position-x: 27.2727272727%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token_side[data-counter-id=VOWBackColonial] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token_side[data-counter-id=VOWFewerTroopsPutBackColonial] {
+  background-position-x: 45.4545454545%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token_side[data-counter-id=VOWFewerTroopsColonial] {
+  background-position-x: 54.5454545455%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token_side[data-counter-id=VOWPennsylvaniaMusters] {
+  background-position-x: 63.6363636364%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token_side[data-counter-id=VOWPittSubsidies] {
+  background-position-x: 72.7272727273%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token_side[data-counter-id=VOWFewerTroopsPutBackBritish] {
+  background-position-x: 81.8181818182%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
+.bt_token_side[data-counter-id=VOWFewerTroopsBritish] {
+  background-position-x: 90.9090909091%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
 .bt_token_side[data-counter-id=CanonniersBombardiers_reduced] {
   background-position-x: 0%;
   background-position-y: 0%;
@@ -2528,296 +2612,44 @@ body > .card {
   background-size: 1200% 700%;
 }
 
-.bt_token_side[data-counter-id=""] {
+.bt_token_side[data-counter-id=VOWPickOneArtilleryFrench] {
   background-position-x: 45.4545454545%;
   background-position-y: 100%;
   background-image: url("img/unit_tokens_fre.webp");
   background-size: 1200% 700%;
 }
 
-.bt_token_side[data-counter-id=""] {
+.bt_token_side[data-counter-id=VOWBackFrench] {
   background-position-x: 54.5454545455%;
   background-position-y: 100%;
   background-image: url("img/unit_tokens_fre.webp");
   background-size: 1200% 700%;
 }
 
-.bt_token_side[data-counter-id=""] {
+.bt_token_side[data-counter-id=VOWFewerTroopsPutBackFrench] {
   background-position-x: 63.6363636364%;
   background-position-y: 100%;
   background-image: url("img/unit_tokens_fre.webp");
   background-size: 1200% 700%;
 }
 
-.bt_token_side[data-counter-id=""] {
+.bt_token_side[data-counter-id=VOWFewerTroopsFrench] {
   background-position-x: 72.7272727273%;
   background-position-y: 100%;
   background-image: url("img/unit_tokens_fre.webp");
   background-size: 1200% 700%;
 }
 
-.bt_token_side[data-counter-id=""] {
+.bt_token_side[data-counter-id=VOWFrenchNavyLossedPutBack] {
   background-position-x: 81.8181818182%;
   background-position-y: 100%;
   background-image: url("img/unit_tokens_fre.webp");
   background-size: 1200% 700%;
 }
 
-.bt_token_side[data-counter-id=""] {
+.bt_token_side[data-counter-id=VOWCircleBackFrench] {
   background-position-x: 90.9090909091%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 100%;
-  background-position-y: 100%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 0%;
-  background-position-y: 116.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 9.0909090909%;
-  background-position-y: 116.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 18.1818181818%;
-  background-position-y: 116.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 27.2727272727%;
-  background-position-y: 116.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 36.3636363636%;
-  background-position-y: 116.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 45.4545454545%;
-  background-position-y: 116.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 54.5454545455%;
-  background-position-y: 116.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 63.6363636364%;
-  background-position-y: 116.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 72.7272727273%;
-  background-position-y: 116.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 81.8181818182%;
-  background-position-y: 116.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 90.9090909091%;
-  background-position-y: 116.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 100%;
-  background-position-y: 116.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 0%;
-  background-position-y: 133.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 9.0909090909%;
-  background-position-y: 133.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 18.1818181818%;
-  background-position-y: 133.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 27.2727272727%;
-  background-position-y: 133.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 36.3636363636%;
-  background-position-y: 133.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 45.4545454545%;
-  background-position-y: 133.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 54.5454545455%;
-  background-position-y: 133.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 63.6363636364%;
-  background-position-y: 133.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 72.7272727273%;
-  background-position-y: 133.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 81.8181818182%;
-  background-position-y: 133.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 90.9090909091%;
-  background-position-y: 133.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 100%;
-  background-position-y: 133.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 0%;
-  background-position-y: 150%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 9.0909090909%;
-  background-position-y: 150%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 18.1818181818%;
-  background-position-y: 150%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 27.2727272727%;
-  background-position-y: 150%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 36.3636363636%;
-  background-position-y: 150%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 45.4545454545%;
-  background-position-y: 150%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 54.5454545455%;
-  background-position-y: 150%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 63.6363636364%;
-  background-position-y: 150%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 72.7272727273%;
-  background-position-y: 150%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 81.8181818182%;
-  background-position-y: 150%;
-  background-image: url("img/unit_tokens_fre.webp");
-  background-size: 1200% 700%;
-}
-
-.bt_token_side[data-counter-id=""] {
-  background-position-x: 90.9090909091%;
-  background-position-y: 150%;
   background-image: url("img/unit_tokens_fre.webp");
   background-size: 1200% 700%;
 }

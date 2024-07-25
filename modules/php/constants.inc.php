@@ -248,6 +248,7 @@ const COMMANDER = 'commander';
 const FLEET = 'fleet';
 const FORT = 'fort';
 const LIGHT = 'light';
+const VAGARIES_OF_WAR = 'vagariesOfWar';
 
 /**
  * Factions / control
@@ -295,6 +296,7 @@ const POOL_BRITISH_ARTILLERY = 'poolBritishArtillery';
 const POOL_BRITISH_FORTS = 'poolBritishForts';
 const POOL_BRITISH_METROPOLITAN_VOW = 'poolBritishMetropolitanVoW';
 const POOL_BRITISH_COLONIAL_VOW = 'poolBritishColonialVoW';
+const POOL_BRITISH_COLONIAL_VOW_BONUS = 'poolBritishColonialVoWBonus';
 
 const POOL_FRENCH_COMMANDERS = 'poolFrenchCommanders';
 const POOL_FRENCH_LIGHT = 'poolFrenchLight';
@@ -644,6 +646,27 @@ const MISSISSAGUE = 'Mississague';
 const MOHAWK = 'Mohawk';
 const OUTAOUAIS = 'Outaouais';
 const SENECA = 'Seneca';
+
+/**
+ * Vagaries of War tokens
+ */
+// French
+const VOW_FRENCH_NAVY_LOSSES_PUT_BACK = 'VOWFrenchNavyLossedPutBack';
+const VOW_FEWER_TROOPS_FRENCH = 'VOWFewerTroopsFrench';
+const VOW_FEWER_TROOPS_PUT_BACK_FRENCH = 'VOWFewerTroopsPutBackFrench';
+const VOW_PICK_ONE_ARTILLERY_FRENCH = 'VOWPickOneArtilleryFrench';
+// British
+const VOW_FEWER_TROOPS_BRITISH = 'VOWFewerTroopsBritish';
+const VOW_FEWER_TROOPS_PUT_BACK_BRITISH = 'VOWFewerTroopsPutBackBritish';
+const VOW_PICK_TWO_ARTILLERY_BRITISH = 'VOWPickTwoArtilleryBritish';
+const VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH = 'VOWPickTwoArtilleryOrLightBritish';
+// Colonial
+const VOW_PICK_ONE_COLONIAL_LIGHT = 'VOWPickOneColonialLight';
+const VOW_PICK_ONE_COLONIAL_LIGHT_PUT_BACK = 'VOWPickOneColonialLightPutBack';
+const VOW_FEWER_TROOPS_COLONIAL = 'VOWFewerTroopsColonial';
+const VOW_FEWER_TROOPS_PUT_BACK_COLONIAL = 'VOWFewerTroopsPutBackColonial';
+const VOW_PENNSYLVANIA_MUSTERS = 'VOWPennsylvaniaMusters';
+const VOW_PITT_SUBSIDIES = 'VOWPittSubsidies';
 
 /**
  * Connection types
