@@ -12,14 +12,15 @@ use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Markers;
+use BayonetsAndTomahawks\Managers\Scenarios;
+use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
-class FleetsArriveAction extends \BayonetsAndTomahawks\Models\AtomicAction
+class FleetsArriveCommanderDraw extends \BayonetsAndTomahawks\Actions\FleetsArrive
 {
   public function getState()
   {
-    // TODO: should be something different probably
-    return ST_ACTION_ROUND_END;
+    return ST_FLEETS_ARRIVE_COMMANDER_DRAW;
   }
 
   // ..######..########....###....########.########
@@ -38,14 +39,38 @@ class FleetsArriveAction extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stFleetsArriveAction()
+  public function stFleetsArriveCommanderDraw()
   {
-    Notifications::log('stFleetsArriveAction', []);
-    Globals::getActionRound(ACTION_ROUND_3);
-    Markers::move(ROUND_MARKER,ACTION_ROUND_3);
-    Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), ACTION_ROUND_3);
+    $info = $this->ctx->getInfo();
 
-    $this->resolveAction(['automatic' => true]);
+    $pool = $info['pool'];
+
+    $picked = Units::getInLocation($this->poolReinforcementsMap[$pool])->toArray();
+
+    $commanderInfo = [];
+    // Check Commander draw
+    $unitsWithOfficerGorget = Utils::filter($picked, function ($unit) {
+      return $unit->isMetropolitanBrigade() && $unit->hasOfficerGorget();
+    });
+
+    foreach ($unitsWithOfficerGorget as $unit) {
+      $location = $unit->getFaction() === BRITISH ? POOL_BRITISH_COMMANDERS : POOL_FRENCH_COMMANDERS;
+      $commanders = Units::getInLocation($location)->toArray();
+      $numberOfCommanders = count($commanders);
+      if ($numberOfCommanders === 0) {
+        continue;
+      }
+      $index = bga_rand(0, count($commanders) - 1);
+      $commander = $commanders[$index];
+      $commander->setLocation($this->poolReinforcementsMap[$pool]);
+      $commanderInfo[$unit->getId()] = $commander->getId();
+      Notifications::commanderDraw($unit, $commander);
+    }
+
+    $this->ctx->updateInfo('commanders', $commanderInfo);
+
+
+    $this->resolveAction(['automatic' => true], true);
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##
@@ -56,7 +81,7 @@ class FleetsArriveAction extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreFleetsArriveAction()
+  public function stPreFleetsArriveCommanderDraw()
   {
   }
 
@@ -69,7 +94,7 @@ class FleetsArriveAction extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsFleetsArriveAction()
+  public function argsFleetsArriveCommanderDraw()
   {
 
 
@@ -92,16 +117,16 @@ class FleetsArriveAction extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassFleetsArriveAction()
+  public function actPassFleetsArriveCommanderDraw()
   {
-    $player = self::getPlayer();
+    // $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actFleetsArriveAction($args)
+  public function actFleetsArriveCommanderDraw($args)
   {
-    self::checkAction('actFleetsArriveAction');
+    self::checkAction('actFleetsArriveCommanderDraw');
 
 
 

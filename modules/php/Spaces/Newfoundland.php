@@ -16,5 +16,7 @@ class Newfoundland extends \BayonetsAndTomahawks\Models\Space
     $this->victorySpace = true;
     $this->top = 226;
     $this->left = 1385.5;
+    $this->adjacentSeaZones = [ATLANTIC_OCEAN, GULF_OF_SAINT_LAWRENCE];
+    $this->coastal = true;
   }
 }

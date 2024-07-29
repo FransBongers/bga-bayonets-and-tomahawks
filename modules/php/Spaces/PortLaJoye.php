@@ -22,5 +22,7 @@ class PortLaJoye extends \BayonetsAndTomahawks\Models\Space
       LOUISBOURG => LOUISBOURG_PORT_LA_JOYE,
       MIRAMICHY => MIRAMICHY_PORT_LA_JOYE,
     ];
+    $this->adjacentSeaZones = [GULF_OF_SAINT_LAWRENCE];
+    $this->coastal = true;
   }
 }

@@ -10,5 +10,6 @@ class B15th58th extends \BayonetsAndTomahawks\Models\Brigade
     $this->counterText = clienttranslate('15th & 58th');
     $this->faction = BRITISH;
     $this->metropolitan = true;
+    $this->officerGorget = true;
   }
 }

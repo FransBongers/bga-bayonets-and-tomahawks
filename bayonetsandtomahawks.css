@@ -683,11 +683,15 @@ body > .card {
 .bt_stack {
   border-radius: calc(var(--btMapScale) * 4px);
 }
+.bt_stack .bt_token {
+  transition: top 500ms, left 500ms;
+}
 
 .bt_stack[data-has-unit=true] {
   min-width: calc(var(--btMapScale) * 52px);
 }
 .bt_stack[data-has-unit=true] .bt_token {
+  position: absolute !important;
   transition: top 500ms, left 500ms;
 }
 
@@ -928,6 +932,11 @@ body > .card {
 #customActions .bt_log_die {
   --btTokenScale: 0.7;
 }
+#customActions .bt_token_side {
+  --btTokenScale: 0.8;
+  position: relative;
+  margin: 0px -5px;
+}
 
 #pagemaintitletext .bt_card,
 #gameaction_status .bt_card {
@@ -941,6 +950,8 @@ body > .card {
   top: -3px;
   margin-top: 3px;
   vertical-align: middle;
+  margin-left: 2px;
+  margin-right: 2px;
 }
 #pagemaintitletext .bt_marker_side,
 #gameaction_status .bt_marker_side {
@@ -2750,6 +2761,16 @@ body > .card {
 .bt_marker_side[data-type=routeMarker] {
   background-position-x: 71.4285714286%;
   background-position-y: 20%;
+}
+
+.bt_marker_side[data-type=openSeasMarker][data-side=front] {
+  background-position-x: 28.5714285714%;
+  background-position-y: 0%;
+}
+
+.bt_marker_side[data-type=openSeasMarker][data-side=back] {
+  background-position-x: 14.2857142857%;
+  background-position-y: 0%;
 }
 
 #show_settings {

@@ -67,10 +67,12 @@ class NotificationManager {
       'battleReturnCommander',
       'battleStart',
       'battleSelectCommander',
+      'commanderDraw',
       'discardCardFromHand',
       'discardCardFromHandPrivate',
       'discardCardInPlay',
       'drawCardPrivate',
+      'drawnReinforcements',
       'eliminateUnit',
       'loseControl',
       'moveRaidPointsMarker',
@@ -80,14 +82,17 @@ class NotificationManager {
       'moveUnit',
       'placeStackMarker',
       'placeUnitInLosses',
+      'placeUnits',
       'raidPoints',
       'reduceUnit',
       'removeMarkersEndOfActionRound',
+      'returnToPool',
       'revealCardsInPlay',
       'scoreVictoryPoints',
       'selectReserveCard',
       'selectReserveCardPrivate',
       'takeControl',
+      'vagariesOfWarPickUnits',
     ];
 
     // example: https://github.com/thoun/knarr/blob/main/src/knarr.ts
@@ -292,6 +297,11 @@ class NotificationManager {
     await this.game.discard.addCard(fakeCard, { fromElement });
   }
 
+  async notif_commanderDraw(notif: Notif<NotifCommanderDrawArgs>) {
+    const { commander } = notif.args;
+    await this.game.pools.stocks[commander.location].addCard(commander);
+  }
+
   async notif_discardCardFromHandPrivate(
     notif: Notif<NotifDiscardCardFromHandPrivateArgs>
   ) {
@@ -313,6 +323,11 @@ class NotificationManager {
     await this.game.deck.addCard(card);
     await this.game.hand.addCard(card);
     return;
+  }
+
+  async notif_drawnReinforcements(notif: Notif<NotifDrawnReinforcementsArgs>) {
+    const { units, location } = notif.args;
+    await this.game.pools.stocks[location].addCards(units);
   }
 
   async notif_eliminateUnit(notif: Notif<NotifEliminateUnitArgs>) {
@@ -397,6 +412,15 @@ class NotificationManager {
     // await this.game.gameMap.moveYearMarker({ year });
   }
 
+  async notif_placeUnits(notif: Notif<NotifPlaceUnitsArgs>) {
+    const { units, spaceId, faction } = notif.args;
+    const unitStack = this.game.gameMap.stacks[spaceId][faction];
+    if (!unitStack) {
+      return;
+    }
+    await unitStack.addUnits(units);
+  }
+
   async notif_placeStackMarker(notif: Notif<NotifPlaceStackMarkerArgs>) {
     const { marker } = notif.args;
     await this.game.gameMap.addMarkerToStack(marker);
@@ -437,6 +461,11 @@ class NotificationManager {
         element.setAttribute('data-spent', 'false');
       }
     });
+  }
+
+  async notif_returnToPool(notif: Notif<NotifReturnToPoolArgs>) {
+    const { unit } = notif.args;
+    await this.game.pools.stocks[unit.location].addCard(unit);
   }
 
   async notif_revealCardsInPlay(notif: Notif<NotifRevealCardsInPlayArgs>) {
@@ -503,5 +532,12 @@ class NotificationManager {
         type: `${faction}_control_marker`,
       });
     }
+  }
+
+  async notif_vagariesOfWarPickUnits(
+    notif: Notif<NotifVagariesOfWarPickUnitsArgs>
+  ) {
+    const { units, location } = notif.args;
+    await this.game.pools.stocks[location].addCards(units);
   }
 }

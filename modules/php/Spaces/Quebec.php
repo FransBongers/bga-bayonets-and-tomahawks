@@ -1,4 +1,5 @@
 <?php
+
 namespace BayonetsAndTomahawks\Spaces;
 
 use BayonetsAndTomahawks\Managers\Units;
@@ -25,9 +26,11 @@ class Quebec extends \BayonetsAndTomahawks\Models\Space
       JACQUES_CARTIER => JACQUES_CARTIER_QUEBEC,
       LES_TROIS_RIVIERES => LES_TROIS_RIVIERES_QUEBEC,
     ];
+    $this->adjacentSeaZones = [GULF_OF_SAINT_LAWRENCE];
+    $this->coastal = true;
   }
 
-  public function hasBastion() 
+  public function hasBastion()
   {
     return count(Units::getAll(QUEBEC_BASTION_1)) + count(Units::getAll(QUEBEC_BASTION_2)) > 0;
   }

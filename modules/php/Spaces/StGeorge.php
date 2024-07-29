@@ -22,5 +22,7 @@ class StGeorge extends \BayonetsAndTomahawks\Models\Space
       TACONNET => ST_GEORGE_TACONNET,
       YORK => ST_GEORGE_YORK,
     ];
+    $this->adjacentSeaZones = [ATLANTIC_OCEAN];
+    $this->coastal = true;
   }
 }

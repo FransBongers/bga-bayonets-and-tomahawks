@@ -21,5 +21,7 @@ class Philadelphia extends \BayonetsAndTomahawks\Models\Space
       EASTON => EASTON_PHILADELPHIA,
       NEW_YORK => NEW_YORK_PHILADELPHIA,
     ];
+    $this->adjacentSeaZones = [ATLANTIC_OCEAN];
+    $this->coastal = true;
   }
 }

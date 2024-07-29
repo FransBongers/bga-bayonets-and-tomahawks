@@ -11,5 +11,6 @@ class Fraser extends \BayonetsAndTomahawks\Models\Brigade
     $this->faction = BRITISH;
     $this->highland = true;
     $this->metropolitan = true;
+    $this->officerGorget = true;
   }
 }

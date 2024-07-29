@@ -78,6 +78,9 @@ class UnitStack extends ManualPositionStock<BTToken> {
     //   console.log('element in cardRemoved', element);
     //   element.style.position = '';
     // }
+    const unitDiv = this.getCardElement(unit);
+    unitDiv.style.top = undefined;
+    unitDiv.style.left = undefined;
 
     super.cardRemoved(unit, settings);
     if (this.getCards().length === 0) {
@@ -112,7 +115,7 @@ class UnitStack extends ManualPositionStock<BTToken> {
 
     cards.forEach((card, index) => {
       const unitDiv = stock.getCardElement(card);
-      unitDiv.style.position = 'absolute';
+      // unitDiv.style.position = 'absolute';
       unitDiv.style.top = `calc(var(--btTokenScale) * ${
         index * (expanded ? 0 : -8)
       }px)`;

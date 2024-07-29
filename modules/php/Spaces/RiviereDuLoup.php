@@ -21,5 +21,7 @@ class RiviereDuLoup extends \BayonetsAndTomahawks\Models\Space
       MATAWASKIYAK => MATAWASKIYAK_RIVIERE_DU_LOUP,
       MTAN => MTAN_RIVIERE_DU_LOUP,
     ];
+    $this->adjacentSeaZones = [GULF_OF_SAINT_LAWRENCE];
+    $this->coastal = true;
   }
 }

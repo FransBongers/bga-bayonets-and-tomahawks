@@ -58,6 +58,7 @@ const POOL_BRITISH_LIGHT = 'poolBritishLight';
 const POOL_BRITISH_ARTILLERY = 'poolBritishArtillery';
 const POOL_BRITISH_FORTS = 'poolBritishForts';
 const POOL_BRITISH_METROPOLITAN_VOW = 'poolBritishMetropolitanVoW';
+const POOL_BRITISH_COLONIAL_LIGHT = 'poolBritishColonialLight';
 const POOL_BRITISH_COLONIAL_VOW = 'poolBritishColonialVoW';
 const POOL_BRITISH_COLONIAL_VOW_BONUS = 'poolBritishColonialVoWBonus';
 
@@ -69,10 +70,18 @@ const POOL_FRENCH_METROPOLITAN_VOW = 'poolFrenchMetropolitanVoW';
 
 const POOL_NEUTRAL_INDIANS = 'poolNeutralIndians';
 
+/**
+ * Reinforcements
+ */
+const REINFORCEMENTS_FLEETS = 'reinforcementsFleets';
+const REINFORCEMENTS_BRITISH = 'reinforcementsBritish';
+const REINFORCEMENTS_FRENCH = 'reinforcementsFrench';
+
 const POOLS = [
   POOL_FLEETS,
   POOL_BRITISH_COMMANDERS,
   POOL_BRITISH_LIGHT,
+  POOL_BRITISH_COLONIAL_LIGHT,
   POOL_BRITISH_ARTILLERY,
   POOL_BRITISH_FORTS,
   POOL_BRITISH_METROPOLITAN_VOW,
@@ -84,6 +93,10 @@ const POOLS = [
   POOL_FRENCH_FORTS,
   POOL_FRENCH_METROPOLITAN_VOW,
   POOL_NEUTRAL_INDIANS,
+  // Drawn reinforcements
+  REINFORCEMENTS_FLEETS,
+  REINFORCEMENTS_BRITISH,
+  REINFORCEMENTS_FRENCH,
 ];
 
 /**
@@ -92,7 +105,7 @@ const POOLS = [
 const YEAR_MARKER = 'year_marker';
 const ROUND_MARKER = 'round_marker';
 const VICTORY_MARKER = 'victory_marker';
-const OPEN_SEAS_MARKER = 'open_seas_marker';
+const OPEN_SEAS_MARKER = 'openSeasMarker';
 const FRENCH_RAID_MARKER = 'french_raid_marker';
 const BRITISH_RAID_MARKER = 'british_raid_marker';
 const FRENCH_BATTLE_MARKER = 'french_battle_marker';
@@ -179,12 +192,35 @@ const COMMANDER_REROLLS_TRACK_DEFENDER_1 = 'commander_rerolls_track_defender_1';
 const COMMANDER_REROLLS_TRACK_DEFENDER_2 = 'commander_rerolls_track_defender_2';
 const COMMANDER_REROLLS_TRACK_DEFENDER_3 = 'commander_rerolls_track_defender_3';
 
+const OPEN_SEAS_MARKER_SAIL_BOX = 'openSeasMarkerSailBox';
+
 // Losses Boxes
 const LOSSES_BOX_BRITISH = 'lossesBox_british';
 const LOSSES_BOX_FRENCH = 'lossesBox_french';
 
 const MARKERS = 'markers';
 const UNITS = 'units';
+
+/**
+ * Vagaries of War tokens
+ */
+// French
+const VOW_FRENCH_NAVY_LOSSES_PUT_BACK = 'VOWFrenchNavyLossedPutBack';
+const VOW_FEWER_TROOPS_FRENCH = 'VOWFewerTroopsFrench';
+const VOW_FEWER_TROOPS_PUT_BACK_FRENCH = 'VOWFewerTroopsPutBackFrench';
+const VOW_PICK_ONE_ARTILLERY_FRENCH = 'VOWPickOneArtilleryFrench';
+// British
+const VOW_FEWER_TROOPS_BRITISH = 'VOWFewerTroopsBritish';
+const VOW_FEWER_TROOPS_PUT_BACK_BRITISH = 'VOWFewerTroopsPutBackBritish';
+const VOW_PICK_TWO_ARTILLERY_BRITISH = 'VOWPickTwoArtilleryBritish';
+const VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH = 'VOWPickTwoArtilleryOrLightBritish';
+// Colonial
+const VOW_PICK_ONE_COLONIAL_LIGHT = 'VOWPickOneColonialLight';
+const VOW_PICK_ONE_COLONIAL_LIGHT_PUT_BACK = 'VOWPickOneColonialLightPutBack';
+const VOW_FEWER_TROOPS_COLONIAL = 'VOWFewerTroopsColonial';
+const VOW_FEWER_TROOPS_PUT_BACK_COLONIAL = 'VOWFewerTroopsPutBackColonial';
+const VOW_PENNSYLVANIA_MUSTERS = 'VOWPennsylvaniaMusters';
+const VOW_PITT_SUBSIDIES = 'VOWPittSubsidies';
 
 /**
  * Actions

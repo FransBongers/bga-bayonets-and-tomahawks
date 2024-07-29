@@ -12,6 +12,14 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
     $this->number = 2;
     $this->startYear = 1757;
     $this->duration = 1;
+    $this->reinforcements = [
+      1757 => [
+        POOL_FLEETS => 7,
+        POOL_BRITISH_METROPOLITAN_VOW => 6,
+        POOL_BRITISH_COLONIAL_VOW => 8,
+        POOL_FRENCH_METROPOLITAN_VOW => 3,
+      ]
+    ];
     $this->victoryMarkerLocation = VICTORY_POINTS_FRENCH_1;
     $this->locations = [
       // Indian Setup
@@ -291,12 +299,14 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
           WOLFE,
         ]
       ],
-      POOL_BRITISH_LIGHT => [
+      POOL_BRITISH_COLONIAL_LIGHT => [
         'units' => [
-          // Light colonial
           DUNN,
           PUTNAM,
-          // Light
+        ]
+      ],
+      POOL_BRITISH_LIGHT => [
+        'units' => [
           GAGE,
           L_HOWE,
           MORGAN,

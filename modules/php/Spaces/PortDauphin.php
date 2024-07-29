@@ -19,5 +19,7 @@ class PortDauphin extends \BayonetsAndTomahawks\Models\Space
     $this->adjacentSpaces = [
       LOUISBOURG => LOUISBOURG_PORT_DAUPHIN,
     ];
+    $this->adjacentSeaZones = [GULF_OF_SAINT_LAWRENCE];
+    $this->coastal = true;
   }
 }

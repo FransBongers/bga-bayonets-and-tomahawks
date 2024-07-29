@@ -20,5 +20,7 @@ class RiviereRistigouche extends \BayonetsAndTomahawks\Models\Space
       MIRAMICHY => MIRAMICHY_RIVIERE_RISTIGOUCHE,
       MTAN => MTAN_RIVIERE_RISTIGOUCHE,
     ];
+    $this->adjacentSeaZones = [GULF_OF_SAINT_LAWRENCE];
+    $this->coastal = true;
   }
 }

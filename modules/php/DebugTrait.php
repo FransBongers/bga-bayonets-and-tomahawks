@@ -81,11 +81,16 @@ trait DebugTrait
 
   function debug_test()
   {
-    // Markers::get(FRENCH_BATTLE_MARKER)->setLocation(Locations::battleTrack(false, 5));
-    Notifications::log('spent', Units::getSpent());
-    Units::removeAllSpentMarkers();
-    Notifications::log('spent after', Units::getSpent());
+    Spaces::get(CHIGNECTOU)->setControl(BRITISH);
+    // $tokens = [];
+    // $tokens[OPEN_SEAS_MARKER] = [
+    //   'id' => OPEN_SEAS_MARKER,
+    //   'location' => OPEN_SEAS_MARKER
+    // ];
 
+    // Markers::create($tokens, null);
+
+    // Units::move(['unit_71', 'unit_72'], POOL_BRITISH_COLONIAL_LIGHT);
     // $space = Spaces::get(LAKE_GEORGE);
     // $defendingFaction = $space->getDefender();
     // $attackingFaction = Players::otherFaction($defendingFaction);
@@ -100,10 +105,12 @@ trait DebugTrait
     // $marker = Markers::getMarkerFromSupply(ROUTE_MARKER);
     // $marker->setLocation(Locations::stackMarker(TICONDEROGA, BRITISH));
 
-    // Notifications::log('getMarkerFromSupply', $marker);
+    Notifications::log('getBattlePriority', Spaces::get(LAKE_GEORGE)->getBattlePriority());
     // $result = AtomicActions::get(LIGHT_MOVEMENT)->checkEnemyUnitsAndOverwhelm(Spaces::get(ANNAPOLIS_ROYAL), Players::get());
 
-    // Notifications::log('checkEnemyUnitsAndOverwhelm', $result);
+    // Notifications::log('british controlled', Utils::filter(Spaces::getControlledBy(BRITISH), function ($space) {
+    //   return $space->getHomeSpace() !== null && $space->isCoastal();
+    // }));
   }
 
   // function ed()

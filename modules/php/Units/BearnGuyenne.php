@@ -10,5 +10,6 @@ class BearnGuyenne extends \BayonetsAndTomahawks\Models\Brigade
     $this->counterText = clienttranslate('Bearn & Guyenne');
     $this->faction = FRENCH;
     $this->metropolitan = true;
+    $this->officerGorget = true;
   }
 }

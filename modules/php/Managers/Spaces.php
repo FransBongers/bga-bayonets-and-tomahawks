@@ -51,6 +51,15 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
     return $locations;
   }
 
+  public static function getControlledBy($faction)
+  {
+    $locations = self::getSelectQuery()
+    ->where('control', '=', $faction)
+    ->get()
+    ->toArray();
+    return $locations;
+  }
+
   // ..######..########.########.##.....##.########.
   // .##....##.##..........##....##.....##.##.....##
   // .##.......##..........##....##.....##.##.....##

@@ -12,6 +12,14 @@ class VaudreuilsPetiteGuerre1755 extends \BayonetsAndTomahawks\Models\Scenario
     $this->number = 1;
     $this->startYear = 1755;
     $this->duration = 1;
+    $this->reinforcements = [
+      1755 => [
+        POOL_FLEETS => 5,
+        POOL_BRITISH_METROPOLITAN_VOW => 3,
+        POOL_BRITISH_COLONIAL_VOW => 8,
+        POOL_FRENCH_METROPOLITAN_VOW => 3,
+      ]
+    ];
     $this->victoryMarkerLocation = VICTORY_POINTS_FRENCH_1;
     $this->locations = [
       // Indian Setup
@@ -247,13 +255,13 @@ class VaudreuilsPetiteGuerre1755 extends \BayonetsAndTomahawks\Models\Scenario
           BRADSTREET,
         ]
       ],
-      POOL_BRITISH_LIGHT => [
+      POOL_BRITISH_COLONIAL_LIGHT => [
         'units' => [
-          // Light colonial
           ARMSTRONG,
           PUTNAM,
         ]
       ],
+      POOL_BRITISH_LIGHT => [],
       POOL_BRITISH_ARTILLERY => [
         'units' => [
           ROYAL_ARTILLERY,

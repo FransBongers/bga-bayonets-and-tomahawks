@@ -10,6 +10,7 @@ class Scenario implements \JsonSerializable
   protected $startYear;
   protected $duration;
   protected $locations;
+  protected $reinforcements;
   protected $pools;
   protected $victoryMarkerLocation;
 
@@ -26,6 +27,7 @@ class Scenario implements \JsonSerializable
     'duration' => ['duration', 'int'],
     'locations' => ['locations', 'obj'],
     'pools' => ['pools', 'obj'],
+    'reinforcements' => ['reinforcements', 'obj'],
   ];
 
 
@@ -52,6 +54,11 @@ class Scenario implements \JsonSerializable
   public function getPools()
   {
     return $this->pools;
+  }
+
+  public function getReinforcements()
+  {
+    return $this->reinforcements;
   }
 
   public function getStartYear()

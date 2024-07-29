@@ -77,6 +77,8 @@
     "src/states/BattleSelectCommanderState.ts",
     "src/states/ConfirmPartialTurn.ts",
     "src/states/ConfirmTurn.ts",
+    "src/states/FleetsArriveUnitPlacement.ts",
+    "src/states/FleetsArriveVagariesOfWar.ts",
     "src/states/LightMovementState.ts",
     "src/states/LightMovementDestinationState.ts",
     "src/states/RaidState.ts",

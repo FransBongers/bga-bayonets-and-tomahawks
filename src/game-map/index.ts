@@ -25,6 +25,7 @@ class GameMap {
   public victoryPointsTrack: Record<string, LineStock<BTToken>> = {};
   public battleTrack: Record<string, LineStock<BTToken>> = {};
   public raidTrack: Record<string, LineStock<BTToken>> = {};
+  public openSeasMarkerSailBox: LineStock<BTToken>;
 
   public commanderRerollsTrack: Record<string, LineStock<BTToken>> = {};
   // {
@@ -64,12 +65,14 @@ class GameMap {
       element.replaceChildren();
     });
 
+    // TODO: replace with remove all?
     [
       YEAR_MARKER,
       ROUND_MARKER,
       BRITISH_RAID_MARKER,
       FRENCH_RAID_MARKER,
       VICTORY_MARKER,
+      OPEN_SEAS_MARKER,
     ].forEach((markerId) => {
       const node = document.getElementById(markerId);
       if (node) {
@@ -290,6 +293,14 @@ class GameMap {
           );
       });
     }
+    this.openSeasMarkerSailBox = new LineStock<BTToken>(
+      this.game.tokenManager,
+      document.getElementById(OPEN_SEAS_MARKER_SAIL_BOX),
+      {
+        wrap: 'nowrap',
+        gap: '0px',
+      }
+    );
 
     this.updateMarkers({ gamedatas });
   }
@@ -322,11 +333,13 @@ class GameMap {
       this.battleTrack[bBattleMarker.location].addCard(bBattleMarker);
     }
     const fBattleMarker = markers[FRENCH_BATTLE_MARKER];
-    console.log('fBattleMarker', fBattleMarker);
     if (fBattleMarker && this.battleTrack[fBattleMarker.location]) {
-      console.log('placeMarker', fBattleMarker);
       // this.battleTrack[fBattleMarker.location].addCard(fBattleMarker);
       this.battleTrack[fBattleMarker.location].addCard(fBattleMarker);
+    }
+
+    if (markers[OPEN_SEAS_MARKER]) {
+      this.openSeasMarkerSailBox.addCard(markers[OPEN_SEAS_MARKER]);
     }
 
     const victoryMarker = markers[VICTORY_MARKER];

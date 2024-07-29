@@ -309,6 +309,42 @@ $machinestates = array(
         'transitions' => [],
     ],
 
+    ST_FLEETS_ARRIVE_VAGARIES_OF_WAR => [
+        'name' => 'fleetsArriveVagariesOfWar',
+        'description' => clienttranslate('${actplayer} must resolve Vagaries of War effects'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actFleetsArriveVagariesOfWar', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_FLEETS_ARRIVE_COMMANDER_DRAW => [
+        'name' => 'fleetsArriveCommanderDraw',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_FLEETS_ARRIVE_UNIT_PLACEMENT => [
+        'name' => 'fleetsArriveUnitPlacement',
+        'description' => clienttranslate('${actplayer} must place units'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actFleetsArriveUnitPlacement', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_FLEETS_ARRIVE_END_OF_ROUND => [
+        'name' => 'fleetsArriveEndOfRound',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
     ST_COLONIALS_ENLIST_DRAW_REINFORCEMENTS => [
         'name' => 'colonialsEnlistDrawReinforcements',
         'description' => '',

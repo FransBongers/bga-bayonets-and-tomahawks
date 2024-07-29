@@ -153,6 +153,12 @@ class Markers extends \BayonetsAndTomahawks\Helpers\Pieces
       'location' => BATTLE_MARKERS_POOL,
       // 'extra_data' => json_encode(null)
     ];
+    $tokens[OPEN_SEAS_MARKER] = [
+      'id' => OPEN_SEAS_MARKER,
+      'location' => OPEN_SEAS_MARKER_SAIL_BOX
+    ];
+
+    // TODO: add other markers: rout, marshall troops etc
 
     $players = Players::getAll();
     foreach ($players as $player) {

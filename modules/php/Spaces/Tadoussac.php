@@ -19,5 +19,7 @@ class Tadoussac extends \BayonetsAndTomahawks\Models\Space
     $this->adjacentSpaces = [
       COTE_DE_BEAUPRE => COTE_DE_BEAUPRE_TADOUSSAC,
     ];
+    $this->adjacentSeaZones = [GULF_OF_SAINT_LAWRENCE];
+    $this->coastal = true;
   }
 }

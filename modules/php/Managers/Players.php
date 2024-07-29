@@ -129,6 +129,20 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
     });
   }
 
+  public static function getPlayerIdsForFactions()
+  {
+    $players = Players::getAll()->toArray();
+    $data = [];
+    foreach([BRITISH, FRENCH] as $faction)
+    {
+      $data[$faction] = Utils::array_find($players, function ($player) use ($faction) {
+        return $player->getFaction() === $faction;
+      })->getId();
+    }
+
+    return $data;
+  }
+
   public function getNextId($player)
   {
     $playerId = is_int($player) ? $player : $player->getId();

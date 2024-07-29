@@ -23,6 +23,8 @@ class Louisbourg extends \BayonetsAndTomahawks\Models\Space
       PORT_DAUPHIN => LOUISBOURG_PORT_DAUPHIN,
       PORT_LA_JOYE => LOUISBOURG_PORT_LA_JOYE,
     ];
+    $this->adjacentSeaZones = [ATLANTIC_OCEAN, GULF_OF_SAINT_LAWRENCE];
+    $this->coastal = true;
   }
 
   public function hasBastion() 

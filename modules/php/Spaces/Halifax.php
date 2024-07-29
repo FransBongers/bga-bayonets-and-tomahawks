@@ -22,5 +22,7 @@ class Halifax extends \BayonetsAndTomahawks\Models\Space
       CAPE_SABLE => CAPE_SABLE_HALIFAX,
       CHIGNECTOU => CHIGNECTOU_HALIFAX,
     ];
+    $this->adjacentSeaZones = [ATLANTIC_OCEAN];
+    $this->coastal = true;
   }
 }

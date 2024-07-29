@@ -8,6 +8,7 @@ class Brigade extends AbstractUnit
   protected $staticAttributes = ['counterId', 'counterText', 'faction', 'highland', 'metropolitan', 'type'];
   protected $highland = false;
   protected $metropolitan = false;
+  protected $officerGorget = false;
 
   public function __construct($row)
   {
@@ -23,5 +24,10 @@ class Brigade extends AbstractUnit
       Globals::setActiveBattleHighlandBrigadeHit(true);
     }
     return parent::applyHit($player);
+  }
+
+  public function hasOfficerGorget()
+  {
+    return $this->officerGorget;
   }
 }

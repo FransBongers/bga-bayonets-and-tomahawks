@@ -20,4 +20,10 @@ class Fleet extends AbstractUnit
     $this->setLocation(POOL_FLEETS);
     Notifications::eliminateUnit($player, $this);
   }
+
+  public function removeFromPool()
+  {
+    $this->setLocation(REMOVED_FROM_PLAY, POOL_FLEETS);
+    Notifications::removeFromPlay($this);
+  }
 }

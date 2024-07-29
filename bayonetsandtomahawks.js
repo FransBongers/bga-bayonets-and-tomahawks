@@ -2086,6 +2086,7 @@ var POOL_BRITISH_LIGHT = 'poolBritishLight';
 var POOL_BRITISH_ARTILLERY = 'poolBritishArtillery';
 var POOL_BRITISH_FORTS = 'poolBritishForts';
 var POOL_BRITISH_METROPOLITAN_VOW = 'poolBritishMetropolitanVoW';
+var POOL_BRITISH_COLONIAL_LIGHT = 'poolBritishColonialLight';
 var POOL_BRITISH_COLONIAL_VOW = 'poolBritishColonialVoW';
 var POOL_BRITISH_COLONIAL_VOW_BONUS = 'poolBritishColonialVoWBonus';
 var POOL_FRENCH_COMMANDERS = 'poolFrenchCommanders';
@@ -2094,10 +2095,14 @@ var POOL_FRENCH_ARTILLERY = 'poolFrenchArtillery';
 var POOL_FRENCH_FORTS = 'poolFrenchForts';
 var POOL_FRENCH_METROPOLITAN_VOW = 'poolFrenchMetropolitanVoW';
 var POOL_NEUTRAL_INDIANS = 'poolNeutralIndians';
+var REINFORCEMENTS_FLEETS = 'reinforcementsFleets';
+var REINFORCEMENTS_BRITISH = 'reinforcementsBritish';
+var REINFORCEMENTS_FRENCH = 'reinforcementsFrench';
 var POOLS = [
     POOL_FLEETS,
     POOL_BRITISH_COMMANDERS,
     POOL_BRITISH_LIGHT,
+    POOL_BRITISH_COLONIAL_LIGHT,
     POOL_BRITISH_ARTILLERY,
     POOL_BRITISH_FORTS,
     POOL_BRITISH_METROPOLITAN_VOW,
@@ -2109,11 +2114,14 @@ var POOLS = [
     POOL_FRENCH_FORTS,
     POOL_FRENCH_METROPOLITAN_VOW,
     POOL_NEUTRAL_INDIANS,
+    REINFORCEMENTS_FLEETS,
+    REINFORCEMENTS_BRITISH,
+    REINFORCEMENTS_FRENCH,
 ];
 var YEAR_MARKER = 'year_marker';
 var ROUND_MARKER = 'round_marker';
 var VICTORY_MARKER = 'victory_marker';
-var OPEN_SEAS_MARKER = 'open_seas_marker';
+var OPEN_SEAS_MARKER = 'openSeasMarker';
 var FRENCH_RAID_MARKER = 'french_raid_marker';
 var BRITISH_RAID_MARKER = 'british_raid_marker';
 var FRENCH_BATTLE_MARKER = 'french_battle_marker';
@@ -2188,10 +2196,25 @@ var COMMANDER_REROLLS_TRACK_DEFENDER_0 = 'commander_rerolls_track_defender_0';
 var COMMANDER_REROLLS_TRACK_DEFENDER_1 = 'commander_rerolls_track_defender_1';
 var COMMANDER_REROLLS_TRACK_DEFENDER_2 = 'commander_rerolls_track_defender_2';
 var COMMANDER_REROLLS_TRACK_DEFENDER_3 = 'commander_rerolls_track_defender_3';
+var OPEN_SEAS_MARKER_SAIL_BOX = 'openSeasMarkerSailBox';
 var LOSSES_BOX_BRITISH = 'lossesBox_british';
 var LOSSES_BOX_FRENCH = 'lossesBox_french';
 var MARKERS = 'markers';
 var UNITS = 'units';
+var VOW_FRENCH_NAVY_LOSSES_PUT_BACK = 'VOWFrenchNavyLossedPutBack';
+var VOW_FEWER_TROOPS_FRENCH = 'VOWFewerTroopsFrench';
+var VOW_FEWER_TROOPS_PUT_BACK_FRENCH = 'VOWFewerTroopsPutBackFrench';
+var VOW_PICK_ONE_ARTILLERY_FRENCH = 'VOWPickOneArtilleryFrench';
+var VOW_FEWER_TROOPS_BRITISH = 'VOWFewerTroopsBritish';
+var VOW_FEWER_TROOPS_PUT_BACK_BRITISH = 'VOWFewerTroopsPutBackBritish';
+var VOW_PICK_TWO_ARTILLERY_BRITISH = 'VOWPickTwoArtilleryBritish';
+var VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH = 'VOWPickTwoArtilleryOrLightBritish';
+var VOW_PICK_ONE_COLONIAL_LIGHT = 'VOWPickOneColonialLight';
+var VOW_PICK_ONE_COLONIAL_LIGHT_PUT_BACK = 'VOWPickOneColonialLightPutBack';
+var VOW_FEWER_TROOPS_COLONIAL = 'VOWFewerTroopsColonial';
+var VOW_FEWER_TROOPS_PUT_BACK_COLONIAL = 'VOWFewerTroopsPutBackColonial';
+var VOW_PENNSYLVANIA_MUSTERS = 'VOWPennsylvaniaMusters';
+var VOW_PITT_SUBSIDIES = 'VOWPittSubsidies';
 var ACTION_ROUND_INDIAN_ACTIONS = 'ACTION_ROUND_INDIAN_ACTIONS';
 define([
     'dojo',
@@ -2244,6 +2267,8 @@ var BayonetsAndTomahawks = (function () {
             battleSelectCommander: new BattleSelectCommanderState(this),
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
+            fleetsArriveVagariesOfWar: new FleetsArriveVagariesOfWarState(this),
+            fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
             lightMovement: new LightMovementState(this),
             lightMovementDestination: new LightMovementDestinationState(this),
             raid: new RaidState(this),
@@ -3378,6 +3403,7 @@ var GameMap = (function () {
             BRITISH_RAID_MARKER,
             FRENCH_RAID_MARKER,
             VICTORY_MARKER,
+            OPEN_SEAS_MARKER,
         ].forEach(function (markerId) {
             var node = document.getElementById(markerId);
             if (node) {
@@ -3511,6 +3537,10 @@ var GameMap = (function () {
         for (var l = 0; l <= 3; l++) {
             _loop_5(l);
         }
+        this.openSeasMarkerSailBox = new LineStock(this.game.tokenManager, document.getElementById(OPEN_SEAS_MARKER_SAIL_BOX), {
+            wrap: 'nowrap',
+            gap: '0px',
+        });
         this.updateMarkers({ gamedatas: gamedatas });
     };
     GameMap.prototype.updateMarkers = function (_a) {
@@ -3538,10 +3568,11 @@ var GameMap = (function () {
             this.battleTrack[bBattleMarker.location].addCard(bBattleMarker);
         }
         var fBattleMarker = markers[FRENCH_BATTLE_MARKER];
-        console.log('fBattleMarker', fBattleMarker);
         if (fBattleMarker && this.battleTrack[fBattleMarker.location]) {
-            console.log('placeMarker', fBattleMarker);
             this.battleTrack[fBattleMarker.location].addCard(fBattleMarker);
+        }
+        if (markers[OPEN_SEAS_MARKER]) {
+            this.openSeasMarkerSailBox.addCard(markers[OPEN_SEAS_MARKER]);
         }
         var victoryMarker = markers[VICTORY_MARKER];
         if (victoryMarker && this.victoryPointsTrack[victoryMarker.location]) {
@@ -3729,7 +3760,7 @@ var tplCommanderTrack = function () {
             id: markerSpace.id,
             top: markerSpace.top,
             left: markerSpace.left,
-            extraClasses: 'bt_commander_rerolls_track'
+            extraClasses: 'bt_commander_rerolls_track',
         });
     }).join('');
 };
@@ -3737,7 +3768,7 @@ var tplBattleMarkersPool = function () { return '<div id="battle_markers_pool"><
 var tplGameMap = function (_a) {
     var gamedatas = _a.gamedatas;
     var spaces = gamedatas.spaces;
-    return "\n  <div id=\"bt_game_map\">\n\n    ".concat(tplLossesBox(), "\n    ").concat(tplSpaces({ spaces: spaces }), "\n    ").concat(tplVictoryPointsTrack(), "\n    ").concat(tplBattleTrack(), "\n    ").concat(tplBattleMarkersPool(), "\n    ").concat(tplCommanderTrack(), "\n    ").concat(tplRaidTrack(), "\n    ").concat(tplYearTrack(), "\n    ").concat(tplActionRoundTrack(), "\n\n  </div>");
+    return "\n  <div id=\"bt_game_map\">\n    ".concat(tplMarkerSpace({ id: OPEN_SEAS_MARKER_SAIL_BOX, top: 77.5, left: 1374.5 }), "\n    ").concat(tplLossesBox(), "\n    ").concat(tplSpaces({ spaces: spaces }), "\n    ").concat(tplVictoryPointsTrack(), "\n    ").concat(tplBattleTrack(), "\n    ").concat(tplBattleMarkersPool(), "\n    ").concat(tplCommanderTrack(), "\n    ").concat(tplRaidTrack(), "\n    ").concat(tplYearTrack(), "\n    ").concat(tplActionRoundTrack(), "\n\n  </div>");
 };
 var Hand = (function () {
     function Hand(game) {
@@ -3847,7 +3878,7 @@ var getTokenDiv = function (_a) {
         case LOG_TOKEN_DIE_RESULT:
             return tplLogDieResult(value);
         case LOG_TOKEN_UNIT:
-            return tplLogTokenUnit(value);
+            return tplLogTokenUnit(value, game.gamedatas.staticData.units[value].type);
         default:
             return value;
     }
@@ -3866,8 +3897,8 @@ var tplLogTokenCard = function (id) {
 var tplLogTokenMarker = function (type) {
     return "<div class=\"bt_marker_side\" data-type=\"".concat(type, "\"></div>");
 };
-var tplLogTokenUnit = function (counterId) {
-    return "<div class=\"bt_token_side\" data-counter-id=\"".concat(counterId, "\"></div>");
+var tplLogTokenUnit = function (counterId, type) {
+    return "<div class=\"bt_token_side\" data-counter-id=\"".concat(counterId, "\"").concat(type === COMMANDER ? ' data-commander="true"' : '', "></div>");
 };
 var tplLogDieResult = function (dieResult) {
     return "<div class=\"bt_log_die\" data-die-result=\"".concat(dieResult, "\"></div>");
@@ -3890,10 +3921,12 @@ var NotificationManager = (function () {
             'battleReturnCommander',
             'battleStart',
             'battleSelectCommander',
+            'commanderDraw',
             'discardCardFromHand',
             'discardCardFromHandPrivate',
             'discardCardInPlay',
             'drawCardPrivate',
+            'drawnReinforcements',
             'eliminateUnit',
             'loseControl',
             'moveRaidPointsMarker',
@@ -3903,14 +3936,17 @@ var NotificationManager = (function () {
             'moveUnit',
             'placeStackMarker',
             'placeUnitInLosses',
+            'placeUnits',
             'raidPoints',
             'reduceUnit',
             'removeMarkersEndOfActionRound',
+            'returnToPool',
             'revealCardsInPlay',
             'scoreVictoryPoints',
             'selectReserveCard',
             'selectReserveCardPrivate',
             'takeControl',
+            'vagariesOfWarPickUnits',
         ];
         notifs.forEach(function (notifName) {
             _this.subscriptions.push(dojo.subscribe(notifName, _this, function (notifDetails) {
@@ -4117,6 +4153,21 @@ var NotificationManager = (function () {
             });
         });
     };
+    NotificationManager.prototype.notif_commanderDraw = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var commander;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        commander = notif.args.commander;
+                        return [4, this.game.pools.stocks[commander.location].addCard(commander)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
     NotificationManager.prototype.notif_discardCardFromHandPrivate = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, card, playerId;
@@ -4161,6 +4212,21 @@ var NotificationManager = (function () {
                         return [4, this.game.hand.addCard(card)];
                     case 2:
                         _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_drawnReinforcements = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, units, location;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = notif.args, units = _a.units, location = _a.location;
+                        return [4, this.game.pools.stocks[location].addCards(units)];
+                    case 1:
+                        _b.sent();
                         return [2];
                 }
             });
@@ -4292,6 +4358,25 @@ var NotificationManager = (function () {
             });
         });
     };
+    NotificationManager.prototype.notif_placeUnits = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, units, spaceId, faction, unitStack;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = notif.args, units = _a.units, spaceId = _a.spaceId, faction = _a.faction;
+                        unitStack = this.game.gameMap.stacks[spaceId][faction];
+                        if (!unitStack) {
+                            return [2];
+                        }
+                        return [4, unitStack.addUnits(units)];
+                    case 1:
+                        _b.sent();
+                        return [2];
+                }
+            });
+        });
+    };
     NotificationManager.prototype.notif_placeStackMarker = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var marker;
@@ -4358,6 +4443,21 @@ var NotificationManager = (function () {
                     }
                 });
                 return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_returnToPool = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var unit;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        unit = notif.args.unit;
+                        return [4, this.game.pools.stocks[unit.location].addCard(unit)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
             });
         });
     };
@@ -4459,6 +4559,21 @@ var NotificationManager = (function () {
                     });
                 }
                 return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_vagariesOfWarPickUnits = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, units, location;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = notif.args, units = _a.units, location = _a.location;
+                        return [4, this.game.pools.stocks[location].addCards(units)];
+                    case 1:
+                        _b.sent();
+                        return [2];
+                }
             });
         });
     };
@@ -4591,11 +4706,12 @@ var Pools = (function () {
     return Pools;
 }());
 var tplPoolsContainer = function () {
-    return "\n  <div id=\"bt_right_column\">\n    ".concat(tplPoolFleets(), "\n    ").concat(tplPoolNeutralIndians(), "\n    ").concat(tplPoolBritish(), "\n    ").concat(tplPoolFrench(), "\n  </div>");
+    return "\n  <div id=\"bt_right_column\">\n  ".concat(tplDrawnReinforcements(), "\n    ").concat(tplPoolFleets(), "\n    ").concat(tplPoolNeutralIndians(), "\n    ").concat(tplPoolBritish(), "\n    ").concat(tplPoolFrench(), "\n  </div>");
 };
+var tplDrawnReinforcements = function () { return "\n<div id=\"bt_drawn_reinforcements\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Drawn Reinforcements'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Fleets'), "</span></div>\n    <div id=\"reinforcementsFleets\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('British'), "</span></div>\n    <div id=\"reinforcementsBritish\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('French'), "</span></div>\n    <div id=\"reinforcementsFrench\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
 var tplPoolFleets = function () { return "\n<div id=\"bt_pool_fleets\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Fleets'), "</span></div>\n  <div id=\"poolFleets\" class=\"bt_unit_pool\"></div>\n</div>"); };
 var tplPoolNeutralIndians = function () { return "\n<div id=\"bt_pool_neutralIndians\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Neutral Indians'), "</span></div>\n  <div id=\"poolNeutralIndians\" class=\"bt_unit_pool\"></div>\n</div>"); };
-var tplPoolBritish = function () { return "\n<div id=\"bt_pool_british\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('British'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Commanders'), "</span></div>\n    <div id=\"poolBritishCommanders\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Light'), "</span></div>\n    <div id=\"poolBritishLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Artillery'), "</span></div>\n    <div id=\"poolBritishArtillery\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Forts'), "</span></div>\n    <div id=\"poolBritishForts\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Metropolitan Brigades & VoW'), "</span></div>\n    <div id=\"poolBritishMetropolitanVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial Brigades & VoW'), "</span></div>\n    <div id=\"poolBritishColonialVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial VoW Bonus'), "</span></div>\n    <div id=\"poolBritishColonialVoWBonus\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
+var tplPoolBritish = function () { return "\n<div id=\"bt_pool_british\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('British'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Commanders'), "</span></div>\n    <div id=\"poolBritishCommanders\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Light'), "</span></div>\n    <div id=\"poolBritishLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial Light'), "</span></div>\n    <div id=\"poolBritishColonialLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Artillery'), "</span></div>\n    <div id=\"poolBritishArtillery\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Forts'), "</span></div>\n    <div id=\"poolBritishForts\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Metropolitan Brigades & VoW'), "</span></div>\n    <div id=\"poolBritishMetropolitanVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial Brigades & VoW'), "</span></div>\n    <div id=\"poolBritishColonialVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial VoW Bonus'), "</span></div>\n    <div id=\"poolBritishColonialVoWBonus\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
 var tplPoolFrench = function () { return "\n<div id=\"bt_pool_french\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('French'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Commanders'), "</span></div>\n    <div id=\"poolFrenchCommanders\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Light'), "</span></div>\n    <div id=\"poolFrenchLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Artillery'), "</span></div>\n    <div id=\"poolFrenchArtillery\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Forts'), "</span></div>\n    <div id=\"poolFrenchForts\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Metropolitan Brigades & VoW'), "</span></div>\n    <div id=\"poolFrenchMetropolitanVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
 var tplPool = function (_a) {
     var type = _a.type;
@@ -5905,6 +6021,394 @@ var ConfirmTurnState = (function () {
     };
     return ConfirmTurnState;
 }());
+var FleetsArriveUnitPlacementState = (function () {
+    function FleetsArriveUnitPlacementState(game) {
+        this.placedFleets = null;
+        this.placedUnits = null;
+        this.placedCommanders = null;
+        this.game = game;
+    }
+    FleetsArriveUnitPlacementState.prototype.onEnteringState = function (args) {
+        debug('Entering FleetsArriveUnitPlacementState');
+        this.args = args;
+        this.localMoves = {};
+        this.placedFleets = {};
+        this.placedUnits = {};
+        this.placedCommanders = {};
+        this.updateInterfaceInitialStep();
+    };
+    FleetsArriveUnitPlacementState.prototype.onLeavingState = function () {
+        debug('Leaving FleetsArriveUnitPlacementState');
+    };
+    FleetsArriveUnitPlacementState.prototype.setDescription = function (activePlayerId) { };
+    FleetsArriveUnitPlacementState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        var fleetsToPlace = this.args.fleets.filter(function (fleet) {
+            return !Object.keys(_this.placedFleets).includes(fleet.id);
+        });
+        if (fleetsToPlace.length === 0) {
+            this.updateInterfacePlaceUnits();
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a Fleet to place'),
+            args: {
+                you: '${you}',
+            },
+        });
+        fleetsToPlace.forEach(function (fleet) {
+            _this.game.setUnitSelectable({
+                id: fleet.id,
+                callback: function () {
+                    _this.updateInterfaceSelectSpace({ unit: fleet, isFleet: true });
+                },
+            });
+        });
+        if (Object.keys(this.placedFleets).length === 0) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
+        }
+        else {
+            this.addCancelButton();
+        }
+    };
+    FleetsArriveUnitPlacementState.prototype.updateInterfaceSelectSpace = function (_a) {
+        var _this = this;
+        var _b;
+        var unit = _a.unit, _c = _a.isFleet, isFleet = _c === void 0 ? false : _c;
+        this.game.clearPossible();
+        var commanderId = this.args.commandersPerUnit[unit.id] || null;
+        this.game.clientUpdatePageTitle({
+            text: commanderId
+                ? _('${you} must select a Space to place ${tkn_unit}${tkn_unit_commander}')
+                : _('${you} must select a Space to place ${tkn_unit}'),
+            args: {
+                you: '${you}',
+                tkn_unit: unit.counterId,
+                tkn_unit_commander: commanderId
+                    ? (_b = this.args.commanders[commanderId]) === null || _b === void 0 ? void 0 : _b.counterId
+                    : '',
+            },
+        });
+        if (isFleet) {
+            this.args.spaces.forEach(function (space) {
+                _this.game.setLocationSelectable({
+                    id: space.id,
+                    callback: function () { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    this.placedFleets[unit.id] = space.id;
+                                    this.addLocalMove({ fromSpaceId: unit.location, unit: unit });
+                                    return [4, this.game.gameMap.stacks[space.id][unit.faction].addUnit(unit)];
+                                case 1:
+                                    _a.sent();
+                                    this.updateInterfaceInitialStep();
+                                    return [2];
+                            }
+                        });
+                    }); },
+                });
+            });
+        }
+        else {
+            var spacesToPlaceUnit = this.getPossibleSpacesToPlaceUnit();
+            spacesToPlaceUnit.forEach(function (id) {
+                _this.game.setLocationSelectable({
+                    id: id,
+                    callback: function () { return __awaiter(_this, void 0, void 0, function () {
+                        var units, commander;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    this.placedUnits[unit.id] = id;
+                                    this.addLocalMove({ fromSpaceId: unit.location, unit: unit });
+                                    units = [unit];
+                                    if (commanderId) {
+                                        commander = this.args.commanders[commanderId];
+                                        this.addLocalMove({
+                                            fromSpaceId: unit.location,
+                                            unit: commander,
+                                        });
+                                        units.push(commander);
+                                    }
+                                    return [4, this.game.gameMap.stacks[id][unit.faction].addUnits(units)];
+                                case 1:
+                                    _a.sent();
+                                    this.updateInterfacePlaceUnits();
+                                    return [2];
+                            }
+                        });
+                    }); },
+                });
+            });
+        }
+        this.addCancelButton();
+    };
+    FleetsArriveUnitPlacementState.prototype.updateInterfacePlaceUnits = function () {
+        var _this = this;
+        var unitsToPlace = this.args.units.filter(function (unit) {
+            return (!Object.keys(_this.placedFleets).includes(unit.id) &&
+                !Object.keys(_this.placedUnits).includes(unit.id));
+        });
+        if (unitsToPlace.length === 0) {
+            this.updateInterfaceConfirm();
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a unit to place'),
+            args: {
+                you: '${you}',
+            },
+        });
+        unitsToPlace.forEach(function (unit) {
+            _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () {
+                    _this.updateInterfaceSelectSpace({ unit: unit });
+                },
+            });
+        });
+        this.addCancelButton();
+    };
+    FleetsArriveUnitPlacementState.prototype.updateInterfaceConfirm = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Confirm unit placement?'),
+            args: {},
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actFleetsArriveUnitPlacement',
+                args: {
+                    placedFleets: _this.placedFleets,
+                    placedUnits: _this.placedUnits,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.addCancelButton();
+    };
+    FleetsArriveUnitPlacementState.prototype.addLocalMove = function (_a) {
+        var fromSpaceId = _a.fromSpaceId, unit = _a.unit;
+        if (this.localMoves[fromSpaceId]) {
+            this.localMoves[fromSpaceId].push(unit);
+        }
+        else {
+            this.localMoves[fromSpaceId] = [unit];
+        }
+    };
+    FleetsArriveUnitPlacementState.prototype.addCancelButton = function () {
+        var _this = this;
+        this.game.addDangerActionButton({
+            id: 'cancel_btn',
+            text: _('Cancel'),
+            callback: function () { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4, this.revertLocalMoves()];
+                        case 1:
+                            _a.sent();
+                            this.game.onCancel();
+                            return [2];
+                    }
+                });
+            }); },
+        });
+    };
+    FleetsArriveUnitPlacementState.prototype.revertLocalMoves = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var promises;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        promises = [];
+                        Object.entries(this.localMoves).forEach(function (_a) {
+                            var spaceId = _a[0], units = _a[1];
+                            promises.push(_this.game.pools.stocks[spaceId].addCards(units));
+                        });
+                        return [4, Promise.all(promises)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    FleetsArriveUnitPlacementState.prototype.getPossibleSpacesToPlaceUnit = function () {
+        var fleetLocations = Object.values(this.placedFleets);
+        if (fleetLocations.length > 0) {
+            return fleetLocations.reduce(function (carry, current) {
+                if (carry.includes(current)) {
+                    return carry;
+                }
+                else {
+                    carry.push(current);
+                    return carry;
+                }
+            }, []);
+        }
+        var unitLocations = Object.values(this.placedUnits);
+        if (unitLocations.length > 0) {
+            return [unitLocations[0]];
+        }
+        else {
+            return this.args.spaces.map(function (space) { return space.id; });
+        }
+    };
+    return FleetsArriveUnitPlacementState;
+}());
+var FleetsArriveVagariesOfWarState = (function () {
+    function FleetsArriveVagariesOfWarState(game) {
+        var _a;
+        this.selectedUnitIds = [];
+        this.selectedVoWToken = null;
+        this.vowTokenNumberOfUnitsMap = (_a = {},
+            _a[VOW_PICK_ONE_ARTILLERY_FRENCH] = 1,
+            _a[VOW_PICK_TWO_ARTILLERY_BRITISH] = 2,
+            _a[VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH] = 2,
+            _a);
+        this.game = game;
+    }
+    FleetsArriveVagariesOfWarState.prototype.onEnteringState = function (args) {
+        debug('Entering FleetsArriveVagariesOfWarState');
+        this.args = args;
+        this.selectedUnitIds = [];
+        this.selectedVoWToken = null;
+        this.updateInterfaceInitialStep();
+    };
+    FleetsArriveVagariesOfWarState.prototype.onLeavingState = function () {
+        debug('Leaving FleetsArriveVagariesOfWarState');
+    };
+    FleetsArriveVagariesOfWarState.prototype.setDescription = function (activePlayerId) { };
+    FleetsArriveVagariesOfWarState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        if (Object.keys(this.args.options).length === 1) {
+            this.selectedVoWToken = Object.keys(this.args.options)[0];
+            this.updateInterfaceSelectUnits();
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a Vagaries of War token to resolve'),
+            args: {
+                you: '${you}',
+            },
+        });
+        Object.keys(this.args.options).forEach(function (counterId) {
+            _this.game.addSecondaryActionButton({
+                id: "".concat(counterId, "_btn"),
+                text: _this.game.format_string_recursive('${tkn_unit}', {
+                    tkn_unit: counterId,
+                }),
+                callback: function () {
+                    _this.selectedVoWToken = counterId;
+                    _this.updateInterfaceSelectUnits();
+                },
+            });
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    FleetsArriveVagariesOfWarState.prototype.updateInterfaceSelectUnits = function () {
+        var _this = this;
+        var numberOfUnitsToSelect = this.vowTokenNumberOfUnitsMap[this.selectedVoWToken];
+        if (this.selectedUnitIds.length === numberOfUnitsToSelect) {
+            this.updateInterfaceConfirm();
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a unit (${number} remaining)'),
+            args: {
+                you: '${you}',
+                number: numberOfUnitsToSelect - this.selectedUnitIds.length,
+            },
+        });
+        this.selectedUnitIds.forEach(function (id) { return _this.game.setUnitSelected({ id: id }); });
+        this.args.options[this.selectedVoWToken].forEach(function (unit) {
+            return _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () {
+                    if (_this.selectedUnitIds.includes(unit.id)) {
+                        _this.selectedUnitIds = _this.selectedUnitIds.filter(function (unitId) { return unitId !== unit.id; });
+                    }
+                    else {
+                        _this.selectedUnitIds.push(unit.id);
+                    }
+                    _this.updateInterfaceSelectUnits();
+                },
+            });
+        });
+        this.game.addCancelButton();
+    };
+    FleetsArriveVagariesOfWarState.prototype.updateInterfaceConfirm = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Pick ${unitsLog} ?'),
+            args: {
+                unitsLog: this.createUnitsLog(this.args.options[this.selectedVoWToken].filter(function (unit) {
+                    return _this.selectedUnitIds.includes(unit.id);
+                })),
+            },
+        });
+        this.selectedUnitIds.forEach(function (id) { return _this.game.setUnitSelected({ id: id }); });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actFleetsArriveVagariesOfWar',
+                args: {
+                    vowTokenId: _this.selectedVoWToken,
+                    selectedUnitIds: _this.selectedUnitIds,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    FleetsArriveVagariesOfWarState.prototype.createUnitsLog = function (units) {
+        var unitsLog = '';
+        var unitsLogArgs = {};
+        units.forEach(function (unit, index) {
+            var key = "tkn_unit_".concat(index);
+            unitsLog += '${' + key + '}';
+            unitsLogArgs[key] = unit.counterId;
+        });
+        return {
+            log: unitsLog,
+            args: unitsLogArgs,
+        };
+    };
+    return FleetsArriveVagariesOfWarState;
+}());
 var LightMovementState = (function () {
     function LightMovementState(game) {
         this.selectedUnits = [];
@@ -6064,7 +6568,6 @@ var LightMovementDestinationState = (function () {
     LightMovementDestinationState.prototype.setSpacesSelectable = function () {
         var _this = this;
         Object.values(this.args.destinations).forEach(function (destination) {
-            console.log('destination', destination);
             _this.game.setLocationSelectable({
                 id: destination.space.id,
                 callback: function () {
@@ -6416,6 +6919,9 @@ var UnitStack = (function (_super) {
         return promise;
     };
     UnitStack.prototype.cardRemoved = function (unit, settings) {
+        var unitDiv = this.getCardElement(unit);
+        unitDiv.style.top = undefined;
+        unitDiv.style.left = undefined;
         _super.prototype.cardRemoved.call(this, unit, settings);
         if (this.getCards().length === 0) {
             this.element.removeAttribute('data-has-unit');
@@ -6441,7 +6947,6 @@ var UnitStack = (function (_super) {
         }
         cards.forEach(function (card, index) {
             var unitDiv = stock.getCardElement(card);
-            unitDiv.style.position = 'absolute';
             unitDiv.style.top = "calc(var(--btTokenScale) * ".concat(index * (expanded ? 0 : -8), "px)");
             var offset = expanded ? 52 : 8;
             unitDiv.style.left = "calc(var(--btTokenScale) * ".concat(index * (_this.faction === FRENCH ? -1 * offset : offset), "px)");

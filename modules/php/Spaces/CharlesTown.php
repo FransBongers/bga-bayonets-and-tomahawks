@@ -20,5 +20,7 @@ class CharlesTown extends \BayonetsAndTomahawks\Models\Space
     $this->adjacentSpaces = [
       NINETY_SIX => CHARLES_TOWN_NINETY_SIX,
     ];
+    $this->adjacentSeaZones = [ATLANTIC_OCEAN];
+    $this->coastal = true;
   }
 }

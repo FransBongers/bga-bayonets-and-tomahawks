@@ -20,5 +20,7 @@ class NewLondon extends \BayonetsAndTomahawks\Models\Space
       NEW_YORK => NEW_LONDON_NEW_YORK,
       NORTHFIELD => NEW_LONDON_NORTHFIELD,
     ];
+    $this->adjacentSeaZones = [ATLANTIC_OCEAN];
+    $this->coastal = true;
   }
 }

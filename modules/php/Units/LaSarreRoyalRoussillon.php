@@ -10,5 +10,6 @@ class LaSarreRoyalRoussillon extends \BayonetsAndTomahawks\Models\Brigade
     $this->counterText = clienttranslate('La Sarre & Royal-Roussillon');
     $this->faction = FRENCH;
     $this->metropolitan = true;
+    $this->officerGorget = true;
   }
 }

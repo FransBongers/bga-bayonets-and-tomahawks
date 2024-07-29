@@ -21,5 +21,7 @@ class AnnapolisRoyal extends \BayonetsAndTomahawks\Models\Space
       CHIGNECTOU => ANNAPOLIS_ROYAL_CHIGNECTOU,
       HALIFAX => ANNAPOLIS_ROYAL_HALIFAX,
     ];
+    $this->adjacentSeaZones = [ATLANTIC_OCEAN];
+    $this->coastal = true;
   }
 }

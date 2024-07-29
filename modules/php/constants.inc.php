@@ -59,6 +59,10 @@ const ST_ACTION_ROUND_END = 27;
 const ST_ACTION_ROUND_SAIL_BOX_LANDING = 28;
 const ST_ACTION_ROUND_CHOOSE_REACTION = 29;
 const ST_FLEETS_ARRIVE_DRAW_REINFORCEMENTS = 30;
+const ST_FLEETS_ARRIVE_VAGARIES_OF_WAR = 31;
+const ST_FLEETS_ARRIVE_COMMANDER_DRAW = 32;
+const ST_FLEETS_ARRIVE_UNIT_PLACEMENT = 33;
+const ST_FLEETS_ARRIVE_END_OF_ROUND = 34;
 const ST_COLONIALS_ENLIST_DRAW_REINFORCEMENTS = 40;
 const ST_WINTER_QUARTERS_GAME_END_CHECK = 50;
 const ST_ACTION_ACTIVATE_STACK = 60;
@@ -125,8 +129,12 @@ const BATTLE_ROLLS_REROLLS = 'BATTLE_ROLLS_REROLLS';
 const BATTLE_ROUT = 'BATTLE_ROUT';
 const BATTLE_SELECT_COMMANDER = 'BATTLE_SELECT_COMMANDER';
 const COLONIALS_ENLIST_DRAW_REINFORCEMENTS = 'COLONIALS_ENLIST_DRAW_REINFORCEMENTS';
+const FLEETS_ARRIVE_COMMANDER_DRAW = 'FLEETS_ARRIVE_COMMANDER_DRAW';
 const FLEETS_ARRIVE_DRAW_REINFORCEMENTS = 'FLEETS_ARRIVE_DRAW_REINFORCEMENTS';
-const FLEETS_ARRIVE_ACTION = 'FLEETS_ARRIVE_ACTION';
+const FLEETS_ARRIVE_END_OF_ROUND = 'FLEETS_ARRIVE_END_OF_ROUND';
+const FLEETS_ARRIVE_UNIT_PLACEMENT = 'FLEETS_ARRIVE_UNIT_PLACEMENT';
+const FLEETS_ARRIVE_VAGARIES_OF_WAR = 'FLEETS_ARRIVE_VAGARIES_OF_WAR';
+// const FLEETS_ARRIVE_ACTION = 'FLEETS_ARRIVE_ACTION';
 const WINTER_QUARTERS_GAME_END_CHECK = 'WINTER_QUARTERS_GAME_END_CHECK';
 
 // Actions that can be performed by stack
@@ -192,6 +200,8 @@ const VICTORY_POINTS_BRITISH_9 = 'victory_points_british_9';
 const VICTORY_POINTS_BRITISH_10 = 'victory_points_british_10';
 
 const BATTLE_MARKERS_POOL = 'battle_markers_pool';
+
+const OPEN_SEAS_MARKER_SAIL_BOX = 'openSeasMarkerSailBox';
 
 // Die faces
 const FLAG = 'flag';
@@ -265,7 +275,7 @@ const NEUTRAL = 'neutral';
 const YEAR_MARKER = 'year_marker';
 const ROUND_MARKER = 'round_marker';
 const VICTORY_MARKER = 'victory_marker';
-const OPEN_SEAS_MARKER = 'open_seas_marker';
+const OPEN_SEAS_MARKER = 'openSeasMarker';
 const FRENCH_RAID_MARKER = 'french_raid_marker';
 const BRITISH_RAID_MARKER = 'british_raid_marker';
 const FRENCH_BATTLE_MARKER = 'french_battle_marker';
@@ -295,6 +305,7 @@ const POOL_BRITISH_LIGHT = 'poolBritishLight';
 const POOL_BRITISH_ARTILLERY = 'poolBritishArtillery';
 const POOL_BRITISH_FORTS = 'poolBritishForts';
 const POOL_BRITISH_METROPOLITAN_VOW = 'poolBritishMetropolitanVoW';
+const POOL_BRITISH_COLONIAL_LIGHT = 'poolBritishColonialLight';
 const POOL_BRITISH_COLONIAL_VOW = 'poolBritishColonialVoW';
 const POOL_BRITISH_COLONIAL_VOW_BONUS = 'poolBritishColonialVoWBonus';
 
@@ -305,6 +316,14 @@ const POOL_FRENCH_FORTS = 'poolFrenchForts';
 const POOL_FRENCH_METROPOLITAN_VOW = 'poolFrenchMetropolitanVoW';
 
 const POOL_NEUTRAL_INDIANS = 'poolNeutralIndians';
+
+/**
+ * Reinforcements
+ */
+const REINFORCEMENTS_FLEETS = 'reinforcementsFleets';
+const REINFORCEMENTS_BRITISH = 'reinforcementsBritish';
+const REINFORCEMENTS_FRENCH = 'reinforcementsFrench';
+
 /**
  * Spaces
  */
@@ -510,6 +529,15 @@ const SPACES = [
   ZAWAKWTEGOK,
 ];
 
+/**
+ * Sea zones
+ */
+const ATLANTIC_OCEAN = 'atlanticOcean';
+const GULF_OF_SAINT_LAWRENCE = 'gulfOfSaintLawrence';
+
+/**
+ * Other locations
+ */
 const REMOVED_FROM_PLAY = 'removedFromPlay';
 
 /**

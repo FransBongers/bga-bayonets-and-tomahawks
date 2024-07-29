@@ -17,5 +17,7 @@ class Mtan extends \BayonetsAndTomahawks\Models\Space
       RIVIERE_DU_LOUP => MTAN_RIVIERE_DU_LOUP,
       RIVIERE_RISTIGOUCHE => MTAN_RIVIERE_RISTIGOUCHE,
     ];
+    $this->adjacentSeaZones = [GULF_OF_SAINT_LAWRENCE];
+    $this->coastal = true;
   }
 }

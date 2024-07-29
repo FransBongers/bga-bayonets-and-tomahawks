@@ -61,6 +61,7 @@ interface BayonetsAndTomahawksGame extends Game {
   gameMap: GameMap;
   notificationManager: NotificationManager;
   playerManager: PlayerManager;
+  pools: Pools;
   settings: Settings;
   tokenManager: TokenManager;
   tooltipManager: TooltipManager;

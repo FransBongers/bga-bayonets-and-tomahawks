@@ -10,5 +10,6 @@ class Berry extends \BayonetsAndTomahawks\Models\Brigade
     $this->counterText = clienttranslate('Berry');
     $this->faction = FRENCH;
     $this->metropolitan = true;
+    $this->officerGorget = true;
   }
 }

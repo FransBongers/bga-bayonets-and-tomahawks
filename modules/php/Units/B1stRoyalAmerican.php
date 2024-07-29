@@ -10,5 +10,6 @@ class B1stRoyalAmerican extends \BayonetsAndTomahawks\Models\Brigade
     $this->counterText = clienttranslate('1st Royal American');
     $this->faction = BRITISH;
     $this->metropolitan = true;
+    $this->officerGorget = true;
   }
 }

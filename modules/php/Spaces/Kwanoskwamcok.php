@@ -17,5 +17,7 @@ class Kwanoskwamcok extends \BayonetsAndTomahawks\Models\Space
       CHIGNECTOU => CHIGNECTOU_KWANOSKWAMCOK,
       ST_GEORGE => KWANOSKWAMCOK_ST_GEORGE,
     ];
+    $this->adjacentSeaZones = [ATLANTIC_OCEAN];
+    $this->coastal = true;
   }
 }

@@ -174,6 +174,11 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     return $this->type === ARTILLERY;
   }
 
+  public function isVagariesOfWarToken()
+  {
+    return $this->type === VAGARIES_OF_WAR;
+  }
+
   public function getType()
   {
     return $this->type;

@@ -20,5 +20,7 @@ class Boston extends \BayonetsAndTomahawks\Models\Space
       NORTHFIELD => BOSTON_NORTHFIELD,
       YORK => BOSTON_YORK,
     ];
+    $this->adjacentSeaZones = [ATLANTIC_OCEAN];
+    $this->coastal = true;
   }
 }

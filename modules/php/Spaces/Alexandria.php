@@ -19,5 +19,7 @@ class Alexandria extends \BayonetsAndTomahawks\Models\Space
       PHILADELPHIA => ALEXANDRIA_PHILADELPHIA,
       WINCHESTER => ALEXANDRIA_WINCHESTER,
     ];
+    $this->adjacentSeaZones = [ATLANTIC_OCEAN];
+    $this->coastal = true;
   }
 }

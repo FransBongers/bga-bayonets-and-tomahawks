@@ -129,29 +129,6 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
     self::DB()->update(['spent' => 0])->where('spent', '=', 1)->run();
   }
 
-  // public static function get($id, $raiseExceptionIfNotEnough = true)
-  // {
-  //   $result = self::getMany($id, $raiseExceptionIfNotEnough);
-  //   return $result->count() == 1 ? $result->first() : $result;
-  // }
-
-  // public static function getMany($ids, $raiseExceptionIfNotEnough = true)
-  // {
-  //   if (!is_array($ids)) {
-  //     $ids = [$ids];
-  //   }
-
-  //   $ids = array_map(function ($id) {
-  //     if (Utils::startsWith($id, 'unit')) {
-  //       return intval(explode('_', $id)[1]);
-  //     } else {
-  //       return $id;
-  //     }
-  //   }, $ids);
-
-  //   return parent::getMany($ids, $raiseExceptionIfNotEnough);
-  // }
-
   // ..######..########.########.########.########.########...######.
   // .##....##.##..........##.......##....##.......##.....##.##....##
   // .##.......##..........##.......##....##.......##.....##.##......

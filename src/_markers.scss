@@ -102,6 +102,16 @@
   background-position-y: math.div(1, 5) * 100%;
 }
 
+.bt_marker_side[data-type="openSeasMarker"][data-side="front"] {
+  background-position-x: math.div(2, 7) * 100%;
+  background-position-y: math.div(0, 5) * 100%;
+}
+
+.bt_marker_side[data-type="openSeasMarker"][data-side="back"] {
+  background-position-x: math.div(1, 7) * 100%;
+  background-position-y: math.div(0, 5) * 100%;
+}
+
 // .bt_marker_test {
 //   background-image: url('img/markers_2.webp');
 //   height: calc(var(--btMapScale) * 37px);

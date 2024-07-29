@@ -23,5 +23,7 @@ class York extends \BayonetsAndTomahawks\Models\Space
       TACONNET => TACONNET_YORK,
       ZAWAKWTEGOK => YORK_ZAWAKWTEGOK,
     ];
+    $this->adjacentSeaZones = [ATLANTIC_OCEAN];
+    $this->coastal = true;
   }
 }

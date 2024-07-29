@@ -33,8 +33,10 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
 
 
   protected $staticAttributes = [
+    'adjacentSeaZones',
     'battlePriority',
     'britishBase',
+    'coastal',
     'homeSpace',
     'militia',
     'name',
@@ -47,8 +49,10 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     'left'
   ];
 
+  protected $adjacentSeaZones = [];
   protected $battlePriority;
   protected $britishBase = false;
+  protected $coastal = false;
   protected $defaultControl;
   protected $faction = null;
   protected $homeSpace = null;
@@ -136,5 +140,10 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   public function hasBastion()
   {
     return false;
+  }
+
+  public function isCoastal()
+  {
+    return $this->coastal;
   }
 }

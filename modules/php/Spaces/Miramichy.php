@@ -23,5 +23,7 @@ class Miramichy extends \BayonetsAndTomahawks\Models\Space
       PORT_LA_JOYE => MIRAMICHY_PORT_LA_JOYE,
       RIVIERE_RISTIGOUCHE => MIRAMICHY_RIVIERE_RISTIGOUCHE,
     ];
+    $this->adjacentSeaZones = [GULF_OF_SAINT_LAWRENCE];
+    $this->coastal = true;
   }
 }

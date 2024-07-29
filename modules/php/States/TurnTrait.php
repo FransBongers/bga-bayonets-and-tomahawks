@@ -8,6 +8,7 @@ use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Log;
+use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\AtomicActions;
@@ -54,14 +55,19 @@ trait TurnTrait
 
   function stSetupActionRound()
   {
-    $player = Players::getActive();
-    self::giveExtraTime($player->getId());
+    $playerIds = Players::getPlayerIdsForFactions();
+    foreach ($playerIds as $faction => $playerId) {
+      self::giveExtraTime($playerId);
+    }
+
+    $britishPlayerId = $playerIds[BRITISH];
+    $frenchPlayerId = $playerIds[FRENCH];
 
     // Stats::incPlayerTurnCount($player);
     // Stats::incTurnCount(1);
     $node = [];
     $currentRoundStep = Globals::getActionRound();
-    Notifications::log('currentRoundStep', $currentRoundStep);
+
     $isActionRound = in_array($currentRoundStep, [
       ACTION_ROUND_1,
       ACTION_ROUND_2,
@@ -86,14 +92,7 @@ trait TurnTrait
       ];
       $engineCallback = ['method' => 'stFirstPlayerActionPhase'];
     } else if ($currentRoundStep === FLEETS_ARRIVE) {
-      $node = [
-        'children' => [
-          [
-            'action' => FLEETS_ARRIVE_DRAW_REINFORCEMENTS,
-            'playerId' => 'all',
-          ],
-        ],
-      ];
+      $node = $this->getFleetsArriveFlow($britishPlayerId, $frenchPlayerId);
       $engineCallback = ['method' => 'stSetupActionRound'];
     } else if ($currentRoundStep === COLONIALS_ENLIST) {
       $node = [
@@ -124,7 +123,6 @@ trait TurnTrait
 
   function stFirstPlayerActionPhase()
   {
-    Notifications::log('stFirstPlayerActionPhase',[]);
     $playerId = Globals::getFirstPlayerId();
     self::giveExtraTime($playerId);
 
@@ -136,7 +134,6 @@ trait TurnTrait
 
   function stSecondPlayerActionPhase()
   {
-    Notifications::log('stSecondPlayerActionPhase',[]);
     $playerId = Globals::getSecondPlayerId();
     self::giveExtraTime($playerId);
 
@@ -336,6 +333,64 @@ trait TurnTrait
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  public function getFleetsArriveFlow($britishPlayerId, $frenchPlayerId)
+  {
+    $node = [
+      'children' => [
+        [
+          'action' => FLEETS_ARRIVE_DRAW_REINFORCEMENTS,
+          'pool' => POOL_FLEETS,
+        ],
+        [
+          'action' => FLEETS_ARRIVE_DRAW_REINFORCEMENTS,
+          'pool' => POOL_BRITISH_METROPOLITAN_VOW,
+        ],
+        [
+          'action' => FLEETS_ARRIVE_VAGARIES_OF_WAR,
+          'playerId' => $britishPlayerId,
+          'faction' => BRITISH,
+          'pool' => POOL_BRITISH_METROPOLITAN_VOW,
+        ],
+        [
+          'action' => FLEETS_ARRIVE_COMMANDER_DRAW,
+          'playerId' => $britishPlayerId,
+          'faction' => BRITISH,
+          'pool' => POOL_BRITISH_METROPOLITAN_VOW,
+        ],
+        [
+          'action' => FLEETS_ARRIVE_DRAW_REINFORCEMENTS,
+          'pool' => POOL_FRENCH_METROPOLITAN_VOW,
+        ],
+        [
+          'action' => FLEETS_ARRIVE_VAGARIES_OF_WAR,
+          'playerId' => $frenchPlayerId,
+          'faction' => FRENCH,
+          'pool' => POOL_FRENCH_METROPOLITAN_VOW,
+        ],
+        [
+          'action' => FLEETS_ARRIVE_COMMANDER_DRAW,
+          'playerId' => $frenchPlayerId,
+          'faction' => FRENCH,
+          'pool' => POOL_FRENCH_METROPOLITAN_VOW,
+        ],
+        [
+          'action' => FLEETS_ARRIVE_UNIT_PLACEMENT,
+          'playerId' => $britishPlayerId,
+          'faction' => BRITISH,
+        ],
+        [
+          'action' => FLEETS_ARRIVE_UNIT_PLACEMENT,
+          'playerId' => $frenchPlayerId,
+          'faction' => FRENCH,
+        ],
+        [
+          'action' => FLEETS_ARRIVE_END_OF_ROUND,
+        ],
+      ],
+    ];
+    return $node;
+  }
 
   public function getPlayerActionsPhaseFlow($playerId, $isFirstplayer)
   {

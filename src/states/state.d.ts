@@ -106,6 +106,18 @@ interface OnEnteringLightMovementStateArgs extends CommonArgs {
   faction: Faction;
 }
 
+interface OnEnteringFleetsArriveUnitPlacementStateArgs extends CommonArgs {
+  fleets: BTUnit[];
+  units: BTUnit[];
+  spaces: BTSpace[];
+  commanders: Record<string, BTUnit>;
+  commandersPerUnit: Record<string, string>;
+}
+
+interface OnEnteringFleetsArriveVagariesOfWarStateArgs extends CommonArgs {
+  options: Record<string, BTUnit[]>;
+}
+
 interface OnEnteringLightMovementDestinationStateArgs extends CommonArgs {
   // commanders: BTUnit[];
   // lightUnits: BTUnit[];

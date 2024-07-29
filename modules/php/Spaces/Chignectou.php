@@ -26,5 +26,7 @@ class Chignectou extends \BayonetsAndTomahawks\Models\Space
       POINTE_SAINTE_ANNE => CHIGNECTOU_POINTE_SAINTE_ANNE,
       PORT_LA_JOYE => CHIGNECTOU_PORT_LA_JOYE,
     ];
+    $this->adjacentSeaZones = [ATLANTIC_OCEAN];
+    $this->coastal = true;
   }
 }

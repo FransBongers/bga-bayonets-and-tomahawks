@@ -78,6 +78,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     battleSelectCommander: BattleSelectCommanderState;
     confirmPartialTurn: ConfirmPartialTurnState;
     confirmTurn: ConfirmTurnState;
+    fleetsArriveVagariesOfWar: FleetsArriveVagariesOfWarState;
+    fleetsArriveUnitPlacement: FleetsArriveUnitPlacementState;
     lightMovement: LightMovementState;
     lightMovementDestination: LightMovementDestinationState;
     raid: RaidState;
@@ -128,6 +130,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       battleSelectCommander: new BattleSelectCommanderState(this),
       confirmPartialTurn: new ConfirmPartialTurnState(this),
       confirmTurn: new ConfirmTurnState(this),
+      fleetsArriveVagariesOfWar: new FleetsArriveVagariesOfWarState(this),
+      fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
       lightMovement: new LightMovementState(this),
       lightMovementDestination: new LightMovementDestinationState(this),
       raid: new RaidState(this),

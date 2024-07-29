@@ -20,5 +20,7 @@ class CapeSable extends \BayonetsAndTomahawks\Models\Space
       ANNAPOLIS_ROYAL => ANNAPOLIS_ROYAL_CAPE_SABLE,
       HALIFAX => CAPE_SABLE_HALIFAX,
     ];
+    $this->adjacentSeaZones = [ATLANTIC_OCEAN];
+    $this->coastal = true;
   }
 }

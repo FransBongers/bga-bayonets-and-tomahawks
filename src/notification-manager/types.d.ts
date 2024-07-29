@@ -50,8 +50,17 @@ interface NotifBattleSelectCommanderArgs extends NotifWithPlayerArgs {
   commander: BTUnit;
 }
 
+interface NotifCommanderDrawArgs extends NotifWithPlayerArgs {
+  commander: BTUnit;
+}
+
 interface NotifDrawCardPrivateArgs extends NotifWithPlayerArgs {
   card: BTCard;
+}
+
+interface NotifDrawnReinforcementsArgs {
+  units: BTUnit[];
+  location: string;
 }
 
 interface NotifDiscardCardFromHandArgs extends NotifWithPlayerArgs {
@@ -107,6 +116,12 @@ interface NotifMoveYearMarkerArgs {
   marker: BTMarker;
 }
 
+interface NotifPlaceUnitsArgs extends NotifWithPlayerArgs {
+  units: BTUnit[];
+  faction: string;
+  spaceId: string;
+}
+
 interface NotifPlaceStackMarkerArgs extends NotifWithPlayerArgs {
   marker: BTMarker;
 }
@@ -130,6 +145,10 @@ interface NotifRemoveMarkersEndOfActionRoundArgs {
   spentUnits: BTUnit[];
 }
 
+interface NotifReturnToPoolArgs {
+  unit: BTUnit;
+}
+
 interface NotifRevealCardsInPlayArgs {
   british: BTCard;
   french: BTCard;
@@ -147,4 +166,9 @@ interface NotifSelectReserveCardPrivateArgs extends NotifWithPlayerArgs {
 interface NotifTakeControlArgs extends NotifWithPlayerArgs {
   faction: BRITISH_FACTION | FRENCH_FACTION;
   space: BTSpace;
+}
+
+interface NotifVagariesOfWarPickUnitsArgs extends NotifWithPlayerArgs {
+  units: BTUnit[];
+  location: string;
 }

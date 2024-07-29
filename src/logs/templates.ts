@@ -14,17 +14,17 @@ const tplLogTokenPlayerName = ({
 /* ------- GAME SPECIFIC LOG TOKENS ------- */
 
 const tplLogTokenCard = (id: string) => {
-  
-    return `<div class="bt_log_card bt_card" data-card-id="${id}"></div>`;
+  return `<div class="bt_log_card bt_card" data-card-id="${id}"></div>`;
 };
 
 const tplLogTokenMarker = (type: string) => {
   return `<div class="bt_marker_side" data-type="${type}"></div>`;
 };
 
-
-const tplLogTokenUnit = (counterId: string) => {
-  return `<div class="bt_token_side" data-counter-id="${counterId}"></div>`;
+const tplLogTokenUnit = (counterId: string, type: string) => {
+  return `<div class="bt_token_side" data-counter-id="${counterId}"${
+    type === COMMANDER ? ' data-commander="true"' : ''
+  }></div>`;
 };
 
 const tplLogDieResult = (dieResult: string) => {

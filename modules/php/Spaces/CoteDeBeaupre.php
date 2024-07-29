@@ -23,5 +23,7 @@ class CoteDeBeaupre extends \BayonetsAndTomahawks\Models\Space
       QUEBEC => COTE_DE_BEAUPRE_QUEBEC,
       TADOUSSAC => COTE_DE_BEAUPRE_TADOUSSAC,
     ];
+    $this->adjacentSeaZones = [GULF_OF_SAINT_LAWRENCE];
+    $this->coastal = true;
   }
 }

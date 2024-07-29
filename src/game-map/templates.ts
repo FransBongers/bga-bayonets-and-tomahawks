@@ -124,7 +124,7 @@ const tplCommanderTrack = () =>
       id: markerSpace.id as string,
       top: markerSpace.top,
       left: markerSpace.left,
-      extraClasses: 'bt_commander_rerolls_track'
+      extraClasses: 'bt_commander_rerolls_track',
     })
   ).join('');
 
@@ -139,7 +139,7 @@ const tplGameMap = ({
 
   return `
   <div id="bt_game_map">
-
+    ${tplMarkerSpace({ id: OPEN_SEAS_MARKER_SAIL_BOX, top: 77.5, left: 1374.5 })}
     ${tplLossesBox()}
     ${tplSpaces({ spaces })}
     ${tplVictoryPointsTrack()}

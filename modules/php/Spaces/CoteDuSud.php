@@ -23,5 +23,7 @@ class CoteDuSud extends \BayonetsAndTomahawks\Models\Space
       RIVIERE_DU_LOUP => COTE_DU_SUD_RIVIERE_DU_LOUP,
       WOLASTOKUK => COTE_DU_SUD_WOLASTOKUK,
     ];
+    $this->adjacentSeaZones = [GULF_OF_SAINT_LAWRENCE];
+    $this->coastal = true;
   }
 }

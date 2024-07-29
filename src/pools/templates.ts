@@ -1,6 +1,7 @@
 const tplPoolsContainer = () => {
   return `
   <div id="bt_right_column">
+  ${tplDrawnReinforcements()}
     ${tplPoolFleets()}
     ${tplPoolNeutralIndians()}
     ${tplPoolBritish()}
@@ -11,6 +12,24 @@ const tplPoolsContainer = () => {
 // ${tplPool({type: 'french'})}
 // ${tplPool({type: 'indian'})}
 // ${tplPool({type: 'british'})}
+
+const tplDrawnReinforcements = () => `
+<div id="bt_drawn_reinforcements" class="bt_unit_pool_container">
+  <div><span>${_('Drawn Reinforcements')}</span></div>
+  <div>
+    <div class="bt_unit_pool_section_title"><span>${_('Fleets')}</span></div>
+    <div id="reinforcementsFleets" class="bt_unit_pool"></div>
+  </div>
+  <div>
+    <div class="bt_unit_pool_section_title"><span>${_('British')}</span></div>
+    <div id="reinforcementsBritish" class="bt_unit_pool"></div>
+  </div>
+  <div>
+    <div class="bt_unit_pool_section_title"><span>${_('French')}</span></div>
+    <div id="reinforcementsFrench" class="bt_unit_pool"></div>
+  </div>
+</div>
+`
 
 const tplPoolFleets = () => `
 <div id="bt_pool_fleets" class="bt_unit_pool_container">
@@ -34,6 +53,10 @@ const tplPoolBritish = () => `
   <div>
     <div class="bt_unit_pool_section_title"><span>${_('Light')}</span></div>
     <div id="poolBritishLight" class="bt_unit_pool"></div>
+  </div>
+  <div>
+    <div class="bt_unit_pool_section_title"><span>${_('Colonial Light')}</span></div>
+    <div id="poolBritishColonialLight" class="bt_unit_pool"></div>
   </div>
   <div>
     <div class="bt_unit_pool_section_title"><span>${_('Artillery')}</span></div>

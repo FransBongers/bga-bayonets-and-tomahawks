@@ -145,6 +145,23 @@ class Notifications
     return $map[$faction];
   }
 
+  private static function getUnitsLog($units)
+  {
+    $unitsLog = '';
+    $unitsLogArgs = [];
+
+    foreach ($units as $index => $unit) {
+      $key = 'tkn_unit_' . $index;
+      $unitsLog = $unitsLog . '${' . $key . '}';
+      $unitsLogArgs[$key] = $unit->getCounterId();
+    }
+
+    return [
+      'log' => $unitsLog,
+      'args' => $unitsLogArgs,
+    ];
+  }
+
   // ..######......###....##.....##.########
   // .##....##....##.##...###...###.##......
   // .##.........##...##..####.####.##......
@@ -319,6 +336,15 @@ class Notifications
     ]);
   }
 
+  public static function commanderDraw($unit, $commander)
+  {
+    self::notifyAll("commanderDraw", clienttranslate('Commander draw for ${tkn_unit_brigade} is ${tkn_unit_commander}'), [
+      'tkn_unit_brigade' => $unit->getCounterId(),
+      'tkn_unit_commander' => $commander->getCounterId(),
+      'commander' => $commander->jsonSerialize(),
+    ]);
+  }
+
   public static function drawCard($player, $card)
   {
     self::notify($player, 'drawCardPrivate', clienttranslate('Private: ${player_name} draws  ${cardId}'), [
@@ -377,6 +403,35 @@ class Notifications
     ]);
   }
 
+  public static function drawnReinforcements($units, $location)
+  {
+    $textMap = [
+      REINFORCEMENTS_FLEETS => clienttranslate('Fleets: ${unitsLog}'),
+      REINFORCEMENTS_BRITISH => clienttranslate('British reinforcements: ${unitsLog}'), // how to differentiate between COlonial?
+      // REINFORCEMENTS_BRITISH => clienttranslate('French reinforcements: ${unitsLog}'),
+      REINFORCEMENTS_FRENCH => clienttranslate('French reinforcements: ${unitsLog}'),
+    ];
+
+    // $unitsLog = '';
+    // $unitsLogArgs = [];
+
+    // foreach ($units as $index => $unit) {
+    //   $key = 'tkn_unit_' . $index;
+    //   $unitsLog = $unitsLog . '${' . $key . '}';
+    //   $unitsLogArgs[$key] = $unit->getCounterId();
+    // }
+
+    self::notifyAll("drawnReinforcements", $textMap[$location], [
+      'units' => $units,
+      'location' => $location,
+      // 'unitsLog' => [
+      //   'log' => $unitsLog,
+      //   'args' => $unitsLogArgs,
+      // ],
+      'unitsLog' => self::getUnitsLog($units),
+    ]);
+  }
+
   public static function gainInitiative($faction)
   {
     self::message(clienttranslate('The ${factionName} gain initiative'), [
@@ -421,7 +476,7 @@ class Notifications
   {
     self::notifyAll("moveRoundMarker", '', [
       'nextRoundStep' => $nextRoundStep,
-      'marker' => $marker,
+      'marker' => $marker->jsonSerialize(),
     ]);
   }
 
@@ -457,6 +512,11 @@ class Notifications
     ]);
   }
 
+  public static function noFrenchFleetInPool()
+  {
+    self::message(clienttranslate('No French Fleet in the fleet pool to remove'), []);
+  }
+
   public static function placeStackMarker($player, $marker, $space)
   {
     self::notifyAll("placeStackMarker", clienttranslate('${player_name} places ${tkn_marker} on their stack in  ${tkn_boldText_spaceName}'), [
@@ -474,6 +534,28 @@ class Notifications
       'player' => $player,
       'unit' => $unit->jsonSerialize(),
       'tkn_unit' => $unit->getCounterId(),
+    ]);
+  }
+
+  public static function removeFromPlay($unit, $previousLocation = null)
+  {
+    $text = $previousLocation === POOL_FLEETS ?
+      clienttranslate('${tkn_unit} is removed from the fleet pool') :
+      clienttranslate('${tkn_unit} is removed from play');
+
+    self::notifyAll("eliminateUnit", $text, [
+      'unit' => $unit->jsonSerialize(),
+      'tkn_unit' => $unit->getCounterId()
+    ]);
+  }
+
+  public static function returnToPool($token)
+  {
+    $text = clienttranslate('${tkn_unit} is put back in the pool');
+
+    self::notifyAll("returnToPool", $text, [
+      'unit' => $token->jsonSerialize(),
+      'tkn_unit' => $token->getCounterId()
     ]);
   }
 
@@ -514,6 +596,19 @@ class Notifications
     self::notifyAll("moveYearMarker", '', [
       'location' => $location,
       'marker' => $marker,
+    ]);
+  }
+
+  public static function placeUnits($player, $units, $space, $faction)
+  {
+    self::notifyAll("placeUnits", clienttranslate('${player_name} places ${unitsLog} in ${tkn_boldText_spaceName}'), [
+      'player' => $player,
+      'unitsLog' => self::getUnitsLog($units),
+      'units' => $units,
+      'faction' => $faction,
+      'spaceId' => $space->getId(),
+      'tkn_boldText_spaceName' => $space->getName(),
+      'i18n' => ['tkn_boldText_spaceName'],
     ]);
   }
 
@@ -585,6 +680,17 @@ class Notifications
       'tkn_boldText_space' => $space->getName(),
       'space' => $space,
       'i18n' => ['tkn_boldText_space'],
+    ]);
+  }
+
+  public static function vagariesOfWarPickUnits($player, $counterId, $units, $location)
+  {
+    self::notifyAll("vagariesOfWarPickUnits", clienttranslate('${player_name} uses ${tkn_unit_vowToken} to pick ${unitsLog}'), [
+      'player' => $player,
+      'unitsLog' => self::getUnitsLog($units),
+      'tkn_unit_vowToken' => $counterId,
+      'units' => $units,
+      'location' => $location,
     ]);
   }
 }
