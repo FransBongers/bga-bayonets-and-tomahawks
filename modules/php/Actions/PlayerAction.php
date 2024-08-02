@@ -60,7 +60,8 @@ class PlayerAction extends \BayonetsAndTomahawks\Models\AtomicAction
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
-    Engine::resolve(PASS);
+    // Engine::resolve(PASS);
+    $this->resolveAction(PASS);
   }
 
   // public function actPlayerAction($cardId, $strength)

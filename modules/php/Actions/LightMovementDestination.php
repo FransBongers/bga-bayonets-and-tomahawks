@@ -162,11 +162,12 @@ class LightMovementDestination extends \BayonetsAndTomahawks\Actions\UnitMovemen
     }
 
     $info = $this->ctx->getInfo();
-    $origin = Spaces::get($info['spaceId']);
+    $originId = $info['spaceId'];
+    $origin = Spaces::get($originId);
     $unitIds = $info['unitIds'];
     $units = Units::getMany($unitIds)->toArray();
 
-    Units::move($unitIds, $destinationId);
+    Units::move($unitIds, $destinationId, 0, $originId);
 
     // TODO: move markers
     Notifications::moveStack(self::getPlayer(), $units, [], $origin, $destination);

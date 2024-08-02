@@ -77,7 +77,10 @@ trait DebugTrait
     return $result;
   }
 
-
+  function debug_getUnit($unitId)
+  {
+    Notifications::log('unit', Units::get($unitId));
+  }
 
   function debug_test()
   {
