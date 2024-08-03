@@ -8,6 +8,7 @@ class AnnapolisRoyal extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = ANNAPOLIS_ROYAL;
     $this->battlePriority = 53;
+    $this->colony = NOVA_SCOTIA;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('ANNAPOLIS ROYAL');

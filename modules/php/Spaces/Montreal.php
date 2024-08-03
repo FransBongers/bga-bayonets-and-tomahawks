@@ -8,6 +8,7 @@ class Montreal extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = MONTREAL;
     $this->battlePriority = 122;
+    $this->colony = CANADA;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->militia = 2;

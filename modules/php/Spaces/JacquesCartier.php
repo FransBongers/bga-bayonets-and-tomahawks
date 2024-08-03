@@ -8,6 +8,7 @@ class JacquesCartier extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = JACQUES_CARTIER;
     $this->battlePriority = 93;
+    $this->colony = CANADA;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Jacques Cartier');

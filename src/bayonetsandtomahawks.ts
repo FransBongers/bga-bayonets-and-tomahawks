@@ -76,9 +76,10 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     battleRetreat: BattleRetreatState;
     battleRollsRerolls: BattleRollsRerollsState;
     battleSelectCommander: BattleSelectCommanderState;
+    colonialsEnlistUnitPlacement: ColonialsEnlistUnitPlacementState;
     confirmPartialTurn: ConfirmPartialTurnState;
     confirmTurn: ConfirmTurnState;
-    fleetsArriveVagariesOfWar: FleetsArriveVagariesOfWarState;
+    vagariesOfWarPickUnits: VagariesOfWarPickUnitsState;
     fleetsArriveUnitPlacement: FleetsArriveUnitPlacementState;
     lightMovement: LightMovementState;
     lightMovementDestination: LightMovementDestinationState;
@@ -128,9 +129,10 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       battleRetreat: new BattleRetreatState(this),
       battleRollsRerolls: new BattleRollsRerollsState(this),
       battleSelectCommander: new BattleSelectCommanderState(this),
+      colonialsEnlistUnitPlacement: new ColonialsEnlistUnitPlacementState(this),
       confirmPartialTurn: new ConfirmPartialTurnState(this),
       confirmTurn: new ConfirmTurnState(this),
-      fleetsArriveVagariesOfWar: new FleetsArriveVagariesOfWarState(this),
+      vagariesOfWarPickUnits: new VagariesOfWarPickUnitsState(this),
       fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
       lightMovement: new LightMovementState(this),
       lightMovementDestination: new LightMovementDestinationState(this),

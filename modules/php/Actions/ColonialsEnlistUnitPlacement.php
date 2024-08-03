@@ -9,24 +9,19 @@ use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Markers;
-use BayonetsAndTomahawks\Managers\Scenarios;
+use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
-class FleetsArriveVagariesOfWar extends \BayonetsAndTomahawks\Actions\FleetsArrive
+class ColonialsEnlistUnitPlacement extends \BayonetsAndTomahawks\Actions\LogisticsRounds
 {
-  protected $vowTokenNumberOfUnitsMap = [
-    VOW_PICK_ONE_ARTILLERY_FRENCH => 1,
-    VOW_PICK_TWO_ARTILLERY_BRITISH => 2,
-    VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH => 2,
-  ];
-
   public function getState()
   {
-    return ST_FLEETS_ARRIVE_VAGARIES_OF_WAR;
+    return ST_COLONIALS_ENLIST_UNIT_PLACEMENT;
   }
 
   // ..######..########....###....########.########
@@ -45,14 +40,12 @@ class FleetsArriveVagariesOfWar extends \BayonetsAndTomahawks\Actions\FleetsArri
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stFleetsArriveVagariesOfWar()
+  public function stColonialsEnlistUnitPlacement()
   {
-    $vagariesOfWarTokens = $this->getVagariesOfWarTokens();
 
-    if (count($this->getOptions($vagariesOfWarTokens)) === 0) {
-      $this->resolveAction(['automatic' => true]);
-    }
+    // $this->resolveAction(['automatic' => true], true);
   }
+
   // .########..########..########.......###.....######..########.####..#######..##....##
   // .##.....##.##.....##.##............##.##...##....##....##.....##..##.....##.###...##
   // .##.....##.##.....##.##...........##...##..##..........##.....##..##.....##.####..##
@@ -61,7 +54,7 @@ class FleetsArriveVagariesOfWar extends \BayonetsAndTomahawks\Actions\FleetsArri
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreFleetsArriveVagariesOfWar()
+  public function stPreColonialsEnlistUnitPlacement()
   {
   }
 
@@ -74,12 +67,21 @@ class FleetsArriveVagariesOfWar extends \BayonetsAndTomahawks\Actions\FleetsArri
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsFleetsArriveVagariesOfWar()
+  public function argsColonialsEnlistUnitPlacement()
   {
-    $vagariesOfWarTokens = $this->getVagariesOfWarTokens();
+    $info = $this->ctx->getInfo();
+    $faction = $info['faction'];
+
+    $units = array_merge(Units::getInLocation(REINFORCEMENTS_COLONIAL)->toArray(), Units::getInLocation(DISBANDED_COLONIAL_BRIGADES)->toArray());
+
+    $spaces = Utils::filter(Spaces::getControlledBy($faction), function ($space) {
+      return $space->getHomeSpace() === BRITISH && $space->getColony() !== null;
+    });
+
 
     return [
-      'options' => $this->getOptions($vagariesOfWarTokens),
+      'spaces' => $spaces,
+      'units' => $units,
     ];
   }
 
@@ -99,72 +101,66 @@ class FleetsArriveVagariesOfWar extends \BayonetsAndTomahawks\Actions\FleetsArri
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassFleetsArriveVagariesOfWar()
+  public function actPassColonialsEnlistUnitPlacement()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actFleetsArriveVagariesOfWar($args)
+  public function actColonialsEnlistUnitPlacement($args)
   {
-    self::checkAction('actFleetsArriveVagariesOfWar');
+    self::checkAction('actColonialsEnlistUnitPlacement');
 
-    $counterId = $args['vowTokenId'];
-    $selectedUnitIds = $args['selectedUnitIds'];
+    $placedUnits = $args['placedUnits'];
 
-    $vagariesOfWarTokens = $this->getVagariesOfWarTokens();
-    $options = $this->getOptions($vagariesOfWarTokens);
+    $stateArgs = $this->argsColonialsEnlistUnitPlacement();
 
-    if (!isset($options[$counterId])) {
-      throw new \feException("ERROR 016");
-    }
 
-    $units = $options[$counterId];
-
-    $selectedUnitIds = array_unique($selectedUnitIds);
-
-    if (count($selectedUnitIds) !== $this->vowTokenNumberOfUnitsMap[$counterId]) {
-      throw new \feException("ERROR 017");
-    }
-
-    $vowToken = Utils::array_find($vagariesOfWarTokens, function ($token) use ($counterId) {
-      return $token->getCounterId() === $counterId;
-    });
-
-    if ($vowToken === null) {
-      throw new \feException("ERROR 018");
-    }
-
-    $selectedUnits = Utils::filter($units, function ($unit) use ($selectedUnitIds) {
-      return in_array($unit->getId(), $selectedUnitIds);
-    });
-
-    if (count($selectedUnits) !== count($selectedUnitIds)) {
-      throw new \feException("ERROR 019");
-    }
-
+    $faction = $this->ctx->getInfo()['faction'];
     $player = self::getPlayer();
 
-    $info = $this->ctx->getInfo();
-    $pool = $info['pool'];
-    $location = $this->poolReinforcementsMap[$pool];
+    $spaces = $stateArgs['spaces'];
+    $units = $stateArgs['units'];
 
-    Units::move($selectedUnitIds, $location);
-
-    Notifications::vagariesOfWarPickUnits($player, $counterId, $selectedUnits, $location);
-    if ($vowToken->getPutTokenBackInPool()) {
-      $vowToken->returnToPool($pool);
-    } else {
-      $vowToken->removeFromPlay();
+    // Check if all units have been placed
+    foreach ($units as $unit) {
+      if (!isset($placedUnits[$unit->getId()])) {
+        throw new \feException("ERROR 027");
+      }
     }
 
-    $this->ctx->insertAsBrother(new LeafNode([
-      'action' => FLEETS_ARRIVE_VAGARIES_OF_WAR,
-      'playerId' => $player->getId(),
-      'faction' => $info['faction'],
-      'pool' => $pool,
-    ]));
+
+    $unitsPerSpace = [];
+    foreach ($placedUnits as $unitId => $spaceId) {
+      $unit = Utils::array_find($units, function ($optionUnit) use ($unitId) {
+        return $optionUnit->getId() === $unitId;
+      });
+      if ($unit === null) {
+        throw new \feException("ERROR 028");
+      }
+
+      $space = Utils::array_find($spaces, function ($optionSpace) use ($spaceId) {
+        return $optionSpace->getId() === $spaceId;
+      });
+      if ($space === null) {
+        throw new \feException("ERROR 029");
+      }
+      if ($unit->isBrigade() && $space->getColony() !== $unit->getColony()) {
+        throw new \feException("ERROR 030");
+      }
+
+      if (isset($unitsPerSpace[$spaceId])) {
+        $unitsPerSpace[$spaceId]['units'][] = $unit;
+      } else {
+        $unitsPerSpace[$spaceId] = [
+          'space' => $space,
+          'units' => [$unit],
+        ];
+      }
+    }
+
+    $this->placeUnits($unitsPerSpace, $player, $faction);
 
     $this->resolveAction($args);
   }
@@ -177,48 +173,22 @@ class FleetsArriveVagariesOfWar extends \BayonetsAndTomahawks\Actions\FleetsArri
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  private function getVagariesOfWarTokens()
+  private function placeUnits($unitsPerSpace, $player, $faction)
   {
-    $info = $this->ctx->getInfo();
-    $pool = $info['pool'];
+    $unitsPerSpace = array_values($unitsPerSpace);
 
-    $picked = Units::getInLocation($this->poolReinforcementsMap[$pool])->toArray();
-
-    $vagariesOfWarTokens = Utils::filter($picked, function ($unit) {
-      return $unit->isVagariesOfWarToken();
+    usort($unitsPerSpace, function ($a, $b) {
+      return $a['space']->getBattlePriority() - $b['space']->getBattlePriority();
     });
-    return $vagariesOfWarTokens;
-  }
 
-  public function getOptions($vagariesOfWarTokens)
-  {
+    foreach ($unitsPerSpace as $data) {
+      $space = $data['space'];
+      $units = $data['units'];
+      Units::move(array_map(function ($unit) {
+        return $unit->getId();
+      }, $units), $space->getId());
 
-    if (count($vagariesOfWarTokens) === 0) {
-      return [];
+      Notifications::placeUnits($player, $units, $space, $faction);
     }
-
-    $options = [];
-
-    foreach ($vagariesOfWarTokens as $token) {
-      $counterId = $token->getCounterId();
-
-      if (isset($options[$counterId])) {
-        continue;
-      }
-
-      switch ($counterId) {
-        case VOW_PICK_ONE_ARTILLERY_FRENCH;
-          $options[$counterId] = Units::getInLocation(POOL_FRENCH_ARTILLERY)->toArray();
-          break;
-        case VOW_PICK_TWO_ARTILLERY_BRITISH;
-          $options[$counterId] = Units::getInLocation(POOL_BRITISH_ARTILLERY)->toArray();
-          break;
-        case VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH:
-          $options[$counterId] = array_merge(Units::getInLocation(POOL_BRITISH_ARTILLERY)->toArray(), Units::getInLocation(POOL_BRITISH_LIGHT)->toArray());
-          break;
-      }
-    }
-
-    return $options;
   }
 }

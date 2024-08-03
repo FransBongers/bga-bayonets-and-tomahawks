@@ -8,6 +8,7 @@ class Northfield extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = NORTHFIELD;
     $this->battlePriority = 141;
+    $this->colony = NEW_ENGLAND;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->militia = 3;

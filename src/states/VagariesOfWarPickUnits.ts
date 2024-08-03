@@ -1,6 +1,6 @@
-class FleetsArriveVagariesOfWarState implements State {
+class VagariesOfWarPickUnitsState implements State {
   private game: BayonetsAndTomahawksGame;
-  private args: OnEnteringFleetsArriveVagariesOfWarStateArgs;
+  private args: OnEnteringVagariesOfWarPickUnitsStateArgs;
   private selectedUnitIds: string[] = [];
   private selectedVoWToken: string = null;
 
@@ -8,14 +8,16 @@ class FleetsArriveVagariesOfWarState implements State {
     [VOW_PICK_ONE_ARTILLERY_FRENCH]: 1,
     [VOW_PICK_TWO_ARTILLERY_BRITISH]: 2,
     [VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH]: 2,
+    [VOW_PICK_ONE_COLONIAL_LIGHT]: 1,
+    [VOW_PICK_ONE_COLONIAL_LIGHT_PUT_BACK]: 1,
   };
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
   }
 
-  onEnteringState(args: OnEnteringFleetsArriveVagariesOfWarStateArgs) {
-    debug('Entering FleetsArriveVagariesOfWarState');
+  onEnteringState(args: OnEnteringVagariesOfWarPickUnitsStateArgs) {
+    debug('Entering VagariesOfWarPickUnitsState');
     this.args = args;
     this.selectedUnitIds = [];
     this.selectedVoWToken = null;
@@ -23,7 +25,7 @@ class FleetsArriveVagariesOfWarState implements State {
   }
 
   onLeavingState() {
-    debug('Leaving FleetsArriveVagariesOfWarState');
+    debug('Leaving VagariesOfWarPickUnitsState');
   }
 
   setDescription(activePlayerId: number) {}
@@ -90,9 +92,10 @@ class FleetsArriveVagariesOfWarState implements State {
     this.game.clearPossible();
 
     this.game.clientUpdatePageTitle({
-      text: _('${you} must select a unit (${number} remaining)'),
+      text: _('${you} must select a unit for ${tkn_unit} (${number} remaining)'),
       args: {
         you: '${you}',
+        tkn_unit: this.selectedVoWToken,
         number: numberOfUnitsToSelect - this.selectedUnitIds.length,
       },
     });
@@ -135,7 +138,7 @@ class FleetsArriveVagariesOfWarState implements State {
     const callback = () => {
       this.game.clearPossible();
       this.game.takeAction({
-        action: 'actFleetsArriveVagariesOfWar',
+        action: 'actVagariesOfWarPickUnits',
         args: {
           vowTokenId: this.selectedVoWToken,
           selectedUnitIds: this.selectedUnitIds,

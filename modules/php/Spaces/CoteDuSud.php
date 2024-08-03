@@ -8,6 +8,7 @@ class CoteDuSud extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = COTE_DU_SUD;
     $this->battlePriority = 62;
+    $this->colony = CANADA;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->militia = 2;

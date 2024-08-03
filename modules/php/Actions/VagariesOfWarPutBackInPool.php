@@ -16,12 +16,12 @@ use BayonetsAndTomahawks\Managers\Scenarios;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
-class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Actions\FleetsArrive
+class VagariesOfWarPutBackInPool extends \BayonetsAndTomahawks\Actions\LogisticsRounds
 {
 
   public function getState()
   {
-    return ST_FLEETS_ARRIVE_DRAW_REINFORCEMENTS;
+    return ST_VAGARIES_OF_WAR_PUT_BACK_IN_POOL;
   }
 
   // ..######..########....###....########.########
@@ -40,58 +40,20 @@ class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Actions\Fleet
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stFleetsArriveDrawReinforcements()
+  public function stVagariesOfWarPutBackInPool()
   {
-    // Notifications::log('stFleetsArriveDrawReinforcements', []);
-    // Globals::setActionRound(ACTION_ROUND_3);
-    // Markers::move(ROUND_MARKER, ACTION_ROUND_3);
-    // Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), ACTION_ROUND_3);
-
-    $reinforcements = Scenarios::get()->getReinforcements()[Globals::getYear()];
-
     $info = $this->ctx->getInfo();
 
     $pool = $info['pool'];
 
-    $units = Units::getInLocation($pool)->toArray();
-    shuffle($units);
+    $units = Units::getInLocation($this->poolReinforcementsMap[$pool])->toArray();
 
-    $picked = array_slice($units, 0, $reinforcements[$pool]);
-
-    $location = $this->poolReinforcementsMap[$pool];
-    Units::move(array_map(function ($unit) {
-      return $unit->getId();
-    }, $picked), $location);
-    Notifications::drawnReinforcements($picked, $location);
-
-    $vagariesOfWarTokens = Utils::filter($picked, function ($token) {
+    $vagariesOfWarTokens = Utils::filter($units, function ($token) {
       return $token->isVagariesOfWarToken();
     });
 
-    // Resolve all Vagaries of War that can be auto resolved
     foreach ($vagariesOfWarTokens as $token) {
-      $counterId = $token->getCounterId();
-      if (in_array($counterId, [VOW_FEWER_TROOPS_BRITISH, VOW_FEWER_TROOPS_FRENCH])) {
-        $token->removeFromPlay();
-      }
-
-      if (in_array($counterId, [VOW_FEWER_TROOPS_PUT_BACK_BRITISH, VOW_FEWER_TROOPS_PUT_BACK_FRENCH])) {
-        $token->returnToPool($pool);
-      }
-
-      if ($counterId === VOW_FRENCH_NAVY_LOSSES_PUT_BACK) {
-        $frenchFleets = Utils::filter(Units::getInLocation(POOL_FLEETS)->toArray(), function ($unit) {
-          return $unit->isFleet() && $unit->getFaction() === FRENCH;
-        });
-        $numberOfFrenchFleets = count($frenchFleets);
-        if ($numberOfFrenchFleets === 0) {
-          Notifications::noFrenchFleetInPool();
-        } else {
-          $index = bga_rand(0, $numberOfFrenchFleets - 1);
-          $frenchFleets[$index]->removeFromPool();
-        }
-        $token->returnToPool($pool);
-      }
+      $token->returnToPool($pool);
     }
 
     $this->resolveAction(['automatic' => true], true);
@@ -105,7 +67,7 @@ class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Actions\Fleet
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreFleetsArriveDrawReinforcements()
+  public function stPreVagariesOfWarPutBackInPool()
   {
   }
 
@@ -118,7 +80,7 @@ class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Actions\Fleet
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsFleetsArriveDrawReinforcements()
+  public function argsVagariesOfWarPutBackInPool()
   {
 
 
@@ -141,16 +103,16 @@ class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Actions\Fleet
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassFleetsArriveDrawReinforcements()
+  public function actPassVagariesOfWarPutBackInPool()
   {
     // $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actFleetsArriveDrawReinforcements($args)
+  public function actVagariesOfWarPutBackInPool($args)
   {
-    self::checkAction('actFleetsArriveDrawReinforcements');
+    self::checkAction('actVagariesOfWarPutBackInPool');
 
 
 

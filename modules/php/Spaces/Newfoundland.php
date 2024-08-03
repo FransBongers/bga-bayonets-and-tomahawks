@@ -8,6 +8,7 @@ class Newfoundland extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = NEWFOUNDLAND;
     $this->battlePriority = 11;
+    $this->colony = NOVA_SCOTIA;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('NEWFOUNDLAND');

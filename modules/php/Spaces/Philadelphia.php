@@ -9,6 +9,7 @@ class Philadelphia extends \BayonetsAndTomahawks\Models\Space
     $this->id = PHILADELPHIA;
     $this->battlePriority = 999;
     $this->britishBase = true;
+    $this->colony = PENNSYLVANIA_AND_DELAWARE;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Philadelphia');

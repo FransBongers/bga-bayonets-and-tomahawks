@@ -8,6 +8,7 @@ class PointeSainteAnne extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = POINTE_SAINTE_ANNE;
     $this->battlePriority = 52;
+    $this->colony = ACADIE;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Pointe Sainte Anne');

@@ -8,6 +8,7 @@ class Albany extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = ALBANY;
     $this->battlePriority = 161;
+    $this->colony = NEW_YORK_AND_NEW_JERSEY;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->militia = 3;

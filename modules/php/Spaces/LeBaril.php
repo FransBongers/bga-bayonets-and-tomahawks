@@ -8,6 +8,7 @@ class LeBaril extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = LE_BARIL;
     $this->battlePriority = 273;
+    $this->colony = PAYS_D_EN_HAUT;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Le Baril');

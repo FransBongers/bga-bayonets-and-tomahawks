@@ -301,22 +301,30 @@ $machinestates = array(
         'possibleactions' => ['actActionRoundChooseReaction', 'actPassOptionalAction', 'actRestart'],
     ],
 
-    ST_FLEETS_ARRIVE_DRAW_REINFORCEMENTS => [
-        'name' => 'fleetsArriveDrawReinforcements',
+    ST_DRAW_REINFORCEMENTS => [
+        'name' => 'drawReinforcements',
         'description' => '',
         'type' => 'game',
         'action' => 'stAtomicAction',
         'transitions' => [],
     ],
 
-    ST_FLEETS_ARRIVE_VAGARIES_OF_WAR => [
-        'name' => 'fleetsArriveVagariesOfWar',
+    ST_VAGARIES_OF_WAR_PICK_UNITS => [
+        'name' => 'vagariesOfWarPickUnits',
         'description' => clienttranslate('${actplayer} must resolve Vagaries of War effects'),
         'descriptionmyturn' => clienttranslate('${you}'),
         'type' => 'activeplayer',
         'args' => 'argsAtomicAction',
         'action' => 'stAtomicAction',
-        'possibleactions' => ['actFleetsArriveVagariesOfWar', 'actPassOptionalAction', 'actRestart'],
+        'possibleactions' => ['actVagariesOfWarPickUnits', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_VAGARIES_OF_WAR_PUT_BACK_IN_POOL => [
+        'name' => 'vagariesOfWarPutBackInPool',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
     ],
 
     ST_FLEETS_ARRIVE_COMMANDER_DRAW => [
@@ -337,20 +345,22 @@ $machinestates = array(
         'possibleactions' => ['actFleetsArriveUnitPlacement', 'actPassOptionalAction', 'actRestart'],
     ],
 
-    ST_FLEETS_ARRIVE_END_OF_ROUND => [
-        'name' => 'fleetsArriveEndOfRound',
+    ST_LOGISTICS_ROUND_END => [
+        'name' => 'logisticsRoundEnd',
         'description' => '',
         'type' => 'game',
         'action' => 'stAtomicAction',
         'transitions' => [],
     ],
 
-    ST_COLONIALS_ENLIST_DRAW_REINFORCEMENTS => [
-        'name' => 'colonialsEnlistDrawReinforcements',
-        'description' => '',
-        'type' => 'game',
+    ST_COLONIALS_ENLIST_UNIT_PLACEMENT => [
+        'name' => 'colonialsEnlistUnitPlacement',
+        'description' => clienttranslate('${actplayer} must place Colonial units'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
         'action' => 'stAtomicAction',
-        'transitions' => [],
+        'possibleactions' => ['actColonialsEnlistUnitPlacement', 'actPassOptionalAction', 'actRestart'],
     ],
 
     ST_WINTER_QUARTERS_GAME_END_CHECK => [

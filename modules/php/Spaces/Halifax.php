@@ -8,6 +8,7 @@ class Halifax extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = HALIFAX;
     $this->battlePriority = 32;
+    $this->colony = NOVA_SCOTIA;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->militia = 2;

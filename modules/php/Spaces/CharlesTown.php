@@ -8,6 +8,7 @@ class CharlesTown extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = CHARLES_TOWN;
     $this->battlePriority = 283;
+    $this->colony = VIRGINIA_AND_SOUTH;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->militia = 3;

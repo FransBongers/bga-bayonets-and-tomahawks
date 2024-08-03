@@ -8,6 +8,7 @@ class LeDetroit extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = LE_DETROIT;
     $this->battlePriority = 261;
+    $this->colony = PAYS_D_EN_HAUT;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->militia = 1;

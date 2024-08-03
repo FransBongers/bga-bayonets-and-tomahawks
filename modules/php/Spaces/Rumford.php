@@ -8,6 +8,7 @@ class Rumford extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = RUMFORD;
     $this->battlePriority = 121;
+    $this->colony = NEW_ENGLAND;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->militia = 2;

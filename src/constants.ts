@@ -39,13 +39,14 @@ const FACTIONS: Faction[] = [BRITISH, FRENCH, INDIAN];
 /*
  * Units types
  */
-// const ARTILLERY = 'artillery';
-// const BASTION_UNIT_TYPE = 'bastion';
-// const BRIGADE = 'brigade';
+const ARTILLERY = 'artillery';
+const BASTION_UNIT_TYPE = 'bastion';
+const BRIGADE = 'brigade';
 const COMMANDER = 'commander';
-// const FLEET = 'fleet';
-// const FORT = 'fort';
-// const LIGHT = 'light';
+const FLEET = 'fleet';
+const FORT = 'fort';
+const LIGHT = 'light';
+const VAGARIES_OF_WAR = 'vagariesOfWar';
 
 const REMOVED_FROM_PLAY = 'removedFromPlay';
 
@@ -76,6 +77,7 @@ const POOL_NEUTRAL_INDIANS = 'poolNeutralIndians';
 const REINFORCEMENTS_FLEETS = 'reinforcementsFleets';
 const REINFORCEMENTS_BRITISH = 'reinforcementsBritish';
 const REINFORCEMENTS_FRENCH = 'reinforcementsFrench';
+const REINFORCEMENTS_COLONIAL = 'reinforcementsColonial';
 
 const POOLS = [
   POOL_FLEETS,
@@ -97,6 +99,7 @@ const POOLS = [
   REINFORCEMENTS_FLEETS,
   REINFORCEMENTS_BRITISH,
   REINFORCEMENTS_FRENCH,
+  REINFORCEMENTS_COLONIAL,
 ];
 
 /**
@@ -213,7 +216,8 @@ const VOW_PICK_ONE_ARTILLERY_FRENCH = 'VOWPickOneArtilleryFrench';
 const VOW_FEWER_TROOPS_BRITISH = 'VOWFewerTroopsBritish';
 const VOW_FEWER_TROOPS_PUT_BACK_BRITISH = 'VOWFewerTroopsPutBackBritish';
 const VOW_PICK_TWO_ARTILLERY_BRITISH = 'VOWPickTwoArtilleryBritish';
-const VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH = 'VOWPickTwoArtilleryOrLightBritish';
+const VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH =
+  'VOWPickTwoArtilleryOrLightBritish';
 // Colonial
 const VOW_PICK_ONE_COLONIAL_LIGHT = 'VOWPickOneColonialLight';
 const VOW_PICK_ONE_COLONIAL_LIGHT_PUT_BACK = 'VOWPickOneColonialLightPutBack';

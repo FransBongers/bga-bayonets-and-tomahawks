@@ -15,12 +15,13 @@ use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Models\Player;
 
 
-class FleetsArrive extends \BayonetsAndTomahawks\Models\AtomicAction
+class LogisticsRounds extends \BayonetsAndTomahawks\Models\AtomicAction
 {
 
   protected $poolReinforcementsMap = [
     POOL_FLEETS => REINFORCEMENTS_FLEETS,
     POOL_BRITISH_METROPOLITAN_VOW => REINFORCEMENTS_BRITISH,
     POOL_FRENCH_METROPOLITAN_VOW => REINFORCEMENTS_FRENCH,
+    POOL_BRITISH_COLONIAL_VOW => REINFORCEMENTS_COLONIAL,
   ];
 }

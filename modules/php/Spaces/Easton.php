@@ -8,6 +8,7 @@ class Easton extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = EASTON;
     $this->battlePriority = 203;
+    $this->colony = PENNSYLVANIA_AND_DELAWARE;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->militia = 2;

@@ -8,6 +8,7 @@ class FortOuiatenon extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = FORT_OUIATENON;
     $this->battlePriority = 282;
+    $this->colony = PAYS_D_EN_HAUT;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Fort Ouiatenon');

@@ -373,8 +373,10 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
         ],
       ],
       POOL_BRITISH_COLONIAL_VOW_BONUS => [
-        PENN_DEL, // VoW bonus
-        PENN_DEL, // VoW bonus
+        'units' => [
+          PENN_DEL, // VoW bonus
+          PENN_DEL, // VoW bonus
+        ]
       ],
       POOL_FRENCH_COMMANDERS => [
         'units' => [

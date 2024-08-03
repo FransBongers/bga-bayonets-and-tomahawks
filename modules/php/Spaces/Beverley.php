@@ -8,6 +8,7 @@ class Beverley extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = BEVERLEY;
     $this->battlePriority = 271;
+    $this->colony = VIRGINIA_AND_SOUTH;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Beverley');

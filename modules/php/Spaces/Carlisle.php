@@ -8,6 +8,7 @@ class Carlisle extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = CARLISLE;
     $this->battlePriority = 223;
+    $this->colony = PENNSYLVANIA_AND_DELAWARE;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->militia = 2;

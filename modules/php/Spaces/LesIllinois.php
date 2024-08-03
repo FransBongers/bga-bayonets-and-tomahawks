@@ -8,6 +8,7 @@ class LesIllinois extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = LES_ILLINOIS;
     $this->battlePriority = 301;
+    $this->colony = PAYS_D_EN_HAUT;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->militia = 1;

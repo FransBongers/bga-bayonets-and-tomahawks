@@ -8,6 +8,7 @@ class Alexandria extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = ALEXANDRIA;
     $this->battlePriority = 999;
+    $this->colony = VIRGINIA_AND_SOUTH;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Alexandria');

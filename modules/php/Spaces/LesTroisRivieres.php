@@ -8,6 +8,7 @@ class LesTroisRivieres extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = LES_TROIS_RIVIERES;
     $this->battlePriority = 101;
+    $this->colony = CANADA;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->militia = 2;

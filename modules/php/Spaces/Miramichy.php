@@ -8,6 +8,7 @@ class Miramichy extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = MIRAMICHY;
     $this->battlePriority = 31;
+    $this->colony = ACADIE;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Miramichy');

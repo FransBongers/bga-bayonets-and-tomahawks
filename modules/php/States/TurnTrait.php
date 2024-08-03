@@ -95,14 +95,7 @@ trait TurnTrait
       $node = $this->getFleetsArriveFlow($britishPlayerId, $frenchPlayerId);
       $engineCallback = ['method' => 'stSetupActionRound'];
     } else if ($currentRoundStep === COLONIALS_ENLIST) {
-      $node = [
-        'children' => [
-          [
-            'action' => COLONIALS_ENLIST_DRAW_REINFORCEMENTS,
-            'playerId' => 'all',
-          ],
-        ],
-      ];
+      $node = $this->getColonialsEnlistFlow($britishPlayerId);
       $engineCallback = ['method' => 'stSetupActionRound'];
     } else if ($currentRoundStep === WINTER_QUARTERS) {
       $node = [
@@ -334,20 +327,60 @@ trait TurnTrait
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  public function getColonialsEnlistFlow($britishPlayerId)
+  {
+    $node = [
+      'children' => [
+        [
+          'action' => DRAW_REINFORCEMENTS,
+          'pool' => POOL_BRITISH_COLONIAL_VOW,
+        ],
+        [
+          'action' => VAGARIES_OF_WAR_PICK_UNITS,
+          'playerId' => $britishPlayerId,
+          'faction' => BRITISH,
+          'pool' => POOL_BRITISH_COLONIAL_VOW,
+        ],
+        [
+          'action' => VAGARIES_OF_WAR_PUT_BACK_IN_POOL,
+          'playerId' => $britishPlayerId,
+          'faction' => BRITISH,
+          'pool' => POOL_BRITISH_COLONIAL_VOW,
+        ],
+        [
+          'action' => COLONIALS_ENLIST_UNIT_PLACEMENT,
+          'playerId' => $britishPlayerId,
+          'faction' => BRITISH,
+        ],
+        [
+          'action' => LOGISTICS_ROUND_END,
+          'logisticsRound' => COLONIALS_ENLIST
+        ],
+      ],
+    ];
+    return $node;
+  }
+
   public function getFleetsArriveFlow($britishPlayerId, $frenchPlayerId)
   {
     $node = [
       'children' => [
         [
-          'action' => FLEETS_ARRIVE_DRAW_REINFORCEMENTS,
+          'action' => DRAW_REINFORCEMENTS,
           'pool' => POOL_FLEETS,
         ],
         [
-          'action' => FLEETS_ARRIVE_DRAW_REINFORCEMENTS,
+          'action' => DRAW_REINFORCEMENTS,
           'pool' => POOL_BRITISH_METROPOLITAN_VOW,
         ],
         [
-          'action' => FLEETS_ARRIVE_VAGARIES_OF_WAR,
+          'action' => VAGARIES_OF_WAR_PICK_UNITS,
+          'playerId' => $britishPlayerId,
+          'faction' => BRITISH,
+          'pool' => POOL_BRITISH_METROPOLITAN_VOW,
+        ],
+        [
+          'action' => VAGARIES_OF_WAR_PUT_BACK_IN_POOL,
           'playerId' => $britishPlayerId,
           'faction' => BRITISH,
           'pool' => POOL_BRITISH_METROPOLITAN_VOW,
@@ -359,11 +392,17 @@ trait TurnTrait
           'pool' => POOL_BRITISH_METROPOLITAN_VOW,
         ],
         [
-          'action' => FLEETS_ARRIVE_DRAW_REINFORCEMENTS,
+          'action' => DRAW_REINFORCEMENTS,
           'pool' => POOL_FRENCH_METROPOLITAN_VOW,
         ],
         [
-          'action' => FLEETS_ARRIVE_VAGARIES_OF_WAR,
+          'action' => VAGARIES_OF_WAR_PICK_UNITS,
+          'playerId' => $frenchPlayerId,
+          'faction' => FRENCH,
+          'pool' => POOL_FRENCH_METROPOLITAN_VOW,
+        ],
+        [
+          'action' => VAGARIES_OF_WAR_PUT_BACK_IN_POOL,
           'playerId' => $frenchPlayerId,
           'faction' => FRENCH,
           'pool' => POOL_FRENCH_METROPOLITAN_VOW,
@@ -385,7 +424,8 @@ trait TurnTrait
           'faction' => FRENCH,
         ],
         [
-          'action' => FLEETS_ARRIVE_END_OF_ROUND,
+          'action' => LOGISTICS_ROUND_END,
+          'logisticsRound' => FLEETS_ARRIVE
         ],
       ],
     ];

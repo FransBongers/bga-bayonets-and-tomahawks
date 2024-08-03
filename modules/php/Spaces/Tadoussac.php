@@ -8,6 +8,7 @@ class Tadoussac extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = TADOUSSAC;
     $this->battlePriority = 42;
+    $this->colony = CANADA;
     $this->defaultControl = NEUTRAL;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Tadoussac');

@@ -84,7 +84,29 @@ trait DebugTrait
 
   function debug_test()
   {
-    Spaces::get(CHIGNECTOU)->setControl(BRITISH);
+    // PENN_DEL
+    $unitIdIndex = count(Units::getAll()) + 1;
+    $units = [];
+
+    for ($i = 0; $i < 2; $i++) {
+      // $info = self::getInstance($unit);
+      $id = 'unit_' . $unitIdIndex;
+      $data = [
+        'id' => $id,
+        'location' => POOL_BRITISH_COLONIAL_VOW_BONUS,
+        'counter_id' => PENN_DEL,
+        'spent' => 0,
+        // 'type' => $unit,
+      ];
+      $data['extra_data'] = ['properties' => []];
+      $units[$id] = $data;
+      $unitIdIndex += 1;
+    }
+
+    Notifications::log('units', $units);
+    Units::create($units, null);
+
+    // Spaces::get(CHIGNECTOU)->setControl(BRITISH);
     // $tokens = [];
     // $tokens[OPEN_SEAS_MARKER] = [
     //   'id' => OPEN_SEAS_MARKER,
@@ -108,7 +130,7 @@ trait DebugTrait
     // $marker = Markers::getMarkerFromSupply(ROUTE_MARKER);
     // $marker->setLocation(Locations::stackMarker(TICONDEROGA, BRITISH));
 
-    Notifications::log('getBattlePriority', Spaces::get(LAKE_GEORGE)->getBattlePriority());
+    // Notifications::log('getBattlePriority', Spaces::get(LAKE_GEORGE)->getBattlePriority());
     // $result = AtomicActions::get(LIGHT_MOVEMENT)->checkEnemyUnitsAndOverwhelm(Spaces::get(ANNAPOLIS_ROYAL), Players::get());
 
     // Notifications::log('british controlled', Utils::filter(Spaces::getControlledBy(BRITISH), function ($space) {

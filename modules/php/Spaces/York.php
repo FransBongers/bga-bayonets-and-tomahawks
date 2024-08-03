@@ -8,6 +8,7 @@ class York extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = YORK;
     $this->battlePriority = 111;
+    $this->colony = NEW_ENGLAND;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('YORK');

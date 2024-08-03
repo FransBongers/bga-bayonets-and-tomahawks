@@ -8,6 +8,7 @@ class RiviereRistigouche extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = RIVIERE_RISTIGOUCHE;
     $this->battlePriority = 23;
+    $this->colony = ACADIE;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Rivière Ristigouche');

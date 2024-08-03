@@ -8,6 +8,7 @@ class CoteDeBeaupre extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = COTE_DE_BEAUPRE;
     $this->battlePriority = 61;
+    $this->colony = CANADA;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->militia = 2;

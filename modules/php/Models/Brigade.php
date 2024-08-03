@@ -1,11 +1,12 @@
 <?php
+
 namespace BayonetsAndTomahawks\Models;
 
 use BayonetsAndTomahawks\Core\Globals;
 
 class Brigade extends AbstractUnit
 {
-  protected $staticAttributes = ['counterId', 'counterText', 'faction', 'highland', 'metropolitan', 'type'];
+  protected $staticAttributes = ['counterId', 'colony', 'counterText', 'faction', 'highland', 'metropolitan', 'type'];
   protected $highland = false;
   protected $metropolitan = false;
   protected $officerGorget = false;

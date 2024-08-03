@@ -8,6 +8,7 @@ class NinetySix extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = NINETY_SIX;
     $this->battlePriority = 292;
+    $this->colony = VIRGINIA_AND_SOUTH;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
     $this->name = clienttranslate('Ninety Six');

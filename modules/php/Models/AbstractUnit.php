@@ -23,6 +23,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   ];
 
   protected $id = null;
+  protected $colony = null;
   protected $counterId;
   protected $spent = 0;
   protected $faction = null;
@@ -39,7 +40,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   /*
    * STATIC DATA
    */
-  protected $staticAttributes = ['counterId', 'counterText', 'faction', 'type', 'mpLimit', 'highland', 'metropolitan', 'connectionTypeAllowed'];
+  protected $staticAttributes = ['colony', 'counterId', 'counterText', 'faction', 'type', 'mpLimit', 'highland', 'metropolitan', 'connectionTypeAllowed'];
   protected $type = null;
   protected $counterText = null;
 

@@ -403,31 +403,29 @@ class Notifications
     ]);
   }
 
-  public static function drawnReinforcements($units, $location)
+  public static function drawnBonusUnits($player, $units, $location)
   {
-    $textMap = [
-      REINFORCEMENTS_FLEETS => clienttranslate('Fleets: ${unitsLog}'),
-      REINFORCEMENTS_BRITISH => clienttranslate('British reinforcements: ${unitsLog}'), // how to differentiate between COlonial?
-      // REINFORCEMENTS_BRITISH => clienttranslate('French reinforcements: ${unitsLog}'),
-      REINFORCEMENTS_FRENCH => clienttranslate('French reinforcements: ${unitsLog}'),
-    ];
-
-    // $unitsLog = '';
-    // $unitsLogArgs = [];
-
-    // foreach ($units as $index => $unit) {
-    //   $key = 'tkn_unit_' . $index;
-    //   $unitsLog = $unitsLog . '${' . $key . '}';
-    //   $unitsLogArgs[$key] = $unit->getCounterId();
-    // }
-
-    self::notifyAll("drawnReinforcements", $textMap[$location], [
+    self::notifyAll("drawnReinforcements", clienttranslate('${player_name} takes units from the VoW Bonus pool: ${unitsLog}'), [
+      'player' => $player,
       'units' => $units,
       'location' => $location,
-      // 'unitsLog' => [
-      //   'log' => $unitsLog,
-      //   'args' => $unitsLogArgs,
-      // ],
+      'unitsLog' => self::getUnitsLog($units),
+    ]);
+  }
+
+  public static function drawnReinforcements($player, $units, $location)
+  {
+    $textMap = [
+      REINFORCEMENTS_FLEETS => clienttranslate('${player_name} draws Fleets: ${unitsLog}'),
+      REINFORCEMENTS_BRITISH => clienttranslate('${player_name} draws British reinforcements: ${unitsLog}'), // how to differentiate between COlonial?
+      REINFORCEMENTS_FRENCH => clienttranslate('${player_name} draws French reinforcements: ${unitsLog}'),
+      REINFORCEMENTS_COLONIAL => clienttranslate('${player_name} draws Colonial reinforcements: ${unitsLog}')
+    ];
+
+    self::notifyAll("drawnReinforcements", $textMap[$location], [
+      'player' => $player,
+      'units' => $units,
+      'location' => $location,
       'unitsLog' => self::getUnitsLog($units),
     ]);
   }

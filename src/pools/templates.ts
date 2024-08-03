@@ -28,6 +28,10 @@ const tplDrawnReinforcements = () => `
     <div class="bt_unit_pool_section_title"><span>${_('French')}</span></div>
     <div id="reinforcementsFrench" class="bt_unit_pool"></div>
   </div>
+  <div>
+    <div class="bt_unit_pool_section_title"><span>${_('Colonial')}</span></div>
+    <div id="reinforcementsColonial" class="bt_unit_pool"></div>
+  </div>
 </div>
 `
 

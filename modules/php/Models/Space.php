@@ -37,6 +37,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     'battlePriority',
     'britishBase',
     'coastal',
+    'colony',
     'homeSpace',
     'militia',
     'name',
@@ -53,6 +54,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   protected $battlePriority;
   protected $britishBase = false;
   protected $coastal = false;
+  protected $colony = null;
   protected $defaultControl;
   protected $faction = null;
   protected $homeSpace = null;
@@ -78,6 +80,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     return [
       'id' => $this->id,
       'battle' => $this->battle === 1,
+      'colony' => $this->colony,
       'control' => $this->control,
       'defaultControl' => $this->defaultControl,
       'homeSpace' => $this->homeSpace,

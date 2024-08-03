@@ -2078,7 +2078,14 @@ var FRENCH = 'french';
 var INDIAN = 'indian';
 var NEUTRAL = 'neutral';
 var FACTIONS = [BRITISH, FRENCH, INDIAN];
+var ARTILLERY = 'artillery';
+var BASTION_UNIT_TYPE = 'bastion';
+var BRIGADE = 'brigade';
 var COMMANDER = 'commander';
+var FLEET = 'fleet';
+var FORT = 'fort';
+var LIGHT = 'light';
+var VAGARIES_OF_WAR = 'vagariesOfWar';
 var REMOVED_FROM_PLAY = 'removedFromPlay';
 var POOL_FLEETS = 'poolFleets';
 var POOL_BRITISH_COMMANDERS = 'poolBritishCommanders';
@@ -2098,6 +2105,7 @@ var POOL_NEUTRAL_INDIANS = 'poolNeutralIndians';
 var REINFORCEMENTS_FLEETS = 'reinforcementsFleets';
 var REINFORCEMENTS_BRITISH = 'reinforcementsBritish';
 var REINFORCEMENTS_FRENCH = 'reinforcementsFrench';
+var REINFORCEMENTS_COLONIAL = 'reinforcementsColonial';
 var POOLS = [
     POOL_FLEETS,
     POOL_BRITISH_COMMANDERS,
@@ -2117,6 +2125,7 @@ var POOLS = [
     REINFORCEMENTS_FLEETS,
     REINFORCEMENTS_BRITISH,
     REINFORCEMENTS_FRENCH,
+    REINFORCEMENTS_COLONIAL,
 ];
 var YEAR_MARKER = 'year_marker';
 var ROUND_MARKER = 'round_marker';
@@ -2265,9 +2274,10 @@ var BayonetsAndTomahawks = (function () {
             battleRetreat: new BattleRetreatState(this),
             battleRollsRerolls: new BattleRollsRerollsState(this),
             battleSelectCommander: new BattleSelectCommanderState(this),
+            colonialsEnlistUnitPlacement: new ColonialsEnlistUnitPlacementState(this),
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
-            fleetsArriveVagariesOfWar: new FleetsArriveVagariesOfWarState(this),
+            vagariesOfWarPickUnits: new VagariesOfWarPickUnitsState(this),
             fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
             lightMovement: new LightMovementState(this),
             lightMovementDestination: new LightMovementDestinationState(this),
@@ -4708,7 +4718,7 @@ var Pools = (function () {
 var tplPoolsContainer = function () {
     return "\n  <div id=\"bt_right_column\">\n  ".concat(tplDrawnReinforcements(), "\n    ").concat(tplPoolFleets(), "\n    ").concat(tplPoolNeutralIndians(), "\n    ").concat(tplPoolBritish(), "\n    ").concat(tplPoolFrench(), "\n  </div>");
 };
-var tplDrawnReinforcements = function () { return "\n<div id=\"bt_drawn_reinforcements\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Drawn Reinforcements'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Fleets'), "</span></div>\n    <div id=\"reinforcementsFleets\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('British'), "</span></div>\n    <div id=\"reinforcementsBritish\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('French'), "</span></div>\n    <div id=\"reinforcementsFrench\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
+var tplDrawnReinforcements = function () { return "\n<div id=\"bt_drawn_reinforcements\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Drawn Reinforcements'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Fleets'), "</span></div>\n    <div id=\"reinforcementsFleets\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('British'), "</span></div>\n    <div id=\"reinforcementsBritish\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('French'), "</span></div>\n    <div id=\"reinforcementsFrench\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial'), "</span></div>\n    <div id=\"reinforcementsColonial\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
 var tplPoolFleets = function () { return "\n<div id=\"bt_pool_fleets\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Fleets'), "</span></div>\n  <div id=\"poolFleets\" class=\"bt_unit_pool\"></div>\n</div>"); };
 var tplPoolNeutralIndians = function () { return "\n<div id=\"bt_pool_neutralIndians\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Neutral Indians'), "</span></div>\n  <div id=\"poolNeutralIndians\" class=\"bt_unit_pool\"></div>\n</div>"); };
 var tplPoolBritish = function () { return "\n<div id=\"bt_pool_british\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('British'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Commanders'), "</span></div>\n    <div id=\"poolBritishCommanders\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Light'), "</span></div>\n    <div id=\"poolBritishLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial Light'), "</span></div>\n    <div id=\"poolBritishColonialLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Artillery'), "</span></div>\n    <div id=\"poolBritishArtillery\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Forts'), "</span></div>\n    <div id=\"poolBritishForts\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Metropolitan Brigades & VoW'), "</span></div>\n    <div id=\"poolBritishMetropolitanVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial Brigades & VoW'), "</span></div>\n    <div id=\"poolBritishColonialVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial VoW Bonus'), "</span></div>\n    <div id=\"poolBritishColonialVoWBonus\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
@@ -5956,6 +5966,180 @@ var BattleSelectCommanderState = (function () {
     };
     return BattleSelectCommanderState;
 }());
+var ColonialsEnlistUnitPlacementState = (function () {
+    function ColonialsEnlistUnitPlacementState(game) {
+        this.placedUnits = null;
+        this.game = game;
+    }
+    ColonialsEnlistUnitPlacementState.prototype.onEnteringState = function (args) {
+        debug('Entering ColonialsEnlistUnitPlacementState');
+        this.args = args;
+        this.localMoves = {};
+        this.placedUnits = {};
+        this.updateInterfaceInitialStep();
+    };
+    ColonialsEnlistUnitPlacementState.prototype.onLeavingState = function () {
+        debug('Leaving ColonialsEnlistUnitPlacementState');
+    };
+    ColonialsEnlistUnitPlacementState.prototype.setDescription = function (activePlayerId) { };
+    ColonialsEnlistUnitPlacementState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        var unitsToPlace = this.args.units.filter(function (unit) {
+            return !Object.keys(_this.placedUnits).includes(unit.id);
+        });
+        if (unitsToPlace.length === 0) {
+            this.updateInterfaceConfirm();
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a unit to place'),
+            args: {
+                you: '${you}',
+            },
+        });
+        unitsToPlace.forEach(function (unit) {
+            _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () {
+                    _this.updateInterfaceSelectSpace({ unit: unit });
+                },
+            });
+        });
+        if (Object.keys(this.placedUnits).length === 0) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
+        }
+        else {
+            this.addCancelButton();
+        }
+    };
+    ColonialsEnlistUnitPlacementState.prototype.updateInterfaceSelectSpace = function (_a) {
+        var _this = this;
+        var unit = _a.unit;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a Space to place ${tkn_unit}'),
+            args: {
+                you: '${you}',
+                tkn_unit: unit.counterId,
+            },
+        });
+        var spacesToPlaceUnit = this.getPossibleSpacesToPlaceUnit(unit);
+        spacesToPlaceUnit.forEach(function (id) {
+            _this.game.setLocationSelectable({
+                id: id,
+                callback: function () { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                this.placedUnits[unit.id] = id;
+                                this.addLocalMove({ fromSpaceId: unit.location, unit: unit });
+                                return [4, this.game.gameMap.stacks[id][unit.faction].addUnit(unit)];
+                            case 1:
+                                _a.sent();
+                                this.updateInterfaceInitialStep();
+                                return [2];
+                        }
+                    });
+                }); },
+            });
+        });
+        this.addCancelButton();
+    };
+    ColonialsEnlistUnitPlacementState.prototype.updateInterfaceConfirm = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Confirm unit placement?'),
+            args: {},
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actColonialsEnlistUnitPlacement',
+                args: {
+                    placedUnits: _this.placedUnits,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.addCancelButton();
+    };
+    ColonialsEnlistUnitPlacementState.prototype.addLocalMove = function (_a) {
+        var fromSpaceId = _a.fromSpaceId, unit = _a.unit;
+        if (this.localMoves[fromSpaceId]) {
+            this.localMoves[fromSpaceId].push(unit);
+        }
+        else {
+            this.localMoves[fromSpaceId] = [unit];
+        }
+    };
+    ColonialsEnlistUnitPlacementState.prototype.addCancelButton = function () {
+        var _this = this;
+        this.game.addDangerActionButton({
+            id: 'cancel_btn',
+            text: _('Cancel'),
+            callback: function () { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4, this.revertLocalMoves()];
+                        case 1:
+                            _a.sent();
+                            this.game.onCancel();
+                            return [2];
+                    }
+                });
+            }); },
+        });
+    };
+    ColonialsEnlistUnitPlacementState.prototype.revertLocalMoves = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var promises;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        promises = [];
+                        Object.entries(this.localMoves).forEach(function (_a) {
+                            var spaceId = _a[0], units = _a[1];
+                            promises.push(_this.game.pools.stocks[spaceId].addCards(units));
+                        });
+                        return [4, Promise.all(promises)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    ColonialsEnlistUnitPlacementState.prototype.getPossibleSpacesToPlaceUnit = function (unit) {
+        var _this = this;
+        if (this.game.gamedatas.staticData.units[unit.counterId].type === LIGHT) {
+            return this.args.spaces.map(function (space) { return space.id; });
+        }
+        else {
+            return this.args.spaces
+                .filter(function (space) {
+                return space.colony ===
+                    _this.game.gamedatas.staticData.units[unit.counterId].colony;
+            })
+                .map(function (space) { return space.id; });
+        }
+    };
+    return ColonialsEnlistUnitPlacementState;
+}());
 var ConfirmPartialTurnState = (function () {
     function ConfirmPartialTurnState(game) {
         this.game = game;
@@ -6274,8 +6458,8 @@ var FleetsArriveUnitPlacementState = (function () {
     };
     return FleetsArriveUnitPlacementState;
 }());
-var FleetsArriveVagariesOfWarState = (function () {
-    function FleetsArriveVagariesOfWarState(game) {
+var VagariesOfWarPickUnitsState = (function () {
+    function VagariesOfWarPickUnitsState(game) {
         var _a;
         this.selectedUnitIds = [];
         this.selectedVoWToken = null;
@@ -6283,21 +6467,23 @@ var FleetsArriveVagariesOfWarState = (function () {
             _a[VOW_PICK_ONE_ARTILLERY_FRENCH] = 1,
             _a[VOW_PICK_TWO_ARTILLERY_BRITISH] = 2,
             _a[VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH] = 2,
+            _a[VOW_PICK_ONE_COLONIAL_LIGHT] = 1,
+            _a[VOW_PICK_ONE_COLONIAL_LIGHT_PUT_BACK] = 1,
             _a);
         this.game = game;
     }
-    FleetsArriveVagariesOfWarState.prototype.onEnteringState = function (args) {
-        debug('Entering FleetsArriveVagariesOfWarState');
+    VagariesOfWarPickUnitsState.prototype.onEnteringState = function (args) {
+        debug('Entering VagariesOfWarPickUnitsState');
         this.args = args;
         this.selectedUnitIds = [];
         this.selectedVoWToken = null;
         this.updateInterfaceInitialStep();
     };
-    FleetsArriveVagariesOfWarState.prototype.onLeavingState = function () {
-        debug('Leaving FleetsArriveVagariesOfWarState');
+    VagariesOfWarPickUnitsState.prototype.onLeavingState = function () {
+        debug('Leaving VagariesOfWarPickUnitsState');
     };
-    FleetsArriveVagariesOfWarState.prototype.setDescription = function (activePlayerId) { };
-    FleetsArriveVagariesOfWarState.prototype.updateInterfaceInitialStep = function () {
+    VagariesOfWarPickUnitsState.prototype.setDescription = function (activePlayerId) { };
+    VagariesOfWarPickUnitsState.prototype.updateInterfaceInitialStep = function () {
         var _this = this;
         if (Object.keys(this.args.options).length === 1) {
             this.selectedVoWToken = Object.keys(this.args.options)[0];
@@ -6328,7 +6514,7 @@ var FleetsArriveVagariesOfWarState = (function () {
         });
         this.game.addUndoButtons(this.args);
     };
-    FleetsArriveVagariesOfWarState.prototype.updateInterfaceSelectUnits = function () {
+    VagariesOfWarPickUnitsState.prototype.updateInterfaceSelectUnits = function () {
         var _this = this;
         var numberOfUnitsToSelect = this.vowTokenNumberOfUnitsMap[this.selectedVoWToken];
         if (this.selectedUnitIds.length === numberOfUnitsToSelect) {
@@ -6337,9 +6523,10 @@ var FleetsArriveVagariesOfWarState = (function () {
         }
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _('${you} must select a unit (${number} remaining)'),
+            text: _('${you} must select a unit for ${tkn_unit} (${number} remaining)'),
             args: {
                 you: '${you}',
+                tkn_unit: this.selectedVoWToken,
                 number: numberOfUnitsToSelect - this.selectedUnitIds.length,
             },
         });
@@ -6360,7 +6547,7 @@ var FleetsArriveVagariesOfWarState = (function () {
         });
         this.game.addCancelButton();
     };
-    FleetsArriveVagariesOfWarState.prototype.updateInterfaceConfirm = function () {
+    VagariesOfWarPickUnitsState.prototype.updateInterfaceConfirm = function () {
         var _this = this;
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
@@ -6375,7 +6562,7 @@ var FleetsArriveVagariesOfWarState = (function () {
         var callback = function () {
             _this.game.clearPossible();
             _this.game.takeAction({
-                action: 'actFleetsArriveVagariesOfWar',
+                action: 'actVagariesOfWarPickUnits',
                 args: {
                     vowTokenId: _this.selectedVoWToken,
                     selectedUnitIds: _this.selectedUnitIds,
@@ -6394,7 +6581,7 @@ var FleetsArriveVagariesOfWarState = (function () {
         }
         this.game.addCancelButton();
     };
-    FleetsArriveVagariesOfWarState.prototype.createUnitsLog = function (units) {
+    VagariesOfWarPickUnitsState.prototype.createUnitsLog = function (units) {
         var unitsLog = '';
         var unitsLogArgs = {};
         units.forEach(function (unit, index) {
@@ -6407,7 +6594,7 @@ var FleetsArriveVagariesOfWarState = (function () {
             args: unitsLogArgs,
         };
     };
-    return FleetsArriveVagariesOfWarState;
+    return VagariesOfWarPickUnitsState;
 }());
 var LightMovementState = (function () {
     function LightMovementState(game) {

@@ -8,6 +8,7 @@ class RiviereOuabache extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = RIVIERE_OUABACHE;
     $this->battlePriority = 302;
+    $this->colony = PAYS_D_EN_HAUT;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('Rivière Ouabache');

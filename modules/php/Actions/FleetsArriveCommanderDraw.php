@@ -16,7 +16,7 @@ use BayonetsAndTomahawks\Managers\Scenarios;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
-class FleetsArriveCommanderDraw extends \BayonetsAndTomahawks\Actions\FleetsArrive
+class FleetsArriveCommanderDraw extends \BayonetsAndTomahawks\Actions\LogisticsRounds
 {
   public function getState()
   {

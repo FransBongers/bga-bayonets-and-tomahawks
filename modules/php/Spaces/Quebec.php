@@ -11,6 +11,7 @@ class Quebec extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = QUEBEC;
     $this->battlePriority = 81;
+    $this->colony = CANADA;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->militia = 3;

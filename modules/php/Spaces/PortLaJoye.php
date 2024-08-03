@@ -8,6 +8,7 @@ class PortLaJoye extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = PORT_LA_JOYE;
     $this->battlePriority = 22;
+    $this->colony = ACADIE;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->militia = 1;

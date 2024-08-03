@@ -16,12 +16,12 @@ use BayonetsAndTomahawks\Managers\Scenarios;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
-class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Actions\FleetsArrive
+class DrawReinforcements extends \BayonetsAndTomahawks\Actions\LogisticsRounds
 {
 
   public function getState()
   {
-    return ST_FLEETS_ARRIVE_DRAW_REINFORCEMENTS;
+    return ST_DRAW_REINFORCEMENTS;
   }
 
   // ..######..########....###....########.########
@@ -40,13 +40,8 @@ class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Actions\Fleet
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stFleetsArriveDrawReinforcements()
+  public function stDrawReinforcements()
   {
-    // Notifications::log('stFleetsArriveDrawReinforcements', []);
-    // Globals::setActionRound(ACTION_ROUND_3);
-    // Markers::move(ROUND_MARKER, ACTION_ROUND_3);
-    // Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), ACTION_ROUND_3);
-
     $reinforcements = Scenarios::get()->getReinforcements()[Globals::getYear()];
 
     $info = $this->ctx->getInfo();
@@ -58,11 +53,13 @@ class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Actions\Fleet
 
     $picked = array_slice($units, 0, $reinforcements[$pool]);
 
+    $player = self::getPlayer();
+
     $location = $this->poolReinforcementsMap[$pool];
     Units::move(array_map(function ($unit) {
       return $unit->getId();
     }, $picked), $location);
-    Notifications::drawnReinforcements($picked, $location);
+    Notifications::drawnReinforcements($player, $picked, $location);
 
     $vagariesOfWarTokens = Utils::filter($picked, function ($token) {
       return $token->isVagariesOfWarToken();
@@ -71,13 +68,13 @@ class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Actions\Fleet
     // Resolve all Vagaries of War that can be auto resolved
     foreach ($vagariesOfWarTokens as $token) {
       $counterId = $token->getCounterId();
-      if (in_array($counterId, [VOW_FEWER_TROOPS_BRITISH, VOW_FEWER_TROOPS_FRENCH])) {
+      if (in_array($counterId, [VOW_FEWER_TROOPS_BRITISH, VOW_FEWER_TROOPS_FRENCH, VOW_FEWER_TROOPS_COLONIAL])) {
         $token->removeFromPlay();
       }
 
-      if (in_array($counterId, [VOW_FEWER_TROOPS_PUT_BACK_BRITISH, VOW_FEWER_TROOPS_PUT_BACK_FRENCH])) {
-        $token->returnToPool($pool);
-      }
+      // if (in_array($counterId, [VOW_FEWER_TROOPS_PUT_BACK_BRITISH, VOW_FEWER_TROOPS_PUT_BACK_FRENCH, VOW_FEWER_TROOPS_PUT_BACK_COLONIAL])) {
+      //   $token->returnToPool($pool);
+      // }
 
       if ($counterId === VOW_FRENCH_NAVY_LOSSES_PUT_BACK) {
         $frenchFleets = Utils::filter(Units::getInLocation(POOL_FLEETS)->toArray(), function ($unit) {
@@ -90,7 +87,44 @@ class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Actions\Fleet
           $index = bga_rand(0, $numberOfFrenchFleets - 1);
           $frenchFleets[$index]->removeFromPool();
         }
-        $token->returnToPool($pool);
+        // $token->returnToPool($pool);
+      }
+
+      if ($counterId === VOW_PENNSYLVANIA_MUSTERS) {
+        $bonusUnits = Utils::filter(Units::getInLocation(POOL_BRITISH_COLONIAL_VOW_BONUS)->toArray(), function ($unit) {
+          return $unit->getCounterId() === PENN_DEL;
+        });
+        $pickedBonusUnits = array_slice($bonusUnits, 0, 2);
+        Units::move(array_map(function ($unit) {
+          return $unit->getId();
+        }, $pickedBonusUnits), $location);
+        Notifications::drawnBonusUnits($player, $pickedBonusUnits, $location);
+        $token->removeFromPlay();
+      }
+
+      if ($counterId === VOW_PITT_SUBSIDIES) {
+        $bonusUnits = Utils::filter(Units::getInLocation(POOL_BRITISH_COLONIAL_VOW_BONUS)->toArray(), function ($unit) {
+          return in_array($unit->getCounterId(), [NEW_ENGLAND, NYORK_NJ, VIRGINIA_S]);
+        });
+        $pickedBonusUnits = [];
+        $newEnglandUnits = Utils::filter($bonusUnits, function ($unit) {
+          return $unit->getCounterId() === NEW_ENGLAND;
+        });
+        $pickedBonusUnits = array_slice($newEnglandUnits, 0, 2);
+        foreach ([NYORK_NJ, VIRGINIA_S] as $counterId) {
+          $bonusUnit = Utils::array_find($bonusUnits, function ($unit) use ($counterId) {
+            return $unit->getCouterId() === $counterId;
+          });
+          if ($bonusUnit !== null) {
+            $pickedBonusUnits[] = $bonusUnit;
+          }
+        }
+
+        Units::move(array_map(function ($unit) {
+          return $unit->getId();
+        }, $pickedBonusUnits), $location);
+        Notifications::drawnBonusUnits($player, $pickedBonusUnits, $location);
+        $token->removeFromPlay();
       }
     }
 
@@ -105,7 +139,7 @@ class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Actions\Fleet
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreFleetsArriveDrawReinforcements()
+  public function stPreDrawReinforcements()
   {
   }
 
@@ -118,7 +152,7 @@ class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Actions\Fleet
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsFleetsArriveDrawReinforcements()
+  public function argsDrawReinforcements()
   {
 
 
@@ -141,16 +175,16 @@ class FleetsArriveDrawReinforcements extends \BayonetsAndTomahawks\Actions\Fleet
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassFleetsArriveDrawReinforcements()
+  public function actPassDrawReinforcements()
   {
     // $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actFleetsArriveDrawReinforcements($args)
+  public function actDrawReinforcements($args)
   {
-    self::checkAction('actFleetsArriveDrawReinforcements');
+    self::checkAction('actDrawReinforcements');
 
 
 

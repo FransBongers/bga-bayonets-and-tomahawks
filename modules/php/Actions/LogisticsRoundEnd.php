@@ -12,13 +12,16 @@ use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Markers;
+use BayonetsAndTomahawks\Managers\Scenarios;
+use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
-class ColonialsEnlistDrawReinforcements extends \BayonetsAndTomahawks\Models\AtomicAction
+class LogisticsRoundEnd extends \BayonetsAndTomahawks\Actions\LogisticsRounds
 {
+
   public function getState()
   {
-    return ST_COLONIALS_ENLIST_DRAW_REINFORCEMENTS;
+    return ST_LOGISTICS_ROUND_END;
   }
 
   // ..######..########....###....########.########
@@ -37,12 +40,19 @@ class ColonialsEnlistDrawReinforcements extends \BayonetsAndTomahawks\Models\Ato
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stColonialsEnlistDrawReinforcements()
+  public function stLogisticsRoundEnd()
   {
-    // Notifications::log('stColonialsEnlistDrawReinforcements', []);
-    Globals::setActionRound(ACTION_ROUND_4);
-    Markers::move(ROUND_MARKER, ACTION_ROUND_4);
-    Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), ACTION_ROUND_4);
+    $logisticsRound = $this->ctx->getInfo()['logisticsRound'];
+
+    if ($logisticsRound === FLEETS_ARRIVE) {
+      Globals::setActionRound(ACTION_ROUND_3);
+      Markers::move(ROUND_MARKER, ACTION_ROUND_3);
+      Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), ACTION_ROUND_3);
+    } else if ($logisticsRound === COLONIALS_ENLIST) {
+      Globals::setActionRound(ACTION_ROUND_4);
+      Markers::move(ROUND_MARKER, ACTION_ROUND_4);
+      Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), ACTION_ROUND_4);
+    }
 
     $this->resolveAction(['automatic' => true]);
   }
@@ -55,7 +65,7 @@ class ColonialsEnlistDrawReinforcements extends \BayonetsAndTomahawks\Models\Ato
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreColonialsEnlistDrawReinforcements()
+  public function stPreLogisticsRoundEnd()
   {
   }
 
@@ -68,7 +78,7 @@ class ColonialsEnlistDrawReinforcements extends \BayonetsAndTomahawks\Models\Ato
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsColonialsEnlistDrawReinforcements()
+  public function argsLogisticsRoundEnd()
   {
 
 
@@ -91,16 +101,16 @@ class ColonialsEnlistDrawReinforcements extends \BayonetsAndTomahawks\Models\Ato
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassColonialsEnlistDrawReinforcements()
+  public function actPassLogisticsRoundEnd()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actColonialsEnlistDrawReinforcements($args)
+  public function actLogisticsRoundEnd($args)
   {
-    self::checkAction('actColonialsEnlistDrawReinforcements');
+    self::checkAction('actLogisticsRoundEnd');
 
 
 

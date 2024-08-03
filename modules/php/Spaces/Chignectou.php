@@ -10,6 +10,7 @@ class Chignectou extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = CHIGNECTOU;
     $this->battlePriority = 33;
+    $this->colony = ACADIE;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('CHIGNECTOU');

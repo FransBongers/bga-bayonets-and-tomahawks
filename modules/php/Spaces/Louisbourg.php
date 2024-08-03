@@ -10,6 +10,7 @@ class Louisbourg extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = LOUISBOURG;
     $this->battlePriority = 13;
+    $this->colony = ACADIE;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->militia = 2;

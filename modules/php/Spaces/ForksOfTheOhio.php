@@ -8,6 +8,7 @@ class ForksOfTheOhio extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = FORKS_OF_THE_OHIO;
     $this->battlePriority = 262;
+    $this->colony = PAYS_D_EN_HAUT;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->name = clienttranslate('FORKS OF THE OHIO');

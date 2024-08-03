@@ -8,6 +8,7 @@ class NewLondon extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = NEW_LONDON;
     $this->battlePriority = 999;
+    $this->colony = NEW_ENGLAND;
     $this->britishBase = true;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;

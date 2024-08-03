@@ -111,6 +111,7 @@ interface BTMarker {
 interface BTSpace {
   id: string;
   battle: boolean;
+  colony: string | null;
   control: string;
   raided: BRITISH_FACTION | FRENCH_FACTION | null;
   homeSpace: BRITISH_FACTION | FRENCH_FACTION | null;
@@ -154,6 +155,7 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
     units: {
       [counterId: string]: {
         faction: "british" | "french";
+        colony: string | null;
         counterText: string;
         type: string;
       };

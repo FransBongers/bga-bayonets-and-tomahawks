@@ -17,7 +17,7 @@ use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
-class FleetsArriveUnitPlacement extends \BayonetsAndTomahawks\Actions\FleetsArrive
+class FleetsArriveUnitPlacement extends \BayonetsAndTomahawks\Actions\LogisticsRounds
 {
   public function getState()
   {
@@ -206,7 +206,7 @@ class FleetsArriveUnitPlacement extends \BayonetsAndTomahawks\Actions\FleetsArri
     }
 
     $unitsPerSpace = [];
-    // Place fleets
+    // Place units
     foreach ($placedUnits as $unitId => $spaceId) {
       $unit = Utils::array_find($units, function ($optionUnit) use ($unitId) {
         return $optionUnit->getId() === $unitId;

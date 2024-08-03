@@ -60,6 +60,11 @@ interface OnEnteringBattleSelectCommanderStateArgs extends CommonArgs {
   faction: BRITISH_FACTION | FRENCH_FACTION;
 }
 
+interface OnEnteringColonialsEnlistUnitPlacementStateArgs extends CommonArgs {
+  units: BTUnit[];
+  spaces: BTSpace[];
+}
+
 interface OnEnteringConfirmTurnArgs extends CommonArgs {}
 
 interface OnEnteringActionActivateStackStateArgs extends CommonArgs {
@@ -114,7 +119,7 @@ interface OnEnteringFleetsArriveUnitPlacementStateArgs extends CommonArgs {
   commandersPerUnit: Record<string, string>;
 }
 
-interface OnEnteringFleetsArriveVagariesOfWarStateArgs extends CommonArgs {
+interface OnEnteringVagariesOfWarPickUnitsStateArgs extends CommonArgs {
   options: Record<string, BTUnit[]>;
 }
 
