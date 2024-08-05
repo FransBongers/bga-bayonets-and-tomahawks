@@ -19,6 +19,11 @@ class Card34 extends \BayonetsAndTomahawks\Models\Card
         'id' => ARMY_AP_2X
       ]
     ];
+    $this->event = [
+      'id' => DISEASE_IN_BRITISH_CAMP,
+      'title' => clienttranslate('Disease in British Camp'),
+      AR_START => true,
+    ];
     $this->faction = FRENCH;
     $this->initiativeValue = 3;
   }

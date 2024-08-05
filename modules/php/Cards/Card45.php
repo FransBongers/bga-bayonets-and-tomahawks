@@ -13,6 +13,11 @@ class Card45 extends \BayonetsAndTomahawks\Models\Card
         'id' => INDIAN_AP
       ],
     ];
+    $this->event = [
+      'id' => SMALLPOX_EPIDEMIC,
+      'title' => clienttranslate('Smallpox Epidemic'),
+      AR_START => true,
+    ];
     $this->faction = INDIAN;
   }
 }

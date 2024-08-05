@@ -16,6 +16,11 @@ class Card46 extends \BayonetsAndTomahawks\Models\Card
         'id' => INDIAN_AP
       ],
     ];
+    $this->event = [
+      'id' => STAGED_LACROSSE_GAME,
+      'title' => clienttranslate('Staged Lacross Game'),
+      AR_START => false,
+    ];
     $this->faction = INDIAN;
   }
 }

@@ -19,6 +19,11 @@ class Card33 extends \BayonetsAndTomahawks\Models\Card
         'id' => SAIL_ARMY_AP
       ]
     ];
+    $this->event = [
+      'id' => HESITANT_BRITISH_GENERAL,
+      'title' => clienttranslate('Hesitant British General'),
+      AR_START => true,
+    ];
     $this->faction = FRENCH;
     $this->initiativeValue = 1;
     $this->years = [1757];

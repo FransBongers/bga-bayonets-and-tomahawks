@@ -22,6 +22,11 @@ class Card07 extends \BayonetsAndTomahawks\Models\Card
         'id' => ARMY_AP_2X
       ]
     ];
+    $this->event = [
+      'id' => CONSTRUCTION_FRENZY,
+      'title' => clienttranslate('Construction Frenzy'),
+      AR_START => false,
+    ];
     $this->faction = BRITISH;
     $this->initiativeValue = 2;
   }

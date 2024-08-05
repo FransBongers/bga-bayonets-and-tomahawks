@@ -16,6 +16,11 @@ class Card32 extends \BayonetsAndTomahawks\Models\Card
         'id' => SAIL_ARMY_AP
       ]
     ];
+    $this->event = [
+      'id' => WILDERNESS_AMBUSH,
+      'title' => clienttranslate('Wilderness Ambush'),
+      AR_START => false,
+    ];
     $this->faction = FRENCH;
     $this->initiativeValue = 4;
   }

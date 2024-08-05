@@ -19,6 +19,7 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
   protected $primary = 'card_id';
   protected $location;
   protected $state;
+  protected $event = null;
   protected $faction;
   protected $initiativeValue = null;
   protected $actionPoints = [];
@@ -35,6 +36,7 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
 
   protected $staticAttributes = [
     'id',
+    'event',
     'faction',
     'actionPoints',
     'buildUpDeck',

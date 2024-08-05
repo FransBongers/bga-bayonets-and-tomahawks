@@ -19,6 +19,11 @@ class Card41 extends \BayonetsAndTomahawks\Models\Card
         'id' => SAIL_ARMY_AP
       ]
     ];
+    $this->event = [
+      'id' => INDOMITABLE_ABBATIS,
+      'title' => clienttranslate('Indomitable Abbatis'),
+      AR_START => false,
+    ];
     $this->faction = FRENCH;
     $this->initiativeValue = 1;
     $this->years = [1758, 1759];

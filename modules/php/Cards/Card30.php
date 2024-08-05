@@ -16,6 +16,11 @@ class Card30 extends \BayonetsAndTomahawks\Models\Card
         'id' => SAIL_ARMY_AP
       ]
     ];
+    $this->event = [
+      'id' => RELUCTANT_WAGONEERS,
+      'title' => clienttranslate('Reluctant Wagoneers'),
+      AR_START => true,
+    ];
     $this->faction = FRENCH;
     $this->initiativeValue = 3;
   }

@@ -17,6 +17,11 @@ class Card05 extends \BayonetsAndTomahawks\Models\Card
     ];
     $this->id = 'Card05';
     $this->buildUpDeck = true;
+    $this->event = [
+      'id' => DISEASE_IN_FRENCH_CAMP,
+      'title' => clienttranslate('Disease in French Camp'),
+      AR_START => true,
+    ];
     $this->faction = BRITISH;
     $this->initiativeValue = 6;
   }

@@ -16,6 +16,11 @@ class Card11 extends \BayonetsAndTomahawks\Models\Card
         'id' => SAIL_ARMY_AP_2X
       ]
     ];
+    $this->event = [
+      'id' => SMALLPOX_INFECTED_BLANKETS,
+      'title' => clienttranslate('Smallpox-Infected Blankets'),
+      AR_START => true,
+    ];
     $this->faction = BRITISH;
     $this->initiativeValue = 4;
   }

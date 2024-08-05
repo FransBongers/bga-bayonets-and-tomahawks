@@ -16,6 +16,11 @@ class Card50 extends \BayonetsAndTomahawks\Models\Card
         'id' => INDIAN_AP
       ],
     ];
+    $this->event = [
+      'id' => A_RIGHT_TO_PLUNDER_AND_CAPTIVES,
+      'title' => clienttranslate('A Right to Plunder & Captives'),
+      AR_START => false,
+    ];
     $this->faction = INDIAN;
   }
 }

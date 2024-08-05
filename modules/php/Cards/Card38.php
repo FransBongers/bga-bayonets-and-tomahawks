@@ -19,6 +19,11 @@ class Card38 extends \BayonetsAndTomahawks\Models\Card
         'id' => SAIL_ARMY_AP
       ]
     ];
+    $this->event = [
+      'id' => IROQUOIS_DIPLOMACY,
+      'title' => clienttranslate('Iroquois Diplomacy'),
+      AR_START => true,
+    ];
     $this->faction = FRENCH;
     $this->initiativeValue = 1;
     $this->years = [1755,1756];

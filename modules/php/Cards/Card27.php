@@ -19,6 +19,11 @@ class Card27 extends \BayonetsAndTomahawks\Models\Card
         'id' => SAIL_ARMY_AP
       ]
     ];
+    $this->event = [
+      'id' => LUCKY_CANNONBALL,
+      'title' => clienttranslate('Lucky Cannonball'),
+      AR_START => false,
+    ];
     $this->faction = FRENCH;
     $this->initiativeValue = 1;
     $this->years = [1757];

@@ -22,6 +22,11 @@ class Card14 extends \BayonetsAndTomahawks\Models\Card
         'id' => SAIL_ARMY_AP
       ]
     ];
+    $this->event = [
+      'id' => PERFECT_VOLLEYS,
+      'title' => clienttranslate('Perfect Volleys'),
+      AR_START => false,
+    ];
     $this->faction = BRITISH;
     $this->initiativeValue = 4;
   }

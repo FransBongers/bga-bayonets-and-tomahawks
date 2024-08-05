@@ -13,6 +13,11 @@ class Card53 extends \BayonetsAndTomahawks\Models\Card
         'id' => INDIAN_AP
       ],
     ];
+    $this->event = [
+      'id' => PENNSYLVANIAS_PEACE_PROMISES,
+      'title' => clienttranslate("Pennsylvania's Peace Promises"),
+      AR_START => true,
+    ];
     $this->faction = INDIAN;
   }
 }

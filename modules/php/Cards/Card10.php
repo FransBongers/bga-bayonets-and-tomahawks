@@ -20,6 +20,11 @@ class Card10 extends \BayonetsAndTomahawks\Models\Card
       ]
     ];
     $this->buildUpDeck = true;
+    $this->event = [
+      'id' => FORCED_MARCH,
+      'title' => clienttranslate('Forced March'),
+      AR_START => false,
+    ];
     $this->faction = BRITISH;
     $this->initiativeValue = 4;
   }

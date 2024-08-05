@@ -23,6 +23,11 @@ class Card18 extends \BayonetsAndTomahawks\Models\Card
       ]
     ];
     $this->buildUpDeck = true;
+    $this->event = [
+      'id' => WINTERING_REAR_ADMIRAL,
+      'title' => clienttranslate('Wintering Rear Admiral'),
+      AR_START => true,
+    ];
     $this->faction = BRITISH;
     $this->initiativeValue = 4;
     $this->years = [1758, 1759];

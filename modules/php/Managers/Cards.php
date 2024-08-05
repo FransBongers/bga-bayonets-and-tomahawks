@@ -53,11 +53,27 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
 
   public static function getCardsInPlay()
   {
-    return [
-      BRITISH => self::getTopOf(Locations::cardInPlay(BRITISH)),
-      FRENCH => self::getTopOf(Locations::cardInPlay(FRENCH)),
-      INDIAN => self::getTopOf(Locations::cardInPlay(INDIAN)),
+    $cards = self::getSelectQuery()
+      ->where(static::$prefix . 'location', 'LIKE', 'cardInPlay_' . '%')
+      ->get()
+      ->toArray();
+
+    $data = [
+      BRITISH => null,
+      FRENCH => null,
+      INDIAN => null,
     ];
+
+    foreach($cards as $card) {
+      $data[$card->getFaction()] = $card;
+    }
+
+    return $data;
+    // return [
+    //   BRITISH => self::getTopOf(Locations::cardInPlay(BRITISH)),
+    //   FRENCH => self::getTopOf(Locations::cardInPlay(FRENCH)),
+    //   INDIAN => self::getTopOf(Locations::cardInPlay(INDIAN)),
+    // ];
   }
 
   // public static function getOfTypeInLocation($type, $location)

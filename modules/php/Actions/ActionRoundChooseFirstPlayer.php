@@ -92,6 +92,12 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
     Globals::setSecondPlayerId($secondPlayer->getId());
     // TODO: AR Start events?
 
+    $cardsInPlay = Cards::getCardsInPlay();
+
+    foreach([$firstPlayer, $secondPlayer] as $player) {
+      $faction = $player->getFaction();
+    }
+
     //
     // Notifications::log('firstPlayer', $firstPlayer);
     // Notifications::log('secondPlayer', $secondPlayer);

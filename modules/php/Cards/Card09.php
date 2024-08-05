@@ -22,6 +22,11 @@ class Card09 extends \BayonetsAndTomahawks\Models\Card
         'id' => ARMY_AP
       ]
     ];
+    $this->event = [
+      'id' => SURPRISE_LANDING,
+      'title' => clienttranslate('Surprise Landing'),
+      AR_START => false,
+    ];
     $this->faction = BRITISH;
     $this->initiativeValue = 3;
   }

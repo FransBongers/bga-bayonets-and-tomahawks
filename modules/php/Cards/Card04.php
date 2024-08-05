@@ -17,6 +17,11 @@ class Card04 extends \BayonetsAndTomahawks\Models\Card
       ],
     ];
     $this->buildUpDeck = true;
+    $this->event = [
+      'id' => ROUND_UP_MEN_AND_EQUIPMENT,
+      'title' => clienttranslate('Round up Men & Equipment'),
+      AR_START => true,
+    ];
     $this->faction = BRITISH;
     $this->initiativeValue = 6;
   }

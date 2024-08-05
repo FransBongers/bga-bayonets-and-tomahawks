@@ -16,6 +16,11 @@ class Card31 extends \BayonetsAndTomahawks\Models\Card
         'id' => SAIL_ARMY_AP
       ]
     ];
+    $this->event = [
+      'id' => ROUND_UP_MEN_AND_EQUIPMENT,
+      'title' => clienttranslate('Round up Men & Equipment'),
+      AR_START => true,
+    ];
     $this->faction = FRENCH;
     $this->initiativeValue = 4;
   }

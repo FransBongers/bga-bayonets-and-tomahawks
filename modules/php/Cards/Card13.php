@@ -19,6 +19,11 @@ class Card13 extends \BayonetsAndTomahawks\Models\Card
         'id' => SAIL_ARMY_AP
       ]
     ];
+    $this->event = [
+      'id' => CHEROKEE_DIPLOMACY,
+      'title' => clienttranslate('Cherokee Diplomacy'),
+      AR_START => true,
+    ];
     $this->faction = BRITISH;
     $this->initiativeValue = 3;
   }
