@@ -54,6 +54,7 @@ class AtomicActions
     SAIL_MOVEMENT_DESTINATION => 'SailMovementDestination',
     SELECT_RESERVE_CARD => 'SelectReserveCard',
     WINTER_QUARTERS_GAME_END_CHECK => 'WinterQuartersGameEndCheck',
+    WINTER_QUARTERS_ROUND_END => 'WinterQuartersRoundEnd',
   ];
 
   public static function get($actionId, $ctx = null)

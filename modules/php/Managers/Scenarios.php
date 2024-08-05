@@ -15,9 +15,7 @@ class Scenarios
 
   public static function get($scenarioId = null)
   {
-    Notifications::log('scenarioId', $scenarioId);
     $scenarioId = $scenarioId === null ? Globals::getScenarioId() : $scenarioId;
-    Notifications::log('scenarioId after', $scenarioId);
     if (!\array_key_exists($scenarioId, self::$scenarios)) {
       // throw new \feException(print_r(debug_print_backtrace()));
       // throw new \feException(print_r(Globals::getEngine()));
@@ -35,9 +33,7 @@ class Scenarios
     ];
 
     $scenarioId = $scenarioIdMap[intval($scenarioOption)];
-    Notifications::log('scenarioId', $scenarioId);
     $scenario = self::get($scenarioId);
-    Notifications::log('scenario', $scenario);
     Globals::setYear($scenario->getStartYear());
     Globals::setActionRound(ACTION_ROUND_1);
     Globals::setScenarioId($scenarioId);

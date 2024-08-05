@@ -149,4 +149,24 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   {
     return $this->coastal;
   }
+
+  public function isHomeSpace($faction)
+  {
+    return $this->homeSpace === $faction;
+  }
+
+  public function isVictorySpace()
+  {
+    return $this->victorySpace;
+  }
+
+  public function isControlledBy($faction)
+  {
+    return $this->control === $faction;
+  }
+
+  public function isSettledSpace($faction)
+  {
+    return $this->homeSpace === $faction && $this->value > 1;
+  }
 }

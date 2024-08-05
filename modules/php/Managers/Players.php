@@ -129,6 +129,20 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
     });
   }
 
+  public static function getPlayersForFactions()
+  {
+    $players = Players::getAll()->toArray();
+    $data = [];
+    foreach([BRITISH, FRENCH] as $faction)
+    {
+      $data[$faction] = Utils::array_find($players, function ($player) use ($faction) {
+        return $player->getFaction() === $faction;
+      });
+    }
+
+    return $data;
+  }
+
   public static function getPlayerIdsForFactions()
   {
     $players = Players::getAll()->toArray();
@@ -229,6 +243,12 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
   public static function otherFaction($playerFaction)
   {
     return $playerFaction === BRITISH ? FRENCH : BRITISH;
+  }
+
+  public static function setWinner($player)
+  {
+    // TODO: update scores for scenarios where players van win with 'negative points'
+    // Set score relative to threshold?
   }
 
   public static function scoreVictoryPoints($player, $points)

@@ -371,6 +371,14 @@ $machinestates = array(
         'transitions' => [],
     ],
 
+    ST_WINTER_QUARTERS_ROUND_END => [
+        'name' => 'winterQuartersRoundEnd',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
     ST_ACTION_ACTIVATE_STACK => [
         'name' => 'actionActivateStack',
         'description' => clienttranslate('${actplayer} may activate stack'),

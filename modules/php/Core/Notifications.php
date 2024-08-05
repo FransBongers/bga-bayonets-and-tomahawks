@@ -178,6 +178,13 @@ class Notifications
   // .##.....##.##..........##....##.....##.##.....##.##.....##.##....##
   // .##.....##.########....##....##.....##..#######..########...######.
 
+  public static function achievedVictoryThreshold($player)
+  {
+    self::message(clienttranslate('${player_name} has achieved their Victory Threshold'), [
+      'player' => $player,
+    ]);
+  }
+
   public static function activateStack($player, $space, $actionName)
   {
     self::message(clienttranslate('${player_name} performs ${tkn_boldText_action} with stack in ${tkn_boldText_space}'), [
@@ -678,6 +685,14 @@ class Notifications
       'tkn_boldText_space' => $space->getName(),
       'space' => $space,
       'i18n' => ['tkn_boldText_space'],
+    ]);
+  }
+
+  public static function yearEndBonus($player, $criteriaHaveBeenMet)
+  {
+    $text = $criteriaHaveBeenMet ? clienttranslate('${player_name} gets Year End Bonus') : clienttranslate('${player_name} does not get Year End Bonus');
+    self::message($text, [
+      'player' => $player
     ]);
   }
 

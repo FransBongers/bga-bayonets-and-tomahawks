@@ -2,6 +2,10 @@
 
 namespace BayonetsAndTomahawks\Scenarios;
 
+use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\Spaces;
+
 class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
 {
   public function __construct()
@@ -21,6 +25,14 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
       ]
     ];
     $this->victoryMarkerLocation = VICTORY_POINTS_FRENCH_1;
+    $this->victoryThreshold = [
+      BRITISH => [
+        1757 => 1
+      ],
+      FRENCH => [
+        1757 => 1
+      ]
+    ];
     $this->locations = [
       // Indian Setup
       MIRAMICHY => [
@@ -410,5 +422,41 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
         ],
       ]
     ];
+  }
+
+  public function getYearEndBonus($faction, $year)
+  {
+    $spaces = Spaces::getAll()->toArray();
+    if ($faction === BRITISH) {
+      return $this->getYearEndBonusBritish($spaces);
+    } else {
+      return $this->getYearEndBonusFrench($spaces);
+    }
+  }
+
+  private function getYearEndBonusBritish($spaces)
+  {
+    $countingSpaces = Utils::filter($spaces, function ($space) {
+      return $space->isSettledSpace(FRENCH) && $space->isControlledBy(BRITISH);
+    });
+    Notifications::log('Counting spaces British', $countingSpaces);
+    if (count($countingSpaces) >= 1) {
+      return 2;
+    }
+
+    return 0;
+  }
+
+  private function getYearEndBonusFrench($spaces)
+  {
+    $countingSpaces = Utils::filter($spaces, function ($space) {
+      return $space->isHomeSpace(BRITISH) && $space->isVictorySpace() && $space->isControlledBy(FRENCH);
+    });
+    Notifications::log('Counting spaces French', $countingSpaces);
+    if (count($countingSpaces) >= 3) {
+      return 2;
+    }
+
+    return 0;
   }
 }

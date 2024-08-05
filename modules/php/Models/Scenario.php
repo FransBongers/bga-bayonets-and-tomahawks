@@ -2,6 +2,9 @@
 
 namespace BayonetsAndTomahawks\Models;
 
+use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Managers\Markers;
+
 class Scenario implements \JsonSerializable
 {
   protected $id;
@@ -13,10 +16,10 @@ class Scenario implements \JsonSerializable
   protected $reinforcements;
   protected $pools;
   protected $victoryMarkerLocation;
+  protected $victoryThreshold = [];
 
   public function __construct()
   {
-
   }
 
   protected $attributes = [
@@ -66,9 +69,27 @@ class Scenario implements \JsonSerializable
     return $this->startYear;
   }
 
+  public function getYearEndBonus($faction, $year)
+  {
+    return 0;
+  }
+
   public function getVictoryMarkerLocation()
   {
     return $this->victoryMarkerLocation;
+  }
+
+  public function hasAchievedVictoryThreshold($faction, $year)
+  {
+
+    $vpMarker = Markers::get(VICTORY_MARKER);
+    // 'victory_points_' . $faction . '_' . $score;
+    $splitLocation = explode('_', $vpMarker->getLocation());
+    // TODO: 'negative vp threshold'
+    if ($faction === $splitLocation[2] && intval($splitLocation[3]) >= $this->victoryThreshold[$faction][$year]) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -83,6 +104,4 @@ class Scenario implements \JsonSerializable
 
     return $data;
   }
-
-
 }

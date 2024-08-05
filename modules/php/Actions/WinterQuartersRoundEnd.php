@@ -8,7 +8,6 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
-use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
@@ -19,11 +18,11 @@ use BayonetsAndTomahawks\Models\Marker;
 use BayonetsAndTomahawks\Models\Player;
 use BayonetsAndTomahawks\Scenario;
 
-class WinterQuartersGameEndCheck extends \BayonetsAndTomahawks\Models\AtomicAction
+class WinterQuartersRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
 {
   public function getState()
   {
-    return ST_WINTER_QUARTERS_GAME_END_CHECK;
+    return ST_WINTER_QUARTERS_ROUND_END;
   }
 
   // ..######..########....###....########.########
@@ -42,42 +41,27 @@ class WinterQuartersGameEndCheck extends \BayonetsAndTomahawks\Models\AtomicActi
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stWinterQuartersGameEndCheck()
+  public function stWinterQuartersRoundEnd()
   {
-    $scenario = Scenarios::get();
-    // $yearMarker = Markers::get(YEAR_MARKER);
-    // $year = intval(explode('_', $yearMarker->getLocation())[2]);
-    $year = BTHelpers::getYear();
+    $yearMarker = Markers::get(YEAR_MARKER);
+    $currentYear = intval(explode('_', $yearMarker->getLocation())[2]);
+    $nextYear = $currentYear + 1;
 
-    $players = Players::getPlayersForFactions();
-
-    // 1. Scenario Bonuses
-    foreach ([BRITISH, FRENCH] as $faction) {
-      $bonus = $scenario->getYearEndBonus($faction, $year);
-      if ($bonus > 0) {
-        Notifications::yearEndBonus($players[$faction], true);
-        Players::scoreVictoryPoints($players[$faction], $bonus);
-      } else {
-        Notifications::yearEndBonus($players[$faction], false);
-      }
+    Notifications::discardReserveCards();
+    $players = Players::getAll();
+    foreach($players as $player) {
+      $player->discardReserveCard();
     }
 
-    /**
-     * 2. WIE Bonus
-     */
+    // Move tokens
+    Globals::setYear($nextYear);
+    Globals::setActionRound(ACTION_ROUND_1);
 
-    // 3. Check Victory Threshold
-    foreach ([BRITISH, FRENCH] as $faction) {
-
-      if ($scenario->hasAchievedVictoryThreshold($faction, $year)) {
-        Notifications::achievedVictoryThreshold($players[$faction]);
-        Players::setWinner($players[$faction]);
-
-        // Add pre end of game state to set statistics?
-        Game::get()->gamestate->jumpToState(ST_END_GAME);
-        return;
-      }
-    }
+    $yearMarkerLocation = Locations::yearTrack($nextYear);
+    Markers::move(YEAR_MARKER, $yearMarkerLocation);
+    Markers::move(ROUND_MARKER, ACTION_ROUND_1);
+    Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), ACTION_ROUND_1);
+    Notifications::moveYearMarker(Markers::get(YEAR_MARKER), $yearMarkerLocation);
 
     $this->resolveAction(['automatic' => true]);
   }
@@ -90,7 +74,7 @@ class WinterQuartersGameEndCheck extends \BayonetsAndTomahawks\Models\AtomicActi
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreWinterQuartersGameEndCheck()
+  public function stPreWinterQuartersRoundEnd()
   {
   }
 
@@ -103,7 +87,7 @@ class WinterQuartersGameEndCheck extends \BayonetsAndTomahawks\Models\AtomicActi
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsWinterQuartersGameEndCheck()
+  public function argsWinterQuartersRoundEnd()
   {
 
 
@@ -126,16 +110,16 @@ class WinterQuartersGameEndCheck extends \BayonetsAndTomahawks\Models\AtomicActi
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassWinterQuartersGameEndCheck()
+  public function actPassWinterQuartersRoundEnd()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actWinterQuartersGameEndCheck($args)
+  public function actWinterQuartersRoundEnd($args)
   {
-    self::checkAction('actWinterQuartersGameEndCheck');
+    self::checkAction('actWinterQuartersRoundEnd');
 
 
 

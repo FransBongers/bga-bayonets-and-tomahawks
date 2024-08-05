@@ -5,6 +5,7 @@ namespace BayonetsAndTomahawks;
 use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Managers\ActionPoints;
 use BayonetsAndTomahawks\Managers\AtomicActions;
 use BayonetsAndTomahawks\Managers\Cards;
@@ -23,6 +24,7 @@ use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Helpers\PathCalculator;
 use BayonetsAndTomahawks\Models\ActionPoint;
+use BayonetsAndTomahawks\Scenarios\LoudounsGamble1757;
 
 trait DebugTrait
 {
@@ -84,27 +86,24 @@ trait DebugTrait
 
   function debug_test()
   {
-    // PENN_DEL
-    $unitIdIndex = count(Units::getAll()) + 1;
-    $units = [];
+    $scenario = Scenarios::get();
+    $year = BTHelpers::getYear();
+    $players = Players::getPlayersForFactions();
 
-    for ($i = 0; $i < 2; $i++) {
-      // $info = self::getInstance($unit);
-      $id = 'unit_' . $unitIdIndex;
-      $data = [
-        'id' => $id,
-        'location' => POOL_BRITISH_COLONIAL_VOW_BONUS,
-        'counter_id' => PENN_DEL,
-        'spent' => 0,
-        // 'type' => $unit,
-      ];
-      $data['extra_data'] = ['properties' => []];
-      $units[$id] = $data;
-      $unitIdIndex += 1;
+    foreach ([BRITISH, FRENCH] as $faction) {
+      if ($scenario->hasAchievedVictoryThreshold($faction, $year)) {
+        Notifications::achievedVictoryThreshold($players[$faction]);
+        // Players::setWinner($players[$faction]);
+
+        // Add pre end of game state to set statistics?
+        return;
+      }
     }
 
-    Notifications::log('units', $units);
-    Units::create($units, null);
+    // Notifications::log('players',Players::getPlayersForFactions());
+    // Notifications::log('units', Scenarios::get(LoudounsGamble1757)->getYearEndBonus(BRITISH, 1757));
+    // Notifications::log('units', Scenarios::get(LoudounsGamble1757)->getYearEndBonus(FRENCH, 1757));
+    // Units::create($units, null);
 
     // Spaces::get(CHIGNECTOU)->setControl(BRITISH);
     // $tokens = [];

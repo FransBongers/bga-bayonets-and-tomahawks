@@ -176,7 +176,6 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
     Notifications::log('cards', $cards);
     // // Create the cards
     self::create($cards, null);
-    self::setupDecksForYear($scenario->getStartYear());
   }
 
   /* Creation of the cards */
