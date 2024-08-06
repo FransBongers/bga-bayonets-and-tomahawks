@@ -86,20 +86,26 @@ trait DebugTrait
 
   function debug_test()
   {
-    $scenario = Scenarios::get();
-    $year = BTHelpers::getYear();
-    $players = Players::getPlayersForFactions();
+    // Round up men and equipment
+    // Units::get('unit_45')->setLocation(Locations::lossesBox(BRITISH));
+    // Units::get('unit_108')->setLocation(Locations::lossesBox(BRITISH));
+    // Units::get('unit_94')->setLocation(Locations::lossesBox(BRITISH));
 
-    foreach ([BRITISH, FRENCH] as $faction) {
-      if ($scenario->hasAchievedVictoryThreshold($faction, $year)) {
-        Notifications::achievedVictoryThreshold($players[$faction]);
-        // Players::setWinner($players[$faction]);
+    // $player = Players::get();
+    // Units::get('unit_43')->reduce($player);
+    // Units::get('unit_47')->reduce($player);
+    // Units::get('unit_52')->reduce($player);
+    // Units::get('unit_42')->reduce($player);
 
-        // Add pre end of game state to set statistics?
-        return;
-      }
-    }
+    // British encroachment
 
+    Units::get('unit_12')->setLocation(Locations::lossesBox(FRENCH));
+    Units::get('unit_2')->setLocation(Locations::lossesBox(FRENCH));
+    Units::get('unit_3')->setLocation(Locations::lossesBox(FRENCH));
+    Spaces::get(GRAND_SAULT)->setControl(BRITISH);
+    Spaces::get(GENNISHEYO)->setControl(BRITISH);
+
+    ///////
     // Notifications::log('players',Players::getPlayersForFactions());
     // Notifications::log('units', Scenarios::get(LoudounsGamble1757)->getYearEndBonus(BRITISH, 1757));
     // Notifications::log('units', Scenarios::get(LoudounsGamble1757)->getYearEndBonus(FRENCH, 1757));

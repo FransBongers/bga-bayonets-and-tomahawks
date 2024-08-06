@@ -9,6 +9,7 @@ class Onontake extends \BayonetsAndTomahawks\Models\Space
     $this->id = ONONTAKE;
     $this->battlePriority = 183;
     $this->defaultControl = INDIAN;
+    $this->indianVillage = IROQUOIS;
     $this->name = clienttranslate('Onontake');
     $this->victorySpace = false;
     $this->top = 1632.5;

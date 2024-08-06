@@ -11,6 +11,7 @@ class GrandSault extends \BayonetsAndTomahawks\Models\Space
     $this->colony = ACADIE;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
+    $this->indianVillage = MALECITE;
     $this->name = clienttranslate('Grand Sault');
     $this->outpost = true;
     $this->value = 1;

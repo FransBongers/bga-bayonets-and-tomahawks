@@ -111,6 +111,18 @@ interface OnEnteringLightMovementStateArgs extends CommonArgs {
   faction: Faction;
 }
 
+interface EventDiseaseInFrenchCampStateArgs extends CommonArgs {
+  options: BTUnit[];
+}
+
+interface EventRoundUpMenAndEquipmentStateArgs extends CommonArgs {
+  reduced: BTUnit[];
+  lossesBox: Record<string, {
+    unit: BTUnit;
+    spaceIds: string[];
+  }>
+}
+
 interface OnEnteringFleetsArriveUnitPlacementStateArgs extends CommonArgs {
   fleets: BTUnit[];
   units: BTUnit[];

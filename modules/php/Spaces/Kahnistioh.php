@@ -9,6 +9,7 @@ class Kahnistioh extends \BayonetsAndTomahawks\Models\Space
     $this->id = KAHNISTIOH;
     $this->battlePriority = 211;
     $this->defaultControl = INDIAN;
+    $this->indianVillage = IROQUOIS;
     $this->name = clienttranslate('Kahnistioh');
     $this->victorySpace = false;
     $this->top = 1785;

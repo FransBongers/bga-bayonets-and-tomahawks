@@ -10,15 +10,56 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
-use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Cards;
+use BayonetsAndTomahawks\Managers\Players;
+use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Models\Player;
 
-class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAction
+class ActionRoundResolveARStartEvent extends \BayonetsAndTomahawks\Models\AtomicAction
 {
   public function getState()
   {
-    return ST_ACTION_ROUND_CHOOSE_FIRST_PLAYER;
+    return ST_ACTION_ROUND_RESOLVE_AR_START_EVENT;
+  }
+
+  // ..######..########....###....########.########
+  // .##....##....##......##.##......##....##......
+  // .##..........##.....##...##.....##....##......
+  // ..######.....##....##.....##....##....######..
+  // .......##....##....#########....##....##......
+  // .##....##....##....##.....##....##....##......
+  // ..######.....##....##.....##....##....########
+
+  // ....###.....######..########.####..#######..##....##
+  // ...##.##...##....##....##.....##..##.....##.###...##
+  // ..##...##..##..........##.....##..##.....##.####..##
+  // .##.....##.##..........##.....##..##.....##.##.##.##
+  // .#########.##..........##.....##..##.....##.##..####
+  // .##.....##.##....##....##.....##..##.....##.##...###
+  // .##.....##..######.....##....####..#######..##....##
+
+  public function stActionRoundResolveARStartEvent()
+  {
+    Notifications::log('stActionRoundResolveARStartEvent', []);
+
+    $info = $this->ctx->getInfo();
+    $cardId = $info['cardId'];
+    $faction = $info['faction'];
+
+    $card = Cards::get($cardId);
+
+    // We can get INDIAN here as faction for the indian cards
+    $player = Players::getPlayerForFaction($faction === BRITISH ? BRITISH : FRENCH);
+
+    Notifications::message(clienttranslate('${player_name} resolves ${tkn_boldText_eventTitle} Event'), [
+      'player' => $player,
+      'tkn_boldText_eventTitle' => $card->getEvent()['title'],
+      'i18n' => ['tkn_boldText_eventTitle'],
+    ]);
+
+    $card->resolveARStart($this->ctx);
+
+    $this->resolveAction(['automatic' => true]);
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##
@@ -29,7 +70,7 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreActionRoundChooseFirstPlayer()
+  public function stPreActionRoundResolveARStartEvent()
   {
   }
 
@@ -42,10 +83,10 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsActionRoundChooseFirstPlayer()
+  public function argsActionRoundResolveARStartEvent()
   {
 
-    // Notifications::log('argsActionRoundChooseFirstPlayer',[]);
+
     return [];
   }
 
@@ -65,56 +106,20 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassActionRoundChooseFirstPlayer()
+  public function actPassActionRoundResolveARStartEvent()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actActionRoundChooseFirstPlayer($args)
+  public function actActionRoundResolveARStartEvent($args)
   {
-    self::checkAction('actActionRoundChooseFirstPlayer');
+    self::checkAction('actActionRoundResolveARStartEvent');
 
-    $firstPlayerId = $args['playerId'];
 
-    $players = Players::getAll()->toArray();
 
-    // $firstPlayer = Players::get($firstPlayerId);
-    $firstPlayer = Utils::array_find($players, function ($player) use ($firstPlayerId) {
-      return $player->getId() === $firstPlayerId;
-    });
-    $secondPlayer = Utils::array_find($players, function ($player) use ($firstPlayerId) {
-      return $player->getId() !== $firstPlayerId;
-    });
-
-    Globals::setFirstPlayerId($firstPlayer->getId());
-    Globals::setSecondPlayerId($secondPlayer->getId());
-    // TODO: AR Start events?
-
-    $cardsInPlay = Cards::getCardsInPlay();
-
-    foreach([$firstPlayer, $secondPlayer] as $player) {
-      $faction = $player->getFaction();
-      if ($faction === FRENCH && $cardsInPlay[INDIAN]->getEvent() !== null && $cardsInPlay[INDIAN]->getEvent()[AR_START]) {
-        $this->ctx->getParent()->pushChild(new LeafNode([
-          'action' => ACTION_ROUND_RESOLVE_AR_START_EVENT,
-          // 'playerId' => $player->getId(),
-          'faction' => INDIAN,
-          'cardId' => $cardsInPlay[INDIAN]->getId(),
-        ]));
-      }
-      if ($cardsInPlay[$faction]->getEvent() !== null && $cardsInPlay[$faction]->getEvent()[AR_START]) {
-        $this->ctx->getParent()->pushChild(new LeafNode([
-          'action' => ACTION_ROUND_RESOLVE_AR_START_EVENT,
-          // 'playerId' => $player->getId(),
-          'faction' => $faction,
-          'cardId' => $cardsInPlay[$faction]->getId(),
-        ]));
-      }
-    }
-
-    $this->resolveAction($args);
+    $this->resolveAction($args, true);
   }
 
   //  .##.....##.########.####.##.......####.########.##....##
@@ -124,4 +129,6 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+
 }

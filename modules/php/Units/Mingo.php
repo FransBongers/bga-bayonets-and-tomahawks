@@ -1,4 +1,5 @@
 <?php
+
 namespace BayonetsAndTomahawks\Units;
 
 class Mingo extends \BayonetsAndTomahawks\Models\Light
@@ -10,5 +11,6 @@ class Mingo extends \BayonetsAndTomahawks\Models\Light
     $this->counterText = clienttranslate('Mingo');
     $this->faction = FRENCH;
     $this->indian = true;
+    $this->villages = [DIIOHAGE];
   }
 }

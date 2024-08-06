@@ -9,6 +9,7 @@ class Keowee extends \BayonetsAndTomahawks\Models\Space
     $this->id = KEOWEE;
     $this->battlePriority = 293;
     $this->defaultControl = INDIAN;
+    $this->indianVillage = CHEROKEE;
     $this->name = clienttranslate('Keowee');
     $this->victorySpace = false;
     $this->top = 2224;

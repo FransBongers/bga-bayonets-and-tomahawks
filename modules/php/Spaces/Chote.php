@@ -9,6 +9,7 @@ class Chote extends \BayonetsAndTomahawks\Models\Space
     $this->id = CHOTE;
     $this->battlePriority = 291;
     $this->defaultControl = INDIAN;
+    $this->indianVillage = CHEROKEE;
     $this->name = clienttranslate('Chote');
     $this->victorySpace = false;
     $this->top = 2203;

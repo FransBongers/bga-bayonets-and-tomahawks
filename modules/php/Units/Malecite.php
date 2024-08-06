@@ -1,4 +1,5 @@
 <?php
+
 namespace BayonetsAndTomahawks\Units;
 
 class Malecite extends \BayonetsAndTomahawks\Models\Light
@@ -10,5 +11,6 @@ class Malecite extends \BayonetsAndTomahawks\Models\Light
     $this->counterText = clienttranslate('Malécite');
     $this->faction = FRENCH;
     $this->indian = true;
+    $this->villages = [GRAND_SAULT];
   }
 }

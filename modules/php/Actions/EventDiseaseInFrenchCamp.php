@@ -10,15 +10,15 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
-use BayonetsAndTomahawks\Managers\Players;
+use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Models\Player;
 
-class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAction
+class EventDiseaseInFrenchCamp extends \BayonetsAndTomahawks\Models\AtomicAction
 {
   public function getState()
   {
-    return ST_ACTION_ROUND_CHOOSE_FIRST_PLAYER;
+    return ST_EVENT_DISEASE_IN_FRENCH_CAMP;
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##
@@ -29,7 +29,7 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreActionRoundChooseFirstPlayer()
+  public function stPreEventDiseaseInFrenchCamp()
   {
   }
 
@@ -42,11 +42,13 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsActionRoundChooseFirstPlayer()
+  public function argsEventDiseaseInFrenchCamp()
   {
 
-    // Notifications::log('argsActionRoundChooseFirstPlayer',[]);
-    return [];
+    // Notifications::log('argsEventDiseaseInFrenchCamp',[]);
+    return [
+      'options' => $this->getOptions(),
+    ];
   }
 
   //  .########..##..........###....##....##.########.########.
@@ -65,54 +67,29 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassActionRoundChooseFirstPlayer()
+  public function actPassEventDiseaseInFrenchCamp()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actActionRoundChooseFirstPlayer($args)
+  public function actEventDiseaseInFrenchCamp($args)
   {
-    self::checkAction('actActionRoundChooseFirstPlayer');
+    self::checkAction('actEventDiseaseInFrenchCamp');
+    $unitId = $args['unitId'];
 
-    $firstPlayerId = $args['playerId'];
+    $options = $this->getOptions();
 
-    $players = Players::getAll()->toArray();
-
-    // $firstPlayer = Players::get($firstPlayerId);
-    $firstPlayer = Utils::array_find($players, function ($player) use ($firstPlayerId) {
-      return $player->getId() === $firstPlayerId;
-    });
-    $secondPlayer = Utils::array_find($players, function ($player) use ($firstPlayerId) {
-      return $player->getId() !== $firstPlayerId;
+    $unit = Utils::array_find($options, function ($possibleunit) use ($unitId) {
+      return $unitId === $possibleunit->getId();
     });
 
-    Globals::setFirstPlayerId($firstPlayer->getId());
-    Globals::setSecondPlayerId($secondPlayer->getId());
-    // TODO: AR Start events?
-
-    $cardsInPlay = Cards::getCardsInPlay();
-
-    foreach([$firstPlayer, $secondPlayer] as $player) {
-      $faction = $player->getFaction();
-      if ($faction === FRENCH && $cardsInPlay[INDIAN]->getEvent() !== null && $cardsInPlay[INDIAN]->getEvent()[AR_START]) {
-        $this->ctx->getParent()->pushChild(new LeafNode([
-          'action' => ACTION_ROUND_RESOLVE_AR_START_EVENT,
-          // 'playerId' => $player->getId(),
-          'faction' => INDIAN,
-          'cardId' => $cardsInPlay[INDIAN]->getId(),
-        ]));
-      }
-      if ($cardsInPlay[$faction]->getEvent() !== null && $cardsInPlay[$faction]->getEvent()[AR_START]) {
-        $this->ctx->getParent()->pushChild(new LeafNode([
-          'action' => ACTION_ROUND_RESOLVE_AR_START_EVENT,
-          // 'playerId' => $player->getId(),
-          'faction' => $faction,
-          'cardId' => $cardsInPlay[$faction]->getId(),
-        ]));
-      }
+    if ($unit === null) {
+      throw new \feException("ERROR 031");
     }
+
+    $unit->eliminate(self::getPlayer());
 
     $this->resolveAction($args);
   }
@@ -124,4 +101,43 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  private function getDiseaseInBritishCampOptions()
+  {
+    return [];
+  }
+
+  private function getDiseaseInFrenchCampOptions()
+  {
+    $units = Units::getAll()->toArray();
+    $frenchBrigades = Utils::filter($units, function ($unit) {
+      return $unit->getFaction() === FRENCH &&
+        $unit->isBrigade() &&
+        in_array($unit->getLocation(), SPACES);
+    });
+    $metropolitan = Utils::filter($frenchBrigades, function ($unit) {
+      return $unit->isMetropolitanBrigade();
+    });
+    if (count($metropolitan) > 0) {
+      return $metropolitan;
+    } else {
+      return $frenchBrigades;
+    }
+  }
+
+  private function getOptions()
+  {
+    $info = $this->ctx->getInfo();
+
+    $cardId = $info['cardId'];
+    $card = Cards::get($cardId);
+
+    $eventId = $card->getEvent()['id'];
+
+    if ($eventId === DISEASE_IN_BRITISH_CAMP) {
+      return $this->getDiseaseInBritishCampOptions();
+    } else if ($eventId === DISEASE_IN_FRENCH_CAMP) {
+      return $this->getDiseaseInFrenchCampOptions();
+    }
+  }
 }

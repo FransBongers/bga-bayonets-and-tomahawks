@@ -10,6 +10,7 @@ class Toronto extends \BayonetsAndTomahawks\Models\Space
     $this->battlePriority = 191;
     $this->defaultControl = NEUTRAL;
     $this->homeSpace = FRENCH;
+    $this->indianVillage = MISSISSAGUE;
     $this->name = clienttranslate('Toronto');
     $this->outpost = true;
     $this->value = 1;

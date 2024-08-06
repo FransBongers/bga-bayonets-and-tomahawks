@@ -79,6 +79,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     colonialsEnlistUnitPlacement: ColonialsEnlistUnitPlacementState;
     confirmPartialTurn: ConfirmPartialTurnState;
     confirmTurn: ConfirmTurnState;
+    eventDiseaseInFrenchCamp: EventDiseaseInFrenchCampState;
+    eventRoundUpMenAndEquipment: EventRoundUpMenAndEquipmentState;
     vagariesOfWarPickUnits: VagariesOfWarPickUnitsState;
     fleetsArriveUnitPlacement: FleetsArriveUnitPlacementState;
     lightMovement: LightMovementState;
@@ -132,6 +134,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       colonialsEnlistUnitPlacement: new ColonialsEnlistUnitPlacementState(this),
       confirmPartialTurn: new ConfirmPartialTurnState(this),
       confirmTurn: new ConfirmTurnState(this),
+      eventDiseaseInFrenchCamp: new EventDiseaseInFrenchCampState(this),
+      eventRoundUpMenAndEquipment: new EventRoundUpMenAndEquipmentState(this),
       vagariesOfWarPickUnits: new VagariesOfWarPickUnitsState(this),
       fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
       lightMovement: new LightMovementState(this),
@@ -622,9 +626,10 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     }
     node.classList.add(BT_SELECTABLE);
     this._connections.push(
-      dojo.connect(node, 'onclick', this, (event: PointerEvent) =>
-        callback(event)
-      )
+      dojo.connect(node, 'onclick', this, (event: PointerEvent) => {
+        event.stopPropagation();
+        callback(event);
+      })
     );
   }
 

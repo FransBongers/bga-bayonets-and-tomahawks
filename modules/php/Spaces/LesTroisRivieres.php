@@ -11,6 +11,7 @@ class LesTroisRivieres extends \BayonetsAndTomahawks\Models\Space
     $this->colony = CANADA;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
+    $this->indianVillage = ABENAKI;
     $this->militia = 2;
     $this->name = clienttranslate('Les Trois Rivières');
     $this->settledSpace = true;

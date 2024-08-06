@@ -39,6 +39,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     'coastal',
     'colony',
     'homeSpace',
+    'indianVillage',
     'militia',
     'name',
     'outpost',
@@ -58,6 +59,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   protected $defaultControl;
   protected $faction = null;
   protected $homeSpace = null;
+  protected $indianVillage = null;
   protected $outpost = false;
   protected $settledSpace = false;
   protected $militia = 0;

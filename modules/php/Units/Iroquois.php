@@ -1,4 +1,5 @@
 <?php
+
 namespace BayonetsAndTomahawks\Units;
 
 class Iroquois extends \BayonetsAndTomahawks\Models\Light
@@ -10,5 +11,6 @@ class Iroquois extends \BayonetsAndTomahawks\Models\Light
     $this->counterText = clienttranslate('IROQUOIS');
     $this->faction = NEUTRAL;
     $this->indian = true;
+    $this->villages = [ONONTAKE, OQUAGA, KAHNISTIOH];
   }
 }

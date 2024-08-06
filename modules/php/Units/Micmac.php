@@ -1,4 +1,5 @@
 <?php
+
 namespace BayonetsAndTomahawks\Units;
 
 class Micmac extends \BayonetsAndTomahawks\Models\Light
@@ -10,5 +11,6 @@ class Micmac extends \BayonetsAndTomahawks\Models\Light
     $this->counterText = clienttranslate('Micmac');
     $this->faction = FRENCH;
     $this->indian = true;
+    $this->villages = [MIRAMICHY];
   }
 }

@@ -11,6 +11,7 @@ class ForksOfTheOhio extends \BayonetsAndTomahawks\Models\Space
     $this->colony = PAYS_D_EN_HAUT;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
+    $this->indianVillage = CHAOUANON;
     $this->name = clienttranslate('FORKS OF THE OHIO');
     $this->outpost = true;
     $this->value = 1;

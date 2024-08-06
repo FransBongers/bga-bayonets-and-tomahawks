@@ -11,6 +11,7 @@ class Miramichy extends \BayonetsAndTomahawks\Models\Space
     $this->colony = ACADIE;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
+    $this->indianVillage = MICMAC;
     $this->name = clienttranslate('Miramichy');
     $this->outpost = true;
     $this->value = 1;

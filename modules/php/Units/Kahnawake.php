@@ -1,4 +1,5 @@
 <?php
+
 namespace BayonetsAndTomahawks\Units;
 
 class Kahnawake extends \BayonetsAndTomahawks\Models\Light
@@ -10,5 +11,6 @@ class Kahnawake extends \BayonetsAndTomahawks\Models\Light
     $this->counterText = clienttranslate('Kahnawake');
     $this->faction = FRENCH;
     $this->indian = true;
+    $this->villages = [MONTREAL];
   }
 }

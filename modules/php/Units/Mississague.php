@@ -1,4 +1,5 @@
 <?php
+
 namespace BayonetsAndTomahawks\Units;
 
 class Mississague extends \BayonetsAndTomahawks\Models\Light
@@ -10,5 +11,6 @@ class Mississague extends \BayonetsAndTomahawks\Models\Light
     $this->counterText = clienttranslate('Mississagué');
     $this->faction = FRENCH;
     $this->indian = true;
+    $this->villages = [TORONTO];
   }
 }

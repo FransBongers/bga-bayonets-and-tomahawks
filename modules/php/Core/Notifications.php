@@ -145,7 +145,7 @@ class Notifications
     return $map[$faction];
   }
 
-  private static function getUnitsLog($units)
+  public static function getUnitsLog($units)
   {
     $unitsLog = '';
     $unitsLogArgs = [];

@@ -10,6 +10,7 @@ class Gennisheyo extends \BayonetsAndTomahawks\Models\Space
     $this->battlePriority = 192;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
+    $this->indianVillage = SENECA;
     $this->name = clienttranslate('Gennisheyo');
     $this->outpost = true;
     $this->value = 1;

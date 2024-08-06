@@ -9,6 +9,7 @@ class Oquaga extends \BayonetsAndTomahawks\Models\Space
     $this->id = OQUAGA;
     $this->battlePriority = 181;
     $this->defaultControl = INDIAN;
+    $this->indianVillage = IROQUOIS;
     $this->name = clienttranslate('Oquaga');
     $this->victorySpace = false;
     $this->top = 1626;

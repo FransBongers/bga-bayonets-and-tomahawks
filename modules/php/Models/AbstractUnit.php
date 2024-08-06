@@ -36,6 +36,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   protected $connectionTypeAllowed = [];
   protected $highland = false;
   protected $metropolitan = false;
+  protected $villages = null;
 
   /*
    * STATIC DATA

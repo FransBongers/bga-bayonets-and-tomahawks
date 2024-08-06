@@ -11,6 +11,7 @@ class Albany extends \BayonetsAndTomahawks\Models\Space
     $this->colony = NEW_YORK_AND_NEW_JERSEY;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
+    $this->indianVillage = MOHAWK;
     $this->militia = 3;
     $this->name = clienttranslate('ALBANY');
     $this->settledSpace = true;

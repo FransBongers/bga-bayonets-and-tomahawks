@@ -1,4 +1,5 @@
 <?php
+
 namespace BayonetsAndTomahawks\Units;
 
 class Mohawk extends \BayonetsAndTomahawks\Models\Light
@@ -10,5 +11,6 @@ class Mohawk extends \BayonetsAndTomahawks\Models\Light
     $this->counterText = clienttranslate('Mohawk');
     $this->faction = BRITISH;
     $this->indian = true;
+    $this->villages = [ALBANY];
   }
 }

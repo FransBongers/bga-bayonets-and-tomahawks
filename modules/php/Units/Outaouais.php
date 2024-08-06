@@ -1,4 +1,5 @@
 <?php
+
 namespace BayonetsAndTomahawks\Units;
 
 class Outaouais extends \BayonetsAndTomahawks\Models\Light
@@ -10,5 +11,6 @@ class Outaouais extends \BayonetsAndTomahawks\Models\Light
     $this->counterText = clienttranslate('Outaouais');
     $this->faction = FRENCH;
     $this->indian = true;
+    $this->villages = [LE_DETROIT];
   }
 }

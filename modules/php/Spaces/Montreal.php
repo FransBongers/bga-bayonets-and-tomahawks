@@ -11,6 +11,7 @@ class Montreal extends \BayonetsAndTomahawks\Models\Space
     $this->colony = CANADA;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
+    $this->indianVillage = KAHNAWAKE;
     $this->militia = 2;
     $this->name = clienttranslate('MONTRÉAL');
     $this->settledSpace = true;

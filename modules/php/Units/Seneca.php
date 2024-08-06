@@ -1,4 +1,5 @@
 <?php
+
 namespace BayonetsAndTomahawks\Units;
 
 class Seneca extends \BayonetsAndTomahawks\Models\Light
@@ -10,5 +11,6 @@ class Seneca extends \BayonetsAndTomahawks\Models\Light
     $this->counterText = clienttranslate('Seneca');
     $this->faction = FRENCH;
     $this->indian = true;
+    $this->villages = [GENNISHEYO];
   }
 }

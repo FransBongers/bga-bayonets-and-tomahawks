@@ -11,6 +11,7 @@ class LeDetroit extends \BayonetsAndTomahawks\Models\Space
     $this->colony = PAYS_D_EN_HAUT;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
+    $this->indianVillage = OUTAOUAIS;
     $this->militia = 1;
     $this->name = clienttranslate('LE DÉTROIT');
     $this->settledSpace = true;

@@ -10,6 +10,7 @@ class Diiohage extends \BayonetsAndTomahawks\Models\Space
     $this->battlePriority = 251;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
+    $this->indianVillage = MINGO;
     $this->name = clienttranslate('Diiohage');
     $this->outpost = true;
     $this->value = 1;

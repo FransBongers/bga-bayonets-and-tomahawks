@@ -255,6 +255,14 @@ $machinestates = array(
         'possibleactions' => ['actActionRoundActionPhase', 'actPassOptionalAction', 'actRestart'],
     ],
 
+    ST_ACTION_ROUND_RESOLVE_AR_START_EVENT => [
+        'name' => 'actionRoundResolveARStartEvent',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
     ST_ACTION_ROUND_RESOLVE_BATTLES => [
         'name' => 'actionRoundResolveBattles',
         'description' => '',
@@ -574,5 +582,33 @@ $machinestates = array(
         'args' => 'argsAtomicAction',
         'action' => 'stAtomicAction',
         'possibleactions' => ['actBattleRollsRerolls', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_EVENT_BRITISH_ENCROACHMENT => [
+        'name' => 'eventBritishEncroachment',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_EVENT_DISEASE_IN_FRENCH_CAMP => [
+        'name' => 'eventDiseaseInFrenchCamp',
+        'description' => clienttranslate('${actplayer} must select a unit'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actEventDiseaseInFrenchCamp', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_EVENT_ROUND_UP_MEN_AND_EQUIPMENT => [
+        'name' => 'eventRoundUpMenAndEquipment',
+        'description' => clienttranslate('${actplayer} may select reduced units or a unit in their Losses Box'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actEventRoundUpMenAndEquipment', 'actPassOptionalAction', 'actRestart'],
     ],
 );

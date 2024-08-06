@@ -2277,6 +2277,8 @@ var BayonetsAndTomahawks = (function () {
             colonialsEnlistUnitPlacement: new ColonialsEnlistUnitPlacementState(this),
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
+            eventDiseaseInFrenchCamp: new EventDiseaseInFrenchCampState(this),
+            eventRoundUpMenAndEquipment: new EventRoundUpMenAndEquipmentState(this),
             vagariesOfWarPickUnits: new VagariesOfWarPickUnitsState(this),
             fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
             lightMovement: new LightMovementState(this),
@@ -2563,7 +2565,8 @@ var BayonetsAndTomahawks = (function () {
         }
         node.classList.add(BT_SELECTABLE);
         this._connections.push(dojo.connect(node, 'onclick', this, function (event) {
-            return callback(event);
+            event.stopPropagation();
+            callback(event);
         }));
     };
     BayonetsAndTomahawks.prototype.setStackSelected = function (_a) {
@@ -6204,6 +6207,135 @@ var ConfirmTurnState = (function () {
         this.game.addUndoButtons(this.args);
     };
     return ConfirmTurnState;
+}());
+var EventDiseaseInFrenchCampState = (function () {
+    function EventDiseaseInFrenchCampState(game) {
+        this.game = game;
+    }
+    EventDiseaseInFrenchCampState.prototype.onEnteringState = function (args) {
+        debug('Entering EventDiseaseInFrenchCampState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    EventDiseaseInFrenchCampState.prototype.onLeavingState = function () {
+        debug('Leaving EventDiseaseInFrenchCampState');
+    };
+    EventDiseaseInFrenchCampState.prototype.setDescription = function (activePlayerId) { };
+    EventDiseaseInFrenchCampState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select 1 Brigade to eliminate'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.args.options.forEach(function (unit) {
+            _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () { return _this.updateInterfaceConfirm({ unit: unit }); },
+            });
+            var stack = _this.game.gameMap.stacks[unit.location][unit.faction];
+            stack.open();
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    EventDiseaseInFrenchCampState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var unit = _a.unit;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Eliminate ${tkn_unit} ?'),
+            args: {
+                tkn_unit: unit.counterId,
+            },
+        });
+        this.game.setUnitSelected({ id: unit.id });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actEventDiseaseInFrenchCamp',
+                args: {
+                    unitId: unit.id,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    return EventDiseaseInFrenchCampState;
+}());
+var EventRoundUpMenAndEquipmentState = (function () {
+    function EventRoundUpMenAndEquipmentState(game) {
+        this.game = game;
+    }
+    EventRoundUpMenAndEquipmentState.prototype.onEnteringState = function (args) {
+        debug('Entering EventRoundUpMenAndEquipmentState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    EventRoundUpMenAndEquipmentState.prototype.onLeavingState = function () {
+        debug('Leaving EventRoundUpMenAndEquipmentState');
+    };
+    EventRoundUpMenAndEquipmentState.prototype.setDescription = function (activePlayerId) { };
+    EventRoundUpMenAndEquipmentState.prototype.updateInterfaceInitialStep = function () {
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select 1 Brigade to eliminate'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    EventRoundUpMenAndEquipmentState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var dieResult = _a.dieResult;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Reroll ${tkn_dieResult} ?'),
+            args: {
+                tkn_dieResult: dieResult.result,
+            },
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actEventRoundUpMenAndEquipment',
+                args: {
+                    dieResult: dieResult,
+                    rerollSource: dieResult.availableRerollSources[0]
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    return EventRoundUpMenAndEquipmentState;
 }());
 var FleetsArriveUnitPlacementState = (function () {
     function FleetsArriveUnitPlacementState(game) {

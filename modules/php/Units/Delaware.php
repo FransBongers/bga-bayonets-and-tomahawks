@@ -1,4 +1,5 @@
 <?php
+
 namespace BayonetsAndTomahawks\Units;
 
 class Delaware extends \BayonetsAndTomahawks\Models\Light
@@ -10,5 +11,6 @@ class Delaware extends \BayonetsAndTomahawks\Models\Light
     $this->counterText = clienttranslate('Delaware');
     $this->faction = FRENCH;
     $this->indian = true;
+    $this->villages = [KITHANINK];
   }
 }

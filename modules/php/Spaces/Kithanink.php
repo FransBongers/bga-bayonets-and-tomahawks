@@ -10,6 +10,7 @@ class Kithanink extends \BayonetsAndTomahawks\Models\Space
     $this->battlePriority = 233;
     $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
+    $this->indianVillage = DELAWARE;
     $this->name = clienttranslate('Kithanink');
     $this->outpost = true;
     $this->value = 1;

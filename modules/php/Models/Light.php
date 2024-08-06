@@ -3,7 +3,7 @@ namespace BayonetsAndTomahawks\Models;
 
 class Light extends AbstractUnit
 {
-  protected $staticAttributes = ['colonial', 'colony', 'counterId', 'counterText', 'faction', 'indian', 'type'];
+  protected $staticAttributes = ['colonial', 'colony', 'counterId', 'counterText', 'faction', 'indian', 'type', 'villages'];
   protected $colonial = false;
 
   public function __construct($row)

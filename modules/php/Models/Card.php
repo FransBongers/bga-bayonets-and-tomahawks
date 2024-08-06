@@ -103,6 +103,11 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
     return null;
   }
 
+  public function resolveARStart($ctx)
+  {
+
+  }
+
   // public function getBuildUpDeck()
   // {
   //   return $this->buildUpDeck;
