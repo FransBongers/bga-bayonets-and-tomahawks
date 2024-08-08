@@ -33,6 +33,9 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'activeBattleAttackerFaction' => 'str',
     'activeBattleDefenderFaction' => 'str',
     'activeBattleHighlandBrigadeHit' => 'bool',
+    'lostAPBritish' => 'obj',
+    'lostAPFrench' => 'obj',
+    'lostAPIndian' => 'obj',
   ];
 
   protected static $table = 'global_variables';
@@ -157,6 +160,8 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
   public static function setupNewGame($players, $options)
   {
     // Game options
-
+    self::setLostAPBritish([]);
+    self::setLostAPFrench([]);
+    self::setLostAPIndian([]);
   }
 }

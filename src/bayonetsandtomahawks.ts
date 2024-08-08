@@ -79,6 +79,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     colonialsEnlistUnitPlacement: ColonialsEnlistUnitPlacementState;
     confirmPartialTurn: ConfirmPartialTurnState;
     confirmTurn: ConfirmTurnState;
+    eventDelayedSuppliesFromFrance: EventDelayedSuppliesFromFranceState;
     eventDiseaseInFrenchCamp: EventDiseaseInFrenchCampState;
     eventPennsylvaniasPeacePromises: EventPennsylvaniasPeacePromisesState;
     eventRoundUpMenAndEquipment: EventRoundUpMenAndEquipmentState;
@@ -135,6 +136,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       colonialsEnlistUnitPlacement: new ColonialsEnlistUnitPlacementState(this),
       confirmPartialTurn: new ConfirmPartialTurnState(this),
       confirmTurn: new ConfirmTurnState(this),
+      eventDelayedSuppliesFromFrance: new EventDelayedSuppliesFromFranceState(this),
       eventDiseaseInFrenchCamp: new EventDiseaseInFrenchCampState(this),
       eventPennsylvaniasPeacePromises: new EventPennsylvaniasPeacePromisesState(this),
       eventRoundUpMenAndEquipment: new EventRoundUpMenAndEquipmentState(this),

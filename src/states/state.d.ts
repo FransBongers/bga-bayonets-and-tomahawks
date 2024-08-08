@@ -111,6 +111,11 @@ interface OnEnteringLightMovementStateArgs extends CommonArgs {
   faction: Faction;
 }
 
+interface EventDelayedSuppliesFromFranceStateArgs extends CommonArgs {
+  indianAP: BTActionPoint[];
+  frenchAP: BTActionPoint[];
+}
+
 interface EventDiseaseInFrenchCampStateArgs extends CommonArgs {
   options: BTUnit[];
 }

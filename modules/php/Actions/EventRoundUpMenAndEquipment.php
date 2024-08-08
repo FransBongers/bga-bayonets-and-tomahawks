@@ -198,19 +198,51 @@ class EventRoundUpMenAndEquipment extends \BayonetsAndTomahawks\Models\AtomicAct
   private function getFrenchOptions()
   {
     $units = Units::getAll()->toArray();
-    // $frenchBrigades = Utils::filter($units, function ($unit) {
-    //   return $unit->getFaction() === FRENCH &&
-    //     $unit->isBrigade() &&
-    //     in_array($unit->getLocation(), SPACES);
-    // });
-    // $metropolitan = Utils::filter($frenchBrigades, function ($unit) {
-    //   return $unit->isMetropolitanBrigade();
-    // });
-    // if (count($metropolitan) > 0) {
-    //   return $metropolitan;
-    // } else {
-    //   return $frenchBrigades;
-    // }
+    $reducedUnits = Utils::filter($units, function ($unit) {
+      return $unit->getFaction() === FRENCH && $unit->isReduced() && !$unit->isFort() && !$unit->isBastion();
+    });
+
+    $unitsInLossesBox = Utils::filter($units, function ($unit) {
+      return $unit->getLocation() === Locations::lossesBox(FRENCH);
+    });
+    $canadiens = Utils::filter($unitsInLossesBox, function ($unit) {
+      return $unit->getCounterId() === CANADIENS;
+    });
+
+    if (count($canadiens) > 0) {
+      $unitsInLossesBox = $canadiens;
+    }
+
+    $lossesBox = [];
+
+    if (count($unitsInLossesBox) > 0) {
+      $possibleSpaces = Utils::filter(Spaces::getControlledBy(FRENCH), function ($space) {
+        return $space->getHomeSpace() !== null;
+      });
+      foreach ($unitsInLossesBox as $unit) {
+        if ($unit->isIndian()) {
+          $unitIndianVillage = $unit->getCounterId();
+          $indianVillage = Utils::array_find($possibleSpaces, function ($space) use ($unitIndianVillage) {
+            return $unitIndianVillage === $space->getIndianVillage();
+          });
+
+          $lossesBox[$unit->getId()] = [
+            'unit' => $unit,
+            'spaceIds' => $indianVillage !== null ? [$indianVillage->getId()] : $this->mapSpacesToSpaceIds($possibleSpaces),
+          ];
+        } else {
+          $lossesBox[$unit->getId()] = [
+            'unit' => $unit,
+            'spaceIds' => $this->mapSpacesToSpaceIds($possibleSpaces),
+          ];
+        }
+      }
+    }
+
+    return [
+      'reduced' => $reducedUnits,
+      'lossesBox' => $lossesBox,
+    ];
   }
 
   private function getOptions()

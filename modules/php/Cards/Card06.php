@@ -2,6 +2,9 @@
 
 namespace BayonetsAndTomahawks\Cards;
 
+use BayonetsAndTomahawks\Core\Engine\LeafNode;
+use BayonetsAndTomahawks\Managers\Players;
+
 class Card06 extends \BayonetsAndTomahawks\Models\Card
 {
   public function __construct($row)
@@ -30,5 +33,14 @@ class Card06 extends \BayonetsAndTomahawks\Models\Card
     $this->faction = BRITISH;
     $this->initiativeValue = 1;
     $this->years = [1757];
+  }
+
+  public function resolveARStart($ctx)
+  {
+    $ctx->insertAsBrother(new LeafNode([
+      'action' => EVENT_DELAYED_SUPPLIES_FROM_FRANCE,
+      'cardId' => $this->getId(),
+      'playerId' => Players::getPlayerForFaction(FRENCH)->getId(),
+    ]));
   }
 }

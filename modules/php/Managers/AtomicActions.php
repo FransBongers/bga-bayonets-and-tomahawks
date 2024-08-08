@@ -43,6 +43,7 @@ class AtomicActions
     CONSTRUCTION => 'Construction',
     DRAW_REINFORCEMENTS => 'DrawReinforcements',
     EVENT_BRITISH_ENCROACHMENT => 'EventBritishEncroachment',
+    EVENT_DELAYED_SUPPLIES_FROM_FRANCE => 'EventDelayedSuppliesFromFrance',
     EVENT_DISEASE_IN_FRENCH_CAMP => 'EventDiseaseInFrenchCamp',
     EVENT_PENNSYLVANIAS_PEACE_PROMISES => 'EventPennsylvaniasPeacePromises',
     EVENT_ROUND_UP_MEN_AND_EQUIPMENT => 'EventRoundUpMenAndEquipment',

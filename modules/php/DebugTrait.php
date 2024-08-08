@@ -86,7 +86,12 @@ trait DebugTrait
 
   function debug_test()
   {
-    Notifications::log('static spaces', Spaces::getStaticUiData());
+    Globals::setLostAPIndian([]);
+    // Globals::setLostAPBritish([]);
+    // Globals::setLostAPFrench([]);
+
+    // Cards::get('Card30')->insertOnTop(Locations::campaignDeck(FRENCH));
+    // Cards::get('Card06')->insertOnTop(Locations::campaignDeck(BRITISH));
 
     // // Round up men and equipment
     // Units::get('unit_45')->setLocation(Locations::lossesBox(BRITISH));

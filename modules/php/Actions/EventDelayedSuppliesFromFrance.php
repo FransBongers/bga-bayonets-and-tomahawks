@@ -8,18 +8,19 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
-use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Cards;
+use BayonetsAndTomahawks\Managers\Spaces;
+use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
-class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicAction
+class EventDelayedSuppliesFromFrance extends \BayonetsAndTomahawks\Models\AtomicAction
 {
   public function getState()
   {
-    return ST_ACTION_ROUND_CHOOSE_REACTION;
+    return ST_EVENT_DELAYED_SUPPLIES_FROM_FRANCE;
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##
@@ -30,10 +31,8 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreActionRoundChooseReaction()
+  public function stPreEventDelayedSuppliesFromFrance()
   {
-    // Notifications::log('stPreActionRoundChooseReaction', $this->ctx->getInfo());
-
   }
 
 
@@ -45,18 +44,17 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsActionRoundChooseReaction()
+  public function argsEventDelayedSuppliesFromFrance()
   {
+    $indianCard = Cards::getInLocation(Locations::cardInPlay(INDIAN))->toArray()[0];
+    $frenchCard = Cards::getInLocation(Locations::cardInPlay(FRENCH))->toArray()[0];
 
-    $player = $this->getPlayer();
-    $faction = $player->getFaction();
-    $cardInPlay = Cards::getTopOf(Locations::cardInPlay($faction));
-
-    $lostActionPoints = $faction === BRITISH ? Globals::getLostAPBritish() : Globals::getLostAPFrench();
-    $actionPoints = BTHelpers::getAvailableActionPoints($lostActionPoints, $cardInPlay);
 
     return [
-      'actionPoints' => $actionPoints,
+      'indianAP' => $indianCard->getActionPoints(),
+      'frenchAP' => $frenchCard->getActionPoints(),
+      // 'indianCard' => $indianCard,
+      // 'frenchCard' => $frenchCard,
     ];
   }
 
@@ -76,32 +74,44 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassActionRoundChooseReaction()
+  public function actPassEventDelayedSuppliesFromFrance()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actActionRoundChooseReaction($args)
+  public function actEventDelayedSuppliesFromFrance($args)
   {
+    self::checkAction('actEventDelayedSuppliesFromFrance');
 
-    self::checkAction('actActionRoundChooseReaction');
+    $frenchAP = $args['frenchAP'];
+    $indianAP = $args['indianAP'];
 
-    $actionPointId = $args['actionPointId'];
+    $stateArgs = $this->argsEventDelayedSuppliesFromFrance();
 
-    $stateArgs = $this->argsActionRoundChooseReaction();
+    if (Utils::array_find($stateArgs['indianAP'], function ($ap) use ($indianAP) {
+      return $ap['id'] === $indianAP;
+    }) === null) {
+      throw new \feException("ERROR 039");
+    };
 
-    // TODO: store which AP from card
-    $actionPoint = Utils::array_find($stateArgs['actionPoints'], function ($ap) use ($actionPointId) {
-      return $actionPointId === $ap['id'];
-    });
+    if (Utils::array_find($stateArgs['frenchAP'], function ($ap) use ($frenchAP) {
+      return $ap['id'] === $frenchAP;
+    }) === null) {
+      throw new \feException("ERROR 040");
+    };
 
-    if ($actionPoint === null) {
-      throw new \feException("ERROR 007");
-    }
+    Globals::setLostAPFrench([$frenchAP]);
+    Globals::setLostAPIndian([$indianAP]);
 
-    Globals::setReactionActionPointId($actionPointId);
+    $player = self::getPlayer();
+
+    Notifications::message(clienttranslate('${player_name} chooses to lose ${indianAP} and ${frenchAP}'), [
+      'player' => $player,
+      'indianAP' => $indianAP,
+      'frenchAP' => $frenchAP,
+    ]);
 
     $this->resolveAction($args);
   }
@@ -114,5 +124,23 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  public function canBeResolved()
+  {
+    $spaces = Spaces::getMany([DIIOHAGE, FORKS_OF_THE_OHIO, KITHANINK])->toArray();
 
+    if (Utils::array_some($spaces, function ($space) {
+      return $space->getControl() === BRITISH || $space->getRaided() === BRITISH;
+    })) {
+      return false;
+    }
+    return true;
+  }
+
+  private function getOptions()
+  {
+    $units = Utils::filter(Units::getAll()->toArray(), function ($unit) {
+      return in_array($unit->getCounterId(), [MINGO, DELAWARE, CHAOUANON]) && $unit->getLocation() !== Locations::lossesBox(FRENCH);
+    });
+    return $units;
+  }
 }

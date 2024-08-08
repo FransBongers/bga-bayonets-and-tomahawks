@@ -2277,6 +2277,7 @@ var BayonetsAndTomahawks = (function () {
             colonialsEnlistUnitPlacement: new ColonialsEnlistUnitPlacementState(this),
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
+            eventDelayedSuppliesFromFrance: new EventDelayedSuppliesFromFranceState(this),
             eventDiseaseInFrenchCamp: new EventDiseaseInFrenchCampState(this),
             eventPennsylvaniasPeacePromises: new EventPennsylvaniasPeacePromisesState(this),
             eventRoundUpMenAndEquipment: new EventRoundUpMenAndEquipmentState(this),
@@ -6230,6 +6231,102 @@ var ConfirmTurnState = (function () {
         this.game.addUndoButtons(this.args);
     };
     return ConfirmTurnState;
+}());
+var EventDelayedSuppliesFromFranceState = (function () {
+    function EventDelayedSuppliesFromFranceState(game) {
+        this.frenchAP = null;
+        this.indianAP = null;
+        this.game = game;
+    }
+    EventDelayedSuppliesFromFranceState.prototype.onEnteringState = function (args) {
+        debug('Entering EventDelayedSuppliesFromFranceState');
+        this.args = args;
+        this.frenchAP = null;
+        this.indianAP = null;
+        this.updateInterfaceInitialStep();
+    };
+    EventDelayedSuppliesFromFranceState.prototype.onLeavingState = function () {
+        debug('Leaving EventDelayedSuppliesFromFranceState');
+    };
+    EventDelayedSuppliesFromFranceState.prototype.setDescription = function (activePlayerId) { };
+    EventDelayedSuppliesFromFranceState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select an Indian AP to lose'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.args.indianAP.forEach(function (actionPoint, index) {
+            _this.game.addPrimaryActionButton({
+                id: "ap_".concat(actionPoint, "_").concat(index),
+                text: actionPoint.id,
+                callback: function () {
+                    _this.indianAP = actionPoint.id;
+                    _this.updateInterfaceSelectFrenchAP();
+                },
+            });
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    EventDelayedSuppliesFromFranceState.prototype.updateInterfaceSelectFrenchAP = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a French AP to lose'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.args.frenchAP.forEach(function (actionPoint, index) {
+            _this.game.addPrimaryActionButton({
+                id: "ap_".concat(actionPoint, "_").concat(index),
+                text: actionPoint.id,
+                callback: function () {
+                    _this.frenchAP = actionPoint.id;
+                    _this.updateInterfaceConfirm();
+                },
+            });
+        });
+    };
+    EventDelayedSuppliesFromFranceState.prototype.updateInterfaceConfirm = function () {
+        var _this = this;
+        this.game.clearPossible();
+        var text = _('Lose ${indianAP} and ${frenchAP}?');
+        this.game.clientUpdatePageTitle({
+            text: text,
+            args: {
+                indianAP: this.indianAP,
+                frenchAP: this.frenchAP,
+            },
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actEventDelayedSuppliesFromFrance',
+                args: {
+                    frenchAP: _this.frenchAP,
+                    indianAP: _this.indianAP,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    return EventDelayedSuppliesFromFranceState;
 }());
 var EventDiseaseInFrenchCampState = (function () {
     function EventDiseaseInFrenchCampState(game) {

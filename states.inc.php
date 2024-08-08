@@ -621,4 +621,14 @@ $machinestates = array(
         'action' => 'stAtomicAction',
         'possibleactions' => ['actEventPennsylvaniasPeacePromises', 'actPassOptionalAction', 'actRestart'],
     ],
+
+    ST_EVENT_DELAYED_SUPPLIES_FROM_FRANCE => [
+        'name' => 'eventDelayedSuppliesFromFrance',
+        'description' => clienttranslate('${actplayer} must choose AP to lose'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actEventDelayedSuppliesFromFrance', 'actPassOptionalAction', 'actRestart'],
+    ],
 );

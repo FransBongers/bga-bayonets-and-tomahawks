@@ -8,6 +8,7 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\Flows;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\ActionPoints;
@@ -48,25 +49,12 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
     $action = $this->ctx->getAction();
     $info = $this->ctx->getInfo();
 
-    // $siblings = $this->ctx->getParent()->getChildren();
-
     $usedActionPoints = $this->getUsedActionPoints();
-
-    // foreach ($siblings as $node) {
-    //   $siblingInfo = $node->getInfo();
-    //   if (isset($siblingInfo['actionPointId'])) {
-    //     $usedActionPoints[] = $siblingInfo['actionPointId'];
-    //   }
-    // }
 
     if (isset($info['isFirstPlayer']) && $info['isFirstPlayer'] && Globals::getReactionActionPointId() !== '') {
       $usedActionPoints[] = Globals::getReactionActionPointId();
-      // $reactionAP = Globals::get
-      // $nodes = Engine::getUnresolvedActions([ACTION_ROUND_REACTION]);
-      // if (count($nodes) === 1) {
-      //   $usedActionPoints[] = $nodes[0]->getInfo()['actionPointId'];
-      // }
     }
+
 
     $card = null;
     $isIndianActions = isset($info['isIndianActions']) && $info['isIndianActions'];
@@ -76,13 +64,16 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
       $card = Cards::getTopOf(Locations::cardInPlay($this->getPlayer()->getFaction()));
     }
 
+    $lostAP = $this->getLostActionPoints($isIndianActions);
+    $unavailableActionPoints = array_merge($usedActionPoints, $lostAP);
+
     $availableActionPoints = isset($info['isReaction']) && $info['isReaction'] ?
       [
         [
           'id' => $this->ctx->getInfo()['actionPointId']
         ]
       ] :
-      $this->getAvailableActionPoints($usedActionPoints, $card);
+      BTHelpers::getAvailableActionPoints($unavailableActionPoints, $card);
 
     return [
       // 'action' => $action,
@@ -165,6 +156,19 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  private function getLostActionPoints($isIndianActions)
+  {
+    if ($isIndianActions) {
+      return Globals::getLostAPIndian();
+    };
+    $faction = self::getPlayer()->getFaction();
+    if ($faction === BRITISH) {
+      return Globals::getLostAPBritish();
+    } else {
+      return Globals::getLostAPFrench();
+    }
+  }
+
   private function getUsedActionPoints()
   {
     $usedActionPointIds = [];
@@ -177,39 +181,28 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
       }
       $resArgs = $node->getActionResolutionArgs();
       $usedActionPointIds[] = $resArgs['actionPointId'];
-
-      // $siblingInfo = $node->getInfo();
-      // if (isset($siblingInfo['actionPointId'])) {
-      //   $usedActionPoints[] = $siblingInfo['actionPointId'];
-      // }
     }
-
-    // $nodes = Engine::getResolvedActions([ACTION_ROUND_ACTION_PHASE]);
-    // foreach ($nodes as $node) {
-    //   $resArgs = $node->getActionResolutionArgs();
-    //   $usedActionPointIds[] = $resArgs['actionPointId'];
-    // }
 
     return $usedActionPointIds;
   }
 
-  private function getAvailableActionPoints($usedActionPoints, $card)
-  {
-    $cardActionPoints = $card->getActionPoints();
+  // private function getAvailableActionPoints($usedActionPoints, $card)
+  // {
+  //   $cardActionPoints = $card->getActionPoints();
 
-    $result = [];
-    foreach ($cardActionPoints as $cIndex => $actionPoint) {
-      $uIndex = Utils::array_find_index($usedActionPoints, function ($uActionPointId) use ($actionPoint) {
-        return $uActionPointId === $actionPoint['id'];
-      });
-      if ($uIndex === null) {
-        $result[] = $actionPoint;
-      } else {
-        unset($usedActionPoints[$uIndex]);
-        $usedActionPoints = array_values($usedActionPoints);
-      }
-    }
+  //   $result = [];
+  //   foreach ($cardActionPoints as $cIndex => $actionPoint) {
+  //     $uIndex = Utils::array_find_index($usedActionPoints, function ($uActionPointId) use ($actionPoint) {
+  //       return $uActionPointId === $actionPoint['id'];
+  //     });
+  //     if ($uIndex === null) {
+  //       $result[] = $actionPoint;
+  //     } else {
+  //       unset($usedActionPoints[$uIndex]);
+  //       $usedActionPoints = array_values($usedActionPoints);
+  //     }
+  //   }
 
-    return $result;
-  }
+  //   return $result;
+  // }
 }

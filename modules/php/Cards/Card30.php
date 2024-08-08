@@ -2,6 +2,8 @@
 
 namespace BayonetsAndTomahawks\Cards;
 
+use BayonetsAndTomahawks\Core\Globals;
+
 class Card30 extends \BayonetsAndTomahawks\Models\Card
 {
   public function __construct($row)
@@ -23,5 +25,10 @@ class Card30 extends \BayonetsAndTomahawks\Models\Card
     ];
     $this->faction = FRENCH;
     $this->initiativeValue = 3;
+  }
+
+  public function resolveARStart($ctx)
+  {
+    Globals::setLostAPBritish([ARMY_AP, ARMY_AP]);
   }
 }

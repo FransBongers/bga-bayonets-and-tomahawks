@@ -112,6 +112,10 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     Globals::setFirstPlayerId(0);
     Globals::setSecondPlayerId(0);
     Globals::setReactionActionPointId('');
+    Globals::setLostAPBritish([]);
+    Globals::setLostAPFrench([]);
+    Globals::setLostAPIndian([]);
+    
     Markers::move(ROUND_MARKER,$nextActionRound);
     Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), $nextActionRound);
 

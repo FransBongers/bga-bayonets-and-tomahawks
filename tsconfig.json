@@ -78,6 +78,7 @@
     "src/states/ColonialsEnlistUnitPlacement.ts",
     "src/states/ConfirmPartialTurn.ts",
     "src/states/ConfirmTurn.ts",
+    "src/states/EventDelayedSuppliesFromFrance.ts",
     "src/states/EventDiseaseInFrenchCamp.ts",
     "src/states/EventPennsylvaniasPeacePromises.ts",
     "src/states/EventRoundUpMenAndEquipment.ts",
