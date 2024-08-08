@@ -80,6 +80,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     confirmPartialTurn: ConfirmPartialTurnState;
     confirmTurn: ConfirmTurnState;
     eventDiseaseInFrenchCamp: EventDiseaseInFrenchCampState;
+    eventPennsylvaniasPeacePromises: EventPennsylvaniasPeacePromisesState;
     eventRoundUpMenAndEquipment: EventRoundUpMenAndEquipmentState;
     vagariesOfWarPickUnits: VagariesOfWarPickUnitsState;
     fleetsArriveUnitPlacement: FleetsArriveUnitPlacementState;
@@ -135,6 +136,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       confirmPartialTurn: new ConfirmPartialTurnState(this),
       confirmTurn: new ConfirmTurnState(this),
       eventDiseaseInFrenchCamp: new EventDiseaseInFrenchCampState(this),
+      eventPennsylvaniasPeacePromises: new EventPennsylvaniasPeacePromisesState(this),
       eventRoundUpMenAndEquipment: new EventRoundUpMenAndEquipmentState(this),
       vagariesOfWarPickUnits: new VagariesOfWarPickUnitsState(this),
       fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
@@ -537,6 +539,11 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   onCancel() {
     this.clearPossible();
     this.framework().restoreServerGameState();
+  }
+
+  openUnitStack(unit: BTUnit) {
+    const unitStack = this.gameMap.stacks[unit.location][unit.faction];
+    unitStack.open();
   }
 
   clientUpdatePageTitle({

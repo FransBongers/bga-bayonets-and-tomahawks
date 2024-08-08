@@ -44,6 +44,7 @@ class AtomicActions
     DRAW_REINFORCEMENTS => 'DrawReinforcements',
     EVENT_BRITISH_ENCROACHMENT => 'EventBritishEncroachment',
     EVENT_DISEASE_IN_FRENCH_CAMP => 'EventDiseaseInFrenchCamp',
+    EVENT_PENNSYLVANIAS_PEACE_PROMISES => 'EventPennsylvaniasPeacePromises',
     EVENT_ROUND_UP_MEN_AND_EQUIPMENT => 'EventRoundUpMenAndEquipment',
     FLEETS_ARRIVE_COMMANDER_DRAW => 'FleetsArriveCommanderDraw',
     FLEETS_ARRIVE_UNIT_PLACEMENT => 'FleetsArriveUnitPlacement',

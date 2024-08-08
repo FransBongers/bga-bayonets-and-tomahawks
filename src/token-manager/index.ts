@@ -14,7 +14,7 @@ class TokenManager extends CardManager<BTToken> {
 
   setupDiv(token: BTToken, div: HTMLElement) {
     if (token.manager === UNITS) {
-      div.style.position = 'relative';
+      // div.style.position = 'relative';
       div.classList.add('bt_token');
       div.insertAdjacentHTML(
         'beforeend',

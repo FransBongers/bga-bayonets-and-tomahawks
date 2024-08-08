@@ -84,7 +84,7 @@ class NotificationManager {
       'placeUnitInLosses',
       'placeUnits',
       'raidPoints',
-      'reduceUnit',
+      'flipUnit',
       'removeMarkersEndOfActionRound',
       'returnToPool',
       'revealCardsInPlay',
@@ -445,7 +445,7 @@ class NotificationManager {
     );
   }
 
-  async notif_reduceUnit(notif: Notif<NotifReduceUnitArgs>) {
+  async notif_flipUnit(notif: Notif<NotifReduceUnitArgs>) {
     const { unit } = notif.args;
     this.game.tokenManager.updateCardInformations(unit);
   }

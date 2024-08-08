@@ -54,9 +54,9 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
   public static function getControlledBy($faction)
   {
     $locations = self::getSelectQuery()
-    ->where('control', '=', $faction)
-    ->get()
-    ->toArray();
+      ->where('control', '=', $faction)
+      ->get()
+      ->toArray();
     return $locations;
   }
 
@@ -95,5 +95,19 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
     return self::getAll()->map(function ($space) {
       return $space->jsonSerialize();
     })->toArray();
+  }
+
+  /**
+   * getStaticUiData : return all units static datas
+   */
+  public static function getStaticUiData()
+  {
+    $spaces = self::getAll()->toArray();
+
+    $data = [];
+    foreach ($spaces as $index => $space) {
+      $data[$space->getId()] = $space->getStaticData();
+    }
+    return $data;
   }
 }

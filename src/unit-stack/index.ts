@@ -38,7 +38,6 @@ class UnitStack extends ManualPositionStock<BTToken> {
     this.element.addEventListener('mouseover', () => this.onMouseOver());
     this.element.addEventListener('mouseout', () => this.onMouseOut());
     this.element.addEventListener('click', () => {
-      console.log('clicked');
       this.isOpen = !this.isOpen;
       this.updateStackDisplay(this.element, this.getCards(), this);
     });

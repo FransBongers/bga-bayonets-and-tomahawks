@@ -32,7 +32,10 @@ const getTokenDiv = ({
     case LOG_TOKEN_DIE_RESULT:
       return tplLogDieResult(value);
     case LOG_TOKEN_UNIT:
-      return tplLogTokenUnit(value, game.gamedatas.staticData.units[value].type);
+      const splitCounterId = value.split(':');
+      const counterId = splitCounterId[0];
+      const reduced = splitCounterId?.[1] === 'reduced';
+      return tplLogTokenUnit(counterId, game.gamedatas.staticData.units[counterId]?.type, reduced);
     // case LOG_TOKEN_PLAYER_NAME:
     //   const player = game.playerManager
     //     .getPlayers()

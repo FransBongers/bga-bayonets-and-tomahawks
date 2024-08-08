@@ -115,12 +115,21 @@ interface EventDiseaseInFrenchCampStateArgs extends CommonArgs {
   options: BTUnit[];
 }
 
+interface EventPennsylvaniasPeacePromisesStateArgs extends CommonArgs {
+  units: BTUnit[];
+}
+
 interface EventRoundUpMenAndEquipmentStateArgs extends CommonArgs {
-  reduced: BTUnit[];
-  lossesBox: Record<string, {
-    unit: BTUnit;
-    spaceIds: string[];
-  }>
+  options: {
+    reduced: BTUnit[];
+    lossesBox: Record<
+      string,
+      {
+        unit: BTUnit;
+        spaceIds: string[];
+      }
+    >;
+  };
 }
 
 interface OnEnteringFleetsArriveUnitPlacementStateArgs extends CommonArgs {

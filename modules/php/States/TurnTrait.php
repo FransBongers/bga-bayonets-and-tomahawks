@@ -339,6 +339,12 @@ trait TurnTrait
           'pool' => POOL_FLEETS,
         ],
         [
+          'action' => VAGARIES_OF_WAR_PUT_BACK_IN_POOL,
+          'playerId' => $britishPlayerId,
+          'faction' => BRITISH,
+          'pool' => POOL_FLEETS,
+        ],
+        [
           'action' => DRAW_REINFORCEMENTS,
           'pool' => POOL_BRITISH_METROPOLITAN_VOW,
         ],

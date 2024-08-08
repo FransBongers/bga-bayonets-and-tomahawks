@@ -137,6 +137,7 @@ class bayonetsandtomahawks extends Table
             'players' => Players::getUiData($pId),
             'staticData' => [
                 'units' => Units::getStaticUiData(),
+                'spaces' => Spaces::getStaticUiData(),
             ],
             'spaces' => Spaces::getUiData(),
             'units' => Units::getUiData(),

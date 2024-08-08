@@ -611,4 +611,14 @@ $machinestates = array(
         'action' => 'stAtomicAction',
         'possibleactions' => ['actEventRoundUpMenAndEquipment', 'actPassOptionalAction', 'actRestart'],
     ],
+
+    ST_EVENT_PENNSYLVANIAS_PEACE_PROMISES => [
+        'name' => 'eventPennsylvaniasPeacePromises',
+        'description' => clienttranslate('${actplayer} must select 2 Indian units'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actEventPennsylvaniasPeacePromises', 'actPassOptionalAction', 'actRestart'],
+    ],
 );

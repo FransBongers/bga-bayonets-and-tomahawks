@@ -2278,6 +2278,7 @@ var BayonetsAndTomahawks = (function () {
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
             eventDiseaseInFrenchCamp: new EventDiseaseInFrenchCampState(this),
+            eventPennsylvaniasPeacePromises: new EventPennsylvaniasPeacePromisesState(this),
             eventRoundUpMenAndEquipment: new EventRoundUpMenAndEquipmentState(this),
             vagariesOfWarPickUnits: new VagariesOfWarPickUnitsState(this),
             fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
@@ -2507,6 +2508,10 @@ var BayonetsAndTomahawks = (function () {
     BayonetsAndTomahawks.prototype.onCancel = function () {
         this.clearPossible();
         this.framework().restoreServerGameState();
+    };
+    BayonetsAndTomahawks.prototype.openUnitStack = function (unit) {
+        var unitStack = this.gameMap.stacks[unit.location][unit.faction];
+        unitStack.open();
     };
     BayonetsAndTomahawks.prototype.clientUpdatePageTitle = function (_a) {
         var text = _a.text, args = _a.args, _b = _a.nonActivePlayers, nonActivePlayers = _b === void 0 ? false : _b;
@@ -2937,10 +2942,24 @@ var CardsInPlay = (function () {
 var tplCardsInPlay = function () {
     return "<div id=\"bt_cards_in_play\">\n            <span>Cards in play</span>\n            <div class=\"bt_cards_in_play_container\">\n              <div id=\"british_card_in_play\" class=\"bt_card_in_play\">\n                <div class=\"bt_card_in_play_border\"></div>\n              </div>\n              <div id=\"french_card_in_play\" class=\"bt_card_in_play\">\n                <div class=\"bt_card_in_play_border\"></div>\n              </div>\n              <div id=\"indian_card_in_play\" class=\"bt_card_in_play\">\n                <div class=\"bt_card_in_play_border\"></div>\n              </div>\n            </div>\n          </div\n  ";
 };
-var isDebug = window.location.host == 'studio.boardgamearena.com' || window.location.hash.indexOf('debug') > -1;
+var isDebug = window.location.host == 'studio.boardgamearena.com' ||
+    window.location.hash.indexOf('debug') > -1;
 var debug = isDebug ? console.info.bind(window.console) : function () { };
 var capitalizeFirstLetter = function (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+};
+var createUnitsLog = function (units) {
+    var unitsLog = '';
+    var unitsLogArgs = {};
+    units.forEach(function (unit, index) {
+        var key = "tkn_unit_".concat(index);
+        unitsLog += '${' + key + '}';
+        unitsLogArgs[key] = "".concat(unit.counterId, ":").concat(unit.reduced ? 'reduced' : 'full');
+    });
+    return {
+        log: unitsLog,
+        args: unitsLogArgs,
+    };
 };
 var YEAR_TRACK_CONFIG = [
     {
@@ -3876,6 +3895,7 @@ var LOG_TOKEN_UNIT = 'unit';
 var LOG_TOKEN_DIE_RESULT = 'dieResult';
 var tooltipIdCounter = 0;
 var getTokenDiv = function (_a) {
+    var _b;
     var key = _a.key, value = _a.value, game = _a.game;
     var splitKey = key.split('_');
     var type = splitKey[1];
@@ -3891,7 +3911,10 @@ var getTokenDiv = function (_a) {
         case LOG_TOKEN_DIE_RESULT:
             return tplLogDieResult(value);
         case LOG_TOKEN_UNIT:
-            return tplLogTokenUnit(value, game.gamedatas.staticData.units[value].type);
+            var splitCounterId = value.split(':');
+            var counterId = splitCounterId[0];
+            var reduced = (splitCounterId === null || splitCounterId === void 0 ? void 0 : splitCounterId[1]) === 'reduced';
+            return tplLogTokenUnit(counterId, (_b = game.gamedatas.staticData.units[counterId]) === null || _b === void 0 ? void 0 : _b.type, reduced);
         default:
             return value;
     }
@@ -3910,8 +3933,8 @@ var tplLogTokenCard = function (id) {
 var tplLogTokenMarker = function (type) {
     return "<div class=\"bt_marker_side\" data-type=\"".concat(type, "\"></div>");
 };
-var tplLogTokenUnit = function (counterId, type) {
-    return "<div class=\"bt_token_side\" data-counter-id=\"".concat(counterId, "\"").concat(type === COMMANDER ? ' data-commander="true"' : '', "></div>");
+var tplLogTokenUnit = function (counterId, type, reduced) {
+    return "<div class=\"bt_token_side\" data-counter-id=\"".concat(counterId).concat(reduced ? '_reduced' : '', "\"").concat(type === COMMANDER ? ' data-commander="true"' : '', "></div>");
 };
 var tplLogDieResult = function (dieResult) {
     return "<div class=\"bt_log_die\" data-die-result=\"".concat(dieResult, "\"></div>");
@@ -3951,7 +3974,7 @@ var NotificationManager = (function () {
             'placeUnitInLosses',
             'placeUnits',
             'raidPoints',
-            'reduceUnit',
+            'flipUnit',
             'removeMarkersEndOfActionRound',
             'returnToPool',
             'revealCardsInPlay',
@@ -4434,7 +4457,7 @@ var NotificationManager = (function () {
             });
         });
     };
-    NotificationManager.prototype.notif_reduceUnit = function (notif) {
+    NotificationManager.prototype.notif_flipUnit = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var unit;
             return __generator(this, function (_a) {
@@ -6277,13 +6300,117 @@ var EventDiseaseInFrenchCampState = (function () {
     };
     return EventDiseaseInFrenchCampState;
 }());
+var EventPennsylvaniasPeacePromisesState = (function () {
+    function EventPennsylvaniasPeacePromisesState(game) {
+        this.selectedUnits = [];
+        this.game = game;
+    }
+    EventPennsylvaniasPeacePromisesState.prototype.onEnteringState = function (args) {
+        debug('Entering EventPennsylvaniasPeacePromisesState');
+        this.args = args;
+        this.selectedUnits = [];
+        this.updateInterfaceInitialStep();
+    };
+    EventPennsylvaniasPeacePromisesState.prototype.onLeavingState = function () {
+        debug('Leaving EventPennsylvaniasPeacePromisesState');
+    };
+    EventPennsylvaniasPeacePromisesState.prototype.setDescription = function (activePlayerId) { };
+    EventPennsylvaniasPeacePromisesState.prototype.updateInterfaceInitialStep = function () {
+        var remaining = Math.min(2, this.args.units.length) - this.selectedUnits.length;
+        if (remaining === 0) {
+            this.updateInterfaceConfirm();
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select an Indian unit (${number} remaining)'),
+            args: {
+                you: '${you}',
+                number: remaining,
+            },
+        });
+        this.setUnitsSelectable(this.args.units);
+        this.setUnitsSelected();
+        if (this.selectedUnits.length === 0) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
+        }
+        else {
+            this.game.addCancelButton();
+        }
+    };
+    EventPennsylvaniasPeacePromisesState.prototype.updateInterfaceConfirm = function () {
+        var _this = this;
+        this.game.clearPossible();
+        var text = _('Send ${unitsLog} to the Losses Box?');
+        this.game.clientUpdatePageTitle({
+            text: text,
+            args: {
+                unitsLog: createUnitsLog(this.selectedUnits),
+            },
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actEventPennsylvaniasPeacePromises',
+                args: {
+                    selectedUnitIds: _this.selectedUnits.map(function (_a) {
+                        var id = _a.id;
+                        return id;
+                    }),
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    EventPennsylvaniasPeacePromisesState.prototype.setUnitsSelectable = function (units) {
+        var _this = this;
+        units.forEach(function (unit) {
+            _this.game.openUnitStack(unit);
+            _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () {
+                    if (_this.selectedUnits.some(function (selectedUnit) { return selectedUnit.id === unit.id; })) {
+                        _this.selectedUnits = _this.selectedUnits.filter(function (selectedUnit) { return selectedUnit.id !== unit.id; });
+                    }
+                    else {
+                        _this.selectedUnits.push(unit);
+                    }
+                    _this.updateInterfaceInitialStep();
+                },
+            });
+        });
+    };
+    EventPennsylvaniasPeacePromisesState.prototype.setUnitsSelected = function () {
+        var _this = this;
+        this.selectedUnits.forEach(function (_a) {
+            var id = _a.id;
+            return _this.game.setUnitSelected({ id: id });
+        });
+    };
+    return EventPennsylvaniasPeacePromisesState;
+}());
 var EventRoundUpMenAndEquipmentState = (function () {
     function EventRoundUpMenAndEquipmentState(game) {
+        this.selectedReducedUnits = [];
         this.game = game;
     }
     EventRoundUpMenAndEquipmentState.prototype.onEnteringState = function (args) {
         debug('Entering EventRoundUpMenAndEquipmentState');
         this.args = args;
+        this.selectedReducedUnits = [];
         this.updateInterfaceInitialStep();
     };
     EventRoundUpMenAndEquipmentState.prototype.onLeavingState = function () {
@@ -6291,35 +6418,153 @@ var EventRoundUpMenAndEquipmentState = (function () {
     };
     EventRoundUpMenAndEquipmentState.prototype.setDescription = function (activePlayerId) { };
     EventRoundUpMenAndEquipmentState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _('${you} must select 1 Brigade to eliminate'),
+            text: _('${you} must select an option'),
             args: {
                 you: '${you}',
             },
         });
+        if (this.args.options.reduced.length > 0) {
+            this.game.addPrimaryActionButton({
+                id: 'flip_reduced_btn',
+                text: _('Flip Reduced units'),
+                callback: function () { return _this.updateInterfaceFlipReducedUnits(); },
+            });
+        }
+        if (Object.keys(this.args.options.lossesBox).length > 0) {
+            this.game.addPrimaryActionButton({
+                id: 'place_from_losses_box_btn',
+                text: _('Place 1 unit from Losses Box'),
+                callback: function () { return _this.updateInterfacePlaceUnitFromLossesBox(); },
+            });
+        }
         this.game.addPassButton({
             optionalAction: this.args.optionalAction,
         });
         this.game.addUndoButtons(this.args);
     };
-    EventRoundUpMenAndEquipmentState.prototype.updateInterfaceConfirm = function (_a) {
+    EventRoundUpMenAndEquipmentState.prototype.updateInterfaceFlipReducedUnits = function () {
         var _this = this;
-        var dieResult = _a.dieResult;
+        if (this.selectedReducedUnits.length === 2) {
+            this.updateInterfaceConfirm({ flipReduced: true });
+            return;
+        }
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _('Reroll ${tkn_dieResult} ?'),
+            text: _('${you} must select up to 2 Reduced units to flip (${number} remaining)'),
             args: {
-                tkn_dieResult: dieResult.result,
+                you: '${you}',
+                number: 2 - this.selectedReducedUnits.length,
             },
         });
+        this.args.options.reduced.forEach(function (unit) {
+            _this.game.openUnitStack(unit);
+            _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () {
+                    if (_this.selectedReducedUnits.some(function (selectedUnit) { return selectedUnit.id === unit.id; })) {
+                        _this.selectedReducedUnits = _this.selectedReducedUnits.filter(function (selectedUnit) { return selectedUnit.id !== unit.id; });
+                    }
+                    else {
+                        _this.selectedReducedUnits.push(unit);
+                    }
+                    _this.updateInterfaceFlipReducedUnits();
+                },
+            });
+        });
+        this.selectedReducedUnits.forEach(function (_a) {
+            var id = _a.id;
+            return _this.game.setUnitSelected({ id: id });
+        });
+        this.game.addPrimaryActionButton({
+            id: 'done_btn',
+            text: _('Done'),
+            callback: function () { return _this.updateInterfaceConfirm({ flipReduced: true }); },
+            extraClasses: this.selectedReducedUnits.length === 0 ? DISABLED : '',
+        });
+        this.game.addCancelButton();
+    };
+    EventRoundUpMenAndEquipmentState.prototype.updateInterfacePlaceUnitFromLossesBox = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select 1 unit from the Losses Box'),
+            args: {
+                you: '${you}',
+            },
+        });
+        Object.entries(this.args.options.lossesBox).forEach(function (_a) {
+            var id = _a[0], option = _a[1];
+            _this.game.setUnitSelectable({
+                id: id,
+                callback: function () { return _this.updateInterfaceSelectSpace(option); },
+            });
+        });
+        this.game.addCancelButton();
+    };
+    EventRoundUpMenAndEquipmentState.prototype.updateInterfaceSelectSpace = function (_a) {
+        var _this = this;
+        var unit = _a.unit, spaceIds = _a.spaceIds;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a friendly Home Space to place ${tkn_unit}'),
+            args: {
+                you: '${you}',
+                tkn_unit: unit.counterId,
+            },
+        });
+        this.game.setUnitSelected({ id: unit.id });
+        spaceIds.forEach(function (spaceId) {
+            return _this.game.setLocationSelectable({
+                id: spaceId,
+                callback: function () {
+                    _this.updateInterfaceConfirm({ unit: unit, spaceId: spaceId });
+                },
+            });
+        });
+        this.game.addCancelButton();
+    };
+    EventRoundUpMenAndEquipmentState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var _b = _a.flipReduced, flipReduced = _b === void 0 ? false : _b, unit = _a.unit, spaceId = _a.spaceId;
+        this.game.clearPossible();
+        var text = flipReduced
+            ? _('Flip ${unitsLog} ?')
+            : _('Place ${tkn_unit} in ${spaceName}?');
+        this.game.clientUpdatePageTitle({
+            text: text,
+            args: {
+                unitsLog: createUnitsLog(this.selectedReducedUnits),
+                tkn_unit: unit ? unit.counterId : '',
+                spaceName: spaceId
+                    ? _(this.game.gamedatas.staticData.spaces[spaceId].name)
+                    : '',
+            },
+        });
+        if (flipReduced) {
+            this.selectedReducedUnits.forEach(function (_a) {
+                var id = _a.id;
+                return _this.game.setUnitSelected({ id: id });
+            });
+        }
+        if (unit) {
+            this.game.setUnitSelected({ id: unit.id });
+        }
+        if (spaceId) {
+            this.game.setLocationSelected({ id: spaceId });
+        }
         var callback = function () {
             _this.game.clearPossible();
             _this.game.takeAction({
                 action: 'actEventRoundUpMenAndEquipment',
                 args: {
-                    dieResult: dieResult,
-                    rerollSource: dieResult.availableRerollSources[0]
+                    selectedReducedUnitIds: _this.selectedReducedUnits.map(function (_a) {
+                        var id = _a.id;
+                        return id;
+                    }),
+                    placedUnit: unit ? { unitId: unit.id, spaceId: spaceId } : null,
                 },
             });
         };
@@ -6685,7 +6930,7 @@ var VagariesOfWarPickUnitsState = (function () {
         this.game.clientUpdatePageTitle({
             text: _('Pick ${unitsLog} ?'),
             args: {
-                unitsLog: this.createUnitsLog(this.args.options[this.selectedVoWToken].filter(function (unit) {
+                unitsLog: createUnitsLog(this.args.options[this.selectedVoWToken].filter(function (unit) {
                     return _this.selectedUnitIds.includes(unit.id);
                 })),
             },
@@ -6712,19 +6957,6 @@ var VagariesOfWarPickUnitsState = (function () {
             });
         }
         this.game.addCancelButton();
-    };
-    VagariesOfWarPickUnitsState.prototype.createUnitsLog = function (units) {
-        var unitsLog = '';
-        var unitsLogArgs = {};
-        units.forEach(function (unit, index) {
-            var key = "tkn_unit_".concat(index);
-            unitsLog += '${' + key + '}';
-            unitsLogArgs[key] = unit.counterId;
-        });
-        return {
-            log: unitsLog,
-            args: unitsLogArgs,
-        };
     };
     return VagariesOfWarPickUnitsState;
 }());
@@ -7131,7 +7363,6 @@ var TokenManager = (function (_super) {
     TokenManager.prototype.setupDiv = function (token, div) {
         var _a;
         if (token.manager === UNITS) {
-            div.style.position = 'relative';
             div.classList.add('bt_token');
             div.insertAdjacentHTML('beforeend', "<div id=\"spent_marker_".concat(token.id, "\" data-spent=\"").concat(token.spent === 1 ? 'true' : 'false', "\" class=\"bt_spent_marker\"></div>"));
             var isCommander = ((_a = this.game.gamedatas.staticData.units[token.counterId]) === null || _a === void 0 ? void 0 : _a.type) ===
@@ -7221,7 +7452,6 @@ var UnitStack = (function (_super) {
         _this.element.addEventListener('mouseover', function () { return _this.onMouseOver(); });
         _this.element.addEventListener('mouseout', function () { return _this.onMouseOut(); });
         _this.element.addEventListener('click', function () {
-            console.log('clicked');
             _this.isOpen = !_this.isOpen;
             _this.updateStackDisplay(_this.element, _this.getCards(), _this);
         });

@@ -32,6 +32,7 @@ interface BayonetsAndTomahawksGame extends Game {
   getPlayerId: () => number;
   getUnitData: ({counterId}: {counterId: string;}) => {faction: string;};
   onCancel: () => void;
+  openUnitStack: (unit: BTUnit) => void,
   setCardSelectable: (props: {
     id: string;
     callback: (event: PointerEvent) => void;
@@ -160,6 +161,9 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
         type: string;
       };
     };
+    spaces: Record<string, {
+      name: string;
+    }>
   };
   spaces: BTSpace[];
   units: BTUnit[];

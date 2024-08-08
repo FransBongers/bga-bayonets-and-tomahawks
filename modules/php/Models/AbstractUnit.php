@@ -211,7 +211,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   public function reduce($player)
   {
     $this->setState(1);
-    Notifications::reduceUnit($player, $this);
+    Notifications::flipUnit($player, $this);
   }
 
   public function eliminate($player)
@@ -238,11 +238,19 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     ];
   }
 
-  public function placeInLosses($player)
+  public function flipToFull($player)
   {
-    $lossesBox =  Locations::lossesBox($player->getFaction());
-    Units::move($this->getId(), $lossesBox);
-    $this->location = $lossesBox;
-    Notifications::placeUnitInLosses($player, $this);
+    $this->setState(0);
+    Notifications::flipUnit($player, $this);
+  }
+
+  public function placeInLosses($player, $faction = null)
+  {
+    $playerFaction = $player->getFaction();
+    $boxFaction = $faction !== null ? $faction : $playerFaction;
+    $lossesBox =  Locations::lossesBox($boxFaction);
+    $this->setLocation($lossesBox);
+    $ownLossesBox = $faction === null || $faction === $playerFaction;
+    Notifications::placeUnitInLosses($player, $this, $ownLossesBox);
   }
 }

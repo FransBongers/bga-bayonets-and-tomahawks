@@ -21,10 +21,10 @@ const tplLogTokenMarker = (type: string) => {
   return `<div class="bt_marker_side" data-type="${type}"></div>`;
 };
 
-const tplLogTokenUnit = (counterId: string, type: string) => {
-  return `<div class="bt_token_side" data-counter-id="${counterId}"${
-    type === COMMANDER ? ' data-commander="true"' : ''
-  }></div>`;
+const tplLogTokenUnit = (counterId: string, type: string, reduced: boolean) => {
+  return `<div class="bt_token_side" data-counter-id="${counterId}${
+    reduced ? '_reduced' : ''
+  }"${type === COMMANDER ? ' data-commander="true"' : ''}></div>`;
 };
 
 const tplLogDieResult = (dieResult: string) => {

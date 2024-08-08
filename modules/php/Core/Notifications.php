@@ -2,6 +2,8 @@
 
 namespace BayonetsAndTomahawks\Core;
 
+use BayonetsAndTomahawks\Managers\Spaces;
+
 class Notifications
 {
   // .########...#######..####.##.......########.########.
@@ -533,12 +535,16 @@ class Notifications
     ]);
   }
 
-  public static function reduceUnit($player, $unit)
+  public static function flipUnit($player, $unit)
   {
-    self::notifyAll("reduceUnit", clienttranslate('${player_name} flips ${tkn_unit} to Reduced'), [
+    $text = $unit->getState() === 1 ? clienttranslate('${player_name} flips ${tkn_unit} in ${tkn_boldText_spaceName} to Reduced') : clienttranslate('${player_name} flips ${tkn_unit} in ${tkn_boldText_spaceName} to Full');
+
+    self::notifyAll("flipUnit", $text, [
       'player' => $player,
       'unit' => $unit->jsonSerialize(),
-      'tkn_unit' => $unit->getCounterId(),
+      'tkn_boldText_spaceName' => Spaces::get($unit->getLocation())->getName(),
+      'tkn_unit' => $unit->getCounterId() . ':' . ($unit->getState() === 0 ? 'reduced' : 'full'),
+      'i18n' => ['tkn_boldText_spaceName']
     ]);
   }
 
@@ -617,9 +623,14 @@ class Notifications
     ]);
   }
 
-  public static function placeUnitInLosses($player, $unit)
+  public static function placeUnitInLosses($player, $unit, $ownLossesBox)
   {
-    self::notifyAll("placeUnitInLosses", clienttranslate('${player_name} places ${tkn_unit} in their Losses Box'), [
+    $text = clienttranslate('${player_name} places ${tkn_unit} in their Losses Box');
+    if (!$ownLossesBox) {
+      $text = clienttranslate('${player_name} sends ${tkn_unit} to the Losses Box');
+    }
+
+    self::notifyAll("placeUnitInLosses", $text, [
       'player' => $player,
       'unit' => $unit,
       'tkn_unit' => $unit->getCounterId()

@@ -86,7 +86,9 @@ trait DebugTrait
 
   function debug_test()
   {
-    // Round up men and equipment
+    Notifications::log('static spaces', Spaces::getStaticUiData());
+
+    // // Round up men and equipment
     // Units::get('unit_45')->setLocation(Locations::lossesBox(BRITISH));
     // Units::get('unit_108')->setLocation(Locations::lossesBox(BRITISH));
     // Units::get('unit_94')->setLocation(Locations::lossesBox(BRITISH));
@@ -99,11 +101,11 @@ trait DebugTrait
 
     // British encroachment
 
-    Units::get('unit_12')->setLocation(Locations::lossesBox(FRENCH));
-    Units::get('unit_2')->setLocation(Locations::lossesBox(FRENCH));
-    Units::get('unit_3')->setLocation(Locations::lossesBox(FRENCH));
-    Spaces::get(GRAND_SAULT)->setControl(BRITISH);
-    Spaces::get(GENNISHEYO)->setControl(BRITISH);
+    // Units::get('unit_12')->setLocation(Locations::lossesBox(FRENCH));
+    // Units::get('unit_2')->setLocation(Locations::lossesBox(FRENCH));
+    // Units::get('unit_3')->setLocation(Locations::lossesBox(FRENCH));
+    // Spaces::get(GRAND_SAULT)->setControl(BRITISH);
+    // Spaces::get(GENNISHEYO)->setControl(BRITISH);
 
     ///////
     // Notifications::log('players',Players::getPlayersForFactions());

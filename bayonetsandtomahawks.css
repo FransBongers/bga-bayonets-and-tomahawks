@@ -685,6 +685,7 @@ body > .card {
 }
 .bt_stack .bt_token {
   transition: top 500ms, left 500ms;
+  position: relative;
 }
 
 .bt_stack[data-has-unit=true] {

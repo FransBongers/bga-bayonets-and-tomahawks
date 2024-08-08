@@ -79,6 +79,7 @@
     "src/states/ConfirmPartialTurn.ts",
     "src/states/ConfirmTurn.ts",
     "src/states/EventDiseaseInFrenchCamp.ts",
+    "src/states/EventPennsylvaniasPeacePromises.ts",
     "src/states/EventRoundUpMenAndEquipment.ts",
     "src/states/FleetsArriveUnitPlacement.ts",
     "src/states/VagariesOfWarPickUnits.ts",
