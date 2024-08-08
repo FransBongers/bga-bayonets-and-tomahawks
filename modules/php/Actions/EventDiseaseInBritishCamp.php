@@ -8,17 +8,18 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Models\Player;
 
-class EventDiseaseInFrenchCamp extends \BayonetsAndTomahawks\Models\AtomicAction
+class EventDiseaseInBritishCamp extends \BayonetsAndTomahawks\Models\AtomicAction
 {
   public function getState()
   {
-    return ST_EVENT_DISEASE_IN_FRENCH_CAMP;
+    return ST_EVENT_DISEASE_IN_BRITISH_CAMP;
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##
@@ -29,7 +30,7 @@ class EventDiseaseInFrenchCamp extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreEventDiseaseInFrenchCamp()
+  public function stPreEventDiseaseInBritishCamp()
   {
   }
 
@@ -42,13 +43,10 @@ class EventDiseaseInFrenchCamp extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsEventDiseaseInFrenchCamp()
+  public function argsEventDiseaseInBritishCamp()
   {
 
-    // Notifications::log('argsEventDiseaseInFrenchCamp',[]);
-    return [
-      'options' => $this->getOptions(),
-    ];
+    return  $this->getOptions();
   }
 
   //  .########..##..........###....##....##.########.########.
@@ -67,29 +65,54 @@ class EventDiseaseInFrenchCamp extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassEventDiseaseInFrenchCamp()
+  public function actPassEventDiseaseInBritishCamp()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actEventDiseaseInFrenchCamp($args)
+  public function actEventDiseaseInBritishCamp($args)
   {
-    self::checkAction('actEventDiseaseInFrenchCamp');
-    $unitId = $args['unitId'];
+    self::checkAction('actEventDiseaseInBritishCamp');
+    $selectedUnitIds = $args['selectedUnitIds'];
 
     $options = $this->getOptions();
 
-    $unit = Utils::array_find($options, function ($possibleunit) use ($unitId) {
-      return $unitId === $possibleunit->getId();
-    });
+    $year = $options['year'];
 
-    if ($unit === null) {
-      throw new \feException("ERROR 031");
+    if ($year <= 1756 && count($selectedUnitIds) !== 1) {
+      throw new \feException("ERROR 043");
+    } else if ($year >= 1757 && count($selectedUnitIds) !== 2) {
+      throw new \feException("ERROR 044");
     }
 
-    $unit->eliminate(self::getPlayer());
+    $units = $year <= 1756 ?
+      $options['brigades'] :
+      array_merge($options['colonialBrigades'], $options['metropolitanBrigades']);
+
+    $player = self::getPlayer();
+
+    $eliminatedUnits = [];
+
+    foreach ($selectedUnitIds as $unitId) {
+      $unit = Utils::array_find($units, function ($possibleunit) use ($unitId) {
+        return $unitId === $possibleunit->getId();
+      });
+      if ($unit === null) {
+        throw new \feException("ERROR 045");
+      }
+      $unit->eliminate($player);
+      $eliminatedUnits[] = $unit;
+    }
+
+    if ($year >= 1757 && !(Utils::array_some($eliminatedUnits, function ($unit) {
+      return $unit->isColonialBrigade();
+    }) && Utils::array_some($eliminatedUnits, function ($unit) {
+      return $unit->isMetropolitanBrigade();
+    }))) {
+      throw new \feException("ERROR 046");
+    }
 
     $this->resolveAction($args);
   }
@@ -104,19 +127,29 @@ class EventDiseaseInFrenchCamp extends \BayonetsAndTomahawks\Models\AtomicAction
 
   private function getOptions()
   {
-    $units = Units::getAll()->toArray();
-    $frenchBrigades = Utils::filter($units, function ($unit) {
-      return $unit->getFaction() === FRENCH &&
-        $unit->isBrigade() &&
-        in_array($unit->getLocation(), SPACES);
+    $year = BTHelpers::getYear();
+    $result = [
+      'year' => $year,
+      'brigades' => [],
+      'colonialBrigades' => [],
+      'metropolitanBrigades' => [],
+    ];
+
+    $britishBrigades = Utils::filter(Units::getAll()->toArray(), function ($unit) {
+      return $unit->isBrigade() && $unit->getFaction() === BRITISH && in_array($unit->getLocation(), SPACES);
     });
-    $metropolitan = Utils::filter($frenchBrigades, function ($unit) {
-      return $unit->isMetropolitanBrigade();
-    });
-    if (count($metropolitan) > 0) {
-      return $metropolitan;
+
+    if (in_array($year, [1755, 1756])) {
+      $result['brigades'] = $britishBrigades;
     } else {
-      return $frenchBrigades;
+      $result['colonialBrigades'] = Utils::filter($britishBrigades, function ($unit) {
+        return $unit->isColonialBrigade();
+      });
+      $result['metropolitanBrigades'] = Utils::filter($britishBrigades, function ($unit) {
+        return $unit->isMetropolitanBrigade();
+      });
     }
+
+    return $result;
   }
 }

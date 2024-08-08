@@ -175,6 +175,28 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
       }
     }
 
+    $indianSetup = $scenario->getIndianSetup();
+    foreach ($indianSetup as &$location) {
+
+      if (!isset($location['units'])) {
+        continue;
+      }
+      foreach ($location['units'] as &$unit) {
+        // $info = self::getInstance($unit);
+        $id = 'unit_' . $unitIdIndex;
+        $data = [
+          'id' => 'unit_' . $unitIdIndex,
+          'location' => $location['id'],
+          'counter_id' => $unit,
+          'spent' => 0,
+          // 'type' => $unit,
+        ];
+        $data['extra_data'] = ['properties' => []];
+        $units[$id] = $data;
+        $unitIdIndex += 1;
+      }
+    }
+
     // Units in pools
     $pools = $scenario->getPools();
     foreach ($pools as $poolId => $pool) {

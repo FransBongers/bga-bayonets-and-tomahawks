@@ -12,6 +12,7 @@ class Scenario implements \JsonSerializable
   protected $number;
   protected $startYear;
   protected $duration;
+  protected $indianSetup;
   protected $locations;
   protected $reinforcements;
   protected $pools;
@@ -28,6 +29,7 @@ class Scenario implements \JsonSerializable
     'number' => ['number', 'int'],
     'startYear' => ['startYear', 'int'],
     'duration' => ['duration', 'int'],
+    'indianSetup' => ['indianSetup', 'obj'],
     'locations' => ['locations', 'obj'],
     'pools' => ['pools', 'obj'],
     'reinforcements' => ['reinforcements', 'obj'],
@@ -42,6 +44,11 @@ class Scenario implements \JsonSerializable
   public function getDuration()
   {
     return $this->duration;
+  }
+
+  public function getIndianSetup()
+  {
+    return $this->indianSetup;
   }
 
   public function getName()

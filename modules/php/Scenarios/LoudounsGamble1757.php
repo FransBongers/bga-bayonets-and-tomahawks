@@ -33,7 +33,7 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
         1757 => 1
       ]
     ];
-    $this->locations = [
+    $this->indianSetup = [
       // Indian Setup
       MIRAMICHY => [
         'id' => MIRAMICHY,
@@ -95,6 +95,8 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
           OUTAOUAIS,
         ]
       ],
+    ];
+    $this->locations = [
       // French Setup
       MIRAMICHY => [
         'id' => MIRAMICHY,

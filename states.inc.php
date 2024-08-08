@@ -592,6 +592,16 @@ $machinestates = array(
         'transitions' => [],
     ],
 
+    ST_EVENT_DISEASE_IN_BRITISH_CAMP => [
+        'name' => 'eventDiseaseInBritishCamp',
+        'description' => clienttranslate('${actplayer} must select a unit'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actEventDiseaseInBritishCamp', 'actPassOptionalAction', 'actRestart'],
+    ],
+
     ST_EVENT_DISEASE_IN_FRENCH_CAMP => [
         'name' => 'eventDiseaseInFrenchCamp',
         'description' => clienttranslate('${actplayer} must select a unit'),
@@ -630,5 +640,15 @@ $machinestates = array(
         'args' => 'argsAtomicAction',
         'action' => 'stAtomicAction',
         'possibleactions' => ['actEventDelayedSuppliesFromFrance', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_EVENT_SMALLPOX_INFECTED_BLANKETS => [
+        'name' => 'eventSmallpoxInfectedBlankets',
+        'description' => clienttranslate('${actplayer} must choose 2 French-controlled Indian units to place on the Losses Box'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actEventSmallpoxInfectedBlankets', 'actPassOptionalAction', 'actRestart'],
     ],
 );

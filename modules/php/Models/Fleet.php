@@ -16,14 +16,15 @@ class Fleet extends AbstractUnit
 
   public function eliminate($player)
   {
+    $previousLocation = $this->getLocation();
     $this->setState(0);
     $this->setLocation(POOL_FLEETS);
-    Notifications::eliminateUnit($player, $this);
+    Notifications::eliminateUnit($player, $this, $previousLocation);
   }
 
   public function removeFromPool()
   {
-    $this->setLocation(REMOVED_FROM_PLAY, POOL_FLEETS);
-    Notifications::removeFromPlay($this);
+    $this->setLocation(REMOVED_FROM_PLAY);
+    Notifications::removeFromPlay($this, POOL_FLEETS);
   }
 }

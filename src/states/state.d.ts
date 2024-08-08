@@ -116,6 +116,13 @@ interface EventDelayedSuppliesFromFranceStateArgs extends CommonArgs {
   frenchAP: BTActionPoint[];
 }
 
+interface EventDiseaseInBritishCampStateArgs extends CommonArgs {
+  year: number;
+  brigades: BTUnit[];
+  colonialBrigades: BTUnit[];
+  metropolitanBrigades: BTUnit[];
+}
+
 interface EventDiseaseInFrenchCampStateArgs extends CommonArgs {
   options: BTUnit[];
 }
@@ -135,6 +142,10 @@ interface EventRoundUpMenAndEquipmentStateArgs extends CommonArgs {
       }
     >;
   };
+}
+
+interface EventSmallpoxInfectedBlanketsStateArgs extends CommonArgs {
+  units: BTUnit[];
 }
 
 interface OnEnteringFleetsArriveUnitPlacementStateArgs extends CommonArgs {

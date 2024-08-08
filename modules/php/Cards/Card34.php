@@ -2,6 +2,9 @@
 
 namespace BayonetsAndTomahawks\Cards;
 
+use BayonetsAndTomahawks\Core\Engine\LeafNode;
+use BayonetsAndTomahawks\Managers\Players;
+
 class Card34 extends \BayonetsAndTomahawks\Models\Card
 {
   public function __construct($row)
@@ -26,5 +29,14 @@ class Card34 extends \BayonetsAndTomahawks\Models\Card
     ];
     $this->faction = FRENCH;
     $this->initiativeValue = 3;
+  }
+
+  public function resolveARStart($ctx)
+  {
+    $ctx->insertAsBrother(new LeafNode([
+      'action' => EVENT_DISEASE_IN_BRITISH_CAMP,
+      'cardId' => $this->getId(),
+      'playerId' => Players::getPlayerForFaction(BRITISH)->getId(),
+    ]));
   }
 }

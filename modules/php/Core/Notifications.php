@@ -399,16 +399,16 @@ class Notifications
     self::message(clienttranslate('Both players discard their Reserve card'), []);
   }
 
-  public static function eliminateUnit($player, $unit, $removeFromPlayTest = false)
+  public static function eliminateUnit($player, $unit, $previousLocation)
   {
-    $text = $removeFromPlayTest ?
-      clienttranslate('${player_name} removes ${tkn_unit} from play') :
-      clienttranslate('${player_name} eliminates ${tkn_unit}');
+    $text = clienttranslate('${player_name} eliminates ${tkn_unit} on ${tkn_boldText_spaceName}');
 
     self::notifyAll("eliminateUnit", $text, [
       'player' => $player,
       'unit' => $unit->jsonSerialize(),
-      'tkn_unit' => $unit->getCounterId()
+      'tkn_unit' => $unit->getCounterId(),
+      'tkn_boldText_spaceName' => Spaces::get($previousLocation)->getName(),
+      'i18n' => ['tkn_boldText_spaceName'],
     ]);
   }
 

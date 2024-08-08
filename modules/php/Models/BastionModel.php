@@ -15,7 +15,7 @@ class BastionModel extends AbstractUnit
   {
     $this->setState(0);
     $this->setLocation(REMOVED_FROM_PLAY);
-    Notifications::eliminateUnit($player, $this);
+    Notifications::removeFromPlay($player, $this);
   }
 
 }

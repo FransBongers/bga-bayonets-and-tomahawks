@@ -10,15 +10,17 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
-use BayonetsAndTomahawks\Managers\Units;
+use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Cards;
+use BayonetsAndTomahawks\Managers\Spaces;
+use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
-class EventDiseaseInFrenchCamp extends \BayonetsAndTomahawks\Models\AtomicAction
+class EventSmallpoxInfectedBlankets extends \BayonetsAndTomahawks\Models\AtomicAction
 {
   public function getState()
   {
-    return ST_EVENT_DISEASE_IN_FRENCH_CAMP;
+    return ST_EVENT_SMALLPOX_INFECTED_BLANKETS;
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##
@@ -29,8 +31,22 @@ class EventDiseaseInFrenchCamp extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreEventDiseaseInFrenchCamp()
+  public function stPreEventSmallpoxInfectedBlankets()
   {
+    $options = $this->getOptions();
+    if (count($options) > 2) {
+      return;
+    }
+    if (count($options) === 0) {
+      Notifications::message(clienttranslate('No French-controlled Indian units available on the map'),[]);
+    } else {
+      $player = self::getPlayer();
+      foreach($options as $unit) {
+        $unit->placeInLosses($player, FRENCH);
+      }
+    }
+    
+    $this->resolveAction(['automatic' => true]);
   }
 
 
@@ -42,12 +58,12 @@ class EventDiseaseInFrenchCamp extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsEventDiseaseInFrenchCamp()
+  public function argsEventSmallpoxInfectedBlankets()
   {
 
-    // Notifications::log('argsEventDiseaseInFrenchCamp',[]);
+    // Notifications::log('argsEventSmallpoxInfectedBlankets',[]);
     return [
-      'options' => $this->getOptions(),
+      'units' => $this->getOptions(),
     ];
   }
 
@@ -67,29 +83,36 @@ class EventDiseaseInFrenchCamp extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassEventDiseaseInFrenchCamp()
+  public function actPassEventSmallpoxInfectedBlankets()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actEventDiseaseInFrenchCamp($args)
+  public function actEventSmallpoxInfectedBlankets($args)
   {
-    self::checkAction('actEventDiseaseInFrenchCamp');
-    $unitId = $args['unitId'];
+    self::checkAction('actEventSmallpoxInfectedBlankets');
 
-    $options = $this->getOptions();
+    $selectedUnitIds = $args['selectedUnitIds'];
 
-    $unit = Utils::array_find($options, function ($possibleunit) use ($unitId) {
-      return $unitId === $possibleunit->getId();
-    });
+    $units = $this->getOptions();
 
-    if ($unit === null) {
-      throw new \feException("ERROR 031");
+    $requiredUnits = min(2, count($units));
+    if (count($selectedUnitIds) !== $requiredUnits) {
+      throw new \feException("ERROR 041");
     }
 
-    $unit->eliminate(self::getPlayer());
+    $player = self::getPlayer();
+    foreach ($selectedUnitIds as $unitId) {
+      $unit = Utils::array_find($units, function ($optionUnit) use ($unitId) {
+        return $unitId === $optionUnit->getId();
+      });
+      if ($unit === null) {
+        throw new \feException("ERROR 042");
+      }
+      $unit->placeInLosses($player, FRENCH);
+    }
 
     $this->resolveAction($args);
   }
@@ -104,19 +127,9 @@ class EventDiseaseInFrenchCamp extends \BayonetsAndTomahawks\Models\AtomicAction
 
   private function getOptions()
   {
-    $units = Units::getAll()->toArray();
-    $frenchBrigades = Utils::filter($units, function ($unit) {
-      return $unit->getFaction() === FRENCH &&
-        $unit->isBrigade() &&
-        in_array($unit->getLocation(), SPACES);
+    $units = Utils::filter(Units::getAll()->toArray(), function ($unit) {
+      return $unit->isIndian() && $unit->getFaction() === FRENCH && $unit->getLocation() !== Locations::lossesBox(FRENCH);
     });
-    $metropolitan = Utils::filter($frenchBrigades, function ($unit) {
-      return $unit->isMetropolitanBrigade();
-    });
-    if (count($metropolitan) > 0) {
-      return $metropolitan;
-    } else {
-      return $frenchBrigades;
-    }
+    return $units;
   }
 }

@@ -156,8 +156,9 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
     units: {
       [counterId: string]: {
         faction: "british" | "french";
-        colony: string | null;
+        colony?: string | null;
         counterText: string;
+        metropolitan: boolean;
         type: string;
       };
     };

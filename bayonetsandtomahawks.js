@@ -2278,9 +2278,11 @@ var BayonetsAndTomahawks = (function () {
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
             eventDelayedSuppliesFromFrance: new EventDelayedSuppliesFromFranceState(this),
+            eventDiseaseInBritishCamp: new EventDiseaseInBritishCampState(this),
             eventDiseaseInFrenchCamp: new EventDiseaseInFrenchCampState(this),
             eventPennsylvaniasPeacePromises: new EventPennsylvaniasPeacePromisesState(this),
             eventRoundUpMenAndEquipment: new EventRoundUpMenAndEquipmentState(this),
+            eventSmallpoxInfectedBlankets: new EventSmallpoxInfectedBlanketsState(this),
             vagariesOfWarPickUnits: new VagariesOfWarPickUnitsState(this),
             fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
             lightMovement: new LightMovementState(this),
@@ -6328,6 +6330,132 @@ var EventDelayedSuppliesFromFranceState = (function () {
     };
     return EventDelayedSuppliesFromFranceState;
 }());
+var EventDiseaseInBritishCampState = (function () {
+    function EventDiseaseInBritishCampState(game) {
+        this.selectedUnits = [];
+        this.game = game;
+    }
+    EventDiseaseInBritishCampState.prototype.onEnteringState = function (args) {
+        debug('Entering EventDiseaseInBritishCampState');
+        this.args = args;
+        this.selectedUnits = [];
+        this.updateInterfaceInitialStep();
+    };
+    EventDiseaseInBritishCampState.prototype.onLeavingState = function () {
+        debug('Leaving EventDiseaseInBritishCampState');
+    };
+    EventDiseaseInBritishCampState.prototype.setDescription = function (activePlayerId) { };
+    EventDiseaseInBritishCampState.prototype.updateInterfaceInitialStep = function () {
+        var remaining = this.args.year <= 1756
+            ? 1 - this.selectedUnits.length
+            : 2 - this.selectedUnits.length;
+        if (remaining === 0) {
+            this.updateInterfaceConfirm();
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: this.args.year <= 1756
+                ? _('${you} must select 1 Brigade')
+                : _('${you} must select 1 Colonial Brigade and 1 Metropolitan Brigade (${number} remaining)'),
+            args: {
+                you: '${you}',
+                number: remaining,
+            },
+        });
+        this.setUnitsSelectable();
+        this.setUnitsSelected();
+        if (this.selectedUnits.length === 0) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
+        }
+        else {
+            this.game.addCancelButton();
+        }
+    };
+    EventDiseaseInBritishCampState.prototype.updateInterfaceConfirm = function () {
+        var _this = this;
+        this.game.clearPossible();
+        var text = _('Eliminate ${unitsLog}?');
+        this.game.clientUpdatePageTitle({
+            text: text,
+            args: {
+                unitsLog: createUnitsLog(this.selectedUnits),
+            },
+        });
+        this.selectedUnits.forEach(function (_a) {
+            var id = _a.id;
+            return _this.game.setUnitSelected({ id: id });
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actEventDiseaseInBritishCamp',
+                args: {
+                    selectedUnitIds: _this.selectedUnits.map(function (_a) {
+                        var id = _a.id;
+                        return id;
+                    }),
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    EventDiseaseInBritishCampState.prototype.setUnitsSelectable = function () {
+        var _this = this;
+        var units = [];
+        if (this.args.year <= 1756) {
+            units = this.args.brigades;
+        }
+        else {
+            var colonyBrigadeSelected = this.selectedUnits.some(function (unit) { return !!_this.game.gamedatas.staticData.units[unit.counterId].colony; });
+            var metropolitanBrigadeSelected = this.selectedUnits.some(function (unit) {
+                return !!_this.game.gamedatas.staticData.units[unit.counterId].metropolitan;
+            });
+            if (!colonyBrigadeSelected) {
+                units = this.args.colonialBrigades;
+            }
+            if (!metropolitanBrigadeSelected) {
+                units = units.concat(this.args.metropolitanBrigades);
+            }
+        }
+        units.forEach(function (unit) {
+            _this.game.openUnitStack(unit);
+            _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () {
+                    if (_this.selectedUnits.some(function (selectedUnit) { return selectedUnit.id === unit.id; })) {
+                        _this.selectedUnits = _this.selectedUnits.filter(function (selectedUnit) { return selectedUnit.id !== unit.id; });
+                    }
+                    else {
+                        _this.selectedUnits.push(unit);
+                    }
+                    _this.updateInterfaceInitialStep();
+                },
+            });
+        });
+    };
+    EventDiseaseInBritishCampState.prototype.setUnitsSelected = function () {
+        var _this = this;
+        this.selectedUnits.forEach(function (_a) {
+            var id = _a.id;
+            return _this.game.setUnitSelected({ id: id });
+        });
+    };
+    return EventDiseaseInBritishCampState;
+}());
 var EventDiseaseInFrenchCampState = (function () {
     function EventDiseaseInFrenchCampState(game) {
         this.game = game;
@@ -6678,6 +6806,112 @@ var EventRoundUpMenAndEquipmentState = (function () {
         this.game.addCancelButton();
     };
     return EventRoundUpMenAndEquipmentState;
+}());
+var EventSmallpoxInfectedBlanketsState = (function () {
+    function EventSmallpoxInfectedBlanketsState(game) {
+        this.selectedUnits = [];
+        this.game = game;
+    }
+    EventSmallpoxInfectedBlanketsState.prototype.onEnteringState = function (args) {
+        debug('Entering EventSmallpoxInfectedBlanketsState');
+        this.args = args;
+        this.selectedUnits = [];
+        this.updateInterfaceInitialStep();
+    };
+    EventSmallpoxInfectedBlanketsState.prototype.onLeavingState = function () {
+        debug('Leaving EventSmallpoxInfectedBlanketsState');
+    };
+    EventSmallpoxInfectedBlanketsState.prototype.setDescription = function (activePlayerId) { };
+    EventSmallpoxInfectedBlanketsState.prototype.updateInterfaceInitialStep = function () {
+        var remaining = 2 - this.selectedUnits.length;
+        if (remaining === 0) {
+            this.updateInterfaceConfirm();
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a French-controlled Indian unit (${number} remaining)'),
+            args: {
+                you: '${you}',
+                number: remaining,
+            },
+        });
+        this.setUnitsSelectable(this.args.units);
+        this.setUnitsSelected();
+        if (this.selectedUnits.length === 0) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
+        }
+        else {
+            this.game.addCancelButton();
+        }
+    };
+    EventSmallpoxInfectedBlanketsState.prototype.updateInterfaceConfirm = function () {
+        var _this = this;
+        this.game.clearPossible();
+        var text = _('Place ${unitsLog} on the Losses Box?');
+        this.game.clientUpdatePageTitle({
+            text: text,
+            args: {
+                unitsLog: createUnitsLog(this.selectedUnits),
+            },
+        });
+        this.selectedUnits.forEach(function (_a) {
+            var id = _a.id;
+            return _this.game.setUnitSelected({ id: id });
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actEventSmallpoxInfectedBlankets',
+                args: {
+                    selectedUnitIds: _this.selectedUnits.map(function (_a) {
+                        var id = _a.id;
+                        return id;
+                    }),
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    EventSmallpoxInfectedBlanketsState.prototype.setUnitsSelectable = function (units) {
+        var _this = this;
+        units.forEach(function (unit) {
+            _this.game.openUnitStack(unit);
+            _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () {
+                    if (_this.selectedUnits.some(function (selectedUnit) { return selectedUnit.id === unit.id; })) {
+                        _this.selectedUnits = _this.selectedUnits.filter(function (selectedUnit) { return selectedUnit.id !== unit.id; });
+                    }
+                    else {
+                        _this.selectedUnits.push(unit);
+                    }
+                    _this.updateInterfaceInitialStep();
+                },
+            });
+        });
+    };
+    EventSmallpoxInfectedBlanketsState.prototype.setUnitsSelected = function () {
+        var _this = this;
+        this.selectedUnits.forEach(function (_a) {
+            var id = _a.id;
+            return _this.game.setUnitSelected({ id: id });
+        });
+    };
+    return EventSmallpoxInfectedBlanketsState;
 }());
 var FleetsArriveUnitPlacementState = (function () {
     function FleetsArriveUnitPlacementState(game) {

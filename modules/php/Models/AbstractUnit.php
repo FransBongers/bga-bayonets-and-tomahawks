@@ -136,6 +136,11 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     return $this->type === COMMANDER;
   }
 
+  public function isColonialBrigade()
+  {
+    return $this->type === BRIGADE && $this->colony !== null;
+  }
+
   public function isHighlandBrigade()
   {
     return $this->type === BRIGADE && $this->highland;
@@ -216,9 +221,10 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
 
   public function eliminate($player)
   {
+    $previousLocation = $this->getLocation();
     $this->setState(0);
     $this->setLocation(Locations::lossesBox($this->getFaction()));
-    Notifications::eliminateUnit($player, $this);
+    Notifications::eliminateUnit($player, $this, $previousLocation);
   }
 
   public function applyHit($player = null)

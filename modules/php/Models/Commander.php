@@ -28,7 +28,8 @@ class Commander extends AbstractUnit
 
   public function eliminate($player)
   {
+    $previousLocation = $this->getLocation();
     $this->setLocation(REMOVED_FROM_PLAY);
-    Notifications::eliminateUnit($player, $this);
+    Notifications::eliminateUnit($player, $this, $previousLocation);
   }
 }

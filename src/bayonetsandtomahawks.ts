@@ -80,9 +80,11 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     confirmPartialTurn: ConfirmPartialTurnState;
     confirmTurn: ConfirmTurnState;
     eventDelayedSuppliesFromFrance: EventDelayedSuppliesFromFranceState;
+    eventDiseaseInBritishCamp: EventDiseaseInBritishCampState;
     eventDiseaseInFrenchCamp: EventDiseaseInFrenchCampState;
     eventPennsylvaniasPeacePromises: EventPennsylvaniasPeacePromisesState;
     eventRoundUpMenAndEquipment: EventRoundUpMenAndEquipmentState;
+    eventSmallpoxInfectedBlankets: EventSmallpoxInfectedBlanketsState;
     vagariesOfWarPickUnits: VagariesOfWarPickUnitsState;
     fleetsArriveUnitPlacement: FleetsArriveUnitPlacementState;
     lightMovement: LightMovementState;
@@ -137,9 +139,11 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       confirmPartialTurn: new ConfirmPartialTurnState(this),
       confirmTurn: new ConfirmTurnState(this),
       eventDelayedSuppliesFromFrance: new EventDelayedSuppliesFromFranceState(this),
+      eventDiseaseInBritishCamp: new EventDiseaseInBritishCampState(this),
       eventDiseaseInFrenchCamp: new EventDiseaseInFrenchCampState(this),
       eventPennsylvaniasPeacePromises: new EventPennsylvaniasPeacePromisesState(this),
       eventRoundUpMenAndEquipment: new EventRoundUpMenAndEquipmentState(this),
+      eventSmallpoxInfectedBlankets: new EventSmallpoxInfectedBlanketsState(this),
       vagariesOfWarPickUnits: new VagariesOfWarPickUnitsState(this),
       fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
       lightMovement: new LightMovementState(this),

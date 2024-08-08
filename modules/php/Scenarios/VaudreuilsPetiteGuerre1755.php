@@ -33,7 +33,7 @@ class VaudreuilsPetiteGuerre1755 extends \BayonetsAndTomahawks\Models\Scenario
         1755 => 1
       ]
     ];
-    $this->locations = [
+    $this->indianSetup = [
       // Indian Setup
       MIRAMICHY => [
         'id' => MIRAMICHY,
@@ -95,6 +95,8 @@ class VaudreuilsPetiteGuerre1755 extends \BayonetsAndTomahawks\Models\Scenario
           OUTAOUAIS,
         ]
       ],
+    ];
+    $this->locations = [
       // French Setup
       CHIGNECTOU => [
         'id' => CHIGNECTOU,
