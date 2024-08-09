@@ -50,4 +50,29 @@ class GameMap extends \APP_DbObject
       Notifications::placeUnits($player, [$unit], $space, $faction);
     }
   }
+
+  public static function awardRaidPoints($player, $faction, $points)
+  {
+    // Award raid points
+    $raidMarker = Markers::get($faction === BRITISH ? BRITISH_RAID_MARKER : FRENCH_RAID_MARKER);
+    $position = intval(explode('_', $raidMarker->getLocation())[2]);
+    $newPosition = $position + $points;
+    if ($newPosition < 0) {
+      // Possible when losing raid points
+      $raidMarker->setLocation(RAID_TRACK_0);
+      Notifications::moveRaidPointsMarker($raidMarker);
+    } else if ($newPosition < 8) {
+      $raidMarker->setLocation(Locations::raidTrack($newPosition));
+      Notifications::moveRaidPointsMarker($raidMarker);
+    } else {
+      $remainingRaidPoints = $newPosition - 8;
+      $raidMarker->setLocation(RAID_TRACK_8);
+      Notifications::moveRaidPointsMarker($raidMarker);
+
+      Players::scoreVictoryPoints($player, 1);
+
+      $raidMarker->setLocation(Locations::raidTrack($remainingRaidPoints));
+      Notifications::moveRaidPointsMarker($raidMarker);
+    }
+  }
 }

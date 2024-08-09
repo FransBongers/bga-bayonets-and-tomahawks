@@ -87,8 +87,9 @@ trait DebugTrait
 
   function debug_test()
   {
+    Players::scoreVictoryPoints(Players::getPlayerForFaction(FRENCH),3);
     // GameMap::performIndianNationControlProcedure(IROQUOIS, BRITISH);
-    GameMap::performIndianNationControlProcedure(CHEROKEE, FRENCH);
+    // GameMap::performIndianNationControlProcedure(CHEROKEE, FRENCH);
     // Globals::setControlCherokee(NEUTRAL);
     // Globals::setControlIroquois(NEUTRAL);
 
@@ -96,8 +97,8 @@ trait DebugTrait
     // Globals::setLostAPBritish([]);
     // Globals::setLostAPFrench([]);
 
-    // Cards::get('Card30')->insertOnTop(Locations::campaignDeck(FRENCH));
-    // Cards::get('Card06')->insertOnTop(Locations::campaignDeck(BRITISH));
+    Cards::get('Card38')->insertOnTop(Locations::campaignDeck(FRENCH));
+    Cards::get('Card13')->insertOnTop(Locations::campaignDeck(BRITISH));
 
     // // Round up men and equipment
     // Units::get('unit_45')->setLocation(Locations::lossesBox(BRITISH));

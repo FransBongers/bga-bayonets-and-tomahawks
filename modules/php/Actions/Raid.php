@@ -8,6 +8,7 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\BTDice;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\PathCalculator;
 use BayonetsAndTomahawks\Helpers\Utils;
@@ -243,23 +244,25 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
       $space->setRaided($playerFaction);
       Notifications::raidPoints($player, $space, $raidPoints);
 
-      // Award raid points
-      $raidMarker = Markers::get($playerFaction === BRITISH ? BRITISH_RAID_MARKER : FRENCH_RAID_MARKER);
-      $position = intval(explode('_', $raidMarker->getLocation())[2]);
-      $newPosition = $position + $raidPoints;
-      if ($newPosition < 8) {
-        $raidMarker->setLocation(Locations::raidTrack($newPosition));
-        Notifications::moveRaidPointsMarker($raidMarker);
-      } else {
-        $remainingRaidPoints = $newPosition - 8;
-        $raidMarker->setLocation(RAID_TRACK_8);
-        Notifications::moveRaidPointsMarker($raidMarker);
+      GameMap::awardRaidPoints($player, $playerFaction, $raidPoints);
 
-        Players::scoreVictoryPoints($player, 1);
+      // // Award raid points
+      // $raidMarker = Markers::get($playerFaction === BRITISH ? BRITISH_RAID_MARKER : FRENCH_RAID_MARKER);
+      // $position = intval(explode('_', $raidMarker->getLocation())[2]);
+      // $newPosition = $position + $raidPoints;
+      // if ($newPosition < 8) {
+      //   $raidMarker->setLocation(Locations::raidTrack($newPosition));
+      //   Notifications::moveRaidPointsMarker($raidMarker);
+      // } else {
+      //   $remainingRaidPoints = $newPosition - 8;
+      //   $raidMarker->setLocation(RAID_TRACK_8);
+      //   Notifications::moveRaidPointsMarker($raidMarker);
 
-        $raidMarker->setLocation(Locations::raidTrack($remainingRaidPoints));
-        Notifications::moveRaidPointsMarker($raidMarker);
-      }
+      //   Players::scoreVictoryPoints($player, 1);
+
+      //   $raidMarker->setLocation(Locations::raidTrack($remainingRaidPoints));
+      //   Notifications::moveRaidPointsMarker($raidMarker);
+      // }
     }
 
     $this->resolveAction($args);

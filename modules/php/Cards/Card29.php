@@ -2,6 +2,14 @@
 
 namespace BayonetsAndTomahawks\Cards;
 
+use BayonetsAndTomahawks\Core\Globals;
+use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
+use BayonetsAndTomahawks\Helpers\GameMap;
+use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\Players;
+use BayonetsAndTomahawks\Managers\Spaces;
+
 class Card29 extends \BayonetsAndTomahawks\Models\Card
 {
   public function __construct($row)
@@ -23,5 +31,27 @@ class Card29 extends \BayonetsAndTomahawks\Models\Card
     ];
     $this->faction = FRENCH;
     $this->initiativeValue = 2;
+  }
+
+  public function resolveARStart($ctx)
+  {
+    $frenchPlayer = Players::getPlayerForFaction(FRENCH);
+    $year = BTHelpers::getYear();
+    if (in_array($year, [1755, 1756]) || Globals::getControlCherokee() === BRITISH) {
+      GameMap::awardRaidPoints($frenchPlayer, FRENCH, 2);
+      return;
+    }
+
+    $spaces = [CHARLES_TOWN, NINETY_SIX, BEVERLEY, WILLS_CREEK, WINCHESTER, ALEXANDRIA, PHILADELPHIA, CARLISLE, EASTON, KEOWEE, CHOTE, MEKEKASINK, RAYS_TOWN, SHAMOKIN, GNADENHUTTEN, MINISINK, NEW_YORK];
+
+    $frenchControlledBritishHomeSpaces = Utils::filter(Spaces::get($spaces)->toArray(), function ($space) {
+      return $space->getHomeSpace() === BRITISH && $space->getControl() === FRENCH;
+    });
+
+    if (count($frenchControlledBritishHomeSpaces) >= 2) {
+      GameMap::performIndianNationControlProcedure(CHEROKEE, FRENCH);
+    } else {
+      Notifications::message(clienttranslate('The French do not control the required British Home Spaces: event does not trigger.'));
+    }
   }
 }

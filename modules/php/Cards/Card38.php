@@ -2,6 +2,11 @@
 
 namespace BayonetsAndTomahawks\Cards;
 
+use BayonetsAndTomahawks\Core\Globals;
+use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\GameMap;
+use BayonetsAndTomahawks\Managers\Players;
+
 class Card38 extends \BayonetsAndTomahawks\Models\Card
 {
   public function __construct($row)
@@ -27,5 +32,18 @@ class Card38 extends \BayonetsAndTomahawks\Models\Card
     $this->faction = FRENCH;
     $this->initiativeValue = 1;
     $this->years = [1755,1756];
+  }
+
+  public function resolveARStart($ctx)
+  {
+    $frenchPlayer = Players::getPlayerForFaction(FRENCH);
+    $frenchVP = $frenchPlayer->getScore();
+    if ($frenchVP < 4) {
+      Notifications::message(clienttranslate('French VPs are not 4 or greater: event does not trigger.'));
+      return;
+    }
+    if (Globals::getControlIroquois() === NEUTRAL) {
+      GameMap::performIndianNationControlProcedure(IROQUOIS, FRENCH);
+    }
   }
 }
