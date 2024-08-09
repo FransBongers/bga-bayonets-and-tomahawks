@@ -36,6 +36,8 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'lostAPBritish' => 'obj',
     'lostAPFrench' => 'obj',
     'lostAPIndian' => 'obj',
+    'controlCherokee' => 'str',
+    'controlIroquois' => 'str',
   ];
 
   protected static $table = 'global_variables';
@@ -57,8 +59,8 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     self::$log = false;
 
     foreach (self::DB()
-        ->select(['value', 'name'])
-        ->get()
+      ->select(['value', 'name'])
+      ->get()
       as $name => $variable) {
       if (\array_key_exists($name, self::$variables)) {
         self::$data[$name] = $variable;
@@ -163,5 +165,7 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     self::setLostAPBritish([]);
     self::setLostAPFrench([]);
     self::setLostAPIndian([]);
+    self::setControlCherokee(NEUTRAL);
+    self::setControlIroquois(NEUTRAL);
   }
 }

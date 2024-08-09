@@ -186,12 +186,11 @@ class GameMap {
       gamedatas.units
         .filter((unit) => unit.location === space.id)
         .forEach((unit) => {
-          const data = this.game.getUnitData({ counterId: unit.counterId });
-          if (data.faction === BRITISH) {
+          if (unit.faction === BRITISH) {
             this.stacks[space.id][BRITISH].addUnit(unit);
-          } else if (data.faction === FRENCH) {
+          } else if (unit.faction === FRENCH) {
             this.stacks[space.id][FRENCH].addUnit(unit);
-          } else if (data.faction === INDIAN) {
+          } else if (unit.faction === INDIAN) {
             this.stacks[space.id][FRENCH].addUnit(unit);
           }
         });
@@ -364,6 +363,17 @@ class GameMap {
       .forEach((commander) => {
         this.commanderRerollsTrack[commander.location].addCard(commander);
       });
+
+    [CHEROKEE, IROQUOIS].forEach((indianNation) => {
+      const control = gamedatas.constrolIndianNations[indianNation];
+      if ([BRITISH, FRENCH].includes(control)) {
+        this.addMarkerToSpace({
+          spaceId:
+            indianNation === CHEROKEE ? CHEROKEE_CONTROL : IROQUOIS_CONTROL,
+          type: `${control}_control_marker`,
+        });
+      }
+    });
   }
 
   updateGameMap({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {}
@@ -431,8 +441,7 @@ class GameMap {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  public async addMarkerToStack(marker: BTMarker)
-  {
+  public async addMarkerToStack(marker: BTMarker) {
     const splitLocation = marker.location.split('_');
     this.stacks[splitLocation[0]][splitLocation[1]].addCard(marker);
   }

@@ -447,6 +447,17 @@ class Notifications
     ]);
   }
 
+  public static function indianNationControl($player, $indianNation, $faction)
+  {
+    self::notifyAll("indianNationControl", clienttranslate('${player_name} takes control of the ${tkn_boldText_indianNation} Indian Nation'), [
+      'player' => $player,
+      'faction' => $faction,
+      'indianNation' => $indianNation,
+      'tkn_boldText_indianNation' => $indianNation === CHEROKEE ? clienttranslate('Cherokee') : clienttranslate('Iroquois Confederacy'),
+      'i18n' => ['tkn_boldText_indianNation'],
+    ]);
+  }
+
   public static function interception($otherPlayer, $space, $dieResult, $intercepted)
   {
     $message = $intercepted ?

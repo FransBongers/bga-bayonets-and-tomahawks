@@ -196,6 +196,11 @@ const COMMANDER_REROLLS_TRACK_DEFENDER_2 = 'commander_rerolls_track_defender_2';
 const COMMANDER_REROLLS_TRACK_DEFENDER_3 = 'commander_rerolls_track_defender_3';
 
 const OPEN_SEAS_MARKER_SAIL_BOX = 'openSeasMarkerSailBox';
+const CHEROKEE_CONTROL = 'cherokeeControl';
+const IROQUOIS_CONTROL = 'iroquoisControl';
+
+const CHEROKEE = 'Cherokee';
+const IROQUOIS = 'Iroquois';
 
 // Losses Boxes
 const LOSSES_BOX_BRITISH = 'lossesBox_british';

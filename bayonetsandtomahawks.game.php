@@ -139,9 +139,14 @@ class bayonetsandtomahawks extends Table
                 'units' => Units::getStaticUiData(),
                 'spaces' => Spaces::getStaticUiData(),
             ],
+            'constrolIndianNations' => [
+                CHEROKEE => Globals::getControlCherokee(),
+                IROQUOIS => Globals::getControlIroquois(),
+            ],
+            'markers' => Markers::getAll(),
             'spaces' => Spaces::getUiData(),
             'units' => Units::getUiData(),
-            'markers' => Markers::getAll(),
+            
         ];
 
         return $data;

@@ -142,6 +142,10 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
     french: BTCard | null;
     indian: BTCard | null;
   };
+  constrolIndianNations: {
+    Cherokee: BRITISH_FACTION | FRENCH_FACTION | 'neutral';
+    Iroquois: BRITISH_FACTION | FRENCH_FACTION | 'neutral';
+  }
   markers: {
     year_marker: BTMarker;
     round_marker: BTMarker;

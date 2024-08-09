@@ -2206,6 +2206,10 @@ var COMMANDER_REROLLS_TRACK_DEFENDER_1 = 'commander_rerolls_track_defender_1';
 var COMMANDER_REROLLS_TRACK_DEFENDER_2 = 'commander_rerolls_track_defender_2';
 var COMMANDER_REROLLS_TRACK_DEFENDER_3 = 'commander_rerolls_track_defender_3';
 var OPEN_SEAS_MARKER_SAIL_BOX = 'openSeasMarkerSailBox';
+var CHEROKEE_CONTROL = 'cherokeeControl';
+var IROQUOIS_CONTROL = 'iroquoisControl';
+var CHEROKEE = 'Cherokee';
+var IROQUOIS = 'Iroquois';
 var LOSSES_BOX_BRITISH = 'lossesBox_british';
 var LOSSES_BOX_FRENCH = 'lossesBox_french';
 var MARKERS = 'markers';
@@ -3500,14 +3504,13 @@ var GameMap = (function () {
             gamedatas.units
                 .filter(function (unit) { return unit.location === space.id; })
                 .forEach(function (unit) {
-                var data = _this.game.getUnitData({ counterId: unit.counterId });
-                if (data.faction === BRITISH) {
+                if (unit.faction === BRITISH) {
                     _this.stacks[space.id][BRITISH].addUnit(unit);
                 }
-                else if (data.faction === FRENCH) {
+                else if (unit.faction === FRENCH) {
                     _this.stacks[space.id][FRENCH].addUnit(unit);
                 }
-                else if (data.faction === INDIAN) {
+                else if (unit.faction === INDIAN) {
                     _this.stacks[space.id][FRENCH].addUnit(unit);
                 }
             });
@@ -3628,6 +3631,15 @@ var GameMap = (function () {
         })
             .forEach(function (commander) {
             _this.commanderRerollsTrack[commander.location].addCard(commander);
+        });
+        [CHEROKEE, IROQUOIS].forEach(function (indianNation) {
+            var control = gamedatas.constrolIndianNations[indianNation];
+            if ([BRITISH, FRENCH].includes(control)) {
+                _this.addMarkerToSpace({
+                    spaceId: indianNation === CHEROKEE ? CHEROKEE_CONTROL : IROQUOIS_CONTROL,
+                    type: "".concat(control, "_control_marker"),
+                });
+            }
         });
     };
     GameMap.prototype.updateGameMap = function (_a) {
@@ -3803,7 +3815,11 @@ var tplBattleMarkersPool = function () { return '<div id="battle_markers_pool"><
 var tplGameMap = function (_a) {
     var gamedatas = _a.gamedatas;
     var spaces = gamedatas.spaces;
-    return "\n  <div id=\"bt_game_map\">\n    ".concat(tplMarkerSpace({ id: OPEN_SEAS_MARKER_SAIL_BOX, top: 77.5, left: 1374.5 }), "\n    ").concat(tplLossesBox(), "\n    ").concat(tplSpaces({ spaces: spaces }), "\n    ").concat(tplVictoryPointsTrack(), "\n    ").concat(tplBattleTrack(), "\n    ").concat(tplBattleMarkersPool(), "\n    ").concat(tplCommanderTrack(), "\n    ").concat(tplRaidTrack(), "\n    ").concat(tplYearTrack(), "\n    ").concat(tplActionRoundTrack(), "\n\n  </div>");
+    return "\n  <div id=\"bt_game_map\">\n    ".concat(tplMarkerSpace({
+        id: OPEN_SEAS_MARKER_SAIL_BOX,
+        top: 77.5,
+        left: 1374.5,
+    }), "\n    ").concat(tplLossesBox(), "\n    ").concat(tplSpaces({ spaces: spaces }), "\n    ").concat(tplVictoryPointsTrack(), "\n    ").concat(tplBattleTrack(), "\n    ").concat(tplBattleMarkersPool(), "\n    ").concat(tplCommanderTrack(), "\n    ").concat(tplRaidTrack(), "\n    ").concat(tplYearTrack(), "\n    ").concat(tplActionRoundTrack(), "\n    ").concat(tplMarkerSpace({ id: "".concat(CHEROKEE_CONTROL, "_markers"), top: 2120, left: 863.5 }), "\n    ").concat(tplMarkerSpace({ id: "".concat(IROQUOIS_CONTROL, "_markers"), top: 1711.5, left: 585.5 }), "\n  </div>");
 };
 var Hand = (function () {
     function Hand(game) {
@@ -3967,6 +3983,7 @@ var NotificationManager = (function () {
             'drawCardPrivate',
             'drawnReinforcements',
             'eliminateUnit',
+            'indianNationControl',
             'loseControl',
             'moveRaidPointsMarker',
             'moveRoundMarker',
@@ -4295,6 +4312,19 @@ var NotificationManager = (function () {
                         _a.label = 5;
                     case 5: return [2];
                 }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_indianNationControl = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, indianNation, faction;
+            return __generator(this, function (_b) {
+                _a = notif.args, indianNation = _a.indianNation, faction = _a.faction;
+                this.game.gameMap.addMarkerToSpace({
+                    spaceId: indianNation === CHEROKEE ? CHEROKEE_CONTROL : IROQUOIS_CONTROL,
+                    type: "".concat(faction, "_control_marker"),
+                });
+                return [2];
             });
         });
     };

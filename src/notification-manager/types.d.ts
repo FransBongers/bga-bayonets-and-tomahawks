@@ -79,6 +79,11 @@ interface NotifEliminateUnitArgs extends NotifWithPlayerArgs {
   unit: BTUnit;
 }
 
+interface NotifIndianNationControlArgs extends NotifWithPlayerArgs {
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+  indianNation: string;
+}
+
 interface NotifLoseControlArgs extends NotifWithPlayerArgs {
   faction: BRITISH_FACTION | FRENCH_FACTION;
   space: BTSpace;

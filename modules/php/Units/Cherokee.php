@@ -2,6 +2,8 @@
 
 namespace BayonetsAndTomahawks\Units;
 
+use BayonetsAndTomahawks\Core\Globals;
+
 class Cherokee extends \BayonetsAndTomahawks\Models\Light
 {
   public function __construct($row)
@@ -12,5 +14,10 @@ class Cherokee extends \BayonetsAndTomahawks\Models\Light
     $this->faction = NEUTRAL;
     $this->indian = true;
     $this->villages = [CHOTE, KEOWEE];
+  }
+
+  public function getFaction()
+  {
+    return Globals::getControlCherokee();
   }
 }

@@ -20,6 +20,7 @@ use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Models\AtomicAction;
 use BayonetsAndTomahawks\Models\Space;
 use BayonetsAndTomahawks\Helpers\BTDice;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Helpers\PathCalculator;
@@ -86,9 +87,10 @@ trait DebugTrait
 
   function debug_test()
   {
-    $players = Players::getPlayersForFactions();
-
-    Players::scoreVictoryPoints($players[BRITISH], -2);
+    // GameMap::performIndianNationControlProcedure(IROQUOIS, BRITISH);
+    GameMap::performIndianNationControlProcedure(CHEROKEE, FRENCH);
+    // Globals::setControlCherokee(NEUTRAL);
+    // Globals::setControlIroquois(NEUTRAL);
 
     // Globals::setLostAPIndian([]);
     // Globals::setLostAPBritish([]);

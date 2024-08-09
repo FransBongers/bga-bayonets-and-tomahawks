@@ -676,6 +676,11 @@ body > .card {
   display: flex;
 }
 
+.bt_test {
+  background-color: yellow;
+  opacity: 0.5;
+}
+
 .bt_raid_track {
   justify-content: center;
 }
@@ -1084,7 +1089,7 @@ body > .card {
   background-size: 500% 300%;
 }
 
-.bt_token_side[data-counter-id=Cherokee_british] {
+.bt_token_side[data-counter-id=Cherokee_reduced] {
   background-position-x: 75%;
   background-position-y: 0%;
   background-image: url("img/unit_tokens_ind.webp");
@@ -1105,7 +1110,7 @@ body > .card {
   background-size: 500% 300%;
 }
 
-.bt_token_side[data-counter-id=Iroquois_british] {
+.bt_token_side[data-counter-id=Iroquois_reduced] {
   background-position-x: 25%;
   background-position-y: 50%;
   background-image: url("img/unit_tokens_ind.webp");

@@ -74,6 +74,7 @@ class NotificationManager {
       'drawCardPrivate',
       'drawnReinforcements',
       'eliminateUnit',
+      'indianNationControl',
       'loseControl',
       'moveRaidPointsMarker',
       'moveRoundMarker',
@@ -340,6 +341,14 @@ class NotificationManager {
     } else if (unit.location === POOL_FLEETS) {
       // TODO: move to pool
     }
+  }
+
+  async notif_indianNationControl(notif: Notif<NotifIndianNationControlArgs>) {
+    const { indianNation, faction } = notif.args;
+    this.game.gameMap.addMarkerToSpace({
+      spaceId: indianNation === CHEROKEE ? CHEROKEE_CONTROL : IROQUOIS_CONTROL,
+      type: `${faction}_control_marker`,
+    });
   }
 
   async notif_loseControl(notif: Notif<NotifLoseControlArgs>) {

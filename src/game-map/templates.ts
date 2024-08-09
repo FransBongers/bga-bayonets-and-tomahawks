@@ -139,7 +139,11 @@ const tplGameMap = ({
 
   return `
   <div id="bt_game_map">
-    ${tplMarkerSpace({ id: OPEN_SEAS_MARKER_SAIL_BOX, top: 77.5, left: 1374.5 })}
+    ${tplMarkerSpace({
+      id: OPEN_SEAS_MARKER_SAIL_BOX,
+      top: 77.5,
+      left: 1374.5,
+    })}
     ${tplLossesBox()}
     ${tplSpaces({ spaces })}
     ${tplVictoryPointsTrack()}
@@ -149,7 +153,8 @@ const tplGameMap = ({
     ${tplRaidTrack()}
     ${tplYearTrack()}
     ${tplActionRoundTrack()}
-
+    ${tplMarkerSpace({ id: `${CHEROKEE_CONTROL}_markers`, top: 2120, left: 863.5 })}
+    ${tplMarkerSpace({ id: `${IROQUOIS_CONTROL}_markers`, top: 1711.5, left: 585.5 })}
   </div>`;
 };
 // <div class="bt_marker_test" data-marker-type="victory_point"></div>
