@@ -162,14 +162,14 @@ class Markers extends \BayonetsAndTomahawks\Helpers\Pieces
 
     $players = Players::getAll();
     foreach ($players as $player) {
-      if ($vpMarkerLocation === VICTORY_POINTS_FRENCH_1) {
-        if ($player->getFaction() === BRITISH) {
-          $player->setScore(-1);
-        }
-        if ($player->getFaction() === FRENCH) {
-          $player->setScore(1);
-        }
+      // if ($vpMarkerLocation === VICTORY_POINTS_FRENCH_1) {
+      if ($player->getFaction() === BRITISH) {
+        $player->setScore(0);
       }
+      if ($player->getFaction() === FRENCH) {
+        $player->setScore(intval(explode('_', $vpMarkerLocation)[3]));
+      }
+      // }
     }
 
 

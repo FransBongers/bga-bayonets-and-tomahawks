@@ -86,7 +86,11 @@ trait DebugTrait
 
   function debug_test()
   {
-    Globals::setLostAPIndian([]);
+    $players = Players::getPlayersForFactions();
+
+    Players::scoreVictoryPoints($players[BRITISH], -2);
+
+    // Globals::setLostAPIndian([]);
     // Globals::setLostAPBritish([]);
     // Globals::setLostAPFrench([]);
 

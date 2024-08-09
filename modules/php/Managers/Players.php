@@ -5,6 +5,7 @@ namespace BayonetsAndTomahawks\Managers;
 use BayonetsAndTomahawks\Core\Game;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\PlayersExtra;
@@ -36,7 +37,6 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
       'player_name',
       'player_avatar',
       'player_score',
-      // 'rupees'
     ]);
 
     $values = [];
@@ -133,8 +133,7 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
   {
     $players = Players::getAll()->toArray();
     $data = [];
-    foreach([BRITISH, FRENCH] as $faction)
-    {
+    foreach ([BRITISH, FRENCH] as $faction) {
       $data[$faction] = Utils::array_find($players, function ($player) use ($faction) {
         return $player->getFaction() === $faction;
       });
@@ -147,8 +146,7 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
   {
     $players = Players::getAll()->toArray();
     $data = [];
-    foreach([BRITISH, FRENCH] as $faction)
-    {
+    foreach ([BRITISH, FRENCH] as $faction) {
       $data[$faction] = Utils::array_find($players, function ($player) use ($faction) {
         return $player->getFaction() === $faction;
       })->getId();
@@ -254,24 +252,47 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
   public static function scoreVictoryPoints($player, $points)
   {
     $vpMarker = Markers::get(VICTORY_MARKER);
-    $otherPlayer = Players::getOther($player->getId());
-    // $location = $vpMarker->getLocation();
 
-    $score = $player->getScore();
+    $playersPerFaction = self::getPlayersForFactions();
+    $scores = [
+      BRITISH => $playersPerFaction[BRITISH]->getScore(),
+      FRENCH => $playersPerFaction[FRENCH]->getScore(),
+    ];
+    $leadFaction = $scores[BRITISH] > $scores[FRENCH] ? BRITISH : FRENCH;
+    $otherFaction = BTHelpers::getOtherFaction($leadFaction);
 
-    $updatedScore = 0;
-    if ($score < 0) {
-      $updatedScore = $score + $points;
-      if ($updatedScore >= 0) {
-        $updatedScore += 1;
-      }
+    $playerFaction = $player->getFaction();
+
+    if ($playerFaction === $leadFaction) {
+      $scores[$leadFaction] += $points;
     } else {
-      $updatedScore = $score + $points;
+      $scores[$leadFaction] -= $points;
+      if ($scores[$leadFaction] <= 0) {
+        $scores[$leadFaction]--;
+        $scores[$otherFaction] = $scores[$leadFaction] * -1;
+        $scores[$leadFaction] = 0;
+      }
     }
-    $player->setScore($updatedScore);
-    $otherPlayer->setScore($updatedScore * -1);
 
-    $vpMarker->setLocation(Locations::victoryPointsTrack($updatedScore > 0 ? $player->getFaction() : $otherPlayer->getFaction(), abs($updatedScore)));
+    $playersPerFaction[BRITISH]->setScore($scores[BRITISH]);
+    $playersPerFaction[FRENCH]->setScore($scores[FRENCH]);
+
+    $newLeadFaction = $scores[BRITISH] > $scores[FRENCH] ? BRITISH : FRENCH;
+
+    $vpMarkerPoints = $scores[$newLeadFaction] % 10;
+    $vpMarkerPoints = $vpMarkerPoints === 0 ? 10 : $vpMarkerPoints;
+
+    $vpMarkerLocation = Locations::victoryPointsTrack($newLeadFaction, $vpMarkerPoints);
+
+    $vpMarker->setLocation($vpMarkerLocation);
+    if ($scores[$newLeadFaction] > 10) {
+      $vpMarker->setState(1);
+    } else if ($scores[$newLeadFaction] <= 10) {
+      $vpMarker->setState(0);
+    }
+
+    $player = $playersPerFaction[$playerFaction];
+    $otherPlayer = $playersPerFaction[BTHelpers::getOtherFaction($playerFaction)];
 
     Notifications::scoreVictoryPoints($player, $otherPlayer, $vpMarker, $points);
   }

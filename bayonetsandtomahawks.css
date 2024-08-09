@@ -2719,6 +2719,11 @@ body > .card {
   background-position-y: 60%;
 }
 
+.bt_marker_side[data-type=victory_marker][data-side=back] {
+  background-position-x: 57.1428571429%;
+  background-position-y: 60%;
+}
+
 .bt_marker_side[data-type=british_raided_marker][data-side=front] {
   background-position-x: 14.2857142857%;
   background-position-y: 100%;

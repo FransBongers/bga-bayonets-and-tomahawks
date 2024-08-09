@@ -4529,7 +4529,7 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_scoreVictoryPoints = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, marker, points, element, toNode;
+            var _a, marker, points;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -4542,13 +4542,7 @@ var NotificationManager = (function () {
                                 _this.game.framework().scoreCtrl[playerId].setValue(Number(score));
                             }
                         });
-                        element = document.getElementById(marker.id);
-                        toNode = document.getElementById(marker.location);
-                        if (!(element && toNode)) {
-                            console.error('Unable to move marker');
-                            return [2];
-                        }
-                        return [4, this.game.animationManager.attachWithAnimation(new BgaSlideAnimation({ element: element }), toNode)];
+                        return [4, this.game.gameMap.victoryPointsTrack[marker.location].addCard(marker)];
                     case 1:
                         _b.sent();
                         return [2];

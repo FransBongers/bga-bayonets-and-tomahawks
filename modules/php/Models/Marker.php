@@ -16,7 +16,7 @@ class Marker extends \BayonetsAndTomahawks\Helpers\DB_Model implements \JsonSeri
   protected $attributes = [
     'id' => ['marker_id', 'str'],
     'location' => ['marker_location', 'str'],
-    'state' => ['marker_location', 'int'],
+    'state' => ['marker_state', 'int'],
     // 'extraData' => ['extra_data', 'obj'],
   ];
 

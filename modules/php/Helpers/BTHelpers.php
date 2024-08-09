@@ -32,4 +32,8 @@ class BTHelpers extends \APP_DbObject
 
     return $result;
   }
+
+  public static function getOtherFaction($faction) {
+    return $faction === BRITISH ? FRENCH : BRITISH;
+  }
 }

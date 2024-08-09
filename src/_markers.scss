@@ -57,6 +57,11 @@
   background-position-y: math.div(3, 5) * 100%;
 }
 
+.bt_marker_side[data-type="victory_marker"][data-side="back"] {
+  background-position-x: math.div(4, 7) * 100%;
+  background-position-y: math.div(3, 5) * 100%;
+}
+
 .bt_marker_side[data-type='british_raided_marker'][data-side="front"] {
   background-position-x: math.div(1, 7) * 100%;
   background-position-y: math.div(5, 5) * 100%;

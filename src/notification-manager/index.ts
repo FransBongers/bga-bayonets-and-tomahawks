@@ -489,18 +489,7 @@ class NotificationManager {
       }
     });
 
-    const element = document.getElementById(marker.id);
-    const toNode = document.getElementById(marker.location);
-
-    if (!(element && toNode)) {
-      console.error('Unable to move marker');
-      return;
-    }
-
-    await this.game.animationManager.attachWithAnimation(
-      new BgaSlideAnimation({ element }),
-      toNode
-    );
+    await this.game.gameMap.victoryPointsTrack[marker.location].addCard(marker);
   }
 
   async notif_selectReserveCard(notif: Notif<NotifSelectReserveCardArgs>) {
