@@ -18,7 +18,7 @@ class VagariesOfWar extends AbstractUnit
     return $this->putTokenBackInPool;
   }
 
-  public function removeFromPlay()
+  public function removeFromPlay($player = null)
   {
     $this->setLocation(REMOVED_FROM_PLAY);
     Notifications::removeFromPlay($this);

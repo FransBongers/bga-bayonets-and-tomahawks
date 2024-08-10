@@ -584,6 +584,16 @@ $machinestates = array(
         'possibleactions' => ['actBattleRollsRerolls', 'actPassOptionalAction', 'actRestart'],
     ],
 
+    ST_EVENT_ARMED_BATTOEMEN => [
+        'name' => 'eventArmedBattoemen',
+        'description' => clienttranslate('${actplayer} must select a marker to remove'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actEventArmedBattoemen', 'actPassOptionalAction', 'actRestart'],
+    ],
+
     ST_EVENT_BRITISH_ENCROACHMENT => [
         'name' => 'eventBritishEncroachment',
         'description' => '',
@@ -640,6 +650,14 @@ $machinestates = array(
         'args' => 'argsAtomicAction',
         'action' => 'stAtomicAction',
         'possibleactions' => ['actEventDelayedSuppliesFromFrance', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_EVENT_SMALLPOX_EPIDEMIC => [
+        'name' => 'eventSmallpoxEpidemic',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
     ],
 
     ST_EVENT_SMALLPOX_INFECTED_BLANKETS => [

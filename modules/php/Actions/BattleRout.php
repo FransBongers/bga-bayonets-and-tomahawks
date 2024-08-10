@@ -51,9 +51,9 @@ class BattleRout extends \BayonetsAndTomahawks\Actions\Battle
     Notifications::battleRout($faction);
 
     $markerLocation = Locations::stackMarker($space->getId(), $faction);
-    $existingMarker = Markers::getOfTypeInLocation(ROUTE_MARKER, $markerLocation);
+    $existingMarker = Markers::getOfTypeInLocation(ROUT_MARKER, $markerLocation);
     if (count($existingMarker) === 0) {
-      $marker = Markers::getMarkerFromSupply(ROUTE_MARKER);
+      $marker = Markers::getMarkerFromSupply(ROUT_MARKER);
       $marker->setLocation($markerLocation);
   
       Notifications::placeStackMarker($player, $marker, $space);

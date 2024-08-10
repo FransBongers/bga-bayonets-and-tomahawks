@@ -207,7 +207,7 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
     if ($attackerPosition > $defenderPosition) {
       // Attacker wins
       Notifications::battleWinner($attackerPlayer, $space);
-      $routeMarkerCondition = $attackerPosition - $defenderPosition >= 3;
+      $routMarkerCondition = $attackerPosition - $defenderPosition >= 3;
       // TODO add data for this.
       // Store in global?
       $lastBastionOrFortressEliminated = false;
@@ -217,7 +217,7 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
           'player' => $defenderPlayer,
           'faction' => $defenderFaction,
           'isAttacker' => false,
-          'isRouted' => $routeMarkerCondition || $lastBastionOrFortressEliminated,
+          'isRouted' => $routMarkerCondition || $lastBastionOrFortressEliminated,
           'eliminateNonLightUnits' => $lastBastionOrFortressEliminated,
         ],
         'winner' => [

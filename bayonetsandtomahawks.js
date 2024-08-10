@@ -2135,6 +2135,12 @@ var FRENCH_RAID_MARKER = 'french_raid_marker';
 var BRITISH_RAID_MARKER = 'british_raid_marker';
 var FRENCH_BATTLE_MARKER = 'french_battle_marker';
 var BRITISH_BATTLE_MARKER = 'british_battle_marker';
+var OUT_OF_SUPPLY_MARKER = 'outOfSupplyMarker';
+var ROUT_MARKER = 'routMarker';
+var STACK_MARKERS = [
+    OUT_OF_SUPPLY_MARKER,
+    ROUT_MARKER,
+];
 var RAID_TRACK_0 = 'raid_track_0';
 var RAID_TRACK_1 = 'raid_track_1';
 var RAID_TRACK_2 = 'raid_track_2';
@@ -2281,6 +2287,7 @@ var BayonetsAndTomahawks = (function () {
             colonialsEnlistUnitPlacement: new ColonialsEnlistUnitPlacementState(this),
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
+            eventArmedBattoemen: new EventArmedBattoemenState(this),
             eventDelayedSuppliesFromFrance: new EventDelayedSuppliesFromFranceState(this),
             eventDiseaseInBritishCamp: new EventDiseaseInBritishCampState(this),
             eventDiseaseInFrenchCamp: new EventDiseaseInFrenchCampState(this),
@@ -3619,7 +3626,8 @@ var GameMap = (function () {
         Object.entries(markers)
             .filter(function (_a) {
             var id = _a[0], marker = _a[1];
-            return id.startsWith('routeMarker') && !marker.location.startsWith('supply');
+            var type = id.split('_')[0];
+            return (STACK_MARKERS.includes(type) && !marker.location.startsWith('supply'));
         })
             .forEach(function (_a) {
             var id = _a[0], marker = _a[1];
@@ -3995,6 +4003,7 @@ var NotificationManager = (function () {
             'placeUnits',
             'raidPoints',
             'flipUnit',
+            'removeMarkerFromStack',
             'removeMarkersEndOfActionRound',
             'returnToPool',
             'revealCardsInPlay',
@@ -4497,6 +4506,22 @@ var NotificationManager = (function () {
                 unit = notif.args.unit;
                 this.game.tokenManager.updateCardInformations(unit);
                 return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_removeMarkerFromStack = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, marker, from, _b, spaceId, faction;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _a = notif.args, marker = _a.marker, from = _a.from;
+                        _b = from.split('_'), spaceId = _b[0], faction = _b[1];
+                        return [4, this.game.gameMap.stacks[spaceId][faction].removeCard(marker)];
+                    case 1:
+                        _c.sent();
+                        return [2];
+                }
             });
         });
     };
@@ -6258,6 +6283,78 @@ var ConfirmTurnState = (function () {
     };
     return ConfirmTurnState;
 }());
+var EventArmedBattoemenState = (function () {
+    function EventArmedBattoemenState(game) {
+        this.game = game;
+    }
+    EventArmedBattoemenState.prototype.onEnteringState = function (args) {
+        debug('Entering EventArmedBattoemenState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    EventArmedBattoemenState.prototype.onLeavingState = function () {
+        debug('Leaving EventArmedBattoemenState');
+    };
+    EventArmedBattoemenState.prototype.setDescription = function (activePlayerId) { };
+    EventArmedBattoemenState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select 1 marker to remove'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.args.markers.forEach(function (marker) {
+            _this.game.setUnitSelectable({
+                id: marker.id,
+                callback: function () { return _this.updateInterfaceConfirm({ marker: marker }); },
+            });
+            var _a = marker.location.split('_'), spaceId = _a[0], faction = _a[1];
+            var stack = _this.game.gameMap.stacks[spaceId][faction];
+            stack.open();
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    EventArmedBattoemenState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var marker = _a.marker;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Remove ${tkn_marker} from stack in ${spaceName}?'),
+            args: {
+                tkn_marker: marker.id.split('_')[0],
+                spaceName: _(this.game.gamedatas.staticData.spaces[marker.location.split('_')[0]]
+                    .name),
+            },
+        });
+        this.game.setUnitSelected({ id: marker.id });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actEventArmedBattoemen',
+                args: {
+                    markerId: marker.id,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    return EventArmedBattoemenState;
+}());
 var EventDelayedSuppliesFromFranceState = (function () {
     function EventDelayedSuppliesFromFranceState(game) {
         this.frenchAP = null;
@@ -7824,8 +7921,10 @@ var UnitStack = (function (_super) {
     };
     UnitStack.prototype.cardRemoved = function (unit, settings) {
         var unitDiv = this.getCardElement(unit);
-        unitDiv.style.top = undefined;
-        unitDiv.style.left = undefined;
+        if (unitDiv) {
+            unitDiv.style.top = undefined;
+            unitDiv.style.left = undefined;
+        }
         _super.prototype.cardRemoved.call(this, unit, settings);
         if (this.getCards().length === 0) {
             this.element.removeAttribute('data-has-unit');

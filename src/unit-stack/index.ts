@@ -78,8 +78,11 @@ class UnitStack extends ManualPositionStock<BTToken> {
     //   element.style.position = '';
     // }
     const unitDiv = this.getCardElement(unit);
-    unitDiv.style.top = undefined;
-    unitDiv.style.left = undefined;
+
+    if (unitDiv) {
+      unitDiv.style.top = undefined;
+      unitDiv.style.left = undefined;
+    }
 
     super.cardRemoved(unit, settings);
     if (this.getCards().length === 0) {

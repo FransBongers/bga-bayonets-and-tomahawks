@@ -146,6 +146,11 @@ interface NotifReduceUnitArgs {
   unit: BTUnit;
 }
 
+interface NotifRemoveMarkerFromStackArgs {
+  marker: BTMarker;
+  from: string;
+}
+
 interface NotifRemoveMarkersEndOfActionRoundArgs {
   spentUnits: BTUnit[];
 }

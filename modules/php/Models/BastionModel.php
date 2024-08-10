@@ -13,9 +13,10 @@ class BastionModel extends AbstractUnit
 
   public function eliminate($player)
   {
+    $previousLocation = $this->getLocation();
     $this->setState(0);
     $this->setLocation(REMOVED_FROM_PLAY);
-    Notifications::removeFromPlay($player, $this);
+    Notifications::eliminateUnit($player, $this, $previousLocation);
   }
 
 }

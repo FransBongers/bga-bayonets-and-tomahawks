@@ -86,6 +86,7 @@ class NotificationManager {
       'placeUnits',
       'raidPoints',
       'flipUnit',
+      'removeMarkerFromStack',
       'removeMarkersEndOfActionRound',
       'returnToPool',
       'revealCardsInPlay',
@@ -457,6 +458,15 @@ class NotificationManager {
   async notif_flipUnit(notif: Notif<NotifReduceUnitArgs>) {
     const { unit } = notif.args;
     this.game.tokenManager.updateCardInformations(unit);
+  }
+
+  async notif_removeMarkerFromStack(
+    notif: Notif<NotifRemoveMarkerFromStackArgs>
+  ) {
+    const { marker, from } = notif.args;
+    const [spaceId, faction] = from.split('_');
+    await this.game.gameMap.stacks[spaceId][faction].removeCard(marker);
+    // await this.game.tokenManager.removeCard(marker);
   }
 
   async notif_removeMarkersEndOfActionRound(

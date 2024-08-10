@@ -347,10 +347,12 @@ class GameMap {
     }
 
     Object.entries(markers)
-      .filter(
-        ([id, marker]) =>
-          id.startsWith('routeMarker') && !marker.location.startsWith('supply')
-      )
+      .filter(([id, marker]) => {
+        const type = id.split('_')[0];
+        return (
+          STACK_MARKERS.includes(type) && !marker.location.startsWith('supply')
+        );
+      })
       .forEach(([id, marker]) => {
         this.addMarkerToStack(marker);
       });

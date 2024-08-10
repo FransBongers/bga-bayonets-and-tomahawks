@@ -61,4 +61,11 @@ class Marker extends \BayonetsAndTomahawks\Helpers\DB_Model implements \JsonSeri
       return explode('_', $this->id)[0];
     }
   }
+
+  public function remove($player)
+  {
+    $previousLocation = $this->getLocation();
+    $this->setLocation(Locations::markerSupply($this->getType()));
+    Notifications::removeMarkerFromStack($player, $this, $previousLocation);
+  }
 }

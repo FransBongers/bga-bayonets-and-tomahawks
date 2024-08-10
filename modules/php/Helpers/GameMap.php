@@ -75,4 +75,27 @@ class GameMap extends \APP_DbObject
       Notifications::moveRaidPointsMarker($raidMarker);
     }
   }
+
+  /**
+   * Places marker on a stack if the stack does not have that marker yet
+   */
+  public static function placeMarkerOnStack($player, $type, $space, $faction)
+  {
+    $markerLocation = Locations::stackMarker($space->getId(), $faction);
+    $existingMarker = Markers::getOfTypeInLocation($type, $markerLocation);
+    if (count($existingMarker) === 0) {
+      $marker = Markers::getMarkerFromSupply($type);
+      $marker->setLocation($markerLocation);
+
+      Notifications::placeStackMarker($player, $marker, $space);
+    }
+  }
+
+  public static function getMarkersOnMap($type, $faction) {
+    $markers = Markers::getMarkersOfType($type);
+    return Utils::filter($markers, function ($marker) use ($faction) {
+      $location = $marker->getLocation();
+      return !Utils::startsWith($location,'supply') && explode('_', $location)[1] === $faction;
+    });
+  }
 }

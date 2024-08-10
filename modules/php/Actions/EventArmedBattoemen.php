@@ -8,19 +8,18 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Managers\Cards;
-use BayonetsAndTomahawks\Managers\Players;
-use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Models\Player;
 
-class EventBritishEncroachment extends \BayonetsAndTomahawks\Models\AtomicAction
+class EventArmedBattoemen extends \BayonetsAndTomahawks\Models\AtomicAction
 {
   public function getState()
   {
-    return ST_EVENT_BRITISH_ENCROACHMENT;
+    return ST_EVENT_ARMED_BATTOEMEN;
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##
@@ -31,76 +30,13 @@ class EventBritishEncroachment extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreEventBritishEncroachment()
+  public function stPreEventArmedBattoemen()
   {
-  }
-
-  // ..######..########....###....########.########
-  // .##....##....##......##.##......##....##......
-  // .##..........##.....##...##.....##....##......
-  // ..######.....##....##.....##....##....######..
-  // .......##....##....#########....##....##......
-  // .##....##....##....##.....##....##....##......
-  // ..######.....##....##.....##....##....########
-
-  // ....###.....######..########.####..#######..##....##
-  // ...##.##...##....##....##.....##..##.....##.###...##
-  // ..##...##..##..........##.....##..##.....##.####..##
-  // .##.....##.##..........##.....##..##.....##.##.##.##
-  // .#########.##..........##.....##..##.....##.##..####
-  // .##.....##.##....##....##.....##..##.....##.##...###
-  // .##.....##..######.....##....####..#######..##....##
-
-  public function stEventBritishEncroachment()
-  {
-
-    $indianUnits = Utils::filter(Units::getInLocation(Locations::lossesBox(FRENCH))->toArray(), function ($unit) {
-      return $unit->isIndian();
-    });
-
-    if (count($indianUnits) === 0) {
-      Notifications::message(clienttranslate('There are no Indian units to take from the Losses Box'), []);
+    $options = $this->getOptions();
+    if (count($options) === 0) {
+      Notifications::message(clienttranslate('No Out of Supply or Rout markers to remove'),[]);
       $this->resolveAction(['automatic' => true]);
-      return;
     }
-
-    shuffle($indianUnits);
-
-    $picked = array_slice($indianUnits, 0, 2);
-    $player = Players::getPlayerForFaction(FRENCH);
-
-    Notifications::message(clienttranslate('${player_name} takes ${unitsLog} from the Losses Box'), [
-      'player' => $player,
-      'unitsLog' => Notifications::getUnitsLog($picked),
-    ]);
-
-    // TODO: Iroquois and Cherokee
-    foreach ($picked as $unit) {
-      $villages = Utils::filter(Spaces::getMany($unit->getVillages())->toArray(), function ($space) {
-        if (count($space->getUnits(BRITISH)) > 0) {
-          return false;
-        }
-        return true;
-      });
-      $count = count($villages);
-      if ($count === 0) {
-        Notifications::message(clienttranslate('${player_name} cannot place ${tkn_unit} on its Village'), [
-          'player' => $player,
-          'tkn_unit' => $unit->getCounterId(),
-        ]);
-      } else if ($count > 1) {
-        // TODO: insert extra state to pick village?
-      } else {
-        $space = $villages[0];
-        Notifications::placeUnits($player, [$unit], $space, FRENCH);
-        if ($space->getControl() === BRITISH && $space->getDefaultControl() !== BRITISH) {
-          $space->setControl($space->getDefaultControl());
-          Notifications::loseControl(Players::getPlayerForFaction(BRITISH), $space);
-        }
-      }
-    }
-
-    $this->resolveAction(['automatic' => true], true);
   }
 
 
@@ -112,10 +48,13 @@ class EventBritishEncroachment extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsEventBritishEncroachment()
+  public function argsEventArmedBattoemen()
   {
 
-    return [];
+    // Notifications::log('argsEventArmedBattoemen',[]);
+    return [
+      'markers' => $this->getOptions(),
+    ];
   }
 
   //  .########..##..........###....##....##.########.########.
@@ -134,17 +73,29 @@ class EventBritishEncroachment extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassEventBritishEncroachment()
+  public function actPassEventArmedBattoemen()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actEventBritishEncroachment($args)
+  public function actEventArmedBattoemen($args)
   {
-    self::checkAction('actEventBritishEncroachment');
+    self::checkAction('actEventArmedBattoemen');
+    $markerId = $args['markerId'];
 
+    $markers = $this->getOptions();
+
+    $marker = Utils::array_find($markers, function ($possibleMarker) use ($markerId) {
+      return $markerId === $possibleMarker->getId();
+    });
+
+    if ($marker === null) {
+      throw new \feException("ERROR 047");
+    }
+
+    $marker->remove(self::getPlayer());
 
     $this->resolveAction($args);
   }
@@ -157,4 +108,14 @@ class EventBritishEncroachment extends \BayonetsAndTomahawks\Models\AtomicAction
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  private function getOptions()
+  {
+    $outOfSupplyMarkers = GameMap::getMarkersOnMap(OUT_OF_SUPPLY_MARKER, BRITISH);
+
+    if (count($outOfSupplyMarkers) > 0) {
+      return $outOfSupplyMarkers;
+    } else {
+      return GameMap::getMarkersOnMap(ROUT_MARKER, BRITISH);
+    }
+  }
 }

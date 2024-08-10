@@ -90,9 +90,10 @@
 .bt_stack {
   border-radius: calc(var(--btMapScale) * 4px);
 
-  .bt_token {
+  .bt_token,
+  .bt_marker {
     transition: top 500ms, left 500ms;
-    position: relative;
+    // position: relative;
   }
 }
 
@@ -106,6 +107,7 @@
 }
 
 .bt_stack[data-expanded='true'] {
+  .bt_marker,
   .bt_token {
     z-index: 1;
   }
@@ -128,6 +130,7 @@
   }
 }
 
+.bt_marker.bt_selectable > .card-sides > .card-side,
 .bt_token.bt_selectable > .card-sides > .card-side {
   cursor: pointer;
   filter: drop-shadow(2px 0px 0px base.$selectable-color)
@@ -138,6 +141,8 @@
   //   base.$selectable-color !important;
 }
 
+.bt_marker.bt_selectable:hover > .card-sides > .card-side,
+.bt_marker.bt_selected > .card-sides > .card-side,
 .bt_token.bt_selectable:hover > .card-sides > .card-side,
 .bt_token.bt_selected > .card-sides > .card-side {
   cursor: pointer;

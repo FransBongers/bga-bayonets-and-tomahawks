@@ -78,6 +78,7 @@
     "src/states/ColonialsEnlistUnitPlacement.ts",
     "src/states/ConfirmPartialTurn.ts",
     "src/states/ConfirmTurn.ts",
+    "src/states/EventArmedBattoemen.ts",
     "src/states/EventDelayedSuppliesFromFrance.ts",
     "src/states/EventDiseaseInBritishCamp.ts",
     "src/states/EventDiseaseInFrenchCamp.ts",

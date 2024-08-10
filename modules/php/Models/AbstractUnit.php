@@ -227,6 +227,16 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     Notifications::eliminateUnit($player, $this, $previousLocation);
   }
 
+  public function removeFromPlay($player = null)
+  {
+    $player = $player === null ? Players::get() : $player;
+    $previousLocation = $this->getLocation();
+    // $this->setState(0);
+    $this->setLocation(REMOVED_FROM_PLAY);
+    // TODO: use Notifications::removeFromPlay?
+    Notifications::eliminateUnit($player, $this, $previousLocation);
+  }
+
   public function applyHit($player = null)
   {
     $player = $player !== null ? $player : Players::getPlayerForFaction($this->getFaction());

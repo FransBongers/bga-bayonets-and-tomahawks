@@ -3,6 +3,7 @@
 namespace BayonetsAndTomahawks;
 
 use BayonetsAndTomahawks\Core\Engine;
+use BayonetsAndTomahawks\Core\Game;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Helpers\BTHelpers;
@@ -87,7 +88,14 @@ trait DebugTrait
 
   function debug_test()
   {
-    Players::scoreVictoryPoints(Players::getPlayerForFaction(FRENCH),3);
+
+    // Notifications::log('markers', GameMap::getMarkersOnMap(OUT_OF_SUPPLY_MARKER,BRITISH));
+
+    // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), ROUT_MARKER, Spaces::get(ALBANY), BRITISH);
+    // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), OUT_OF_SUPPLY_MARKER, Spaces::get(BOSTON), BRITISH);
+    // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), OUT_OF_SUPPLY_MARKER, Spaces::get(CARLISLE), BRITISH);
+
+    // Players::scoreVictoryPoints(Players::getPlayerForFaction(FRENCH),3);
     // GameMap::performIndianNationControlProcedure(IROQUOIS, BRITISH);
     // GameMap::performIndianNationControlProcedure(CHEROKEE, FRENCH);
     // Globals::setControlCherokee(NEUTRAL);
@@ -97,8 +105,13 @@ trait DebugTrait
     // Globals::setLostAPBritish([]);
     // Globals::setLostAPFrench([]);
 
-    Cards::get('Card38')->insertOnTop(Locations::campaignDeck(FRENCH));
-    Cards::get('Card13')->insertOnTop(Locations::campaignDeck(BRITISH));
+    // Cards::get('Card38')->insertOnTop(Locations::buildUpDeck(FRENCH));
+    // Cards::get('Card21')->insertOnTop(Locations::buildUpDeck(BRITISH));
+    // Cards::get('Card38')->insertOnTop(Locations::campaignDeck(FRENCH));
+    // Cards::get('Card13')->insertOnTop(Locations::campaignDeck(BRITISH));
+
+
+    Units::get('unit_51')->setLocation(Locations::lossesBox(FRENCH));
 
     // // Round up men and equipment
     // Units::get('unit_45')->setLocation(Locations::lossesBox(BRITISH));
@@ -132,29 +145,6 @@ trait DebugTrait
     //   'location' => OPEN_SEAS_MARKER
     // ];
 
-    // Markers::create($tokens, null);
-
-    // Units::move(['unit_71', 'unit_72'], POOL_BRITISH_COLONIAL_LIGHT);
-    // $space = Spaces::get(LAKE_GEORGE);
-    // $defendingFaction = $space->getDefender();
-    // $attackingFaction = Players::otherFaction($defendingFaction);
-
-    // $players = Players::getAll()->toArray();
-    // $attackingPlayer = Utils::array_find($players, function ($player) use ($attackingFaction) {
-    //   return $player->getFaction() === $attackingFaction;
-    // });
-    // $defendingPlayer = Utils::array_find($players, function ($player) use ($defendingFaction) {
-    //   return $player->getFaction() === $defendingFaction;
-    // });
-    // $marker = Markers::getMarkerFromSupply(ROUTE_MARKER);
-    // $marker->setLocation(Locations::stackMarker(TICONDEROGA, BRITISH));
-
-    // Notifications::log('getBattlePriority', Spaces::get(LAKE_GEORGE)->getBattlePriority());
-    // $result = AtomicActions::get(LIGHT_MOVEMENT)->checkEnemyUnitsAndOverwhelm(Spaces::get(ANNAPOLIS_ROYAL), Players::get());
-
-    // Notifications::log('british controlled', Utils::filter(Spaces::getControlledBy(BRITISH), function ($space) {
-    //   return $space->getHomeSpace() !== null && $space->isCoastal();
-    // }));
   }
 
   // function ed()

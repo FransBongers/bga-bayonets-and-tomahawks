@@ -102,8 +102,13 @@
   background-position-y: math.div(1, 5) * 100%;
 }
 
-.bt_marker_side[data-type="routeMarker"] {
+.bt_marker_side[data-type="routMarker"] {
   background-position-x: math.div(5, 7) * 100%;
+  background-position-y: math.div(1, 5) * 100%;
+}
+
+.bt_marker_side[data-type="outOfSupplyMarker"] {
+  background-position-x: math.div(7, 7) * 100%;
   background-position-y: math.div(1, 5) * 100%;
 }
 

@@ -2,6 +2,7 @@
 
 namespace BayonetsAndTomahawks\Core;
 
+use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Managers\Spaces;
 
 class Notifications
@@ -401,13 +402,24 @@ class Notifications
 
   public static function eliminateUnit($player, $unit, $previousLocation)
   {
-    $text = clienttranslate('${player_name} eliminates ${tkn_unit} on ${tkn_boldText_spaceName}');
+    $text = $unit->getLocation() === REMOVED_FROM_PLAY ?
+      clienttranslate('${player_name} removes ${tkn_unit} on ${tkn_boldText_spaceName} from play') :
+      clienttranslate('${player_name} eliminates ${tkn_unit} on ${tkn_boldText_spaceName}');
+
+    $spaceName = '';
+    if ($previousLocation === Locations::lossesBox(BRITISH)) {
+      $spaceName = clienttranslate('British Losses Box');
+    } else if ($previousLocation === Locations::lossesBox(FRENCH)) {
+      $spaceName = clienttranslate('French Losses Box');
+    } else {
+      $spaceName = Spaces::get($previousLocation)->getName();
+    }
 
     self::notifyAll("eliminateUnit", $text, [
       'player' => $player,
       'unit' => $unit->jsonSerialize(),
       'tkn_unit' => $unit->getCounterId(),
-      'tkn_boldText_spaceName' => Spaces::get($previousLocation)->getName(),
+      'tkn_boldText_spaceName' => $spaceName,
       'i18n' => ['tkn_boldText_spaceName'],
     ]);
   }
@@ -537,7 +549,7 @@ class Notifications
 
   public static function placeStackMarker($player, $marker, $space)
   {
-    self::notifyAll("placeStackMarker", clienttranslate('${player_name} places ${tkn_marker} on their stack in  ${tkn_boldText_spaceName}'), [
+    self::notifyAll("placeStackMarker", clienttranslate('${player_name} places ${tkn_marker} on their stack in ${tkn_boldText_spaceName}'), [
       'player' => $player,
       'marker' => $marker->jsonSerialize(),
       'tkn_marker' => $marker->getType(),
@@ -568,6 +580,18 @@ class Notifications
     self::notifyAll("eliminateUnit", $text, [
       'unit' => $unit->jsonSerialize(),
       'tkn_unit' => $unit->getCounterId()
+    ]);
+  }
+
+  public static function removeMarkerFromStack($player, $marker, $previousLocation)
+  {
+    self::notifyAll("removeMarkerFromStack", clienttranslate('${player_name} removes ${tkn_marker} from their stack in ${tkn_boldText_spaceName}'), [
+      'player' => $player,
+      'marker' => $marker->jsonSerialize(),
+      'from' => $previousLocation,
+      'tkn_marker' => $marker->getType(),
+      'tkn_boldText_spaceName' => Spaces::get(explode('_', $previousLocation)[0])->getName(),
+      'i18n' => ['tkn_boldText_spaceName']
     ]);
   }
 
