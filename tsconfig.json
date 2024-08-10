@@ -82,6 +82,7 @@
     "src/states/EventDelayedSuppliesFromFrance.ts",
     "src/states/EventDiseaseInBritishCamp.ts",
     "src/states/EventDiseaseInFrenchCamp.ts",
+    "src/states/EventHesitantBritishGeneral.ts",
     "src/states/EventPennsylvaniasPeacePromises.ts",
     "src/states/EventRoundUpMenAndEquipment.ts",
     "src/states/EventSmallpoxInfectedBlankets.ts",

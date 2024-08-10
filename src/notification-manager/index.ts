@@ -60,6 +60,7 @@ class NotificationManager {
     const notifs: string[] = [
       'log',
       'message',
+      'addSpentMarkerToUnits',
       'advanceBattleVictoryMarker',
       'battle',
       'battleCleanup',
@@ -207,6 +208,20 @@ class NotificationManager {
     this.game.gamedatas = updatedGamedatas;
     this.game.playerManager.updatePlayers({ gamedatas: updatedGamedatas });
     this.game.gameMap.updateInterface({ gamedatas: updatedGamedatas });
+  }
+
+  async notif_addSpentMarkerToUnits(
+    notif: Notif<NotifAddSpentMarkerToUnitsArgs>
+  ) {
+    const { units } = notif.args;
+    units.forEach((unit) => {
+      if (unit.spent === 1) {
+        const element = document.getElementById(`spent_marker_${unit.id}`);
+        if (element) {
+          element.setAttribute('data-spent', 'true');
+        }
+      }
+    });
   }
 
   async notif_advanceBattleVictoryMarker(

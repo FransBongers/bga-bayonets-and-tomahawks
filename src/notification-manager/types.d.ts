@@ -18,6 +18,10 @@ type NotifSmallRefreshInterfaceArgs = Omit<
   'staticData'
 >;
 
+interface NotifAddSpentMarkerToUnitsArgs {
+  units: BTUnit[];
+}
+
 interface NotifAdvanceBattleVictoryMarkerArgs {
   marker: BTMarker;
 }

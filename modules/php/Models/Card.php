@@ -86,6 +86,22 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
     }
   }
 
+  /**
+   * Right now only used to remove Indian card 
+   * with Smallpox Epidemic event
+   */
+  public function removeFromPlay()
+  {
+    // $owner = $this->getOwner();
+    Cards::insertOnTop($this->getId(), REMOVED_FROM_PLAY);
+    $this->location = REMOVED_FROM_PLAY;
+    // if ($owner !== null) {
+    //   Notifications::discardCardFromHand($owner, $this);
+    // } else {
+      Notifications::discardCardInPlay($this);
+    // }
+  }
+
   // Card is selected to be played this action round
   public function select()
   {

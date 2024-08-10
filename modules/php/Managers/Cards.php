@@ -64,7 +64,7 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
       INDIAN => null,
     ];
 
-    foreach($cards as $card) {
+    foreach ($cards as $card) {
       $data[$card->getFaction()] = $card;
     }
 
@@ -117,8 +117,10 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
 
   public static function setupDecksForYear($year)
   {
-    // Move all cards to the pool
-    $cards = Cards::getAll()->toArray();
+    // Move all cards that are still in play to the pool
+    $cards = Utils::filter(Cards::getAll()->toArray(), function ($card) {
+      return $card->getLocation() !== REMOVED_FROM_PLAY;
+    });
     Cards::move(array_map(function ($card) {
       return $card->getId();
     }, $cards), Locations::cardPool());

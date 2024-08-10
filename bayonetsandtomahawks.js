@@ -2291,6 +2291,7 @@ var BayonetsAndTomahawks = (function () {
             eventDelayedSuppliesFromFrance: new EventDelayedSuppliesFromFranceState(this),
             eventDiseaseInBritishCamp: new EventDiseaseInBritishCampState(this),
             eventDiseaseInFrenchCamp: new EventDiseaseInFrenchCampState(this),
+            eventHesitantBritishGeneral: new EventHesitantBritishGeneralState(this),
             eventPennsylvaniasPeacePromises: new EventPennsylvaniasPeacePromisesState(this),
             eventRoundUpMenAndEquipment: new EventRoundUpMenAndEquipmentState(this),
             eventSmallpoxInfectedBlankets: new EventSmallpoxInfectedBlanketsState(this),
@@ -3977,6 +3978,7 @@ var NotificationManager = (function () {
         var notifs = [
             'log',
             'message',
+            'addSpentMarkerToUnits',
             'advanceBattleVictoryMarker',
             'battle',
             'battleCleanup',
@@ -4074,6 +4076,23 @@ var NotificationManager = (function () {
                 this.game.gamedatas = updatedGamedatas;
                 this.game.playerManager.updatePlayers({ gamedatas: updatedGamedatas });
                 this.game.gameMap.updateInterface({ gamedatas: updatedGamedatas });
+                return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_addSpentMarkerToUnits = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var units;
+            return __generator(this, function (_a) {
+                units = notif.args.units;
+                units.forEach(function (unit) {
+                    if (unit.spent === 1) {
+                        var element = document.getElementById("spent_marker_".concat(unit.id));
+                        if (element) {
+                            element.setAttribute('data-spent', 'true');
+                        }
+                    }
+                });
                 return [2];
             });
         });
@@ -6645,6 +6664,73 @@ var EventDiseaseInFrenchCampState = (function () {
         this.game.addCancelButton();
     };
     return EventDiseaseInFrenchCampState;
+}());
+var EventHesitantBritishGeneralState = (function () {
+    function EventHesitantBritishGeneralState(game) {
+        this.game = game;
+    }
+    EventHesitantBritishGeneralState.prototype.onEnteringState = function (args) {
+        debug('Entering EventHesitantBritishGeneralState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    EventHesitantBritishGeneralState.prototype.onLeavingState = function () {
+        debug('Leaving EventHesitantBritishGeneralState');
+    };
+    EventHesitantBritishGeneralState.prototype.setDescription = function (activePlayerId) { };
+    EventHesitantBritishGeneralState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a British stack'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.args.stacks.forEach(function (space) {
+            _this.game.setLocationSelectable({
+                id: space.id,
+                callback: function () { return _this.updateInterfaceConfirm({ space: space }); },
+            });
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    EventHesitantBritishGeneralState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var space = _a.space;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Place Spent marker on British stack on ${spaceName}?'),
+            args: {
+                spaceName: _(space.name),
+            },
+        });
+        this.game.setLocationSelected({ id: space.id });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actEventHesitantBritishGeneral',
+                args: {
+                    spaceId: space.id,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    return EventHesitantBritishGeneralState;
 }());
 var EventPennsylvaniasPeacePromisesState = (function () {
     function EventPennsylvaniasPeacePromisesState(game) {

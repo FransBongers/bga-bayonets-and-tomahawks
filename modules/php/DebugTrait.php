@@ -105,13 +105,13 @@ trait DebugTrait
     // Globals::setLostAPBritish([]);
     // Globals::setLostAPFrench([]);
 
-    // Cards::get('Card38')->insertOnTop(Locations::buildUpDeck(FRENCH));
+    Cards::get('Card33')->insertOnTop(Locations::buildUpDeck(FRENCH));
     // Cards::get('Card21')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card38')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card13')->insertOnTop(Locations::campaignDeck(BRITISH));
 
 
-    Units::get('unit_51')->setLocation(Locations::lossesBox(FRENCH));
+    // Units::get('unit_51')->setLocation(Locations::lossesBox(FRENCH));
 
     // // Round up men and equipment
     // Units::get('unit_45')->setLocation(Locations::lossesBox(BRITISH));

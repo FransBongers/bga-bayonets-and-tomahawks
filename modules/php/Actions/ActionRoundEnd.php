@@ -45,13 +45,15 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     // 1. Discard played cards facedown.
     $cardsInPlay = Cards::getCardsInPlay();
     Notifications::discardCardsInPlayMessage();
-    // Notifications::log('cardsInPlay',$cardsInPlay);
+
     foreach($cardsInPlay as $faction => $card) {
-      if ($card !== null) {
+      // TODO: remove indian card
+      if ($card !== null && $card->getId() === 'Card45') {
+        $card->removeFromPlay();
+      } else if ($card !== null) {
         $card->discard();
       }
     }
-    // Notifications::discardCardInPlay($cardsInPlay);
 
     // 2. Remove Spent markers, as well as any remaning Landing and Marshall markers.
     $spentUnits = Units::getSpent();

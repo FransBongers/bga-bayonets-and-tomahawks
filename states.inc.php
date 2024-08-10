@@ -652,6 +652,16 @@ $machinestates = array(
         'possibleactions' => ['actEventDelayedSuppliesFromFrance', 'actPassOptionalAction', 'actRestart'],
     ],
 
+    ST_EVENT_HESITANT_BRITISH_GENERAL => [
+        'name' => 'eventHesitantBritishGeneral',
+        'description' => clienttranslate('${actplayer} must select a British stack'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actEventHesitantBritishGeneral', 'actPassOptionalAction', 'actRestart'],
+    ],
+
     ST_EVENT_SMALLPOX_EPIDEMIC => [
         'name' => 'eventSmallpoxEpidemic',
         'description' => '',

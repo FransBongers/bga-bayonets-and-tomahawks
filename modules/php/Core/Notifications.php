@@ -181,6 +181,17 @@ class Notifications
   // .##.....##.##..........##....##.....##.##.....##.##.....##.##....##
   // .##.....##.########....##....##.....##..#######..########...######.
 
+  public static function addSpentMarkerToUnits($player, $units)
+  {
+    self::notifyAll('addSpentMarkerToUnits', clienttranslate('${player_name} places Spent marker on ${unitsLog} in ${tkn_boldText_space}'), [
+      'player' => $player,
+      'tkn_boldText_space' => Spaces::get($units[0]->getLocation())->getName(),
+      'unitsLog' => self::getUnitsLog($units),
+      'units' => $units,
+      'i18n' => ['tkn_boldText_space']
+    ]);
+  }
+
   public static function achievedVictoryThreshold($player)
   {
     self::message(clienttranslate('${player_name} has achieved their Victory Threshold'), [
