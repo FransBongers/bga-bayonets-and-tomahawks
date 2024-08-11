@@ -64,6 +64,7 @@ class NotificationManager {
       'advanceBattleVictoryMarker',
       'battle',
       'battleCleanup',
+      'battleRemoveMarker',
       'battleReroll',
       'battleReturnCommander',
       'battleStart',
@@ -252,6 +253,15 @@ class NotificationManager {
       ),
     ]);
 
+    this.game.gameMap.removeMarkerFromSpace({
+      spaceId: space.id,
+      type: 'battle_marker',
+    });
+  }
+
+  async notif_battleRemoveMarker(notif: Notif<NotifBattleRemoveMarkerArgs>) {
+    const { space } = notif.args;
+    
     this.game.gameMap.removeMarkerFromSpace({
       spaceId: space.id,
       type: 'battle_marker',

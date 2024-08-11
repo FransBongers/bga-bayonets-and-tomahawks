@@ -90,6 +90,7 @@
     "src/states/VagariesOfWarPickUnits.ts",
     "src/states/LightMovementState.ts",
     "src/states/LightMovementDestinationState.ts",
+    "src/states/Movement.ts",
     "src/states/RaidState.ts",
     "src/states/SelectReserveCard.ts",
     "src/states/state.d.ts",

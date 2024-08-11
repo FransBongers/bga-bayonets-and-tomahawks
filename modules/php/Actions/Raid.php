@@ -323,7 +323,7 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
     return count($destinations) > 0;
   }
 
-  public function getFlow($playerId, $originId)
+  public function getFlow($actionPointId, $playerId, $originId)
   {
     return [
       // 'stackAction' => LIGHT_MOVEMENT,

@@ -447,25 +447,67 @@ $machinestates = array(
         'possibleactions' => ['actArmyMovementDestination', 'actPassOptionalAction', 'actRestart'],
     ],
 
-    ST_SAIL_MOVEMENT => [
-        'name' => 'sailMovement',
+    ST_MOVEMENT => [
+        'name' => 'movement',
         'description' => clienttranslate('${actplayer} may move units'),
         'descriptionmyturn' => clienttranslate('${you}'),
         'type' => 'activeplayer',
         'args' => 'argsAtomicAction',
         'action' => 'stAtomicAction',
-        'possibleactions' => ['actSailMovement', 'actPassOptionalAction', 'actRestart'],
+        'possibleactions' => ['actMovement', 'actPassOptionalAction', 'actRestart'],
     ],
 
-    ST_SAIL_MOVEMENT_DESTINATION => [
-        'name' => 'sailMovementDestination',
-        'description' => clienttranslate('${actplayer} may move units'),
-        'descriptionmyturn' => clienttranslate('${you}'),
-        'type' => 'activeplayer',
-        'args' => 'argsAtomicAction',
+    ST_MOVEMENT_BATTLE_AND_TAKE_CONTROL_CHECK => [
+        'name' => 'movementBattleTakeControlCheck',
+        'description' => '',
+        'type' => 'game',
         'action' => 'stAtomicAction',
-        'possibleactions' => ['actSailMovementDestination', 'actPassOptionalAction', 'actRestart'],
+        'transitions' => [],
     ],
+
+    ST_MOVEMENT_LOSE_CONTROL_CHECK => [
+        'name' => 'movementLoseControlCheck',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_MOVEMENT_OVERWHELM_CHECK => [
+        'name' => 'movementOverwhelmCheck',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_MOVEMENT_PLACE_SPENT_MARKERS => [
+        'name' => 'movementPlaceSpentMarkers',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    // ST_SAIL_MOVEMENT => [
+    //     'name' => 'sailMovement',
+    //     'description' => clienttranslate('${actplayer} may move units'),
+    //     'descriptionmyturn' => clienttranslate('${you}'),
+    //     'type' => 'activeplayer',
+    //     'args' => 'argsAtomicAction',
+    //     'action' => 'stAtomicAction',
+    //     'possibleactions' => ['actSailMovement', 'actPassOptionalAction', 'actRestart'],
+    // ],
+
+    // ST_SAIL_MOVEMENT_DESTINATION => [
+    //     'name' => 'sailMovementDestination',
+    //     'description' => clienttranslate('${actplayer} may move units'),
+    //     'descriptionmyturn' => clienttranslate('${you}'),
+    //     'type' => 'activeplayer',
+    //     'args' => 'argsAtomicAction',
+    //     'action' => 'stAtomicAction',
+    //     'possibleactions' => ['actSailMovementDestination', 'actPassOptionalAction', 'actRestart'],
+    // ],
 
     ST_MARSHAL_TROOPS => [
         'name' => 'marshalTroops',

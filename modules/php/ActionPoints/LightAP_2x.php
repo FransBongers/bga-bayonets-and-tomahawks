@@ -11,7 +11,7 @@ class LightAP_2X extends \BayonetsAndTomahawks\Models\ActionPoint
     $this->movementMultiplier = 2;
     $this->name = clienttranslate("Light AP 2x");
     $this->actionsAllowed = [
-      LIGHT_MOVEMENT,
+      MOVEMENT,
       RAID
     ];
   }

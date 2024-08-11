@@ -42,6 +42,10 @@ interface NotifBattleStartArgs {
   defenderMarker: BTMarker;
 }
 
+interface NotifBattleRemoveMarkerArgs {
+  space: BTSpace;
+}
+
 interface NotifBattleRerollArgs extends NotifWithPlayerArgs {
   commander: BTUnit | null;
 }

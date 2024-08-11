@@ -2087,6 +2087,9 @@ var FORT = 'fort';
 var LIGHT = 'light';
 var VAGARIES_OF_WAR = 'vagariesOfWar';
 var REMOVED_FROM_PLAY = 'removedFromPlay';
+var ROAD = 'road';
+var PATH = 'path';
+var HIGHWAY = 'highway';
 var POOL_FLEETS = 'poolFleets';
 var POOL_BRITISH_COMMANDERS = 'poolBritishCommanders';
 var POOL_BRITISH_LIGHT = 'poolBritishLight';
@@ -2137,10 +2140,7 @@ var FRENCH_BATTLE_MARKER = 'french_battle_marker';
 var BRITISH_BATTLE_MARKER = 'british_battle_marker';
 var OUT_OF_SUPPLY_MARKER = 'outOfSupplyMarker';
 var ROUT_MARKER = 'routMarker';
-var STACK_MARKERS = [
-    OUT_OF_SUPPLY_MARKER,
-    ROUT_MARKER,
-];
+var STACK_MARKERS = [OUT_OF_SUPPLY_MARKER, ROUT_MARKER];
 var RAID_TRACK_0 = 'raid_track_0';
 var RAID_TRACK_1 = 'raid_track_1';
 var RAID_TRACK_2 = 'raid_track_2';
@@ -2299,6 +2299,7 @@ var BayonetsAndTomahawks = (function () {
             fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
             lightMovement: new LightMovementState(this),
             lightMovementDestination: new LightMovementDestinationState(this),
+            movement: new MovementState(this),
             raid: new RaidState(this),
             selectReserveCard: new SelectReserveCardState(this),
         };
@@ -3982,6 +3983,7 @@ var NotificationManager = (function () {
             'advanceBattleVictoryMarker',
             'battle',
             'battleCleanup',
+            'battleRemoveMarker',
             'battleReroll',
             'battleReturnCommander',
             'battleStart',
@@ -4144,6 +4146,19 @@ var NotificationManager = (function () {
                         });
                         return [2];
                 }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_battleRemoveMarker = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var space;
+            return __generator(this, function (_a) {
+                space = notif.args.space;
+                this.game.gameMap.removeMarkerFromSpace({
+                    spaceId: space.id,
+                    type: 'battle_marker',
+                });
+                return [2];
             });
         });
     };
@@ -7672,6 +7687,184 @@ var LightMovementDestinationState = (function () {
         });
     };
     return LightMovementDestinationState;
+}());
+var MovementState = (function () {
+    function MovementState(game) {
+        this.selectedUnits = [];
+        this.destination = null;
+        this.game = game;
+    }
+    MovementState.prototype.onEnteringState = function (args) {
+        debug('Entering MovementState');
+        this.args = args;
+        this.selectedUnits = [];
+        this.destination = null;
+        this.updateInterfaceInitialStep();
+    };
+    MovementState.prototype.onLeavingState = function () {
+        debug('Leaving MovementState');
+    };
+    MovementState.prototype.setDescription = function (activePlayerId) { };
+    MovementState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select units and a destination'),
+            args: {
+                you: '${you}',
+            },
+        });
+        var stack = this.game.gameMap.stacks[this.args.fromSpace.id][this.args.faction];
+        stack.open();
+        this.setUnitsSelectable();
+        this.setUnitsSelected();
+        if (this.destination !== null) {
+            this.game.setLocationSelected({ id: this.destination.id });
+        }
+        if (this.selectedUnits.length > 0 && this.destination === null) {
+            this.setDestinationsSelectable();
+        }
+        this.game.addPrimaryActionButton({
+            id: 'done_btn',
+            text: _('Done'),
+            callback: function () { return _this.updateInterfaceConfirm(); },
+            extraClasses: this.selectedUnits.length > 0 && this.destination !== null
+                ? ''
+                : DISABLED,
+        });
+        this.game.addSecondaryActionButton({
+            id: 'select_all_btn',
+            text: _('Select all'),
+            callback: function () {
+                _this.selectedUnits = _this.args.units,
+                    _this.updateInterfaceInitialStep();
+            },
+        });
+        if (this.selectedUnits.length === 0) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
+        }
+        else {
+            this.game.addCancelButton();
+        }
+    };
+    MovementState.prototype.updateInterfaceConfirm = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Move selected units to ${spaceName}?'),
+            args: {
+                spaceName: _(this.destination.name),
+            },
+        });
+        this.game.setLocationSelected({ id: this.destination.id });
+        this.setUnitsSelected();
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actMovement',
+                args: {
+                    destinationId: _this.destination.id,
+                    selectedUnitIds: _this.selectedUnits.map(function (_a) {
+                        var id = _a.id;
+                        return id;
+                    }),
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    MovementState.prototype.setUnitsSelectable = function () {
+        var _this = this;
+        this.args.units.forEach(function (unit) {
+            _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () {
+                    if (_this.selectedUnits.some(function (selectedUnit) { return selectedUnit.id === unit.id; })) {
+                        _this.selectedUnits = _this.selectedUnits.filter(function (selectedUnit) { return selectedUnit.id !== unit.id; });
+                    }
+                    else {
+                        _this.selectedUnits.push(unit);
+                    }
+                    _this.destination = null;
+                    _this.updateInterfaceInitialStep();
+                },
+            });
+        });
+    };
+    MovementState.prototype.setUnitsSelected = function () {
+        var _this = this;
+        this.selectedUnits.forEach(function (unit) {
+            return _this.game.setUnitSelected({ id: unit.id });
+        });
+    };
+    MovementState.prototype.setDestinationsSelectable = function () {
+        var _this = this;
+        var numberOfUnitsForConnectionLimit = this.selectedUnits.filter(function (unit) {
+            var staticData = _this.getUnitStaticData(unit);
+            return ![COMMANDER, FLEET].includes(staticData.type);
+        }).length;
+        var lightOnly = !this.selectedUnits.some(function (unit) { return _this.getUnitStaticData(unit).type !== LIGHT; });
+        var requiresHighway = this.selectedUnits.filter(function (unit) { return _this.getUnitStaticData(unit).type === ARTILLERY; }).length > 1;
+        var validDestinations = this.args.adjacent.filter(function (_a) {
+            var connection = _a.connection;
+            if (requiresHighway && connection.type !== HIGHWAY) {
+                return false;
+            }
+            if (!lightOnly && connection.type === PATH) {
+                return false;
+            }
+            if (numberOfUnitsForConnectionLimit > _this.getRemainingLimit(connection)) {
+                return false;
+            }
+            return true;
+        });
+        validDestinations.forEach(function (_a) {
+            var space = _a.space;
+            _this.game.setLocationSelectable({
+                id: space.id,
+                callback: function () {
+                    _this.destination = space;
+                    _this.updateInterfaceInitialStep();
+                },
+            });
+        });
+    };
+    MovementState.prototype.getUnitStaticData = function (unit) {
+        return this.game.gamedatas.staticData.units[unit.counterId];
+    };
+    MovementState.prototype.getRemainingLimit = function (connection) {
+        var usedLimit = this.args.faction === BRITISH
+            ? connection.britishLimit
+            : connection.frenchLimit;
+        var maxLimit = this.getMaxLimit(connection.type);
+        return maxLimit - usedLimit;
+    };
+    MovementState.prototype.getMaxLimit = function (connectionType) {
+        switch (connectionType) {
+            case HIGHWAY:
+                return 16;
+            case ROAD:
+                return 8;
+            case PATH:
+                return 4;
+            default:
+                return 0;
+        }
+    };
+    return MovementState;
 }());
 var RaidState = (function () {
     function RaidState(game) {

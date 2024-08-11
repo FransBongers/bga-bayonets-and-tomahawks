@@ -11,7 +11,7 @@ class ArmyAP_2x extends \BayonetsAndTomahawks\Models\ActionPoint
     $this->movementMultiplier = 2;
     $this->name = clienttranslate("Army AP 2x");
     $this->actionsAllowed = [
-      ARMY_MOVEMENT,
+      MOVEMENT,
       // CONSTRUCTION,
       // MARSHAL_TROOPS,
     ];

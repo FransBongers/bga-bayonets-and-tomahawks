@@ -231,6 +231,16 @@ class Notifications
     ]);
   }
 
+  public static function battleRemoveMarker($player, $space)
+  {
+    self::notifyAll('battleRemoveMarker', clienttranslate('${player_name} removes Battle marker from ${tkn_boldText_space}'), [
+      'player' => $player,
+      'tkn_boldText_space' => $space->getName(),
+      'space' => $space,
+      'i18n' => ['tkn_boldText_space']
+    ]);
+  }
+
   public static function battleCommanderCasualtyRoll($player, $commanderCasualtyRoll)
   {
     self::message(clienttranslate('${player_name} checks for Commander Casualty and rolls ${tkn_dieResult}'), [

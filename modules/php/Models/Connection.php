@@ -116,7 +116,9 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
     foreach ($this->attributes as $attribute => $field) {
       $data[$attribute] = $this->$attribute;
     }
-
+    unset($data['location']);
+    unset($data['state']);
+    $data['type'] = $this->getType();
     return $data;
   }
 }

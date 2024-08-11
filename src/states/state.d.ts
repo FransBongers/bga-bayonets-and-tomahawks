@@ -111,6 +111,16 @@ interface OnEnteringLightMovementStateArgs extends CommonArgs {
   faction: Faction;
 }
 
+interface OnEnteringMovementStateArgs extends CommonArgs {
+  adjacent: {
+    space: BTSpace;
+    connection: BTConnection;
+  }[];
+  units: BTUnit[];
+  fromSpace: BTSpace;
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+}
+
 interface EventArmedBattoemenStateArgs extends CommonArgs {
   markers: BTMarker[];
 }

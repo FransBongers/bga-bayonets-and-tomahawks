@@ -98,4 +98,40 @@ class GameMap extends \APP_DbObject
       return !Utils::startsWith($location,'supply') && explode('_', $location)[1] === $faction;
     });
   }
+
+  public static function factionOutnumbersEnemyInSpace($space, $faction) {
+    
+    $units = $space->getUnits();
+
+    $enemyHasFort = false;
+    $enemyUnits = [];
+    $playerUnits = [];
+
+    foreach ($units as $unit) {
+      if ($unit->getType() === COMMANDER) {
+        continue;
+      }
+      if ($unit->getFaction() === $faction) {
+        $playerUnits[] = $unit;
+      } else {
+        $enemyUnits[] = $unit;
+        if ($unit->getType() === FORT) {
+          $enemyHasFort = true;
+        }
+      }
+    }
+
+    $enemyHasBastion = $faction === BRITISH && $space->hasBastion();
+    $militia = $space->getHomeSpace() !== $faction ? $space->getMilitia() : 0;
+    $numberOfEnemyUnits = count($enemyUnits) + $militia;
+
+    $hasEnemyUnits = $numberOfEnemyUnits > 0;
+
+    return [
+      'hasEnemyUnits' => $hasEnemyUnits,
+      'outnumbers' => $hasEnemyUnits && count($playerUnits) / $numberOfEnemyUnits > 3,
+      'enemyHasBastion' => $enemyHasBastion,
+      'enemyHasFort' => $enemyHasFort,
+    ];
+  }
 }

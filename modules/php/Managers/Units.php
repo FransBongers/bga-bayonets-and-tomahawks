@@ -49,7 +49,7 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
     }
 
     self::checkLocation($location);
-    self::checkState($state);
+    // self::checkState($state);
     self::checkIdArray($ids);
     return self::getUpdateQueryWithOrigin($ids, $location, $state,  $previousLocation)->run();
   }

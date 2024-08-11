@@ -20,7 +20,7 @@ class SailMovementDestination extends \BayonetsAndTomahawks\Actions\UnitMovement
 {
   public function getState()
   {
-    return ST_SAIL_MOVEMENT_DESTINATION;
+    return 300;//ST_SAIL_MOVEMENT_DESTINATION;
   }
 
   // ..######..########....###....########.########

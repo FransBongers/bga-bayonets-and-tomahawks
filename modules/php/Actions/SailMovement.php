@@ -20,7 +20,7 @@ class SailMovement extends \BayonetsAndTomahawks\Actions\UnitMovement
 {
   public function getState()
   {
-    return ST_SAIL_MOVEMENT;
+    return 200;//ST_SAIL_MOVEMENT;
   }
 
   // ..######..########....###....########.########
@@ -240,7 +240,7 @@ class SailMovement extends \BayonetsAndTomahawks\Actions\UnitMovement
     });
   }
 
-  public function getFlow($playerId, $originId)
+  public function getFlow($actionPointId, $playerId, $originId)
   {
     return [
       'originId' => $originId,

@@ -11,7 +11,7 @@ class IndianAP_2x extends \BayonetsAndTomahawks\Models\ActionPoint
     $this->movementMultiplier = 2;
     $this->name = clienttranslate("Indian AP 2x");
     $this->actionsAllowed = [
-      LIGHT_MOVEMENT,
+      MOVEMENT,
       RAID
     ];
   }

@@ -51,6 +51,13 @@ const VAGARIES_OF_WAR = 'vagariesOfWar';
 const REMOVED_FROM_PLAY = 'removedFromPlay';
 
 /**
+ * Connection types
+ */
+const ROAD = 'road';
+const PATH = 'path';
+const HIGHWAY = 'highway';
+
+/**
  * Pools
  */
 const POOL_FLEETS = 'poolFleets';
@@ -117,10 +124,7 @@ const BRITISH_BATTLE_MARKER = 'british_battle_marker';
 const OUT_OF_SUPPLY_MARKER = 'outOfSupplyMarker';
 const ROUT_MARKER = 'routMarker';
 
-const STACK_MARKERS = [
-  OUT_OF_SUPPLY_MARKER,
-  ROUT_MARKER,
-];
+const STACK_MARKERS = [OUT_OF_SUPPLY_MARKER, ROUT_MARKER];
 
 // Raid track
 const RAID_TRACK_0 = 'raid_track_0';

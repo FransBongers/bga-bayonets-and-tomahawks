@@ -11,8 +11,8 @@ class FrenchLightArmyAP extends \BayonetsAndTomahawks\Models\ActionPoint
     $this->name = clienttranslate("French Light/Army AP");
     $this->actionsAllowed = [
       RAID,
-      LIGHT_MOVEMENT,
-      ARMY_MOVEMENT,
+      MOVEMENT,
+      // ARMY_MOVEMENT,
       // MARSHAL_TROOPS,
       // CONSTRUCTION,
     ];

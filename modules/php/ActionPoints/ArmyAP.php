@@ -10,7 +10,7 @@ class ArmyAP extends \BayonetsAndTomahawks\Models\ActionPoint
     $this->id = ARMY_AP;
     $this->name = clienttranslate("Army AP");
     $this->actionsAllowed = [
-      ARMY_MOVEMENT,
+      MOVEMENT,
       // CONSTRUCTION,
       // MARSHAL_TROOPS,
     ];

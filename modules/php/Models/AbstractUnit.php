@@ -116,6 +116,11 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     return $this->faction;
   }
 
+  public function getMpLimit()
+  {
+    return $this->mpLimit;
+  }
+
   public function isIndian()
   {
     return $this->indian;
@@ -139,6 +144,11 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   public function isColonialBrigade()
   {
     return $this->type === BRIGADE && $this->colony !== null;
+  }
+
+  public function isLight()
+  {
+    return $this->type === LIGHT;
   }
 
   public function isHighlandBrigade()
@@ -194,6 +204,11 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   public function isReduced()
   {
     return $this->state === 1;
+  }
+
+  public function isSpent()
+  {
+    return $this->spent === 1;
   }
 
   public function __call($method, $args)

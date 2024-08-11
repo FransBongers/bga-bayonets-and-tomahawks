@@ -6,14 +6,20 @@ interface AddButtonProps {
 }
 
 interface AddActionButtonProps extends AddButtonProps {
-  color?: "blue" | "gray" | "red" | "none";
+  color?: 'blue' | 'gray' | 'red' | 'none';
 }
 
 interface BayonetsAndTomahawksGame extends Game {
   addCancelButton: ({ callback }?: { callback?: Function }) => void;
   addConfirmButton: (props: { callback: Function | string }) => void;
   addPassButton: (props: { optionalAction: boolean; text?: string }) => void;
-  addPlayerButton: ({ player, callback }: { player: BgaPlayer; callback: Function | string }) => void; 
+  addPlayerButton: ({
+    player,
+    callback,
+  }: {
+    player: BgaPlayer;
+    callback: Function | string;
+  }) => void;
   addPrimaryActionButton: (props: AddButtonProps) => void;
   addSecondaryActionButton: (props: AddButtonProps) => void;
   addDangerActionButton: (props: AddButtonProps) => void;
@@ -30,9 +36,9 @@ interface BayonetsAndTomahawksGame extends Game {
     args: Record<string, unknown>
   ) => string;
   getPlayerId: () => number;
-  getUnitData: ({counterId}: {counterId: string;}) => {faction: string;};
+  getUnitData: ({ counterId }: { counterId: string }) => { faction: string };
   onCancel: () => void;
-  openUnitStack: (unit: BTUnit) => void,
+  openUnitStack: (unit: BTUnit) => void;
   setCardSelectable: (props: {
     id: string;
     callback: (event: PointerEvent) => void;
@@ -43,7 +49,7 @@ interface BayonetsAndTomahawksGame extends Game {
     callback: (event: PointerEvent) => void;
   }) => void;
   setLocationSelected: (props: { id: string }) => void;
-  setStackSelected: (props: { spaceId: string; faction: string; }) => void;
+  setStackSelected: (props: { spaceId: string; faction: string }) => void;
   setUnitSelectable: (props: {
     id: string;
     callback: (event: PointerEvent) => void;
@@ -100,6 +106,13 @@ interface BTCard {
   years: number[] | null;
 }
 
+interface BTConnection {
+  id: string;
+  type: string;
+  britishLimit: number;
+  frenchLimit: number;
+}
+
 interface BTMarker {
   manager: 'markers';
   id: string;
@@ -145,7 +158,7 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   constrolIndianNations: {
     Cherokee: BRITISH_FACTION | FRENCH_FACTION | 'neutral';
     Iroquois: BRITISH_FACTION | FRENCH_FACTION | 'neutral';
-  }
+  };
   markers: {
     year_marker: BTMarker;
     round_marker: BTMarker;
@@ -159,16 +172,19 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   staticData: {
     units: {
       [counterId: string]: {
-        faction: "british" | "french";
+        faction: 'british' | 'french';
         colony?: string | null;
         counterText: string;
         metropolitan: boolean;
         type: string;
       };
     };
-    spaces: Record<string, {
-      name: string;
-    }>
+    spaces: Record<
+      string,
+      {
+        name: string;
+      }
+    >;
   };
   spaces: BTSpace[];
   units: BTUnit[];

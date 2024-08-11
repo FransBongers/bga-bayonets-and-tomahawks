@@ -200,7 +200,7 @@ class LightMovement extends \BayonetsAndTomahawks\Actions\UnitMovement
     return $hasLightUnit;
   }
 
-  public function getFlow($playerId, $originId)
+  public function getFlow($actionPointId, $playerId, $originId)
   {
     return [
       // 'stackAction' => LIGHT_MOVEMENT,

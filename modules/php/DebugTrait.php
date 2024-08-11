@@ -88,6 +88,17 @@ trait DebugTrait
 
   function debug_test()
   {
+    // Engine::insertAsChild([
+    //   'action' => BATTLE_RETREAT,
+    //   'playerId' => Players::getPlayerForFaction(BRITISH)->getId(),
+    //   'faction' => BRITISH,
+    //   'spaceId' => TICONDEROGA,
+    //   'isAttacker' => false
+    // ]);
+    // Engine::getNextUnresolved()->argsMovement();
+
+    // $next = Engine::getNextUnresolved();
+    Notifications::log('index', GameMap::factionOutnumbersEnemyInSpace(Spaces::get(TICONDEROGA), FRENCH));
 
     // Notifications::log('markers', GameMap::getMarkersOnMap(OUT_OF_SUPPLY_MARKER,BRITISH));
 
@@ -105,7 +116,7 @@ trait DebugTrait
     // Globals::setLostAPBritish([]);
     // Globals::setLostAPFrench([]);
 
-    Cards::get('Card33')->insertOnTop(Locations::buildUpDeck(FRENCH));
+    // Cards::get('Card33')->insertOnTop(Locations::buildUpDeck(FRENCH));
     // Cards::get('Card21')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card38')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card13')->insertOnTop(Locations::campaignDeck(BRITISH));

@@ -55,14 +55,6 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
     foreach ($spaces as $space) {
       $actions = $actionPoint->canActivateStackInSpace($space, $player);
 
-      // $units = $space->getUnits();
-
-      // $hasUnitToActivate = Utils::array_some($units, function ($unit) {
-      //   return $unit->getFaction() === INDIAN;
-      // });
-      // if ($hasUnitToActivate) {
-      //   $stacks[] = $space->getId();
-      // }
       if (count($actions) > 0) {
         $stacks[$space->getId()] = $actions;
       }
@@ -105,7 +97,7 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
     $stackId = $args['stack'];
 
     $stateArgs = $this->argsActionActivateStack();
-    
+
 
     if (!isset($stateArgs['stacks'][$stackId])) {
       throw new \feException("Not allowed to activate selected stack");
@@ -118,7 +110,7 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
     }
 
     $actionPointId = $this->ctx->getParent()->getInfo()['actionPointId'];
-    $flow = AtomicActions::get($action['id'])->getFlow(self::getPlayer()->getId(), $stackId, in_array($actionPointId, [INDIAN_AP, INDIAN_AP_2X]));
+    $flow = AtomicActions::get($action['id'])->getFlow($actionPointId, self::getPlayer()->getId(), $stackId, in_array($actionPointId, [INDIAN_AP, INDIAN_AP_2X]));
     $this->ctx->insertAsBrother(Engine::buildTree($flow));
 
     Notifications::activateStack(self::getPlayer(), Spaces::get($stackId), $action['name']);

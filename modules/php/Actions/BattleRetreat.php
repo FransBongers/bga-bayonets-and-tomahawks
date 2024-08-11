@@ -59,7 +59,7 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
     $commanders = $this->getCommandersOnRerollsTrack();
     $spaceId = Globals::getActiveBattleSpaceId();
 
-    foreach($commanders as $faction => $unit) {
+    foreach ($commanders as $faction => $unit) {
       if ($unit === null) {
         continue;
       }
@@ -168,6 +168,7 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
     $isAttacker = $info['isAttacker'];
 
     $space = Spaces::get($spaceId);
+
     $attackerUnits = $isAttacker ? $space->getUnits($faction) : $space->getUnits(Players::otherFaction($faction));
     $defenderUnits = !$isAttacker ? $space->getUnits($faction) : $space->getUnits(Players::otherFaction($faction));
     $spaceIdsAttackersEnteredFrom = array_map(function ($unit) {
@@ -211,7 +212,9 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
 
   private function getSpacesBasedOnAdjacentSpaceRetreatPriorities($possibleConnections, $faction)
   {
-    $spaces = Spaces::getMany(array_keys($possibleConnections))->toArray();
+    $spaces = array_map(function ($adjacent) {
+      return $adjacent['space'];
+    }, $possibleConnections);
     $enemyFaction = Players::otherFaction($faction);
 
     $spacesWithoutEnemyUnits = Utils::filter($spaces, function ($space) use ($enemyFaction) {

@@ -10,7 +10,7 @@ class IndianAP extends \BayonetsAndTomahawks\Models\ActionPoint
     $this->id = INDIAN_AP;
     $this->name = clienttranslate("Indian AP");
     $this->actionsAllowed = [
-      LIGHT_MOVEMENT,
+      MOVEMENT,
       RAID
     ];
   }
