@@ -8,5 +8,7 @@ class Niagara_Onyiudaondagwat extends \BayonetsAndTomahawks\Models\Connections\H
   {
     parent::__construct($row);
     $this->id = NIAGARA_ONYIUDAONDAGWAT;
+    $this->top = 1629;
+    $this->left = 374;
   }
 }

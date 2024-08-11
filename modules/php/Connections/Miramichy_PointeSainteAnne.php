@@ -8,5 +8,7 @@ class Miramichy_PointeSainteAnne extends \BayonetsAndTomahawks\Models\Connection
   {
     parent::__construct($row);
     $this->id = MIRAMICHY_POINTE_SAINTE_ANNE;
+    $this->top = 574;
+    $this->left = 707;
   }
 }

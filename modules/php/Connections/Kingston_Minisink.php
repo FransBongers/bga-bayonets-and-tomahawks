@@ -8,5 +8,7 @@ class Kingston_Minisink extends \BayonetsAndTomahawks\Models\Connections\Highway
   {
     parent::__construct($row);
     $this->id = KINGSTON_MINISINK;
+    $this->top = 1563;
+    $this->left = 873;
   }
 }

@@ -18,7 +18,7 @@ class Connections extends \BayonetsAndTomahawks\Helpers\Pieces
 {
   protected static $table = 'connections';
   protected static $prefix = 'connection_';
-  protected static $customFields = ['british_limit', 'french_limit'];
+  protected static $customFields = ['british_limit', 'french_limit', 'road'];
   protected static $autoremovePrefix = false;
   protected static $autoreshuffle = false;
   protected static $autoIncrement = false;
@@ -77,6 +77,7 @@ class Connections extends \BayonetsAndTomahawks\Helpers\Pieces
         'state' => 0,
         'britishLimit' => 0,
         'frenchLimit' => 0,
+        'road' => 0,
         // 'extra_data' => json_encode($extraData)
       ];
     }
@@ -89,5 +90,29 @@ class Connections extends \BayonetsAndTomahawks\Helpers\Pieces
   public static function setupNewGame($players = null, $options = null)
   {
     self::setupLoadConnections();
+  }
+
+  public static function getUiData()
+  {
+    // return self::getMany([YORK_ZAWAKWTEGOK, ALBANY_KINGSTON])->map(function ($connection) {
+    //   return $connection->jsonSerialize();
+    // })->toArray();
+    return self::getAll()->map(function ($connection) {
+      return $connection->jsonSerialize();
+    })->toArray();
+  }
+
+  /**
+   * getStaticUiData : return all units static datas
+   */
+  public static function getStaticUiData()
+  {
+    $connections = self::getAll()->toArray();
+
+    $data = [];
+    foreach ($connections as $index => $connection) {
+      $data[$connection->getId()] = $connection->getStaticData();
+    }
+    return $data;
   }
 }

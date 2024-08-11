@@ -9,5 +9,7 @@ class Kahnistioh_Kithanink extends \BayonetsAndTomahawks\Models\Connections\Path
     parent::__construct($row);
     $this->id = KAHNISTIOH_KITHANINK;
     $this->indianPath = true;
+    $this->top = 1838;
+    $this->left = 547;
   }
 }

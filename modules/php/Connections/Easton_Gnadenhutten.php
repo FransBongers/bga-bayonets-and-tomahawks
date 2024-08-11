@@ -8,5 +8,7 @@ class Easton_Gnadenhutten extends \BayonetsAndTomahawks\Models\Connections\Highw
   {
     parent::__construct($row);
     $this->id = EASTON_GNADENHUTTEN;
+    $this->top = 1734;
+    $this->left = 829;
   }
 }

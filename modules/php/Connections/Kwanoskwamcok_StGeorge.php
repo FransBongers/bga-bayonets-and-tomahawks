@@ -9,5 +9,7 @@ class Kwanoskwamcok_StGeorge extends \BayonetsAndTomahawks\Models\Connections\Pa
     parent::__construct($row);
     $this->id = KWANOSKWAMCOK_ST_GEORGE;
     $this->coastal = true;
+    $this->top = 780;
+    $this->left = 908;
   }
 }

@@ -8,5 +8,7 @@ class Carlisle_Winchester extends \BayonetsAndTomahawks\Models\Connections\Highw
   {
     parent::__construct($row);
     $this->id = CARLISLE_WINCHESTER;
+    $this->top = 1936;
+    $this->left = 960;
   }
 }

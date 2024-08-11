@@ -8,5 +8,7 @@ class LesIllinois_RiviereOuabache extends \BayonetsAndTomahawks\Models\Connectio
   {
     parent::__construct($row);
     $this->id = LES_ILLINOIS_RIVIERE_OUABACHE;
+    $this->top = 2243;
+    $this->left = 475;
   }
 }

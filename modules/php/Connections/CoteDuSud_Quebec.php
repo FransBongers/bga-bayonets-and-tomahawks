@@ -9,5 +9,7 @@ class CoteDuSud_Quebec extends \BayonetsAndTomahawks\Models\Connections\Highway
     parent::__construct($row);
     $this->id = COTE_DU_SUD_QUEBEC;
     $this->coastal = true;
+    $this->top = 778;
+    $this->left = 445;
   }
 }

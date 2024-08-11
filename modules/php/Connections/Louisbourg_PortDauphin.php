@@ -9,5 +9,7 @@ class Louisbourg_PortDauphin extends \BayonetsAndTomahawks\Models\Connections\Hi
     parent::__construct($row);
     $this->id = LOUISBOURG_PORT_DAUPHIN;
     $this->coastal = true;
+    $this->top = 241;
+    $this->left = 1026;
   }
 }

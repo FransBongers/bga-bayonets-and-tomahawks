@@ -8,5 +8,7 @@ class Mtan_RiviereRistigouche extends \BayonetsAndTomahawks\Models\Connections\P
   {
     parent::__construct($row);
     $this->id = MTAN_RIVIERE_RISTIGOUCHE;
+    $this->top = 500;
+    $this->left = 451;
   }
 }

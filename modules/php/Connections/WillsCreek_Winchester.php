@@ -8,5 +8,7 @@ class WillsCreek_Winchester extends \BayonetsAndTomahawks\Models\Connections\Hig
   {
     parent::__construct($row);
     $this->id = WILLS_CREEK_WINCHESTER;
+    $this->top = 1986;
+    $this->left = 923;
   }
 }

@@ -8,5 +8,7 @@ class Ouentironk_Toronto extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = OUENTIRONK_TORONTO;
+    $this->top = 1642;
+    $this->left = 158;
   }
 }

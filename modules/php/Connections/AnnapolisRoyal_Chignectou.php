@@ -9,5 +9,7 @@ class AnnapolisRoyal_Chignectou extends \BayonetsAndTomahawks\Models\Connections
     parent::__construct($row);
     $this->id = ANNAPOLIS_ROYAL_CHIGNECTOU;
     $this->coastal = true;
+    $this->top = 544;
+    $this->left = 972;
   }
 }

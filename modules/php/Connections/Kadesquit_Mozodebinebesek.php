@@ -8,5 +8,7 @@ class Kadesquit_Mozodebinebesek extends \BayonetsAndTomahawks\Models\Connections
   {
     parent::__construct($row);
     $this->id = KADESQUIT_MOZODEBINEBESEK;
+    $this->top = 705;
+    $this->left = 718;
   }
 }

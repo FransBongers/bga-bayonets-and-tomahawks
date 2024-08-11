@@ -8,5 +8,7 @@ class Albany_OneidaLake extends \BayonetsAndTomahawks\Models\Connections\Highway
   {
     parent::__construct($row);
     $this->id = ALBANY_ONEIDA_LAKE;
+    $this->top = 1465;
+    $this->left = 658;
   }
 }

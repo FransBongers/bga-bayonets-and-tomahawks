@@ -31,6 +31,72 @@
   left: calc(var(--btMapScale) * 282px);
 }
 
+.bt_connection {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: calc(var(--btMarkerScale) * 44px);
+  max-height: calc(var(--btMarkerScale) * 44px);
+  min-width: calc(var(--btMarkerScale) * 44px);
+  max-width: calc(var(--btMarkerScale) * 44px);
+
+  .bt_road {
+    min-height: calc(var(--btMarkerScale) * 44px);
+    max-height: calc(var(--btMarkerScale) * 44px);
+    min-width: calc(var(--btMarkerScale) * 44px);
+    max-width: calc(var(--btMarkerScale) * 44px);
+    background-image: url('img/markers_2.webp');
+    background-size: 800% 600%;
+    box-sizing: border-box;
+    border: calc(var(--btMapScale) * 1px) solid black;
+    border-radius: 5%;
+  }
+
+  .bt_road[data-road='false'] {
+    display: none;
+  }
+
+  .bt_road[data-road='construction'] {
+    background-position-x: math.div(5, 7) * 100%;
+    background-position-y: math.div(0, 5) * 100%;
+  }
+
+  .bt_road[data-road='true'] {
+    background-position-x: math.div(2, 7) * 100%;
+    background-position-y: math.div(3, 5) * 100%;
+  }
+
+  .bt_connection_limit_counter {
+    min-width: calc(var(--btMapScale) * 34px);
+    min-height: calc(var(--btMapScale) * 30px);
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      font-size: calc(var(--btMapScale) * 30px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      margin-left: -2px;
+      // margin-top: 2px;
+      // text-shadow: 2px 0 2px hsla(0, 0%, 100%, .6), 0 -2px 2px hsla(0, 0%, 100%, .6), 0 2px 2px hsla(0, 0%, 100%, .6), -2px 0 2px hsla(0, 0%, 100%, .6);
+      // text-shadow: 2px 0 2px rgba(0, 0, 0, 1), 0 -2px 2px rgba(0, 0, 0, 1), 0 2px 2px rgba(0, 0, 0, 1), -2px 0 2px rgba(0, 0, 0, 1);
+    }
+  }
+
+  span[data-faction='british'] {
+    color: #b73e20;
+  }
+
+  span[data-faction='french'] {
+    color: #216396;
+  }
+}
+
 .bt_space {
   position: absolute !important;
   border-radius: 50%;
@@ -80,7 +146,7 @@
 
 .bt_test {
   background-color: yellow;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 .bt_raid_track {

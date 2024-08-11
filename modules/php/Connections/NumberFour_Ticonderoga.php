@@ -8,5 +8,7 @@ class NumberFour_Ticonderoga extends \BayonetsAndTomahawks\Models\Connections\Pa
   {
     parent::__construct($row);
     $this->id = NUMBER_FOUR_TICONDEROGA;
+    $this->top = 1150;
+    $this->left = 646;
   }
 }

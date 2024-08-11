@@ -8,5 +8,7 @@ class Matschedash_Saugink extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = MATSCHEDASH_SAUGINK;
+    $this->top = 1824;
+    $this->left = 75;
   }
 }

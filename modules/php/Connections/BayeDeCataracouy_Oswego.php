@@ -8,5 +8,7 @@ class BayeDeCataracouy_Oswego extends \BayonetsAndTomahawks\Models\Connections\H
   {
     parent::__construct($row);
     $this->id = BAYE_DE_CATARACOUY_OSWEGO;
+    $this->top = 1463;
+    $this->left = 364;
   }
 }

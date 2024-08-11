@@ -8,5 +8,7 @@ class Mamhlawbagok_Namaskonkik extends \BayonetsAndTomahawks\Models\Connections\
   {
     parent::__construct($row);
     $this->id = MAMHLAWBAGOK_NAMASKONKIK;
+    $this->top = 912;
+    $this->left = 497;
   }
 }

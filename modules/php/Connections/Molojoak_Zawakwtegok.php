@@ -8,5 +8,7 @@ class Molojoak_Zawakwtegok extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = MOLOJOAK_ZAWAKWTEGOK;
+    $this->top = 940;
+    $this->left = 692;
   }
 }

@@ -8,5 +8,7 @@ class Molojoak_Namaskonkik extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = MOLOJOAK_NAMASKONKIK;
+    $this->top = 849;
+    $this->left = 604;
   }
 }

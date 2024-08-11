@@ -8,5 +8,7 @@ class Niagara_WaabishkiigooGichigami extends \BayonetsAndTomahawks\Models\Connec
   {
     parent::__construct($row);
     $this->id = NIAGARA_WAABISHKIIGOO_GICHIGAMI;
+    $this->top = 1871;
+    $this->left = 276;
   }
 }

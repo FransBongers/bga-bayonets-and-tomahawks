@@ -8,5 +8,7 @@ class FortOuiatenon_RiviereOuabache extends \BayonetsAndTomahawks\Models\Connect
   {
     parent::__construct($row);
     $this->id = FORT_OUIATENON_RIVIERE_OUABACHE;
+    $this->top = 2213;
+    $this->left = 339;
   }
 }

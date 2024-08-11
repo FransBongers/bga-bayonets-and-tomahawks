@@ -8,5 +8,7 @@ class RaysTown_Shamokin extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = RAYS_TOWN_SHAMOKIN;
+    $this->top = 1884;
+    $this->left = 792;
   }
 }

@@ -8,5 +8,7 @@ class LesTroisRivieres_Quebec extends \BayonetsAndTomahawks\Models\Connections\H
   {
     parent::__construct($row);
     $this->id = LES_TROIS_RIVIERES_QUEBEC;
+    $this->top = 910;
+    $this->left = 371;
   }
 }

@@ -8,5 +8,7 @@ class CoteDeBeaupre_JacquesCartier extends \BayonetsAndTomahawks\Models\Connecti
   {
     parent::__construct($row);
     $this->id = COTE_DE_BEAUPRE_JACQUES_CARTIER;
+    $this->top = 800;
+    $this->left = 226;
   }
 }

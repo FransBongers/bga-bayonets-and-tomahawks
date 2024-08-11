@@ -8,5 +8,7 @@ class LaPresentation_Montreal extends \BayonetsAndTomahawks\Models\Connections\H
   {
     parent::__construct($row);
     $this->id = LA_PRESENTATION_MONTREAL;
+    $this->top = 1231;
+    $this->left = 291;
   }
 }

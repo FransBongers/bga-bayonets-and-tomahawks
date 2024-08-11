@@ -8,5 +8,7 @@ class Matschedash_Ouentironk extends \BayonetsAndTomahawks\Models\Connections\Pa
   {
     parent::__construct($row);
     $this->id = MATSCHEDASH_OUENTIRONK;
+    $this->top = 1724;
+    $this->left = 110;
   }
 }

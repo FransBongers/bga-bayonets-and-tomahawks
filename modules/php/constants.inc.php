@@ -310,6 +310,7 @@ const BRITISH_BATTLE_MARKER = 'british_battle_marker';
 const ROUT_MARKER = 'routMarker';
 const OUT_OF_SUPPLY_MARKER = 'outOfSupplyMarker';
 
+
 const NAMED_MARKERS = [
   YEAR_MARKER,
   ROUND_MARKER,
@@ -923,6 +924,13 @@ const ST_GEORGE_YORK = 'StGeorge_York';
 const TACONNET_YORK = 'Taconnet_York';
 const WILLS_CREEK_WINCHESTER = 'WillsCreek_Winchester';
 const YORK_ZAWAKWTEGOK = 'York_Zawakwtegok';
+
+/**
+ * Road status
+ */
+const NO_ROAD = 0;
+const ROAD_UNDER_CONTRUCTION = 1;
+const HAS_ROAD = 2;
 
 /**
  * Battle roll sequence

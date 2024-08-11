@@ -9,5 +9,7 @@ class Cawichnowane_Kahnistioh extends \BayonetsAndTomahawks\Models\Connections\P
     parent::__construct($row);
     $this->id = CAWICHNOWANE_KAHNISTIOH;
     $this->indianPath = true;
+    $this->top = 1790;
+    $this->left = 554;
   }
 }

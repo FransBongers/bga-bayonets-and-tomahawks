@@ -8,5 +8,7 @@ class LakeGeorge_Mikazawitegok extends \BayonetsAndTomahawks\Models\Connections\
   {
     parent::__construct($row);
     $this->id = LAKE_GEORGE_MIKAZAWITEGOK;
+    $this->top = 1273;
+    $this->left = 686;
   }
 }

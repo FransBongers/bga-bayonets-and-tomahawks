@@ -8,5 +8,7 @@ class Kithanink_LaPresquIsle extends \BayonetsAndTomahawks\Models\Connections\Hi
   {
     parent::__construct($row);
     $this->id = KITHANINK_LA_PRESQU_ISLE;
+    $this->top = 1865;
+    $this->left = 495;
   }
 }

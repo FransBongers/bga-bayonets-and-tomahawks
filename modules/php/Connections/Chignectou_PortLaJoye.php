@@ -8,5 +8,7 @@ class Chignectou_PortLaJoye extends \BayonetsAndTomahawks\Models\Connections\Pat
   {
     parent::__construct($row);
     $this->id = CHIGNECTOU_PORT_LA_JOYE;
+    $this->top = 495;
+    $this->left = 861;
   }
 }

@@ -8,5 +8,7 @@ class Matawaskiyak_RiviereDuLoup extends \BayonetsAndTomahawks\Models\Connection
   {
     parent::__construct($row);
     $this->id = MATAWASKIYAK_RIVIERE_DU_LOUP;
+    $this->top = 583;
+    $this->left = 436;
   }
 }

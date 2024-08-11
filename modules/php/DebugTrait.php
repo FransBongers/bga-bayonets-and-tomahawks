@@ -27,6 +27,7 @@ use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Helpers\PathCalculator;
 use BayonetsAndTomahawks\Models\ActionPoint;
 use BayonetsAndTomahawks\Scenarios\LoudounsGamble1757;
+use FTP\Connection;
 
 trait DebugTrait
 {
@@ -88,7 +89,9 @@ trait DebugTrait
 
   function debug_test()
   {
-    GameMap::placeMarkerOnStack(Players::getPlayerForFaction(FRENCH), OUT_OF_SUPPLY_MARKER, Spaces::get(GRAND_SAULT), FRENCH);
+    Connections::get(ALBANY_KINGSTON)->setBritishLimit(7);
+    Connections::get(YORK_ZAWAKWTEGOK)->setRoad(HAS_ROAD);
+    // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(FRENCH), OUT_OF_SUPPLY_MARKER, Spaces::get(GRAND_SAULT), FRENCH);
     // Engine::insertAsChild([
     //   'action' => BATTLE_RETREAT,
     //   'playerId' => Players::getPlayerForFaction(BRITISH)->getId(),

@@ -8,5 +8,7 @@ class GrandSault_Miramichy extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = GRAND_SAULT_MIRAMICHY;
+    $this->top = 555;
+    $this->left = 660;
   }
 }

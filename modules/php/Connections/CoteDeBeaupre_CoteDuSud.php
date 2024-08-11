@@ -9,5 +9,7 @@ class CoteDeBeaupre_CoteDuSud extends \BayonetsAndTomahawks\Models\Connections\P
     parent::__construct($row);
     $this->id = COTE_DE_BEAUPRE_COTE_DU_SUD;
     $this->coastal = true;
+    $this->top = 714;
+    $this->left = 388;
   }
 }

@@ -8,5 +8,7 @@ class LeDetroit_Saugink extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = LE_DETROIT_SAUGINK;
+    $this->top = 1977;
+    $this->left = 65;
   }
 }

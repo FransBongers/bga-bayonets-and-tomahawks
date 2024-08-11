@@ -9,5 +9,7 @@ class Mtan_RiviereDuLoup extends \BayonetsAndTomahawks\Models\Connections\Path
     parent::__construct($row);
     $this->id = MTAN_RIVIERE_DU_LOUP;
     $this->coastal = true;
+    $this->top = 510;
+    $this->left = 359;
   }
 }

@@ -8,5 +8,7 @@ class Chignectou_PointeSainteAnne extends \BayonetsAndTomahawks\Models\Connectio
   {
     parent::__construct($row);
     $this->id = CHIGNECTOU_POINTE_SAINTE_ANNE;
+    $this->top = 607;
+    $this->left = 838;
   }
 }

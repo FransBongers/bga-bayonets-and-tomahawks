@@ -8,5 +8,7 @@ class Kahnistioh_LaPresentation extends \BayonetsAndTomahawks\Models\Connections
   {
     parent::__construct($row);
     $this->id = KAHUAHGO_LA_PRESENTATION;
+    $this->top = 1372;
+    $this->left = 375;
   }
 }

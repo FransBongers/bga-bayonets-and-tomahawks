@@ -8,5 +8,7 @@ class LesTroisRivieres_Montreal extends \BayonetsAndTomahawks\Models\Connections
   {
     parent::__construct($row);
     $this->id = LES_TROIS_RIVIERES_MONTREAL;
+    $this->top = 1060;
+    $this->left = 319;
   }
 }

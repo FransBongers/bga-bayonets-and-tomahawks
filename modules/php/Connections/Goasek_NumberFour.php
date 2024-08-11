@@ -8,5 +8,7 @@ class Goasek_NumberFour extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = GOASEK_NUMBER_FOUR;
+    $this->top = 1071;
+    $this->left = 703;
   }
 }

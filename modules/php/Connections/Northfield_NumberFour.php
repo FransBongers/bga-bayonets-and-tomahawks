@@ -8,5 +8,7 @@ class Northfield_NumberFour extends \BayonetsAndTomahawks\Models\Connections\Hig
   {
     parent::__construct($row);
     $this->id = NORTHFIELD_NUMBER_FOUR;
+    $this->top = 1183;
+    $this->left = 828;
   }
 }

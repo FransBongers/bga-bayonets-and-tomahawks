@@ -8,5 +8,7 @@ class OneidaLake_Oswego extends \BayonetsAndTomahawks\Models\Connections\Highway
   {
     parent::__construct($row);
     $this->id = ONEIDA_LAKE_OSWEGO;
+    $this->top = 1532;
+    $this->left = 518;
   }
 }

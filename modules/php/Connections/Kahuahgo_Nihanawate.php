@@ -8,5 +8,7 @@ class Kahuahgo_Nihanawate extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = KAHUAHGO_NIHANAWATE;
+    $this->top = 1363;
+    $this->left = 441;
   }
 }

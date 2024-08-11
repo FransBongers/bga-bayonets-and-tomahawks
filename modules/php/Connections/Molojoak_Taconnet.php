@@ -8,5 +8,7 @@ class Molojoak_Taconnet extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = MOLOJOAK_TACONNET;
+    $this->top = 864;
+    $this->left = 714;
   }
 }

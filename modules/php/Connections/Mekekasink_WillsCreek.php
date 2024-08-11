@@ -8,5 +8,7 @@ class Mekekasink_WillsCreek extends \BayonetsAndTomahawks\Models\Connections\Pat
   {
     parent::__construct($row);
     $this->id = MEKEKASINK_WILLS_CREEK;
+    $this->top = 2020;
+    $this->left = 848;
   }
 }

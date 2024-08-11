@@ -8,5 +8,7 @@ class Easton_Philadelphia extends \BayonetsAndTomahawks\Models\Connections\Highw
   {
     parent::__construct($row);
     $this->id = EASTON_PHILADELPHIA;
+    $this->top = 1791;
+    $this->left = 975;
   }
 }

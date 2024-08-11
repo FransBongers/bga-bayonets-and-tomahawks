@@ -8,5 +8,7 @@ class IsleAuxNoix_Montreal extends \BayonetsAndTomahawks\Models\Connections\High
   {
     parent::__construct($row);
     $this->id = ISLE_AUX_NOIX_MONTREAL;
+    $this->top = 1105;
+    $this->left = 380;
   }
 }

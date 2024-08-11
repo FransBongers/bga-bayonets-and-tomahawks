@@ -43,6 +43,7 @@
     "src/templates.ts",
     "src/utility.ts",
     "src/game-map/config.ts",
+    "src/game-map/connection.ts",
     "src/game-map/index.ts",
     "src/game-map/templates.ts",
     "src/game-map/types.d.ts",

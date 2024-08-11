@@ -8,5 +8,7 @@ class AnnapolisRoyal_Halifax extends \BayonetsAndTomahawks\Models\Connections\Hi
   {
     parent::__construct($row);
     $this->id = ANNAPOLIS_ROYAL_HALIFAX;
+    $this->top = 570;
+    $this->left = 1007;
   }
 }

@@ -8,5 +8,7 @@ class Goasek_Mamhlawbagok extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = GOASEK_MAMHLAWBAGOK;
+    $this->top = 1020;
+    $this->left = 570;
   }
 }

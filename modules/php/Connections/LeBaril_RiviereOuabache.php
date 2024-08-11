@@ -8,5 +8,7 @@ class LeBaril_RiviereOuabache extends \BayonetsAndTomahawks\Models\Connections\H
   {
     parent::__construct($row);
     $this->id = LE_BARIL_RIVIERE_OUABACHE;
+    $this->top = 2163;
+    $this->left = 390;
   }
 }

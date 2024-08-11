@@ -148,6 +148,7 @@ $connectionIds = [
   'Northfield_NumberFour',
   'Northfield_Rumford',
   'NumberFour_Ticonderoga',
+  'NumberFour_Zawakwtegok',
   'OneidaLake_Oquaga',
   'OneidaLake_Oswego',
   'Onontake_Oquaga',

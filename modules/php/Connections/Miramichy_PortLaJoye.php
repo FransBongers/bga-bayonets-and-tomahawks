@@ -9,5 +9,7 @@ class Miramichy_PortLaJoye extends \BayonetsAndTomahawks\Models\Connections\High
     parent::__construct($row);
     $this->id = MIRAMICHY_PORT_LA_JOYE;
     $this->coastal = true;
+    $this->top = 476;
+    $this->left = 795;
   }
 }

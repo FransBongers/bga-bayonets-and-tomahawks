@@ -9,5 +9,7 @@ class AnnapolisRoyal_CapeSable extends \BayonetsAndTomahawks\Models\Connections\
     parent::__construct($row);
     $this->id = ANNAPOLIS_ROYAL_CAPE_SABLE;
     $this->coastal = true;
+    $this->top = 695;
+    $this->left = 1007;
   }
 }

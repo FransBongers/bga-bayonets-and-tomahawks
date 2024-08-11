@@ -8,5 +8,7 @@ class NumberFour_Zawakwtegok extends \BayonetsAndTomahawks\Models\Connections\Pa
   {
     parent::__construct($row);
     $this->id = NUMBER_FOUR_ZAWAKWTEGOK;
+    $this->top = 1051;
+    $this->left = 753;
   }
 }

@@ -247,3 +247,10 @@ const VOW_PITT_SUBSIDIES = 'VOWPittSubsidies';
  * Actions
  */
 const ACTION_ROUND_INDIAN_ACTIONS = 'ACTION_ROUND_INDIAN_ACTIONS';
+
+/**
+ * Road status
+ */
+const NO_ROAD = 0;
+const ROAD_UNDER_CONTRUCTION = 1;
+const HAS_ROAD = 2;

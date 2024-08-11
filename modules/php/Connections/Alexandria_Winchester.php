@@ -8,5 +8,7 @@ class Alexandria_Winchester extends \BayonetsAndTomahawks\Models\Connections\Hig
   {
     parent::__construct($row);
     $this->id = ALEXANDRIA_WINCHESTER;
+    $this->top = 1984;
+    $this->left = 1085;
   }
 }

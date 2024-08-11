@@ -8,5 +8,7 @@ class LakeGeorge_Ticonderoga extends \BayonetsAndTomahawks\Models\Connections\Hi
   {
     parent::__construct($row);
     $this->id = LAKE_GEORGE_TICONDEROGA;
+    $this->top = 1263;
+    $this->left = 588;
   }
 }

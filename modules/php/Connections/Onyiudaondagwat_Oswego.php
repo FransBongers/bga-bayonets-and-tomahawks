@@ -8,5 +8,7 @@ class Onyiudaondagwat_Oswego extends \BayonetsAndTomahawks\Models\Connections\Hi
   {
     parent::__construct($row);
     $this->id = ONYIUDAONDAGWAT_OSWEGO;
+    $this->top = 1577;
+    $this->left = 524;
   }
 }

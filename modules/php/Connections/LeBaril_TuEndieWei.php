@@ -8,5 +8,7 @@ class LeBaril_TuEndieWei extends \BayonetsAndTomahawks\Models\Connections\Highwa
   {
     parent::__construct($row);
     $this->id = LE_BARIL_TU_ENDIE_WEI;
+    $this->top = 2112;
+    $this->left = 490;
   }
 }

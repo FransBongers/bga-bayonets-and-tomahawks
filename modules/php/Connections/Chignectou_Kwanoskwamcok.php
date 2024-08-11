@@ -9,5 +9,7 @@ class Chignectou_Kwanoskwamcok extends \BayonetsAndTomahawks\Models\Connections\
     parent::__construct($row);
     $this->id = CHIGNECTOU_KWANOSKWAMCOK;
     $this->coastal = true;
+    $this->top = 661;
+    $this->left = 869;
   }
 }

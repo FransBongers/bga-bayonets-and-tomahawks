@@ -8,5 +8,7 @@ class Northfield_Rumford extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = NORTHFIELD_RUMFORD;
+    $this->top = 1184;
+    $this->left = 885;
   }
 }

@@ -8,5 +8,7 @@ class York_Zawakwtegok extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = YORK_ZAWAKWTEGOK;
+    $this->top = 988;
+    $this->left = 833;
   }
 }

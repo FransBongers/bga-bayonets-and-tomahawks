@@ -9,5 +9,7 @@ class Boston_York extends \BayonetsAndTomahawks\Models\Connections\Highway
     parent::__construct($row);
     $this->id = BOSTON_YORK;
     $this->coastal = true;
+    $this->top = 1073;
+    $this->left = 993;
   }
 }

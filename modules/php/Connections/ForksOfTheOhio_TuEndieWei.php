@@ -8,5 +8,7 @@ class ForksOfTheOhio_TuEndieWei extends \BayonetsAndTomahawks\Models\Connections
   {
     parent::__construct($row);
     $this->id = FORKS_OF_THE_OHIO_TU_ENDIE_WEI;
+    $this->top = 2095;
+    $this->left = 602;
   }
 }

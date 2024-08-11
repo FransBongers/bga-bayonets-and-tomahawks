@@ -8,5 +8,7 @@ class Keninsheka_TuEndieWei extends \BayonetsAndTomahawks\Models\Connections\Pat
   {
     parent::__construct($row);
     $this->id = KENINSHEKA_TU_ENDIE_WEI;
+    $this->top = 2141;
+    $this->left = 660;
   }
 }

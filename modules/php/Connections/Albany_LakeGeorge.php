@@ -8,5 +8,7 @@ class Albany_LakeGeorge extends \BayonetsAndTomahawks\Models\Connections\Highway
   {
     parent::__construct($row);
     $this->id = ALBANY_LAKE_GEORGE;
+    $this->top = 1327;
+    $this->left = 714;
   }
 }

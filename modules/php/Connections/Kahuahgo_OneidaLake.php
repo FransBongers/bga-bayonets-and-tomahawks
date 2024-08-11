@@ -8,5 +8,7 @@ class Kahuahgo_OneidaLake extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = KAHUAHGO_ONEIDA_LAKE;
+    $this->top = 1447;
+    $this->left = 519;
   }
 }

@@ -8,5 +8,7 @@ class Carlisle_Philadelphia extends \BayonetsAndTomahawks\Models\Connections\Hig
   {
     parent::__construct($row);
     $this->id = CARLISLE_PHILADELPHIA;
+    $this->top = 1847;
+    $this->left = 999;
   }
 }

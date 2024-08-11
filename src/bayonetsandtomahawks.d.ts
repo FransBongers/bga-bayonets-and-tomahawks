@@ -111,6 +111,7 @@ interface BTConnection {
   type: string;
   britishLimit: number;
   frenchLimit: number;
+  road: number;
 }
 
 interface BTMarker {
@@ -155,6 +156,7 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
     french: BTCard | null;
     indian: BTCard | null;
   };
+  connections: BTConnection[];
   constrolIndianNations: {
     Cherokee: BRITISH_FACTION | FRENCH_FACTION | 'neutral';
     Iroquois: BRITISH_FACTION | FRENCH_FACTION | 'neutral';
@@ -170,6 +172,7 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   playerOrder: number[];
   players: Record<number, BayonetsAndTomahawksPlayerData>;
   staticData: {
+    connections: Record<string, { id: string; top: number; left: number }>;
     units: {
       [counterId: string]: {
         faction: 'british' | 'french';

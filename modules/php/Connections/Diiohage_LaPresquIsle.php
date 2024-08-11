@@ -8,5 +8,7 @@ class Diiohage_LaPresquIsle extends \BayonetsAndTomahawks\Models\Connections\Pat
   {
     parent::__construct($row);
     $this->id = DIIOHAGE_LA_PRESQU_ISLE;
+    $this->top = 1925;
+    $this->left = 434;
   }
 }

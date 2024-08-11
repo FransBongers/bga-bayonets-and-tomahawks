@@ -8,5 +8,7 @@ class BayeDeCataracouy_LaPresentation extends \BayonetsAndTomahawks\Models\Conne
   {
     parent::__construct($row);
     $this->id = BAYE_DE_CATARACOUY_LA_PRESENTATION;
+    $this->top = 1402;
+    $this->left = 297;
   }
 }

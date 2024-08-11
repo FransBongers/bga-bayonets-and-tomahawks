@@ -9,5 +9,7 @@ class Onontake_Oquaga extends \BayonetsAndTomahawks\Models\Connections\Path
     parent::__construct($row);
     $this->id = ONONTAKE_OQUAGA;
     $this->indianPath = true;
+    $this->top = 1610;
+    $this->left = 624;
   }
 }

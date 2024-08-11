@@ -8,5 +8,7 @@ class Kadesquit_StGeorge extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = KADESQUIT_ST_GEORGE;
+    $this->top = 787;
+    $this->left = 835;
   }
 }

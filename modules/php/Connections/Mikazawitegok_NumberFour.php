@@ -8,5 +8,7 @@ class Mikazawitegok_NumberFour extends \BayonetsAndTomahawks\Models\Connections\
   {
     parent::__construct($row);
     $this->id = MIKAZAWITEGOK_NUMBER_FOUR;
+    $this->top = 1189;
+    $this->left = 746;
   }
 }

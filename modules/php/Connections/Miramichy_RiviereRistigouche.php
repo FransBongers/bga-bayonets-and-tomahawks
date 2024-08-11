@@ -9,5 +9,7 @@ class Miramichy_RiviereRistigouche extends \BayonetsAndTomahawks\Models\Connecti
     parent::__construct($row);
     $this->id = MIRAMICHY_RIVIERE_RISTIGOUCHE;
     $this->coastal = true;
+    $this->top = 450;
+    $this->left = 616;
   }
 }

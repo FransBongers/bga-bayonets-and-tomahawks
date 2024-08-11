@@ -8,5 +8,7 @@ class IsleAuxNoix_LesTroisRivieres extends \BayonetsAndTomahawks\Models\Connecti
   {
     parent::__construct($row);
     $this->id = ISLE_AUX_NOIX_LES_TROIS_RIVIERES;
+    $this->top = 1045;
+    $this->left = 370;
   }
 }

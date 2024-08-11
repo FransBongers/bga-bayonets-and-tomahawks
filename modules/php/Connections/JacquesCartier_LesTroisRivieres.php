@@ -8,5 +8,7 @@ class JacquesCartier_LesTroisRivieres extends \BayonetsAndTomahawks\Models\Conne
   {
     parent::__construct($row);
     $this->id = JACQUES_CARTIER_LES_TROIS_RIVIERES;
+    $this->top = 911;
+    $this->left = 326;
   }
 }

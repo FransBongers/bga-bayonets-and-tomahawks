@@ -8,5 +8,7 @@ class GrandSault_Matawaskiyak extends \BayonetsAndTomahawks\Models\Connections\P
   {
     parent::__construct($row);
     $this->id = GRAND_SAULT_MATAWASKIYAK;
+    $this->top = 599;
+    $this->left = 530;
   }
 }

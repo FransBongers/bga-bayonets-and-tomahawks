@@ -8,5 +8,7 @@ class LaPresquIsle_Niagara extends \BayonetsAndTomahawks\Models\Connections\High
   {
     parent::__construct($row);
     $this->id = LA_PRESQU_ISLE_NIAGARA;
+    $this->top = 1759;
+    $this->left = 427;
   }
 }

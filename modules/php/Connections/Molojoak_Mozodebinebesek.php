@@ -8,5 +8,7 @@ class Molojoak_Mozodebinebesek extends \BayonetsAndTomahawks\Models\Connections\
   {
     parent::__construct($row);
     $this->id = MOLOJOAK_MOZODEBINEBESEK;
+    $this->top = 805;
+    $this->left = 642;
   }
 }

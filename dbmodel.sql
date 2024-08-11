@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `connections` (
   `connection_state` int(10) DEFAULT 0,
   `british_limit` int(10) DEFAULT 0,
   `french_limit` int(10) DEFAULT 0,
+  `road` int(10) DEFAULT 0,
   -- `extra_data` JSON NULL,
   PRIMARY KEY (`connection_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;

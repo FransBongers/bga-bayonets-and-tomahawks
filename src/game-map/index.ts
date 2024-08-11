@@ -20,6 +20,7 @@ class GameMap {
     lossesBox_french: LineStock<BTToken>;
   };
 
+  public connections: Record<string, Connection> = {};
   public yearTrack: Record<string, LineStock<BTToken>> = {};
   public actionRoundTrack: Record<string, LineStock<BTToken>> = {};
   public victoryPointsTrack: Record<string, LineStock<BTToken>> = {};
@@ -93,6 +94,19 @@ class GameMap {
   // .......##.##..........##....##.....##.##.......
   // .##....##.##..........##....##.....##.##.......
   // ..######..########....##.....#######..##.......
+
+  setupConnections({
+    gamedatas,
+  }: {
+    gamedatas: BayonetsAndTomahawksGamedatas;
+  }) {
+    gamedatas.connections.forEach((connection) => {
+      this.connections[connection.id] = new Connection({
+        game: this.game,
+        connection,
+      });
+    });
+  }
 
   setupUnitsAndSpaces({
     gamedatas,
@@ -387,6 +401,7 @@ class GameMap {
       .insertAdjacentHTML('afterbegin', tplGameMap({ gamedatas }));
     this.setupUnitsAndSpaces({ gamedatas });
     this.setupMarkers({ gamedatas });
+    this.setupConnections({ gamedatas });
   }
 
   // ..######...########.########.########.########.########...######.

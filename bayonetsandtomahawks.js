@@ -2235,6 +2235,9 @@ var VOW_FEWER_TROOPS_PUT_BACK_COLONIAL = 'VOWFewerTroopsPutBackColonial';
 var VOW_PENNSYLVANIA_MUSTERS = 'VOWPennsylvaniaMusters';
 var VOW_PITT_SUBSIDIES = 'VOWPittSubsidies';
 var ACTION_ROUND_INDIAN_ACTIONS = 'ACTION_ROUND_INDIAN_ACTIONS';
+var NO_ROAD = 0;
+var ROAD_UNDER_CONTRUCTION = 1;
+var HAS_ROAD = 2;
 define([
     'dojo',
     'dojo/_base/declare',
@@ -3419,9 +3422,77 @@ var COMMANDER_REROLLS_TRACK_CONFIG = [
         left: 945,
     },
 ];
+var Connection = (function () {
+    function Connection(_a) {
+        var game = _a.game, connection = _a.connection;
+        this.limits = {
+            british: new ebg.counter(),
+            french: new ebg.counter(),
+        };
+        this.game = game;
+        this.connection = connection;
+        this.setup(connection);
+    }
+    Connection.prototype.clearInterface = function () { };
+    Connection.prototype.updateInterface = function (_a) {
+        var gamedatas = _a.gamedatas;
+    };
+    Connection.prototype.setup = function (connection) {
+        var _a = this.game.gamedatas.staticData.connections[this.connection.id], top = _a.top, left = _a.left, id = _a.id;
+        document
+            .getElementById('bt_game_map')
+            .insertAdjacentHTML('beforeend', tplConnection({ id: id, top: top, left: left }));
+        this.limits.british.create("".concat(id, "_britishLimit_counter"));
+        this.limits.french.create("".concat(id, "_frenchLimit_counter"));
+        this.updateUI(connection);
+    };
+    Connection.prototype.updateUI = function (connection) {
+        this.setLimitValue({ faction: 'british', value: connection.britishLimit });
+        this.setLimitValue({ faction: 'french', value: connection.frenchLimit });
+        this.setRoad(connection.road);
+    };
+    Connection.prototype.setRoad = function (roadStatus) {
+        var element = document.getElementById("".concat(this.connection.id, "_road"));
+        if (!element) {
+            return;
+        }
+        element.setAttribute('data-road', this.getRoadStatus(roadStatus));
+    };
+    Connection.prototype.getRoadStatus = function (roadStatus) {
+        switch (roadStatus) {
+            case NO_ROAD:
+                return 'false';
+            case ROAD_UNDER_CONTRUCTION:
+                return 'construction';
+            case HAS_ROAD:
+                return 'true';
+            default:
+                return 'false';
+        }
+    };
+    Connection.prototype.setLimitValue = function (_a) {
+        var faction = _a.faction, value = _a.value;
+        this.limits[faction].setValue(value);
+        this.updateVisible("".concat(this.connection.id, "_").concat(faction, "_limit"), value);
+    };
+    Connection.prototype.updateVisible = function (elementId, value) {
+        var containerElement = document.getElementById(elementId);
+        if (!containerElement) {
+            return;
+        }
+        if (value === 0) {
+            containerElement.style.display = 'none';
+        }
+        else {
+            containerElement.style.display = '';
+        }
+    };
+    return Connection;
+}());
 var GameMap = (function () {
     function GameMap(game) {
         this.stacks = {};
+        this.connections = {};
         this.yearTrack = {};
         this.actionRoundTrack = {};
         this.victoryPointsTrack = {};
@@ -3463,6 +3534,16 @@ var GameMap = (function () {
         var gamedatas = _a.gamedatas;
         this.setupUnitsAndSpaces({ gamedatas: gamedatas });
         this.setupMarkers({ gamedatas: gamedatas });
+    };
+    GameMap.prototype.setupConnections = function (_a) {
+        var _this = this;
+        var gamedatas = _a.gamedatas;
+        gamedatas.connections.forEach(function (connection) {
+            _this.connections[connection.id] = new Connection({
+                game: _this.game,
+                connection: connection,
+            });
+        });
     };
     GameMap.prototype.setupUnitsAndSpaces = function (_a) {
         var _b;
@@ -3662,6 +3743,7 @@ var GameMap = (function () {
             .insertAdjacentHTML('afterbegin', tplGameMap({ gamedatas: gamedatas }));
         this.setupUnitsAndSpaces({ gamedatas: gamedatas });
         this.setupMarkers({ gamedatas: gamedatas });
+        this.setupConnections({ gamedatas: gamedatas });
     };
     GameMap.prototype.moveRoundMarker = function (_a) {
         var nextRoundStep = _a.nextRoundStep;
@@ -3758,6 +3840,10 @@ var tplSpaces = function (_a) {
     var result = mappedSpaces.join('');
     return result;
 };
+var tplConnection = function (_a) {
+    var id = _a.id, top = _a.top, left = _a.left;
+    return "<div id=\"".concat(id, "\" class=\"bt_connection\" style=\"top: calc(var(--btMapScale) * ").concat(top, "px); left: calc(var(--btMapScale) * ").concat(left, "px);\">\n          <div id=\"").concat(id, "_french_limit\" class=\"bt_connection_limit_counter\">\n            <span id=\"").concat(id, "_frenchLimit_counter\" data-faction=\"french\">4</span>\n          </div>\n          <div id=\"").concat(id, "_road\" class=\"bt_road\" data-road=\"false\"></div>\n          <div id=\"").concat(id, "_british_limit\" class=\"bt_connection_limit_counter\">\n            <span id=\"").concat(id, "_britishLimit_counter\" data-faction=\"british\">14</span>\n          </div>\n      </div>");
+};
 var tplMarkerSpace = function (_a) {
     var id = _a.id, top = _a.top, left = _a.left, extraClasses = _a.extraClasses;
     return "<div id=\"".concat(id, "\" class=\"bt_marker_space").concat(extraClasses ? " ".concat(extraClasses) : '', "\" style=\"top: calc(var(--btMapScale) * ").concat(top, "px); left: calc(var(--btMapScale) * ").concat(left, "px);\"></div>");
@@ -3829,7 +3915,15 @@ var tplGameMap = function (_a) {
         id: OPEN_SEAS_MARKER_SAIL_BOX,
         top: 77.5,
         left: 1374.5,
-    }), "\n    ").concat(tplLossesBox(), "\n    ").concat(tplSpaces({ spaces: spaces }), "\n    ").concat(tplVictoryPointsTrack(), "\n    ").concat(tplBattleTrack(), "\n    ").concat(tplBattleMarkersPool(), "\n    ").concat(tplCommanderTrack(), "\n    ").concat(tplRaidTrack(), "\n    ").concat(tplYearTrack(), "\n    ").concat(tplActionRoundTrack(), "\n    ").concat(tplMarkerSpace({ id: "".concat(CHEROKEE_CONTROL, "_markers"), top: 2120, left: 863.5 }), "\n    ").concat(tplMarkerSpace({ id: "".concat(IROQUOIS_CONTROL, "_markers"), top: 1711.5, left: 585.5 }), "\n  </div>");
+    }), "\n    ").concat(tplLossesBox(), "\n    ").concat(tplSpaces({ spaces: spaces }), "\n    ").concat(tplVictoryPointsTrack(), "\n    ").concat(tplBattleTrack(), "\n    ").concat(tplBattleMarkersPool(), "\n    ").concat(tplCommanderTrack(), "\n    ").concat(tplRaidTrack(), "\n    ").concat(tplYearTrack(), "\n    ").concat(tplActionRoundTrack(), "\n    ").concat(tplMarkerSpace({
+        id: "".concat(CHEROKEE_CONTROL, "_markers"),
+        top: 2120,
+        left: 863.5,
+    }), "\n    ").concat(tplMarkerSpace({
+        id: "".concat(IROQUOIS_CONTROL, "_markers"),
+        top: 1711.5,
+        left: 585.5,
+    }), "\n  </div>");
 };
 var Hand = (function () {
     function Hand(game) {

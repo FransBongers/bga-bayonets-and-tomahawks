@@ -49,6 +49,26 @@ const tplSpaces = ({
   return result;
 };
 
+const tplConnection = ({
+  id,
+  top,
+  left,
+}: {
+  id: string;
+  top: number;
+  left: number;
+}) => {
+  return `<div id="${id}" class="bt_connection" style="top: calc(var(--btMapScale) * ${top}px); left: calc(var(--btMapScale) * ${left}px);">
+          <div id="${id}_french_limit" class="bt_connection_limit_counter">
+            <span id="${id}_frenchLimit_counter" data-faction="french">4</span>
+          </div>
+          <div id="${id}_road" class="bt_road" data-road="false"></div>
+          <div id="${id}_british_limit" class="bt_connection_limit_counter">
+            <span id="${id}_britishLimit_counter" data-faction="british">14</span>
+          </div>
+      </div>`;
+};
+
 const tplMarkerSpace = ({
   id,
   top,
@@ -153,8 +173,16 @@ const tplGameMap = ({
     ${tplRaidTrack()}
     ${tplYearTrack()}
     ${tplActionRoundTrack()}
-    ${tplMarkerSpace({ id: `${CHEROKEE_CONTROL}_markers`, top: 2120, left: 863.5 })}
-    ${tplMarkerSpace({ id: `${IROQUOIS_CONTROL}_markers`, top: 1711.5, left: 585.5 })}
+    ${tplMarkerSpace({
+      id: `${CHEROKEE_CONTROL}_markers`,
+      top: 2120,
+      left: 863.5,
+    })}
+    ${tplMarkerSpace({
+      id: `${IROQUOIS_CONTROL}_markers`,
+      top: 1711.5,
+      left: 585.5,
+    })}
   </div>`;
 };
 // <div class="bt_marker_test" data-marker-type="victory_point"></div>

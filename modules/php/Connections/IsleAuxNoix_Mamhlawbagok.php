@@ -8,5 +8,7 @@ class IsleAuxNoix_Mamhlawbagok extends \BayonetsAndTomahawks\Models\Connections\
   {
     parent::__construct($row);
     $this->id = ISLE_AUX_NOIX_MAMHLAWBAGOK;
+    $this->top = 1038;
+    $this->left = 480;
   }
 }

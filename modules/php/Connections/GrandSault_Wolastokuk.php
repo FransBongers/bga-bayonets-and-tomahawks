@@ -8,5 +8,7 @@ class GrandSault_Wolastokuk extends \BayonetsAndTomahawks\Models\Connections\Pat
   {
     parent::__construct($row);
     $this->id = GRAND_SAULT_WOLASTOKUK;
+    $this->top = 670;
+    $this->left = 598;
   }
 }

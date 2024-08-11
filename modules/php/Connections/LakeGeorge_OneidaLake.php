@@ -8,5 +8,7 @@ class LakeGeorge_OneidaLake extends \BayonetsAndTomahawks\Models\Connections\Pat
   {
     parent::__construct($row);
     $this->id = LAKE_GEORGE_ONEIDA_LAKE;
+    $this->top = 1416;
+    $this->left = 592;
   }
 }

@@ -8,5 +8,7 @@ class GrandSault_PointeSainteAnne extends \BayonetsAndTomahawks\Models\Connectio
   {
     parent::__construct($row);
     $this->id = GRAND_SAULT_POINTE_SAINTE_ANNE;
+    $this->top = 621;
+    $this->left = 686;
   }
 }

@@ -9,5 +9,7 @@ class Alexandria_Philadelphia extends \BayonetsAndTomahawks\Models\Connections\H
     parent::__construct($row);
     $this->id = ALEXANDRIA_PHILADELPHIA;
     $this->coastal = true;
+    $this->top = 1926;
+    $this->left = 1085;
   }
 }

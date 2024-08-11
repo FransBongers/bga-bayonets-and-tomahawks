@@ -8,5 +8,7 @@ class Gennisheyo_Niagara extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = GENNISHEYO_NIAGARA;
+    $this->top = 1686;
+    $this->left = 418;
   }
 }

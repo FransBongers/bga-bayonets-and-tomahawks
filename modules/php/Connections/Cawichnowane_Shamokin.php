@@ -8,5 +8,7 @@ class Cawichnowane_Shamokin extends \BayonetsAndTomahawks\Models\Connections\Pat
   {
     parent::__construct($row);
     $this->id = CAWICHNOWANE_SHAMOKIN;
+    $this->top = 1822;
+    $this->left = 713;
   }
 }

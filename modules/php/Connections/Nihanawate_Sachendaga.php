@@ -8,5 +8,7 @@ class Nihanawate_Sachendaga extends \BayonetsAndTomahawks\Models\Connections\Pat
   {
     parent::__construct($row);
     $this->id = NIHANAWATE_SACHENDAGA;
+    $this->top = 1318;
+    $this->left = 468;
   }
 }

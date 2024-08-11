@@ -9,5 +9,7 @@ class Gennisheyo_Kahnistioh extends \BayonetsAndTomahawks\Models\Connections\Pat
     parent::__construct($row);
     $this->id = GENNISHEYO_KAHNISTIOH;
     $this->indianPath = true;
+    $this->top = 1714;
+    $this->left = 491;
   }
 }

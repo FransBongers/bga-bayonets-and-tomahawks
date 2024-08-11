@@ -9,5 +9,7 @@ class CoteDeBeaupre_Tadoussac extends \BayonetsAndTomahawks\Models\Connections\H
     parent::__construct($row);
     $this->id = COTE_DE_BEAUPRE_TADOUSSAC;
     $this->coastal = true;
+    $this->top = 654;
+    $this->left = 306;
   }
 }

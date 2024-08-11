@@ -16,9 +16,12 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
   protected $limit;
   protected $britishLimit;
   protected $frenchLimit;
+  protected $road;
   protected $type;
   protected $indianPath = false;
   protected $coastal = false;
+  protected $top = 0;
+  protected $left = 0;
   // TODO: add road construction
 
   protected $attributes = [
@@ -27,14 +30,14 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
     'state' => ['connection_state', 'int'],
     'britishLimit' => ['british_limit', 'int'],
     'frenchLimit' => ['french_limit', 'int'],
+    'road' => ['road', 'int'],
     // 'extraData' => ['extra_data', 'obj'],
   ];
 
-
   protected $staticAttributes = [
     'id',
-    'limit',
-    'type',
+    'top',
+    'left',
   ];
 
   public function getId()

@@ -8,5 +8,7 @@ class LakeGeorge_Sachendaga extends \BayonetsAndTomahawks\Models\Connections\Pat
   {
     parent::__construct($row);
     $this->id = LAKE_GEORGE_SACHENDAGA;
+    $this->top = 1340;
+    $this->left = 526;
   }
 }

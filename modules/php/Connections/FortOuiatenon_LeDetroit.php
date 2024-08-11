@@ -8,5 +8,7 @@ class FortOuiatenon_LeDetroit extends \BayonetsAndTomahawks\Models\Connections\H
   {
     parent::__construct($row);
     $this->id = FORT_OUIATENON_LE_DETROIT;
+    $this->top = 2102;
+    $this->left = 239;
   }
 }

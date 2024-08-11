@@ -9,5 +9,7 @@ class CoteDeBeaupre_Quebec extends \BayonetsAndTomahawks\Models\Connections\High
     parent::__construct($row);
     $this->id = COTE_DE_BEAUPRE_QUEBEC;
     $this->coastal = true;
+    $this->top = 760;
+    $this->left = 374;
   }
 }

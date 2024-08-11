@@ -9,5 +9,7 @@ class Chote_Keowee extends \BayonetsAndTomahawks\Models\Connections\Path
     parent::__construct($row);
     $this->id = CHOTE_KEOWEE;
     $this->indianPath = true;
+    $this->top = 2228;
+    $this->left = 990;
   }
 }

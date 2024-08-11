@@ -8,5 +8,7 @@ class Nihanawate_Saranac extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = NIHANAWATE_SARANAC;
+    $this->top = 1257;
+    $this->left = 400;
   }
 }

@@ -8,5 +8,7 @@ class JacquesCartier_Quebec extends \BayonetsAndTomahawks\Models\Connections\Hig
   {
     parent::__construct($row);
     $this->id = JACQUES_CARTIER_QUEBEC;
+    $this->top = 881;
+    $this->left = 276;
   }
 }

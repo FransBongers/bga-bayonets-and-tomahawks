@@ -643,6 +643,60 @@ body > .card {
   left: calc(var(--btMapScale) * 282px);
 }
 
+.bt_connection {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(var(--btMarkerScale) * 44px);
+  max-height: calc(var(--btMarkerScale) * 44px);
+  min-width: calc(var(--btMarkerScale) * 44px);
+  max-width: calc(var(--btMarkerScale) * 44px);
+}
+.bt_connection .bt_road {
+  min-height: calc(var(--btMarkerScale) * 44px);
+  max-height: calc(var(--btMarkerScale) * 44px);
+  min-width: calc(var(--btMarkerScale) * 44px);
+  max-width: calc(var(--btMarkerScale) * 44px);
+  background-image: url("img/markers_2.webp");
+  background-size: 800% 600%;
+  box-sizing: border-box;
+  border: calc(var(--btMapScale) * 1px) solid black;
+  border-radius: 5%;
+}
+.bt_connection .bt_road[data-road=false] {
+  display: none;
+}
+.bt_connection .bt_road[data-road=construction] {
+  background-position-x: 71.4285714286%;
+  background-position-y: 0%;
+}
+.bt_connection .bt_road[data-road=true] {
+  background-position-x: 28.5714285714%;
+  background-position-y: 60%;
+}
+.bt_connection .bt_connection_limit_counter {
+  min-width: calc(var(--btMapScale) * 34px);
+  min-height: calc(var(--btMapScale) * 30px);
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bt_connection .bt_connection_limit_counter span {
+  font-size: calc(var(--btMapScale) * 30px);
+  font-weight: 700;
+  letter-spacing: -2px;
+  margin-left: -2px;
+}
+.bt_connection span[data-faction=british] {
+  color: #b73e20;
+}
+.bt_connection span[data-faction=french] {
+  color: #216396;
+}
+
 .bt_space {
   position: absolute !important;
   border-radius: 50%;
@@ -678,7 +732,7 @@ body > .card {
 
 .bt_test {
   background-color: yellow;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 .bt_raid_track {

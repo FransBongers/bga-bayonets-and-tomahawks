@@ -8,5 +8,7 @@ class IsleAuxNoix_Ticonderoga extends \BayonetsAndTomahawks\Models\Connections\H
   {
     parent::__construct($row);
     $this->id = ISLE_AUX_NOIX_TICONDEROGA;
+    $this->top = 1150;
+    $this->left = 454;
   }
 }

@@ -8,5 +8,7 @@ class Diiohage_ForksOfTheOhio extends \BayonetsAndTomahawks\Models\Connections\P
   {
     parent::__construct($row);
     $this->id = DIIOHAGE_FORKS_OF_THE_OHIO;
+    $this->top = 2008;
+    $this->left = 541;
   }
 }
