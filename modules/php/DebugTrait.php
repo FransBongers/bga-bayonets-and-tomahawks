@@ -88,6 +88,7 @@ trait DebugTrait
 
   function debug_test()
   {
+    GameMap::placeMarkerOnStack(Players::getPlayerForFaction(FRENCH), OUT_OF_SUPPLY_MARKER, Spaces::get(GRAND_SAULT), FRENCH);
     // Engine::insertAsChild([
     //   'action' => BATTLE_RETREAT,
     //   'playerId' => Players::getPlayerForFaction(BRITISH)->getId(),
@@ -98,7 +99,7 @@ trait DebugTrait
     // Engine::getNextUnresolved()->argsMovement();
 
     // $next = Engine::getNextUnresolved();
-    Notifications::log('index', GameMap::factionOutnumbersEnemyInSpace(Spaces::get(TICONDEROGA), FRENCH));
+    // Notifications::log('index', GameMap::factionOutnumbersEnemyInSpace(Spaces::get(TICONDEROGA), FRENCH));
 
     // Notifications::log('markers', GameMap::getMarkersOnMap(OUT_OF_SUPPLY_MARKER,BRITISH));
 
