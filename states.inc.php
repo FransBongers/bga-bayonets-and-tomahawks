@@ -407,46 +407,6 @@ $machinestates = array(
         'possibleactions' => ['actRaid', 'actPassOptionalAction', 'actRestart'],
     ],
 
-    ST_LIGHT_MOVEMENT => [
-        'name' => 'lightMovement',
-        'description' => clienttranslate('${actplayer} may move units'),
-        'descriptionmyturn' => clienttranslate('${you}'),
-        'type' => 'activeplayer',
-        'args' => 'argsAtomicAction',
-        'action' => 'stAtomicAction',
-        'possibleactions' => ['actLightMovement', 'actPassOptionalAction', 'actRestart'],
-    ],
-
-    ST_LIGHT_MOVEMENT_DESTINATION => [
-        'name' => 'lightMovementDestination',
-        'description' => clienttranslate('${actplayer} may move units'),
-        'descriptionmyturn' => clienttranslate('${you}'),
-        'type' => 'activeplayer',
-        'args' => 'argsAtomicAction',
-        'action' => 'stAtomicAction',
-        'possibleactions' => ['actLightMovementDestination', 'actPassOptionalAction', 'actRestart'],
-    ],
-
-    ST_ARMY_MOVEMENT => [
-        'name' => 'armyMovement',
-        'description' => clienttranslate('${actplayer} may move units'),
-        'descriptionmyturn' => clienttranslate('${you}'),
-        'type' => 'activeplayer',
-        'args' => 'argsAtomicAction',
-        'action' => 'stAtomicAction',
-        'possibleactions' => ['actArmyMovement', 'actPassOptionalAction', 'actRestart'],
-    ],
-
-    ST_ARMY_MOVEMENT_DESTINATION => [
-        'name' => 'armyMovementDestination',
-        'description' => clienttranslate('${actplayer} may move units'),
-        'descriptionmyturn' => clienttranslate('${you}'),
-        'type' => 'activeplayer',
-        'args' => 'argsAtomicAction',
-        'action' => 'stAtomicAction',
-        'possibleactions' => ['actArmyMovementDestination', 'actPassOptionalAction', 'actRestart'],
-    ],
-
     ST_MOVEMENT => [
         'name' => 'movement',
         'description' => clienttranslate('${actplayer} may move units'),
