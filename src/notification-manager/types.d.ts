@@ -108,6 +108,7 @@ interface NotifMoveRoundMarkerArgs {
 
 interface NotifMoveStackArgs {
   stack: BTUnit[];
+  connection: BTConnection | null;
   destination: BTSpace;
   faction: Faction;
   markers: BTMarker[];

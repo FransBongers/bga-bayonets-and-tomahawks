@@ -458,6 +458,13 @@ class GameMap {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  public resetConnectionLimits() {
+    Object.values(this.connections).forEach((connection) => {
+      connection.setLimitValue({ faction: BRITISH, value: 0 });
+      connection.setLimitValue({ faction: FRENCH, value: 0 });
+    });
+  }
+
   public async addMarkerToStack(marker: BTMarker) {
     const splitLocation = marker.location.split('_');
     this.stacks[splitLocation[0]][splitLocation[1]].addCard(marker);

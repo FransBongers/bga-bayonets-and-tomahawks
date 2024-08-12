@@ -51,7 +51,7 @@ class Connection {
       this.game.gamedatas.staticData.connections[this.connection.id];
     document
       .getElementById('bt_game_map')
-      .insertAdjacentHTML('beforeend', tplConnection({ id, top, left }));
+      .insertAdjacentHTML('afterbegin', tplConnection({ id, top, left }));
 
     this.limits.british.create(`${id}_britishLimit_counter`);
     this.limits.french.create(`${id}_frenchLimit_counter`);
@@ -95,6 +95,17 @@ class Connection {
     value: number;
   }) {
     this.limits[faction].setValue(value);
+    this.updateVisible(`${this.connection.id}_${faction}_limit`, value);
+  }
+
+  public toLimitValue({
+    faction,
+    value,
+  }: {
+    faction: BRITISH_FACTION | FRENCH_FACTION;
+    value: number;
+  }) {
+    this.limits[faction].toValue(value);
     this.updateVisible(`${this.connection.id}_${faction}_limit`, value);
   }
 

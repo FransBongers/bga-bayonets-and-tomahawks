@@ -261,7 +261,7 @@ class NotificationManager {
 
   async notif_battleRemoveMarker(notif: Notif<NotifBattleRemoveMarkerArgs>) {
     const { space } = notif.args;
-    
+
     this.game.gameMap.removeMarkerFromSpace({
       spaceId: space.id,
       type: 'battle_marker',
@@ -415,8 +415,24 @@ class NotificationManager {
   }
 
   async notif_moveStack(notif: Notif<NotifMoveStackArgs>) {
-    const { stack, destination, faction, markers } = notif.args;
+    const { stack, destination, faction, markers, connection } = notif.args;
     const unitStack = this.game.gameMap.stacks[destination.id][faction];
+
+    if (connection !== null) {
+      const connectionUI = this.game.gameMap.connections[connection.id];
+      if (faction === 'british') {
+        connectionUI.toLimitValue({
+          faction: 'british',
+          value: connection.britishLimit,
+        });
+      } else {
+        connectionUI.toLimitValue({
+          faction: 'french',
+          value: connection.frenchLimit,
+        });
+      }
+    }
+
     if (unitStack) {
       await Promise.all([
         unitStack.addUnits(stack),
@@ -505,6 +521,8 @@ class NotificationManager {
         element.setAttribute('data-spent', 'false');
       }
     });
+    this.game.gameMap.resetConnectionLimits();
+    // TODO: markers
   }
 
   async notif_returnToPool(notif: Notif<NotifReturnToPoolArgs>) {

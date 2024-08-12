@@ -115,4 +115,10 @@ class Connections extends \BayonetsAndTomahawks\Helpers\Pieces
     }
     return $data;
   }
+
+  public static function resetConnectionLimits()
+  {
+    self::DB()->update(['british_limit' => 0])->run();
+    self::DB()->update(['french_limit' => 0])->run();
+  }
 }

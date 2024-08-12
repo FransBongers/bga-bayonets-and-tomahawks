@@ -267,7 +267,15 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
 
     Units::move($unitIds, $destinationId, null, $originId);
 
-    Notifications::moveStack($player, $units, $movedMarkers, $origin, $destination);
+    // Update connection limit
+    $connection = $adjacent['connection'];
+    $connectionLimitIncrease = count(Utils::filter($units, function ($unit) {
+      return !$unit->isCommander() && !$unit->isFleet();
+    }));
+    $connection->incLimitUsed($playerFaction, $connectionLimitIncrease);
+    
+
+    Notifications::moveStack($player, $units, $movedMarkers, $origin, $destination, $connection);
 
     // Add markers to remaining units
     foreach ($createInOrigin as $markerType) {

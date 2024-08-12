@@ -3441,7 +3441,7 @@ var Connection = (function () {
         var _a = this.game.gamedatas.staticData.connections[this.connection.id], top = _a.top, left = _a.left, id = _a.id;
         document
             .getElementById('bt_game_map')
-            .insertAdjacentHTML('beforeend', tplConnection({ id: id, top: top, left: left }));
+            .insertAdjacentHTML('afterbegin', tplConnection({ id: id, top: top, left: left }));
         this.limits.british.create("".concat(id, "_britishLimit_counter"));
         this.limits.french.create("".concat(id, "_frenchLimit_counter"));
         this.updateUI(connection);
@@ -3473,6 +3473,11 @@ var Connection = (function () {
     Connection.prototype.setLimitValue = function (_a) {
         var faction = _a.faction, value = _a.value;
         this.limits[faction].setValue(value);
+        this.updateVisible("".concat(this.connection.id, "_").concat(faction, "_limit"), value);
+    };
+    Connection.prototype.toLimitValue = function (_a) {
+        var faction = _a.faction, value = _a.value;
+        this.limits[faction].toValue(value);
         this.updateVisible("".concat(this.connection.id, "_").concat(faction, "_limit"), value);
     };
     Connection.prototype.updateVisible = function (elementId, value) {
@@ -3785,6 +3790,12 @@ var GameMap = (function () {
                         return [2];
                 }
             });
+        });
+    };
+    GameMap.prototype.resetConnectionLimits = function () {
+        Object.values(this.connections).forEach(function (connection) {
+            connection.setLimitValue({ faction: BRITISH, value: 0 });
+            connection.setLimitValue({ faction: FRENCH, value: 0 });
         });
     };
     GameMap.prototype.addMarkerToStack = function (marker) {
@@ -4505,12 +4516,27 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_moveStack = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, stack, destination, faction, markers, unitStack;
+            var _a, stack, destination, faction, markers, connection, unitStack, connectionUI;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = notif.args, stack = _a.stack, destination = _a.destination, faction = _a.faction, markers = _a.markers;
+                        _a = notif.args, stack = _a.stack, destination = _a.destination, faction = _a.faction, markers = _a.markers, connection = _a.connection;
                         unitStack = this.game.gameMap.stacks[destination.id][faction];
+                        if (connection !== null) {
+                            connectionUI = this.game.gameMap.connections[connection.id];
+                            if (faction === 'british') {
+                                connectionUI.toLimitValue({
+                                    faction: 'british',
+                                    value: connection.britishLimit,
+                                });
+                            }
+                            else {
+                                connectionUI.toLimitValue({
+                                    faction: 'french',
+                                    value: connection.frenchLimit,
+                                });
+                            }
+                        }
                         if (!unitStack) return [3, 2];
                         return [4, Promise.all([
                                 unitStack.addUnits(stack),
@@ -4664,6 +4690,7 @@ var NotificationManager = (function () {
                         element.setAttribute('data-spent', 'false');
                     }
                 });
+                this.game.gameMap.resetConnectionLimits();
                 return [2];
             });
         });

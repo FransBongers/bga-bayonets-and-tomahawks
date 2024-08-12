@@ -140,7 +140,7 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
       return $marker->getId();
     }, $markers), Locations::stackMarker($space->getId(), $faction));
 
-    Notifications::moveStack(self::getPlayer(), $units, $markers, $fromSpace, $space, true);
+    Notifications::moveStack(self::getPlayer(), $units, $markers, $fromSpace, $space, null, true);
 
     $this->resolveAction($args);
   }

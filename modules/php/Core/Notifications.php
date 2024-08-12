@@ -531,7 +531,7 @@ class Notifications
     ]);
   }
 
-  public static function moveStack($player, $units, $markers, $origin, $destination, $isRetreat = false)
+  public static function moveStack($player, $units, $markers, $origin, $destination, $connection, $isRetreat = false)
   {
     $text = $isRetreat ?
       clienttranslate('${player_name} retreats their stack from ${tkn_boldText_from} to ${tkn_boldText_to}') :
@@ -545,6 +545,7 @@ class Notifications
       'faction' => $player->getFaction(),
       'stack' => $units,
       'markers' => $markers,
+      'connection' => $connection,
       'i18n' => ['tkn_boldText_from', 'tkn_boldText_to'],
     ]);
   }
