@@ -67,8 +67,10 @@ CREATE TABLE IF NOT EXISTS `spaces` (
   `space_location` varchar(32) NOT NULL,
   `space_state` int(10) DEFAULT 0,
   `battle` int(10) DEFAULT 0,
-  `defender` VARCHAR(10),
   `control` VARCHAR(10) NOT NULL,
+  `control_start_of_turn` VARCHAR(10) NOT NULL,
+  `defender` VARCHAR(10),
+  `fort_construction` int(10) DEFAULT 0,
   `raided` VARCHAR(10),
   -- `extra_data` JSON NULL,
   PRIMARY KEY (`space_id`)

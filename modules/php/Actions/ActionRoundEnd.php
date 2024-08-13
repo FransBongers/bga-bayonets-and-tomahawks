@@ -13,6 +13,7 @@ use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Connections;
 use BayonetsAndTomahawks\Managers\Markers;
+use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
@@ -119,6 +120,7 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     Globals::setLostAPBritish([]);
     Globals::setLostAPFrench([]);
     Globals::setLostAPIndian([]);
+    Spaces::setStartOfTurnControl();
     
     Markers::move(ROUND_MARKER,$nextActionRound);
     Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), $nextActionRound);

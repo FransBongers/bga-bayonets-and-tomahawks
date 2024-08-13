@@ -18,13 +18,17 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   protected $primary = 'space_id';
   protected $battle = 0;
   protected $control = null;
+  protected $controlStartOfTurn = null;
+  protected $fortConstruction;
   protected $raided = null;
 
   protected $attributes = [
     'id' => ['space_id', 'int'],
     'battle' => ['battle', 'int'],
     'control' => ['control', 'str'],
+    'controlStartOfTurn' => ['control_start_of_turn', 'str'],
     'defender' => ['defender', 'str'],
+    'fortConstruction' => ['fort_construction', 'int'],
     'location' => ['space_location', 'str'],
     'state' => ['space_state', 'int'],
     'raided' => ['raided', 'str'],
@@ -84,7 +88,9 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
       'battle' => $this->battle === 1,
       'colony' => $this->colony,
       'control' => $this->control,
+      'controlStartOfTurn' => $this->controlStartOfTurn,
       'defaultControl' => $this->defaultControl,
+      'fortConstruction' => $this->fortConstruction === 1,
       'homeSpace' => $this->homeSpace,
       'name' => $this->name,
       'raided' => $this->raided,

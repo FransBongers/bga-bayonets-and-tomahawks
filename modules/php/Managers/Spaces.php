@@ -20,6 +20,8 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
     'battle',
     'defender',
     'control',
+    'control_start_of_turn',
+    'fort_construction',
     'raided',
     // 'extra_data'
   ];
@@ -60,6 +62,13 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
     return $locations;
   }
 
+  public static function setStartOfTurnControl()
+  {
+    self::DB()->update(['control_start_of_turn' => BRITISH])->where('control', '=', BRITISH)->run();
+    self::DB()->update(['control_start_of_turn' => FRENCH])->where('control', '=', FRENCH)->run();
+    self::DB()->update(['control_start_of_turn' => NEUTRAL])->where('control', '=', NEUTRAL)->run();
+  }
+
   // ..######..########.########.##.....##.########.
   // .##....##.##..........##....##.....##.##.....##
   // .##.......##..........##....##.....##.##.....##
@@ -79,7 +88,9 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
         'id' => $spaceId,
         'battle' => 0,
         'control' => $space->getDefaultControl(), // Use homeSpace data?
+        'control_start_of_turn' => $space->getDefaultControl(), // Use homeSpace data?
         'defender' => null,
+        'fort_construction' => 0,
         'location' => 'default',
         'raided' => null,
         // 'extra_data' => ['properties' => []],

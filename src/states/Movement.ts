@@ -64,8 +64,8 @@ class MovementState implements State {
     }
 
     this.game.addPrimaryActionButton({
-      id: 'done_btn',
-      text: _('Done'),
+      id: 'move_btn',
+      text: _('Move'),
       callback: () => this.updateInterfaceConfirm(),
       extraClasses:
         this.selectedUnits.length > 0 && this.destination !== null
@@ -76,8 +76,8 @@ class MovementState implements State {
       id: 'select_all_btn',
       text: _('Select all'),
       callback: () => {
-        this.selectedUnits = this.args.units,
-        this.updateInterfaceInitialStep();
+        (this.selectedUnits = this.args.units),
+          this.updateInterfaceInitialStep();
       },
     });
 
@@ -117,17 +117,17 @@ class MovementState implements State {
       });
     };
 
-    if (
-      this.game.settings.get({
-        id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
-      }) === PREF_ENABLED
-    ) {
-      callback();
-    } else {
-      this.game.addConfirmButton({
-        callback,
-      });
-    }
+    // if (
+    //   this.game.settings.get({
+    //     id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+    //   }) === PREF_ENABLED
+    // ) {
+    callback();
+    // } else {
+    //   this.game.addConfirmButton({
+    //     callback,
+    //   });
+    // }
 
     this.game.addCancelButton();
   }
