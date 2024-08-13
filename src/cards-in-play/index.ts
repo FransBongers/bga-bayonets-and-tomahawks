@@ -39,8 +39,8 @@ class CardsInPlay {
   }: {
     gamedatas: BayonetsAndTomahawksGamedatas;
   }) {
-    const node: HTMLElement = $("bt_right_column");
-    node.insertAdjacentHTML("afterbegin", tplCardsInPlay());
+    // const node: HTMLElement = $("bt_right_column");
+    // node.insertAdjacentHTML("afterbegin", tplCardsInPlay());
 
     this.cards = {
       [BRITISH]: new LineStock<BTCard>(

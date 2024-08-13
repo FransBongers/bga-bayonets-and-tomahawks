@@ -37,7 +37,7 @@ class ActionRoundActionPhaseState implements State {
   private updateInterfaceInitialStep() {
     this.game.clearPossible();
 
-    this.game.setCardSelected({ id: this.args.card.id });
+    // this.game.setCardSelected({ id: this.args.card.id });
 
     this.game.clientUpdatePageTitle({
       text: this.args.isIndianActions

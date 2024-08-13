@@ -2322,11 +2322,11 @@ var BayonetsAndTomahawks = (function () {
         this.gameMap = new GameMap(this);
         this.pools = new Pools(this);
         this.tooltipManager = new TooltipManager(this);
-        this.cardsInPlay = new CardsInPlay(this);
         if (this.playerOrder.includes(this.getPlayerId())) {
             this.hand = new Hand(this);
         }
         this.playerManager = new PlayerManager(this);
+        this.cardsInPlay = new CardsInPlay(this);
         if (this.notificationManager != undefined) {
             this.notificationManager.destroy();
         }
@@ -2915,8 +2915,6 @@ var CardsInPlay = (function () {
     CardsInPlay.prototype.setupCardsInPlay = function (_a) {
         var _b;
         var gamedatas = _a.gamedatas;
-        var node = $("bt_right_column");
-        node.insertAdjacentHTML("afterbegin", tplCardsInPlay());
         this.cards = (_b = {},
             _b[BRITISH] = new LineStock(this.game.cardManager, document.getElementById("british_card_in_play"), { direction: "column", center: false }),
             _b[FRENCH] = new LineStock(this.game.cardManager, document.getElementById("french_card_in_play"), { direction: "column", center: false }),
@@ -4884,7 +4882,7 @@ var BatPlayer = (function () {
         this.playerData = player;
         this.playerName = player.name;
         this.playerColor = player.color;
-        this.playerHexColor = player.hexColor;
+        this.faction = player.faction;
         var gamedatas = game.gamedatas;
         this.setupPlayer({ gamedatas: gamedatas });
     }
@@ -4905,6 +4903,8 @@ var BatPlayer = (function () {
     };
     BatPlayer.prototype.setupPlayerPanel = function (_a) {
         var playerGamedatas = _a.playerGamedatas;
+        var playerBoardDiv = $("player_board_" + this.playerId);
+        playerBoardDiv.insertAdjacentHTML("beforeend", tplPlayerPanel({ playerId: this.playerId, faction: this.faction }));
         this.updatePlayerPanel({ playerGamedatas: playerGamedatas });
     };
     BatPlayer.prototype.updatePlayerPanel = function (_a) {
@@ -4920,9 +4920,6 @@ var BatPlayer = (function () {
     BatPlayer.prototype.getColor = function () {
         return this.playerColor;
     };
-    BatPlayer.prototype.getHexColor = function () {
-        return this.playerHexColor;
-    };
     BatPlayer.prototype.getName = function () {
         return this.playerName;
     };
@@ -4931,6 +4928,12 @@ var BatPlayer = (function () {
     };
     return BatPlayer;
 }());
+var tplPlayerPanel = function (_a) {
+    var playerId = _a.playerId, faction = _a.faction;
+    return "\n  <div id=\"bt_player_panel_".concat(playerId, "\" class=\"bt_player_panel\">\n    <div class=\"bt_cards_in_play_container\">\n      <div id=\"").concat(faction, "_card_in_play\" class=\"bt_card_in_play\">\n        <div class=\"bt_card_in_play_border\"></div>\n      </div>\n      ").concat(faction === 'french'
+        ? "<div id=\"indian_card_in_play\" class=\"bt_card_in_play\">\n        <div class=\"bt_card_in_play_border\"></div>\n      </div>"
+        : '', "\n    </div>\n  </div>");
+};
 var Pools = (function () {
     function Pools(game) {
         this.stocks = {};
@@ -5479,7 +5482,6 @@ var ActionRoundActionPhaseState = (function () {
     ActionRoundActionPhaseState.prototype.setDescription = function (activePlayerId) { };
     ActionRoundActionPhaseState.prototype.updateInterfaceInitialStep = function () {
         this.game.clearPossible();
-        this.game.setCardSelected({ id: this.args.card.id });
         this.game.clientUpdatePageTitle({
             text: this.args.isIndianActions
                 ? _('${you} may use the Indian card for actions')

@@ -185,13 +185,14 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     this.pools = new Pools(this);
     this.tooltipManager = new TooltipManager(this);
 
-    this.cardsInPlay = new CardsInPlay(this);
+    
 
     if (this.playerOrder.includes(this.getPlayerId())) {
       this.hand = new Hand(this);
     }
 
     this.playerManager = new PlayerManager(this);
+    this.cardsInPlay = new CardsInPlay(this);
 
     if (this.notificationManager != undefined) {
       this.notificationManager.destroy();

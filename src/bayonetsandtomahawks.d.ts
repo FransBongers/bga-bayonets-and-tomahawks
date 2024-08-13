@@ -194,6 +194,6 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
 }
 
 interface BayonetsAndTomahawksPlayerData extends BgaPlayer {
-  hexColor: string;
   hand: BTCard[];
+  faction: BRITISH_FACTION | FRENCH_FACTION;
 }

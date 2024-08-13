@@ -9,9 +9,10 @@
 class BatPlayer {
   protected game: BayonetsAndTomahawksGame;
   protected playerColor: string;
-  private playerHexColor: string;
+  // private playerHexColor: string;
   protected playerId: number;
   private playerName: string;
+  public faction: BRITISH_FACTION | FRENCH_FACTION;
 
   public playerData: BayonetsAndTomahawksPlayerData;
 
@@ -29,7 +30,8 @@ class BatPlayer {
     this.playerData = player;
     this.playerName = player.name;
     this.playerColor = player.color;
-    this.playerHexColor = player.hexColor;
+    this.faction = player.faction;
+    // this.playerHexColor = player.hexColor;
     const gamedatas = game.gamedatas;
 
     // if (this.playerId === this.game.getPlayerId()) {
@@ -73,6 +75,12 @@ class BatPlayer {
   }: {
     playerGamedatas: BayonetsAndTomahawksPlayerData;
   }) {
+    const playerBoardDiv: HTMLElement = $("player_board_" + this.playerId);
+    playerBoardDiv.insertAdjacentHTML(
+      "beforeend",
+      tplPlayerPanel({ playerId: this.playerId, faction: this.faction })
+    );
+
     this.updatePlayerPanel({ playerGamedatas });
   }
 
@@ -106,9 +114,9 @@ class BatPlayer {
     return this.playerColor;
   }
 
-  getHexColor(): string {
-    return this.playerHexColor;
-  }
+  // getHexColor(): string {
+  //   return this.playerHexColor;
+  // }
 
   getName(): string {
     return this.playerName;
