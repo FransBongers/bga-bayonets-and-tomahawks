@@ -13,7 +13,7 @@ class SailArmyAP_2x extends \BayonetsAndTomahawks\Models\ActionPoint
     $this->actionsAllowed = [
       MOVEMENT,
       // SAIL_MOVEMENT,
-      // MARSHAL_TROOPS,
+      MARSHAL_TROOPS,
       // CONSTRUCTION,
     ];
   }

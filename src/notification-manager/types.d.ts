@@ -97,6 +97,10 @@ interface NotifLoseControlArgs extends NotifWithPlayerArgs {
   space: BTSpace;
 }
 
+interface NotifMarshalTroopsArgs extends NotifWithPlayerArgs {
+  activatedUnit: BTUnit;
+}
+
 interface NotifMoveRaidPointsMarkerArgs {
   marker: BTMarker;
 }

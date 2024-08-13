@@ -94,6 +94,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     ];
   }
 
+  
   public function getAdjacentConnections()
   {
     $result = [];

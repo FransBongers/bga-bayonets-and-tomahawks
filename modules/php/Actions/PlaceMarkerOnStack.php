@@ -9,20 +9,22 @@ use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\BTHelpers;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
+use BayonetsAndTomahawks\Managers\Connections;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
-class MovementPlaceSpentMarkers extends \BayonetsAndTomahawks\Actions\UnitMovement
+class PlaceMarkerOnStack extends \BayonetsAndTomahawks\Actions\UnitMovement
 {
   public function getState()
   {
-    return ST_MOVEMENT_PLACE_SPENT_MARKERS;
+    return ST_PLACE_MARKER_ON_STACK;
   }
 
   // ..######..########....###....########.########
@@ -41,27 +43,16 @@ class MovementPlaceSpentMarkers extends \BayonetsAndTomahawks\Actions\UnitMoveme
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stMovementPlaceSpentMarkers()
+  public function stPlaceMarkerOnStack()
   {
     $player = self::getPlayer();
+   
+    $info = $this->ctx->getInfo();
+    $type = $info['markerType'];
+    $space = Spaces::get($info['spaceId']);
+    $faction = $info['faction'];
 
-    $nodes = $this->ctx->getParent()->getResolvedActions([MOVE_STACK]);
-
-    $movedUnitIds = [];
-    foreach ($nodes as $node) {
-      $resArgs = $node->getActionResolutionArgs();
-      $movedUnitIds = array_merge($movedUnitIds, isset($resArgs['unitIds']) ? $resArgs['unitIds'] : []);
-    }
-
-    $movedUnitIds = array_values(array_unique($movedUnitIds));
-
-    $units = Units::getMany($movedUnitIds)->toArray();
-
-    foreach ($units as $unit) {
-      $unit->setSpent(1);
-    }
-
-    Notifications::addSpentMarkerToUnits($player, $units);
+    GameMap::placeMarkerOnStack($player, $type, $space, $faction);
 
     $this->resolveAction(['automatic' => true]);
   }
@@ -73,5 +64,6 @@ class MovementPlaceSpentMarkers extends \BayonetsAndTomahawks\Actions\UnitMoveme
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
 
 }

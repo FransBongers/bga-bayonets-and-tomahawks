@@ -203,88 +203,90 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
       throw new \feException("ERROR 051");
     }
 
-    $destination = $adjacent['space'];
+    // $destination = $adjacent['space'];
 
     $player = self::getPlayer();
 
     $info = $this->ctx->getInfo();
     $originId = $info['spaceId'];
-    $origin = Spaces::get($originId);
+    // $origin = Spaces::get($originId);
 
     $unitIds = array_map(function ($unit) {
       return $unit->getId();
     }, $units);
 
-    $playerFaction = $player->getFaction();
+    // $playerFaction = $player->getFaction();
 
-    // Update markers
-    $destinationHasUnits = count($destination->getUnits($playerFaction)) > 0;
-    $unitsRemainInOrigin = Utils::array_some($origin->getUnits($playerFaction), function ($unit) use ($selectedUnitIds) {
-      return !in_array($unit->getId(), $selectedUnitIds);
-    });
+    // // Update markers
+    // $destinationHasUnits = count($destination->getUnits($playerFaction)) > 0;
+    // $unitsRemainInOrigin = Utils::array_some($origin->getUnits($playerFaction), function ($unit) use ($selectedUnitIds) {
+    //   return !in_array($unit->getId(), $selectedUnitIds);
+    // });
 
-    $destinationMarkers = Markers::getInLocation(Locations::stackMarker($destinationId, $playerFaction))->toArray();
-    $originMarkers = Markers::getInLocation(Locations::stackMarker($originId, $playerFaction))->toArray();
+    // $destinationMarkers = Markers::getInLocation(Locations::stackMarker($destinationId, $playerFaction))->toArray();
+    // $originMarkers = Markers::getInLocation(Locations::stackMarker($originId, $playerFaction))->toArray();
 
-    $movedMarkers = [];
-    $createInOrigin = [];
-    $removeFromDestination = [];
-    /**
-     * Remove marker if:
-     * - destination already has units with marker
-     * - destination has units without marker
-     * -Unless units remain
-     */
-    foreach ([OUT_OF_SUPPLY_MARKER, ROUT_MARKER] as $markerType) {
-      $destinationMarker = Utils::array_find($destinationMarkers, function ($marker) use ($markerType) {
-        return Utils::startsWith($marker->getId(), $markerType);
-      });
-      $originMarker = Utils::array_find($originMarkers, function ($marker) use ($markerType) {
-        return Utils::startsWith($marker->getId(), $markerType);
-      });
+    // $movedMarkers = [];
+    // $createInOrigin = [];
+    // $removeFromDestination = [];
+    // /**
+    //  * Remove marker if:
+    //  * - destination already has units with marker
+    //  * - destination has units without marker
+    //  * -Unless units remain
+    //  */
+    // foreach ([OUT_OF_SUPPLY_MARKER, ROUT_MARKER] as $markerType) {
+    //   $destinationMarker = Utils::array_find($destinationMarkers, function ($marker) use ($markerType) {
+    //     return Utils::startsWith($marker->getId(), $markerType);
+    //   });
+    //   $originMarker = Utils::array_find($originMarkers, function ($marker) use ($markerType) {
+    //     return Utils::startsWith($marker->getId(), $markerType);
+    //   });
 
 
-      if ($originMarker !== null && $destinationHasUnits && !$unitsRemainInOrigin) {
-        // Remove if destination does not have the marker (ie, stack joins a unit without marker)
-        $originMarker->remove($player);
-      } else if ($originMarker !== null) {
-        // Move marker
-        $originMarker->setLocation(Locations::stackMarker($destinationId, $playerFaction));
-        $movedMarkers[] = $originMarker;
+    //   if ($originMarker !== null && $destinationHasUnits && !$unitsRemainInOrigin) {
+    //     // Remove if destination does not have the marker (ie, stack joins a unit without marker)
+    //     $originMarker->remove($player);
+    //   } else if ($originMarker !== null) {
+    //     // Move marker
+    //     $originMarker->setLocation(Locations::stackMarker($destinationId, $playerFaction));
+    //     $movedMarkers[] = $originMarker;
 
-        // Create if marker is moved and units remaing in origin
-        if ($unitsRemainInOrigin) {
-          $createInOrigin[] = $markerType;
-        }
-      }
+    //     // Create if marker is moved and units remaing in origin
+    //     if ($unitsRemainInOrigin) {
+    //       $createInOrigin[] = $markerType;
+    //     }
+    //   }
 
-      // Remove in destination if destination has a marker and is joined by a stack
-      // who does not have a marker 
-      if ($originMarker === null && $destinationMarker !== null) {
-        $removeFromDestination[] = $destinationMarker;
-      }
-    }
+    //   // Remove in destination if destination has a marker and is joined by a stack
+    //   // who does not have a marker 
+    //   if ($originMarker === null && $destinationMarker !== null) {
+    //     $removeFromDestination[] = $destinationMarker;
+    //   }
+    // }
 
-    Units::move($unitIds, $destinationId, null, $originId);
+    // Units::move($unitIds, $destinationId, null, $originId);
 
-    // Update connection limit
+    // // Update connection limit
     $connection = $adjacent['connection'];
-    $connectionLimitIncrease = count(Utils::filter($units, function ($unit) {
-      return !$unit->isCommander() && !$unit->isFleet();
-    }));
-    $connection->incLimitUsed($playerFaction, $connectionLimitIncrease);
-    
+    // $connectionLimitIncrease = count(Utils::filter($units, function ($unit) {
+    //   return !$unit->isCommander() && !$unit->isFleet();
+    // }));
+    // $connection->incLimitUsed($playerFaction, $connectionLimitIncrease);
 
-    Notifications::moveStack($player, $units, $movedMarkers, $origin, $destination, $connection);
 
-    // Add markers to remaining units
-    foreach ($createInOrigin as $markerType) {
-      GameMap::placeMarkerOnStack($player, $markerType, $origin, $playerFaction);
-    }
+    // Notifications::moveStack($player, $units, $movedMarkers, $origin, $destination, $connection);
 
-    foreach ($removeFromDestination as $marker) {
-      $marker->remove($player);
-    }
+    // // Add markers to remaining units
+    // foreach ($createInOrigin as $markerType) {
+    //   GameMap::placeMarkerOnStack($player, $markerType, $origin, $playerFaction);
+    // }
+
+    // foreach ($removeFromDestination as $marker) {
+    //   $marker->remove($player);
+    // }
+
+    $playerId = $player->getId();
 
     $this->ctx->insertAsBrother(Engine::buildTree([
       'children' => [
@@ -305,6 +307,15 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
           'spaceId' => $destinationId,
         ]
       ]
+    ]));
+
+    $this->ctx->insertAsBrother(Engine::buildTree([
+      'action' => MOVE_STACK,
+      'playerId' => $playerId,
+      'fromSpaceId' => $originId,
+      'toSpaceId' => $destinationId,
+      'unitIds' => $unitIds,
+      'connectionId' => $connection->getId(),
     ]));
 
     $this->resolveAction($args);

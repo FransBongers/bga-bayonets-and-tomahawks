@@ -13,7 +13,7 @@ class FrenchLightArmyAP extends \BayonetsAndTomahawks\Models\ActionPoint
       RAID,
       MOVEMENT,
       // ARMY_MOVEMENT,
-      // MARSHAL_TROOPS,
+      MARSHAL_TROOPS,
       // CONSTRUCTION,
     ];
   }

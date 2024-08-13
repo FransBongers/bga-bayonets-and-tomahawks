@@ -2138,9 +2138,10 @@ var FRENCH_RAID_MARKER = 'french_raid_marker';
 var BRITISH_RAID_MARKER = 'british_raid_marker';
 var FRENCH_BATTLE_MARKER = 'french_battle_marker';
 var BRITISH_BATTLE_MARKER = 'british_battle_marker';
+var MARSHAL_TROOPS_MARKER = 'marshalTroopsMarker';
 var OUT_OF_SUPPLY_MARKER = 'outOfSupplyMarker';
 var ROUT_MARKER = 'routMarker';
-var STACK_MARKERS = [OUT_OF_SUPPLY_MARKER, ROUT_MARKER];
+var STACK_MARKERS = [MARSHAL_TROOPS_MARKER, OUT_OF_SUPPLY_MARKER, ROUT_MARKER];
 var RAID_TRACK_0 = 'raid_track_0';
 var RAID_TRACK_1 = 'raid_track_1';
 var RAID_TRACK_2 = 'raid_track_2';
@@ -2302,6 +2303,7 @@ var BayonetsAndTomahawks = (function () {
             fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
             lightMovement: new LightMovementState(this),
             lightMovementDestination: new LightMovementDestinationState(this),
+            marshalTroops: new MarshalTroopsState(this),
             movement: new MovementState(this),
             raid: new RaidState(this),
             selectReserveCard: new SelectReserveCardState(this),
@@ -4102,6 +4104,7 @@ var NotificationManager = (function () {
             'eliminateUnit',
             'indianNationControl',
             'loseControl',
+            'marshalTroops',
             'moveRaidPointsMarker',
             'moveRoundMarker',
             'moveStack',
@@ -4158,6 +4161,12 @@ var NotificationManager = (function () {
     NotificationManager.prototype.getPlayer = function (_a) {
         var playerId = _a.playerId;
         return this.game.playerManager.getPlayer({ playerId: playerId });
+    };
+    NotificationManager.prototype.setUnitSpent = function (unit) {
+        var element = document.getElementById("spent_marker_".concat(unit.id));
+        if (element) {
+            element.setAttribute('data-spent', 'true');
+        }
     };
     NotificationManager.prototype.notif_log = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
@@ -4485,6 +4494,16 @@ var NotificationManager = (function () {
                     spaceId: space.id,
                     type: "".concat(faction, "_control_marker"),
                 });
+                return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_marshalTroops = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var activatedUnit;
+            return __generator(this, function (_a) {
+                activatedUnit = notif.args.activatedUnit;
+                this.setUnitSpent(activatedUnit);
                 return [2];
             });
         });
@@ -7808,6 +7827,150 @@ var LightMovementDestinationState = (function () {
         });
     };
     return LightMovementDestinationState;
+}());
+var MarshalTroopsState = (function () {
+    function MarshalTroopsState(game) {
+        this.marshalledUnits = {};
+        this.activated = null;
+        this.game = game;
+    }
+    MarshalTroopsState.prototype.onEnteringState = function (args) {
+        var _this = this;
+        debug('Entering MarshalTroopsState');
+        this.args = args;
+        this.marshalledUnits = {};
+        Object.keys(this.args.marshal).forEach(function (spaceId) {
+            _this.marshalledUnits[spaceId] = [];
+        });
+        this.activated = null;
+        this.updateInterfaceInitialStep();
+    };
+    MarshalTroopsState.prototype.onLeavingState = function () {
+        debug('Leaving MarshalTroopsState');
+    };
+    MarshalTroopsState.prototype.setDescription = function (activePlayerId) { };
+    MarshalTroopsState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a unit to activate'),
+            args: {
+                you: '${you}',
+            },
+        });
+        var stack = this.game.gameMap.stacks[this.args.space.id][this.args.faction];
+        stack.open();
+        this.args.activate.forEach(function (unit) {
+            return _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () {
+                    _this.activated = unit;
+                    _this.updateInterfaceSelectUnits();
+                },
+            });
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    MarshalTroopsState.prototype.updateInterfaceSelectUnits = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select units to Marshall on ${spaceName}'),
+            args: {
+                you: '${you}',
+                spaceName: _(this.args.space.name),
+            },
+        });
+        this.game.setLocationSelected({ id: this.args.space.id });
+        Object.keys(this.args.marshal).forEach(function (spaceId) {
+            var stack = _this.game.gameMap.stacks[spaceId][_this.args.faction];
+            stack.open();
+        });
+        this.setUnitsSelectable();
+        this.setUnitsSelected();
+        this.game.addPrimaryActionButton({
+            id: 'done_btn',
+            text: _('Done'),
+            callback: function () { return _this.updateInterfaceConfirm(); },
+            extraClasses: this.getMarshallCount() === 0 ? DISABLED : '',
+        });
+        this.game.addCancelButton();
+    };
+    MarshalTroopsState.prototype.updateInterfaceConfirm = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Marshal selected units on ${spaceName}?'),
+            args: {
+                spaceName: _(this.args.space.name),
+            },
+        });
+        this.game.setLocationSelected({ id: this.args.space.id });
+        this.setUnitsSelected();
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actMarshalTroops',
+                args: {
+                    activatedUnitId: _this.activated.id,
+                    marshalledUnitIds: _this.marshalledUnits,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    MarshalTroopsState.prototype.getMarshallCount = function () {
+        return Object.values(this.marshalledUnits).reduce(function (carry, current) {
+            return carry + current.length;
+        }, 0);
+    };
+    MarshalTroopsState.prototype.setUnitsSelectable = function () {
+        var _this = this;
+        Object.entries(this.args.marshal).forEach(function (_a) {
+            var spaceId = _a[0], _b = _a[1], units = _b.units, remainingLimit = _b.remainingLimit;
+            units.forEach(function (unit) {
+                var unitIsSelected = _this.marshalledUnits[spaceId].includes(unit.id);
+                if (unitIsSelected) {
+                    _this.game.setUnitSelectable({
+                        id: unit.id,
+                        callback: function () {
+                            _this.marshalledUnits[spaceId] = _this.marshalledUnits[spaceId].filter(function (selectedUnitId) { return selectedUnitId !== unit.id; });
+                            _this.updateInterfaceSelectUnits();
+                        },
+                    });
+                }
+                else if (_this.marshalledUnits[spaceId].length < remainingLimit) {
+                    _this.game.setUnitSelectable({
+                        id: unit.id,
+                        callback: function () {
+                            _this.marshalledUnits[spaceId].push(unit.id);
+                            _this.updateInterfaceSelectUnits();
+                        },
+                    });
+                }
+            });
+        });
+    };
+    MarshalTroopsState.prototype.setUnitsSelected = function () {
+        var _this = this;
+        Object.values(this.marshalledUnits).forEach(function (units) {
+            return units.forEach(function (id) { return _this.game.setUnitSelected({ id: id }); });
+        });
+    };
+    return MarshalTroopsState;
 }());
 var MovementState = (function () {
     function MovementState(game) {

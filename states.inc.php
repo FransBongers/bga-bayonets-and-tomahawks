@@ -449,6 +449,14 @@ $machinestates = array(
         'transitions' => [],
     ],
 
+    ST_MOVE_STACK => [
+        'name' => 'moveStack',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
     // ST_SAIL_MOVEMENT => [
     //     'name' => 'sailMovement',
     //     'description' => clienttranslate('${actplayer} may move units'),
@@ -680,5 +688,13 @@ $machinestates = array(
         'args' => 'argsAtomicAction',
         'action' => 'stAtomicAction',
         'possibleactions' => ['actEventSmallpoxInfectedBlankets', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_PLACE_MARKER_ON_STACK => [
+        'name' => 'placeMarkerOnStack',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
     ],
 );

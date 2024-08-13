@@ -59,6 +59,8 @@ class AtomicActions
     MOVEMENT_LOSE_CONTROL_CHECK => 'MovementLoseControlCheck',
     MOVEMENT_OVERWHELM_CHECK => 'MovementOverwhelmCheck',
     MOVEMENT_PLACE_SPENT_MARKERS => 'MovementPlaceSpentMarkers',
+    MOVE_STACK => 'MoveStack',
+    PLACE_MARKER_ON_STACK => 'PlaceMarkerOnStack',
     RAID => 'Raid',
     SELECT_RESERVE_CARD => 'SelectReserveCard',
     VAGARIES_OF_WAR_PICK_UNITS => 'VagariesOfWarPickUnits',

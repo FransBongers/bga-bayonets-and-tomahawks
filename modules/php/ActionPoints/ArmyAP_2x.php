@@ -13,7 +13,7 @@ class ArmyAP_2x extends \BayonetsAndTomahawks\Models\ActionPoint
     $this->actionsAllowed = [
       MOVEMENT,
       // CONSTRUCTION,
-      // MARSHAL_TROOPS,
+      MARSHAL_TROOPS,
     ];
   }
 }

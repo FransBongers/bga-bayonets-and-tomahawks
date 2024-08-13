@@ -111,6 +111,19 @@ interface OnEnteringLightMovementStateArgs extends CommonArgs {
   faction: Faction;
 }
 
+interface OnEnteringMarshalTroopsStateArgs extends CommonArgs {
+  activate: BTUnit[];
+  space: BTSpace;
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+  marshal: Record<
+    string,
+    {
+      units: BTUnit[];
+      remainingLimit: number;
+    }
+  >;
+}
+
 interface OnEnteringMovementStateArgs extends CommonArgs {
   adjacent: {
     space: BTSpace;

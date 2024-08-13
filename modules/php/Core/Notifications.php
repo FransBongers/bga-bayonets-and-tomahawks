@@ -516,6 +516,17 @@ class Notifications
     ]);
   }
 
+  public static function marshalTroops($player, $activatedUnit, $targetSpace)
+  {
+    self::notifyAll("marshalTroops", clienttranslate('${player_name} activates ${tkn_unit} to Marshal Troops on ${tkn_boldText_spaceName}'), [
+      'player' => $player,
+      'activatedUnit' => $activatedUnit->jsonSerialize(),
+      'tkn_unit' => $activatedUnit->getCounterId(),
+      'tkn_boldText_spaceName' => $targetSpace->getName(),
+      'i18n' => ['tkn_boldText_spaceName'],
+    ]);
+  }
+
   public static function moveRaidPointsMarker($raidMarker)
   {
     self::notifyAll("moveRaidPointsMarker", '', [

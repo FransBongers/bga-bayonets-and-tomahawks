@@ -47,7 +47,7 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
 
   public function getType()
   {
-    return $this->type;
+    return $this->road === HAS_ROAD ? ROAD : $this->type;
   }
 
   public function getLimitUsed($faction)
@@ -59,6 +59,20 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
     }
     // $key = $faction . 'LimitUsed';
     // return $this->getExtraData($key);
+  }
+
+  public function getLimit()
+  {
+    if ($this->road === HAS_ROAD) {
+      return 8;
+    } else {
+      return $this->limit;
+    }
+  }
+
+  public function getRemainingLimit($faction)
+  {
+    return $this->getLimit() - $this->getLimitUsed($faction);
   }
 
   public function setLimitUsed($faction, $value)
@@ -88,9 +102,17 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
     return $this->coastal;
   }
 
+  public function canBeUsedByUnit($unit, $ignoreLimit = false)
+  {
+    return $this->canBeUsedByUnits([$unit], $ignoreLimit);
+  }
+
   public function canBeUsedByUnits($units, $ignoreLimit = false)
   {
-    // TODO: connection limits
+    if (!$ignoreLimit && $this->getRemainingLimit($units[0]->getFaction()) < count($units)) {
+      return false;
+    }
+
     $hasFleet = Utils::array_some($units, function ($unit) {
       return $unit->isFleet();
     });
@@ -99,7 +121,6 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
     }
 
     $requiresRoadOrHighway = Utils::array_some($units, function ($unit) {
-      // TODO: check commander and light units only?
       return $unit->isBrigade() || $unit->isCommander() || $unit->isArtillery();
     });
 

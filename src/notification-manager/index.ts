@@ -78,6 +78,7 @@ class NotificationManager {
       'eliminateUnit',
       'indianNationControl',
       'loseControl',
+      'marshalTroops',
       'moveRaidPointsMarker',
       'moveRoundMarker',
       'moveStack',
@@ -172,6 +173,13 @@ class NotificationManager {
 
   getPlayer({ playerId }: { playerId: number }): BatPlayer {
     return this.game.playerManager.getPlayer({ playerId });
+  }
+
+  setUnitSpent(unit: BTUnit) {
+    const element = document.getElementById(`spent_marker_${unit.id}`);
+    if (element) {
+      element.setAttribute('data-spent', 'true');
+    }
   }
 
   // .##....##..#######..########.####.########..######.
@@ -384,6 +392,11 @@ class NotificationManager {
       spaceId: space.id,
       type: `${faction}_control_marker`,
     });
+  }
+
+  async notif_marshalTroops(notif: Notif<NotifMarshalTroopsArgs>) {
+    const { activatedUnit } = notif.args;
+    this.setUnitSpent(activatedUnit);
   }
 
   async notif_moveRaidPointsMarker(

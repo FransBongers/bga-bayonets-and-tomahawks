@@ -2827,6 +2827,11 @@ body > .card {
   background-position-y: 20%;
 }
 
+.bt_marker_side[data-type=marshalTroopsMarker] {
+  background-position-x: 42.8571428571%;
+  background-position-y: 0%;
+}
+
 .bt_marker_side[data-type=routMarker] {
   background-position-x: 71.4285714286%;
   background-position-y: 20%;

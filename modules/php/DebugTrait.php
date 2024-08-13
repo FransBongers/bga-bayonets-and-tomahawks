@@ -91,7 +91,7 @@ trait DebugTrait
   {
     
     // Connections::get(ALBANY_KINGSTON)->setBritishLimit(7);
-    // Connections::get(YORK_ZAWAKWTEGOK)->setRoad(HAS_ROAD);
+    Connections::get(LAKE_GEORGE_ONEIDA_LAKE)->setRoad(HAS_ROAD);
     // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(FRENCH), OUT_OF_SUPPLY_MARKER, Spaces::get(GRAND_SAULT), FRENCH);
     // Engine::insertAsChild([
     //   'action' => BATTLE_RETREAT,

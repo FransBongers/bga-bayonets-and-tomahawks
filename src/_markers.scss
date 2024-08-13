@@ -102,6 +102,11 @@
   background-position-y: math.div(1, 5) * 100%;
 }
 
+.bt_marker_side[data-type="marshalTroopsMarker"] {
+  background-position-x: math.div(3, 7) * 100%;
+  background-position-y: math.div(0, 5) * 100%;
+}
+
 .bt_marker_side[data-type="routMarker"] {
   background-position-x: math.div(5, 7) * 100%;
   background-position-y: math.div(1, 5) * 100%;
