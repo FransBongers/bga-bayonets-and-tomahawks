@@ -12,9 +12,8 @@ class FrenchLightArmyAP extends \BayonetsAndTomahawks\Models\ActionPoint
     $this->actionsAllowed = [
       RAID,
       MOVEMENT,
-      // ARMY_MOVEMENT,
       MARSHAL_TROOPS,
-      // CONSTRUCTION,
+      CONSTRUCTION,
     ];
   }
 }

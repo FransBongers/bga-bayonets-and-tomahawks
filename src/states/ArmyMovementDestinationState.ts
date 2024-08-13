@@ -110,7 +110,6 @@ class ArmyMovementDestinationState implements State {
 
   private setSpacesSelectable() {
     Object.values(this.args.destinations).forEach((destination) => {
-      console.log('destination', destination);
       this.game.setLocationSelectable({
         id: destination.space.id,
         callback: () =>

@@ -4,6 +4,7 @@ const LOG_TOKEN_NEW_LINE = 'newLine';
 // Game specific
 const LOG_TOKEN_CARD = 'card';
 const LOG_TOKEN_MARKER = 'marker';
+const LOG_TOKEN_ROAD = 'road';
 const LOG_TOKEN_UNIT = 'unit';
 const LOG_TOKEN_DIE_RESULT = 'dieResult';
 
@@ -31,11 +32,17 @@ const getTokenDiv = ({
       return '<br>';
     case LOG_TOKEN_DIE_RESULT:
       return tplLogDieResult(value);
+    case LOG_TOKEN_ROAD:
+      return tplLogTokenRoad(value);
     case LOG_TOKEN_UNIT:
       const splitCounterId = value.split(':');
       const counterId = splitCounterId[0];
       const reduced = splitCounterId?.[1] === 'reduced';
-      return tplLogTokenUnit(counterId, game.gamedatas.staticData.units[counterId]?.type, reduced);
+      return tplLogTokenUnit(
+        counterId,
+        game.gamedatas.staticData.units[counterId]?.type,
+        reduced
+      );
     // case LOG_TOKEN_PLAYER_NAME:
     //   const player = game.playerManager
     //     .getPlayers()

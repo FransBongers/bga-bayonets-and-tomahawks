@@ -50,8 +50,6 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
 
     $diceResults = $info['diceResults'];
 
-    Notifications::log('stBattleRollsEffects', []);
-
     $playerId = $player->getId();
     $otherPlayer = Players::getOther($playerId);
 
@@ -227,8 +225,6 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
     $enemyBrigades = Utils::filter($space->getUnits(), function ($unit) use ($faction) {
       return $unit->getFaction() !== $faction && $unit->isBrigade();
     });
-    Notifications::log('enemyBrigades', $enemyBrigades);
-
 
     while (count($unprocessedDice) > 0) {
       $dieResult = array_pop($unprocessedDice);

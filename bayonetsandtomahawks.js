@@ -2142,6 +2142,9 @@ var MARSHAL_TROOPS_MARKER = 'marshalTroopsMarker';
 var OUT_OF_SUPPLY_MARKER = 'outOfSupplyMarker';
 var ROUT_MARKER = 'routMarker';
 var STACK_MARKERS = [MARSHAL_TROOPS_MARKER, OUT_OF_SUPPLY_MARKER, ROUT_MARKER];
+var FORT_CONSTRUCTION_MARKER = 'fortConstructionMarker';
+var ROAD_CONSTRUCTION_MARKER = 'roadConstructionMarker';
+var ROAD_MARKER = 'roadMarker';
 var RAID_TRACK_0 = 'raid_track_0';
 var RAID_TRACK_1 = 'raid_track_1';
 var RAID_TRACK_2 = 'raid_track_2';
@@ -2239,6 +2242,13 @@ var ACTION_ROUND_INDIAN_ACTIONS = 'ACTION_ROUND_INDIAN_ACTIONS';
 var NO_ROAD = 0;
 var ROAD_UNDER_CONTRUCTION = 1;
 var HAS_ROAD = 2;
+var PLACE_FORT_CONSTRUCTION_MARKER = 'placeFortConstructionMarker';
+var REPLACE_FORT_CONSTRUCTION_MARKER = 'replaceFortConstructionMarker';
+var REPAIR_FORT = 'repairFort';
+var REMOVE_FORT_CONSTRUCTION_MARKER = 'removeFortConstructionMarkerOrFort';
+var REMOVE_FORT = 'removeFort';
+var PLACE_ROAD_CONSTRUCTION_MARKER = 'placeRoadConstructionMarker';
+var FLIP_ROAD_CONSTRUCTION_MARKER = 'flipRoadConstructionMarker';
 define([
     'dojo',
     'dojo/_base/declare',
@@ -2291,6 +2301,7 @@ var BayonetsAndTomahawks = (function () {
             colonialsEnlistUnitPlacement: new ColonialsEnlistUnitPlacementState(this),
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
+            construction: new ConstructionState(this),
             eventArmedBattoemen: new EventArmedBattoemenState(this),
             eventDelayedSuppliesFromFrance: new EventDelayedSuppliesFromFranceState(this),
             eventDiseaseInBritishCamp: new EventDiseaseInBritishCampState(this),
@@ -3456,18 +3467,18 @@ var Connection = (function () {
         if (!element) {
             return;
         }
-        element.setAttribute('data-road', this.getRoadStatus(roadStatus));
+        element.setAttribute('data-type', this.getRoadStatus(roadStatus));
     };
     Connection.prototype.getRoadStatus = function (roadStatus) {
         switch (roadStatus) {
             case NO_ROAD:
-                return 'false';
+                return 'none';
             case ROAD_UNDER_CONTRUCTION:
-                return 'construction';
+                return ROAD_CONSTRUCTION_MARKER;
             case HAS_ROAD:
-                return 'true';
+                return ROAD_MARKER;
             default:
-                return 'false';
+                return 'none';
         }
     };
     Connection.prototype.setLimitValue = function (_a) {
@@ -3588,6 +3599,12 @@ var GameMap = (function () {
                 _this.addMarkerToSpace({
                     spaceId: space.id,
                     type: 'battle_marker',
+                });
+            }
+            if (space.fortConstruction) {
+                _this.addMarkerToSpace({
+                    spaceId: space.id,
+                    type: FORT_CONSTRUCTION_MARKER,
                 });
             }
             if (!_this.stacks[space.id]) {
@@ -3853,7 +3870,7 @@ var tplSpaces = function (_a) {
 };
 var tplConnection = function (_a) {
     var id = _a.id, top = _a.top, left = _a.left;
-    return "<div id=\"".concat(id, "\" class=\"bt_connection\" style=\"top: calc(var(--btMapScale) * ").concat(top, "px); left: calc(var(--btMapScale) * ").concat(left, "px);\">\n          <div id=\"").concat(id, "_french_limit\" class=\"bt_connection_limit_counter\">\n            <span id=\"").concat(id, "_frenchLimit_counter\" data-faction=\"french\">4</span>\n          </div>\n          <div id=\"").concat(id, "_road\" class=\"bt_road\" data-road=\"false\"></div>\n          <div id=\"").concat(id, "_british_limit\" class=\"bt_connection_limit_counter\">\n            <span id=\"").concat(id, "_britishLimit_counter\" data-faction=\"british\">14</span>\n          </div>\n      </div>");
+    return "<div id=\"".concat(id, "\" class=\"bt_connection\" style=\"top: calc(var(--btMapScale) * ").concat(top, "px); left: calc(var(--btMapScale) * ").concat(left, "px);\">\n          <div id=\"").concat(id, "_french_limit\" class=\"bt_connection_limit_counter\">\n            <span id=\"").concat(id, "_frenchLimit_counter\" data-faction=\"french\">4</span>\n          </div>\n          <div id=\"").concat(id, "_road\" class=\"bt_marker_side\" data-type=\"none\"></div>\n          <div id=\"").concat(id, "_british_limit\" class=\"bt_connection_limit_counter\">\n            <span id=\"").concat(id, "_britishLimit_counter\" data-faction=\"british\">14</span>\n          </div>\n      </div>");
 };
 var tplMarkerSpace = function (_a) {
     var id = _a.id, top = _a.top, left = _a.left, extraClasses = _a.extraClasses;
@@ -4025,6 +4042,7 @@ var LOG_TOKEN_BOLD_TEXT = 'boldText';
 var LOG_TOKEN_NEW_LINE = 'newLine';
 var LOG_TOKEN_CARD = 'card';
 var LOG_TOKEN_MARKER = 'marker';
+var LOG_TOKEN_ROAD = 'road';
 var LOG_TOKEN_UNIT = 'unit';
 var LOG_TOKEN_DIE_RESULT = 'dieResult';
 var tooltipIdCounter = 0;
@@ -4044,6 +4062,8 @@ var getTokenDiv = function (_a) {
             return '<br>';
         case LOG_TOKEN_DIE_RESULT:
             return tplLogDieResult(value);
+        case LOG_TOKEN_ROAD:
+            return tplLogTokenRoad(value);
         case LOG_TOKEN_UNIT:
             var splitCounterId = value.split(':');
             var counterId = splitCounterId[0];
@@ -4065,10 +4085,13 @@ var tplLogTokenCard = function (id) {
     return "<div class=\"bt_log_card bt_card\" data-card-id=\"".concat(id, "\"></div>");
 };
 var tplLogTokenMarker = function (type) {
-    return "<div class=\"bt_marker_side\" data-type=\"".concat(type, "\"></div>");
+    return "<div class=\"bt_log_token bt_marker_side\" data-type=\"".concat(type, "\"></div>");
+};
+var tplLogTokenRoad = function (state) {
+    return "<div class=\"bt_log_token bt_road\" data-road=\"".concat(state, "\"></div>");
 };
 var tplLogTokenUnit = function (counterId, type, reduced) {
-    return "<div class=\"bt_token_side\" data-counter-id=\"".concat(counterId).concat(reduced ? '_reduced' : '', "\"").concat(type === COMMANDER ? ' data-commander="true"' : '', "></div>");
+    return "<div class=\"bt_token_side bt_log_token\" data-counter-id=\"".concat(counterId).concat(reduced ? '_reduced' : '', "\"").concat(type === COMMANDER ? ' data-commander="true"' : '', "></div>");
 };
 var tplLogDieResult = function (dieResult) {
     return "<div class=\"bt_log_die\" data-die-result=\"".concat(dieResult, "\"></div>");
@@ -4094,6 +4117,8 @@ var NotificationManager = (function () {
             'battleStart',
             'battleSelectCommander',
             'commanderDraw',
+            'constructionFort',
+            'constructionRoad',
             'discardCardFromHand',
             'discardCardFromHandPrivate',
             'discardCardInPlay',
@@ -4102,7 +4127,6 @@ var NotificationManager = (function () {
             'eliminateUnit',
             'indianNationControl',
             'loseControl',
-            'marshalTroops',
             'moveRaidPointsMarker',
             'moveRoundMarker',
             'moveStack',
@@ -4197,14 +4221,12 @@ var NotificationManager = (function () {
     NotificationManager.prototype.notif_addSpentMarkerToUnits = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var units;
+            var _this = this;
             return __generator(this, function (_a) {
                 units = notif.args.units;
                 units.forEach(function (unit) {
                     if (unit.spent === 1) {
-                        var element = document.getElementById("spent_marker_".concat(unit.id));
-                        if (element) {
-                            element.setAttribute('data-spent', 'true');
-                        }
+                        _this.setUnitSpent(unit);
                     }
                 });
                 return [2];
@@ -4340,6 +4362,59 @@ var NotificationManager = (function () {
                         _b.sent();
                         return [2];
                 }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_constructionFort = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, faction, fort, option, space, stack;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = notif.args, faction = _a.faction, fort = _a.fort, option = _a.option, space = _a.space;
+                        if (option === PLACE_FORT_CONSTRUCTION_MARKER) {
+                            this.game.gameMap.addMarkerToSpace({
+                                spaceId: space.id,
+                                type: FORT_CONSTRUCTION_MARKER,
+                            });
+                        }
+                        else {
+                            this.game.gameMap.removeMarkerFromSpace({
+                                spaceId: space.id,
+                                type: FORT_CONSTRUCTION_MARKER,
+                            });
+                        }
+                        if (fort === null) {
+                            return [2];
+                        }
+                        stack = this.game.gameMap.stacks[space.id][faction];
+                        if (!(option === REPAIR_FORT)) return [3, 1];
+                        this.game.tokenManager.updateCardInformations(fort);
+                        return [3, 5];
+                    case 1:
+                        if (!(option === REPLACE_FORT_CONSTRUCTION_MARKER)) return [3, 3];
+                        return [4, stack.addUnit(fort)];
+                    case 2:
+                        _b.sent();
+                        return [3, 5];
+                    case 3:
+                        if (!(option === REMOVE_FORT)) return [3, 5];
+                        return [4, stack.removeCard(fort)];
+                    case 4:
+                        _b.sent();
+                        _b.label = 5;
+                    case 5: return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_constructionRoad = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var connection;
+            return __generator(this, function (_a) {
+                connection = notif.args.connection;
+                this.game.gameMap.connections[connection.id].setRoad(connection.road);
+                return [2];
             });
         });
     };
@@ -4492,16 +4567,6 @@ var NotificationManager = (function () {
                     spaceId: space.id,
                     type: "".concat(faction, "_control_marker"),
                 });
-                return [2];
-            });
-        });
-    };
-    NotificationManager.prototype.notif_marshalTroops = function (notif) {
-        return __awaiter(this, void 0, void 0, function () {
-            var activatedUnit;
-            return __generator(this, function (_a) {
-                activatedUnit = notif.args.activatedUnit;
-                this.setUnitSpent(activatedUnit);
                 return [2];
             });
         });
@@ -5913,7 +5978,6 @@ var ArmyMovementDestinationState = (function () {
     ArmyMovementDestinationState.prototype.setSpacesSelectable = function () {
         var _this = this;
         Object.values(this.args.destinations).forEach(function (destination) {
-            console.log('destination', destination);
             _this.game.setLocationSelectable({
                 id: destination.space.id,
                 callback: function () {
@@ -6458,6 +6522,221 @@ var ConfirmTurnState = (function () {
         this.game.addUndoButtons(this.args);
     };
     return ConfirmTurnState;
+}());
+var ConstructionState = (function () {
+    function ConstructionState(game) {
+        this.activated = null;
+        this.game = game;
+    }
+    ConstructionState.prototype.onEnteringState = function (args) {
+        debug('Entering ConstructionState');
+        this.args = args;
+        this.activated = null;
+        this.updateInterfaceInitialStep();
+    };
+    ConstructionState.prototype.onLeavingState = function () {
+        debug('Leaving ConstructionState');
+    };
+    ConstructionState.prototype.setDescription = function (activePlayerId) { };
+    ConstructionState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a unit to activate'),
+            args: {
+                you: '${you}',
+            },
+        });
+        var stack = this.game.gameMap.stacks[this.args.space.id][this.args.faction];
+        stack.open();
+        this.args.activate.forEach(function (unit) {
+            return _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () {
+                    _this.activated = unit;
+                    _this.updateInterfaceConstructionOptions();
+                },
+            });
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    ConstructionState.prototype.updateInterfaceConstructionOptions = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a Connection or Construction option'),
+            args: {
+                you: '${you}',
+                spaceName: _(this.args.space.name),
+            },
+        });
+        this.game.setLocationSelected({ id: this.args.space.id });
+        this.args.fortOptions.forEach(function (option) {
+            _this.game.addSecondaryActionButton({
+                id: "".concat(option, "_btn"),
+                text: _this.getFortConstructionButtonText(option),
+                callback: function () { return _this.updateInterfaceConfirm({ fortOption: option }); },
+            });
+        });
+        Object.entries(this.args.roadOptions).forEach(function (_a) {
+            var connectionId = _a[0], data = _a[1];
+            _this.game.setLocationSelectable({
+                id: "".concat(connectionId, "_road"),
+                callback: function () { return _this.updateInterfaceConfirm({ connectionId: connectionId }); },
+            });
+        });
+        this.game.addCancelButton();
+    };
+    ConstructionState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var connectionId = _a.connectionId, fortOption = _a.fortOption;
+        this.game.clearPossible();
+        this.updateConfirmationPageTitle({ connectionId: connectionId, fortOption: fortOption });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actConstruction',
+                args: {
+                    activatedUnitId: _this.activated.id,
+                    connectionId: connectionId || null,
+                    fortOption: fortOption || null,
+                },
+            });
+        };
+        if (fortOption) {
+            this.game.setLocationSelected({ id: this.args.space.id });
+        }
+        else if (connectionId) {
+            this.game.setLocationSelected({ id: "".concat(connectionId, "_road") });
+        }
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    ConstructionState.prototype.updateConfirmationPageTitle = function (_a) {
+        var _b, _c;
+        var connectionId = _a.connectionId, fortOption = _a.fortOption;
+        var text = '';
+        var args = {};
+        if (fortOption) {
+            switch (fortOption) {
+                case PLACE_FORT_CONSTRUCTION_MARKER:
+                    text = _('Place ${tkn_marker} on ${spaceName}?');
+                    args = {
+                        tkn_marker: FORT_CONSTRUCTION_MARKER,
+                        spaceName: this.args.space.name,
+                    };
+                    break;
+                case REPLACE_FORT_CONSTRUCTION_MARKER:
+                    text = _('Replace ${tkn_marker} on ${spaceName} with Fort?');
+                    args = {
+                        tkn_marker: FORT_CONSTRUCTION_MARKER,
+                        spaceName: this.args.space.name,
+                    };
+                    break;
+                case REPAIR_FORT:
+                    text = _('Repair ${tkn_unit} on ${spaceName}?');
+                    args = {
+                        tkn_unit: "".concat((_b = this.args.fort) === null || _b === void 0 ? void 0 : _b.counterId, ":").concat(this.args.fort.reduced ? 'reduced' : 'full'),
+                        spaceName: this.args.space.name,
+                    };
+                    break;
+                case REMOVE_FORT:
+                    text = _('Remove ${tkn_unit} from ${spaceName}?');
+                    args = {
+                        tkn_unit: "".concat((_c = this.args.fort) === null || _c === void 0 ? void 0 : _c.counterId, ":").concat(this.args.fort.reduced ? 'reduced' : 'full'),
+                        spaceName: this.args.space.name,
+                    };
+                    break;
+                case REMOVE_FORT_CONSTRUCTION_MARKER:
+                    text = _('Remove ${tkn_marker} from ${spaceName}?');
+                    args = {
+                        tkn_marker: FORT_CONSTRUCTION_MARKER,
+                        spaceName: this.args.space.name,
+                    };
+                    break;
+                default:
+                    return '';
+            }
+        }
+        else if (connectionId) {
+            switch (this.args.roadOptions[connectionId].roadOption) {
+                case PLACE_ROAD_CONSTRUCTION_MARKER:
+                    text = _('Place ${tkn_marker} on Path between ${spaceNameOrigin} and ${spaceNameDestination}?');
+                    args = {
+                        tkn_marker: ROAD_CONSTRUCTION_MARKER,
+                        spaceNameOrigin: _(this.args.space.name),
+                        spaceNameDestination: _(this.args.roadOptions[connectionId].space.name),
+                    };
+                    break;
+                case FLIP_ROAD_CONSTRUCTION_MARKER:
+                    text = _('Flip ${tkn_marker_construction} to ${tkn_marker_road} on Path between ${spaceNameOrigin} and ${spaceNameDestination}?');
+                    args = {
+                        tkn_marker_construction: ROAD_CONSTRUCTION_MARKER,
+                        tkn_marker_road: ROAD_MARKER,
+                        spaceNameOrigin: _(this.args.space.name),
+                        spaceNameDestination: _(this.args.roadOptions[connectionId].space.name),
+                    };
+                    break;
+            }
+        }
+        this.game.clientUpdatePageTitle({
+            text: text,
+            args: args,
+        });
+    };
+    ConstructionState.prototype.getFortConstructionButtonText = function (option) {
+        var _a, _b;
+        var text = '';
+        var args = {};
+        switch (option) {
+            case PLACE_FORT_CONSTRUCTION_MARKER:
+                text = _('Place ${tkn_marker}');
+                args = {
+                    tkn_marker: FORT_CONSTRUCTION_MARKER,
+                };
+                break;
+            case REPLACE_FORT_CONSTRUCTION_MARKER:
+                text = _('Replace ${tkn_marker} with Fort');
+                args = {
+                    tkn_marker: FORT_CONSTRUCTION_MARKER,
+                };
+                break;
+            case REPAIR_FORT:
+                text = _('Repair ${tkn_unit}');
+                args = {
+                    tkn_unit: "".concat((_a = this.args.fort) === null || _a === void 0 ? void 0 : _a.counterId, ":").concat(this.args.fort.reduced ? 'reduced' : 'full'),
+                };
+                break;
+            case REMOVE_FORT:
+                text = _('Remove ${tkn_unit}');
+                args = {
+                    tkn_unit: "".concat((_b = this.args.fort) === null || _b === void 0 ? void 0 : _b.counterId, ":").concat(this.args.fort.reduced ? 'reduced' : 'full'),
+                };
+                break;
+            case REMOVE_FORT_CONSTRUCTION_MARKER:
+                text = _('Remove ${tkn_marker}');
+                args = {
+                    tkn_marker: FORT_CONSTRUCTION_MARKER,
+                };
+                break;
+            default:
+                return '';
+        }
+        return this.game.format_string_recursive(text, args);
+    };
+    return ConstructionState;
 }());
 var EventArmedBattoemenState = (function () {
     function EventArmedBattoemenState(game) {
@@ -7981,10 +8260,14 @@ var MovementState = (function () {
         this.game = game;
     }
     MovementState.prototype.onEnteringState = function (args) {
+        var _this = this;
         debug('Entering MovementState');
         this.args = args;
-        this.selectedUnits = [];
-        this.destination = null;
+        this.selectedUnits = this.args.units.filter(function (_a) {
+            var id = _a.id;
+            return _this.args.requiredUnitIds.includes(id);
+        });
+        this.destination = this.args.destination;
         this.updateInterfaceInitialStep();
     };
     MovementState.prototype.onLeavingState = function () {
@@ -7994,12 +8277,24 @@ var MovementState = (function () {
     MovementState.prototype.updateInterfaceInitialStep = function () {
         var _this = this;
         this.game.clearPossible();
-        this.game.clientUpdatePageTitle({
-            text: _('${you} must select units and a destination'),
-            args: {
-                you: '${you}',
-            },
-        });
+        var fixedDestination = this.args.destination !== null;
+        if (fixedDestination) {
+            this.game.clientUpdatePageTitle({
+                text: _('${you} must select units to move to ${spaceName}'),
+                args: {
+                    you: '${you}',
+                    spaceName: _(this.args.destination.name),
+                },
+            });
+        }
+        else {
+            this.game.clientUpdatePageTitle({
+                text: _('${you} must select units and a destination'),
+                args: {
+                    you: '${you}',
+                },
+            });
+        }
         var stack = this.game.gameMap.stacks[this.args.fromSpace.id][this.args.faction];
         stack.open();
         this.setUnitsSelectable();
@@ -8069,13 +8364,16 @@ var MovementState = (function () {
             _this.game.setUnitSelectable({
                 id: unit.id,
                 callback: function () {
-                    if (_this.selectedUnits.some(function (selectedUnit) { return selectedUnit.id === unit.id; })) {
+                    if (_this.selectedUnits.some(function (selectedUnit) { return selectedUnit.id === unit.id; }) &&
+                        !_this.args.requiredUnitIds.includes(unit.id)) {
                         _this.selectedUnits = _this.selectedUnits.filter(function (selectedUnit) { return selectedUnit.id !== unit.id; });
                     }
                     else {
                         _this.selectedUnits.push(unit);
                     }
-                    _this.destination = null;
+                    if (_this.args.destination === null) {
+                        _this.destination = null;
+                    }
                     _this.updateInterfaceInitialStep();
                 },
             });

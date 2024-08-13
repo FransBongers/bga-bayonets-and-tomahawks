@@ -40,8 +40,6 @@ class ActionRoundResolveARStartEvent extends \BayonetsAndTomahawks\Models\Atomic
 
   public function stActionRoundResolveARStartEvent()
   {
-    Notifications::log('stActionRoundResolveARStartEvent', []);
-
     $info = $this->ctx->getInfo();
     $cardId = $info['cardId'];
     $faction = $info['faction'];

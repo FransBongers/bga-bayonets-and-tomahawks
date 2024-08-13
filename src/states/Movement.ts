@@ -11,8 +11,10 @@ class MovementState implements State {
   onEnteringState(args: OnEnteringMovementStateArgs) {
     debug('Entering MovementState');
     this.args = args;
-    this.selectedUnits = [];
-    this.destination = null;
+    this.selectedUnits = this.args.units.filter(({ id }) =>
+      this.args.requiredUnitIds.includes(id)
+    );
+    this.destination = this.args.destination;
     this.updateInterfaceInitialStep();
   }
 
@@ -41,12 +43,24 @@ class MovementState implements State {
   private updateInterfaceInitialStep() {
     this.game.clearPossible();
 
-    this.game.clientUpdatePageTitle({
-      text: _('${you} must select units and a destination'),
-      args: {
-        you: '${you}',
-      },
-    });
+    const fixedDestination = this.args.destination !== null;
+
+    if (fixedDestination) {
+      this.game.clientUpdatePageTitle({
+        text: _('${you} must select units to move to ${spaceName}'),
+        args: {
+          you: '${you}',
+          spaceName: _(this.args.destination.name),
+        },
+      });
+    } else {
+      this.game.clientUpdatePageTitle({
+        text: _('${you} must select units and a destination'),
+        args: {
+          you: '${you}',
+        },
+      });
+    }
 
     const stack: UnitStack =
       this.game.gameMap.stacks[this.args.fromSpace.id][this.args.faction];
@@ -148,7 +162,8 @@ class MovementState implements State {
           if (
             this.selectedUnits.some(
               (selectedUnit) => selectedUnit.id === unit.id
-            )
+            ) &&
+            !this.args.requiredUnitIds.includes(unit.id)
           ) {
             this.selectedUnits = this.selectedUnits.filter(
               (selectedUnit) => selectedUnit.id !== unit.id
@@ -156,7 +171,9 @@ class MovementState implements State {
           } else {
             this.selectedUnits.push(unit);
           }
-          this.destination = null;
+          if (this.args.destination === null) {
+            this.destination = null;
+          }
           this.updateInterfaceInitialStep();
         },
       });

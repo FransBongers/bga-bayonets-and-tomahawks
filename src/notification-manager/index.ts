@@ -70,6 +70,8 @@ class NotificationManager {
       'battleStart',
       'battleSelectCommander',
       'commanderDraw',
+      'constructionFort',
+      'constructionRoad',
       'discardCardFromHand',
       'discardCardFromHandPrivate',
       'discardCardInPlay',
@@ -78,7 +80,7 @@ class NotificationManager {
       'eliminateUnit',
       'indianNationControl',
       'loseControl',
-      'marshalTroops',
+      // 'marshalTroops',
       'moveRaidPointsMarker',
       'moveRoundMarker',
       'moveStack',
@@ -225,10 +227,11 @@ class NotificationManager {
     const { units } = notif.args;
     units.forEach((unit) => {
       if (unit.spent === 1) {
-        const element = document.getElementById(`spent_marker_${unit.id}`);
-        if (element) {
-          element.setAttribute('data-spent', 'true');
-        }
+        this.setUnitSpent(unit);
+        // const element = document.getElementById(`spent_marker_${unit.id}`);
+        // if (element) {
+        //   element.setAttribute('data-spent', 'true');
+        // }
       }
     });
   }
@@ -319,6 +322,37 @@ class NotificationManager {
     ]);
   }
 
+  async notif_constructionFort(notif: Notif<NotifConstructionFortArgs>) {
+    const { faction, fort, option, space } = notif.args;
+    if (option === PLACE_FORT_CONSTRUCTION_MARKER) {
+      this.game.gameMap.addMarkerToSpace({
+        spaceId: space.id,
+        type: FORT_CONSTRUCTION_MARKER,
+      });
+    } else {
+      this.game.gameMap.removeMarkerFromSpace({
+        spaceId: space.id,
+        type: FORT_CONSTRUCTION_MARKER,
+      });
+    }
+    if (fort === null) {
+      return;
+    }
+    const stack = this.game.gameMap.stacks[space.id][faction];
+    if (option === REPAIR_FORT) {
+      this.game.tokenManager.updateCardInformations(fort);
+    } else if (option === REPLACE_FORT_CONSTRUCTION_MARKER) {
+      await stack.addUnit(fort);
+    } else if (option === REMOVE_FORT) {
+      await stack.removeCard(fort);
+    }
+  }
+
+  async notif_constructionRoad(notif: Notif<NotifConstructionRoadArgs>) {
+    const { connection } = notif.args;
+    this.game.gameMap.connections[connection.id].setRoad(connection.road);
+  }
+
   async notif_discardCardFromHand(notif: Notif<NotifDiscardCardFromHandArgs>) {
     const { faction, playerId } = notif.args;
     const fakeCard = {
@@ -394,10 +428,10 @@ class NotificationManager {
     });
   }
 
-  async notif_marshalTroops(notif: Notif<NotifMarshalTroopsArgs>) {
-    const { activatedUnit } = notif.args;
-    this.setUnitSpent(activatedUnit);
-  }
+  // async notif_marshalTroops(notif: Notif<NotifMarshalTroopsArgs>) {
+  //   const { activatedUnit } = notif.args;
+  //   this.setUnitSpent(activatedUnit);
+  // }
 
   async notif_moveRaidPointsMarker(
     notif: Notif<NotifMoveRaidPointsMarkerArgs>

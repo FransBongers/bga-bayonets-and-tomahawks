@@ -315,6 +315,11 @@ const MARSHAL_TROOPS_MARKER = 'marshalTroopsMarker';
 const ROUT_MARKER = 'routMarker';
 const OUT_OF_SUPPLY_MARKER = 'outOfSupplyMarker';
 
+// Construction markers
+const FORT_CONSTRUCTION_MARKER = 'fortConstructionMarker';
+const ROAD_CONSTRUCTION_MARKER = 'roadConstructionMarker';
+const ROAD_MARKER = 'roadMarker';
+
 
 const NAMED_MARKERS = [
   YEAR_MARKER,
@@ -936,6 +941,17 @@ const YORK_ZAWAKWTEGOK = 'York_Zawakwtegok';
 const NO_ROAD = 0;
 const ROAD_UNDER_CONTRUCTION = 1;
 const HAS_ROAD = 2;
+
+/**
+ * Construction options
+ */
+const PLACE_FORT_CONSTRUCTION_MARKER = 'placeFortConstructionMarker';
+const REPLACE_FORT_CONSTRUCTION_MARKER = 'replaceFortConstructionMarker';
+const REPAIR_FORT = 'repairFort';
+const REMOVE_FORT_CONSTRUCTION_MARKER = 'removeFortConstructionMarkerOrFort';
+const REMOVE_FORT = 'removeFort';
+const PLACE_ROAD_CONSTRUCTION_MARKER = 'placeRoadConstructionMarker';
+const FLIP_ROAD_CONSTRUCTION_MARKER = 'flipRoadConstructionMarker';
 
 /**
  * Battle roll sequence

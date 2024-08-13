@@ -39,7 +39,6 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
 
   public function stActionRoundResolveBattles()
   {
-    Notifications::log('stActionRoundResolveBattles', []);
     $battleLocations = Spaces::getBattleLocations();
     $playerId = self::getPlayer()->getId();
 
@@ -70,7 +69,7 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
         ]
       ];
     }
-    Notifications::log('engine', $battleNodes);
+
     if (count($battleNodes['children']) > 0) {
       $this->ctx->insertAsBrother(Engine::buildTree($battleNodes));
     }

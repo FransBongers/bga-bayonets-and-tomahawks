@@ -375,7 +375,7 @@ class VaudreuilsPetiteGuerre1755 extends \BayonetsAndTomahawks\Models\Scenario
     $countingSpaces = Utils::filter($spaces, function ($space) {
       return $space->isHomeSpace(FRENCH) && $space->isVictorySpace() && $space->isControlledBy(BRITISH);
     });
-    Notifications::log('Counting spaces British', $countingSpaces);
+
     if (count($countingSpaces) >= 2) {
       return 2;
     }
@@ -388,7 +388,7 @@ class VaudreuilsPetiteGuerre1755 extends \BayonetsAndTomahawks\Models\Scenario
     $countingSpaces = Utils::filter($spaces, function ($space) {
       return $space->isSettledSpace(BRITISH) && $space->isControlledBy(FRENCH);
     });
-    Notifications::log('Counting spaces French', $countingSpaces);
+
     if (count($countingSpaces) >= 1) {
       return 2;
     }

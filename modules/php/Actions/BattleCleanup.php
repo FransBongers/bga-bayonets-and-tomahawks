@@ -43,7 +43,6 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
   {
     $parentInfo = $this->ctx->getParent()->getInfo();
     $space = Spaces::get($parentInfo['spaceId']);
-    Notifications::log('stBattleCleanup', $parentInfo);
 
     $defender = $space->getDefender();
     $attacker = Players::otherFaction($defender);

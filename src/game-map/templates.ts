@@ -62,7 +62,7 @@ const tplConnection = ({
           <div id="${id}_french_limit" class="bt_connection_limit_counter">
             <span id="${id}_frenchLimit_counter" data-faction="french">4</span>
           </div>
-          <div id="${id}_road" class="bt_road" data-road="false"></div>
+          <div id="${id}_road" class="bt_marker_side" data-type="none"></div>
           <div id="${id}_british_limit" class="bt_connection_limit_counter">
             <span id="${id}_britishLimit_counter" data-faction="british">14</span>
           </div>

@@ -107,8 +107,6 @@ class BattleSelectCommander extends \BayonetsAndTomahawks\Actions\Battle
   {
     self::checkAction('actBattleSelectCommander');
 
-    Notifications::log('args', $args);
-
     $unitId = $args['unitId'];
     $stateArgs = $this->argsBattleSelectCommander();
     $space = $stateArgs['space'];

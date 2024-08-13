@@ -89,8 +89,13 @@ trait DebugTrait
 
   function debug_test()
   {
-    Spaces::setStartOfTurnControl();
-    Notifications::log('space', Spaces::get(ST_GEORGE));
+    // Units::get('unit_48')->setState(1);
+    Connections::get('Loyalhanna_RaysTown')->setRoad(1);
+    Connections::get('RaysTown_Shamokin')->setRoad(2);
+    // Globals::setPlacedConstructionMarkers([]);
+    // Notifications::log('marker', Markers::get('marshalTroopsMarker_1'));
+    // Notifications::log('hasStackMarker', Spaces::get(ALBANY)->hasStackMarker(OUT_OF_SUPPLY_MARKER, BRITISH));
+
     // Connections::get(ALBANY_KINGSTON)->setBritishLimit(7);
     // Connections::get(LAKE_GEORGE_ONEIDA_LAKE)->setRoad(HAS_ROAD);
     // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(FRENCH), OUT_OF_SUPPLY_MARKER, Spaces::get(GRAND_SAULT), FRENCH);

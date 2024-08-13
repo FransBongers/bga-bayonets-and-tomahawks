@@ -441,7 +441,7 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
     $countingSpaces = Utils::filter($spaces, function ($space) {
       return $space->isSettledSpace(FRENCH) && $space->isControlledBy(BRITISH);
     });
-    Notifications::log('Counting spaces British', $countingSpaces);
+
     if (count($countingSpaces) >= 1) {
       return 2;
     }
@@ -454,7 +454,7 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
     $countingSpaces = Utils::filter($spaces, function ($space) {
       return $space->isHomeSpace(BRITISH) && $space->isVictorySpace() && $space->isControlledBy(FRENCH);
     });
-    Notifications::log('Counting spaces French', $countingSpaces);
+
     if (count($countingSpaces) >= 3) {
       return 2;
     }

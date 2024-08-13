@@ -14,7 +14,7 @@ class SailArmyAP_2x extends \BayonetsAndTomahawks\Models\ActionPoint
       MOVEMENT,
       // SAIL_MOVEMENT,
       MARSHAL_TROOPS,
-      // CONSTRUCTION,
+      CONSTRUCTION,
     ];
   }
 }

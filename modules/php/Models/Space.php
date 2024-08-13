@@ -3,8 +3,10 @@
 namespace BayonetsAndTomahawks\Models;
 
 use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Connections;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Units;
 
@@ -100,7 +102,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     ];
   }
 
-  
+
   public function getAdjacentConnections()
   {
     $result = [];
@@ -177,5 +179,11 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   public function isSettledSpace($faction)
   {
     return $this->homeSpace === $faction && $this->value > 1;
+  }
+
+  public function hasStackMarker($type, $faction)
+  {
+    $markers = Markers::getOfTypeInLocation($type, Locations::stackMarker($this->getId(), $faction));
+    return count($markers) > 0;
   }
 }

@@ -10,7 +10,7 @@ class RaysTown extends \BayonetsAndTomahawks\Models\Space
     $this->battlePriority = 241;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
-    $this->name = clienttranslate('RaysTown');
+    $this->name = clienttranslate('Rays Town');
     $this->outpost = true;
     $this->value = 1;
     $this->victorySpace = false;

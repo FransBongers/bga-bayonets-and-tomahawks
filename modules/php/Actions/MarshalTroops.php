@@ -120,6 +120,8 @@ class MarshalTroops extends \BayonetsAndTomahawks\Actions\UnitMovement
       throw new \feException("ERROR 052");
     }
 
+    $activatedUnit->setSpent(1);
+
     $spaces = Spaces::getMany(array_keys($marshalledUnitIds))->toArray();
     $player = self::getPlayer();
     $playerId = $player->getId();

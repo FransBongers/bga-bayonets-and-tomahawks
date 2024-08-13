@@ -18,11 +18,15 @@ const tplLogTokenCard = (id: string) => {
 };
 
 const tplLogTokenMarker = (type: string) => {
-  return `<div class="bt_marker_side" data-type="${type}"></div>`;
+  return `<div class="bt_log_token bt_marker_side" data-type="${type}"></div>`;
+};
+
+const tplLogTokenRoad = (state: string) => {
+  return `<div class="bt_log_token bt_road" data-road="${state}"></div>`;
 };
 
 const tplLogTokenUnit = (counterId: string, type: string, reduced: boolean) => {
-  return `<div class="bt_token_side" data-counter-id="${counterId}${
+  return `<div class="bt_token_side bt_log_token" data-counter-id="${counterId}${
     reduced ? '_reduced' : ''
   }"${type === COMMANDER ? ' data-commander="true"' : ''}></div>`;
 };

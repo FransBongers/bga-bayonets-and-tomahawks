@@ -132,6 +132,21 @@ interface OnEnteringMovementStateArgs extends CommonArgs {
   units: BTUnit[];
   fromSpace: BTSpace;
   faction: BRITISH_FACTION | FRENCH_FACTION;
+  destination: BTSpace;
+  requiredUnitIds: string[];
+}
+
+interface OnEnteringConstructionStateArgs extends CommonArgs {
+  activate: BTUnit[];
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+  fort: BTUnit | null;
+  fortOptions: string[];
+  roadOptions: Record<string, {
+    connection: BTConnection;
+    roadOption: string;
+    space: BTSpace;
+  }>
+  space: BTSpace;
 }
 
 interface EventArmedBattoemenStateArgs extends CommonArgs {

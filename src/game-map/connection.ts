@@ -71,19 +71,19 @@ class Connection {
       return;
     }
 
-    element.setAttribute('data-road', this.getRoadStatus(roadStatus));
+    element.setAttribute('data-type', this.getRoadStatus(roadStatus));
   }
 
   private getRoadStatus(roadStatus: number) {
     switch (roadStatus) {
       case NO_ROAD:
-        return 'false';
+        return 'none';
       case ROAD_UNDER_CONTRUCTION:
-        return 'construction';
+        return ROAD_CONSTRUCTION_MARKER;
       case HAS_ROAD:
-        return 'true';
+        return ROAD_MARKER;
       default:
-        return 'false';
+        return 'none';
     }
   }
 

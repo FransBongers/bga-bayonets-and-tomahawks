@@ -80,6 +80,7 @@
     "src/states/ColonialsEnlistUnitPlacement.ts",
     "src/states/ConfirmPartialTurn.ts",
     "src/states/ConfirmTurn.ts",
+    "src/states/Construction.ts",
     "src/states/EventArmedBattoemen.ts",
     "src/states/EventDelayedSuppliesFromFrance.ts",
     "src/states/EventDiseaseInBritishCamp.ts",

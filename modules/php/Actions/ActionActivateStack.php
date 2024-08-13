@@ -110,7 +110,7 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
     }
 
     $actionPointId = $this->ctx->getParent()->getInfo()['actionPointId'];
-    $flow = AtomicActions::get($action['id'])->getFlow($actionPointId, self::getPlayer()->getId(), $stackId, in_array($actionPointId, [INDIAN_AP, INDIAN_AP_2X]));
+    $flow = AtomicActions::get($action['id'])->getFlow($actionPointId, self::getPlayer()->getId(), $stackId);
     $this->ctx->insertAsBrother(Engine::buildTree($flow));
 
     Notifications::activateStack(self::getPlayer(), Spaces::get($stackId), $action['name']);

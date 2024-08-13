@@ -162,6 +162,12 @@ class GameMap {
           type: 'battle_marker',
         });
       }
+      if (space.fortConstruction) {
+        this.addMarkerToSpace({
+          spaceId: space.id,
+          type: FORT_CONSTRUCTION_MARKER,
+        });
+      }
 
       if (!this.stacks[space.id]) {
         // [BRITISH, FRENCH].forEach((faction) => {

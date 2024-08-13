@@ -142,7 +142,6 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
    */
   public static function loadScenario($scenario)
   {
-    Notifications::log('loadUnits', []);
     // Only needed if we enable rematches?
     // self::DB()
     //   ->delete()
@@ -200,7 +199,6 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
     // Units in pools
     $pools = $scenario->getPools();
     foreach ($pools as $poolId => $pool) {
-      Notifications::log('pool', $pool);
 
       if (!isset($pool['units'])) {
         continue;
@@ -220,7 +218,7 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
         $unitIdIndex += 1;
       }
     }
-    Notifications::log('units', $units);
+
     self::create($units, null);
   }
 

@@ -376,6 +376,66 @@ class Notifications
     ]);
   }
 
+  public static function construction($player, $activatedUnit, $space)
+  {
+    self::message(clienttranslate('${player_name} activates ${tkn_unit} to perform Construction on ${tkn_boldText_spaceName}'), [
+      'player' => $player,
+      'tkn_unit' => $activatedUnit->getCounterId(),
+      'tkn_boldText_spaceName' => $space->getName(),
+      'i18n' => ['tkn_boldText_spaceName'],
+    ]);
+  }
+
+
+  public static function constructionFort($player, $space, $fort, $faction, $option)
+  {
+    switch ($option) {
+      case PLACE_FORT_CONSTRUCTION_MARKER:
+        $text = clienttranslate('${player_name} places ${tkn_marker} on ${tkn_boldText_spaceName}');
+        break;
+      case REPLACE_FORT_CONSTRUCTION_MARKER:
+        $text = clienttranslate('${player_name} replaces ${tkn_marker} on ${tkn_boldText_spaceName} with ${tkn_unit}');
+        break;
+      case REPAIR_FORT:
+        $text = clienttranslate('${player_name} repairs ${tkn_unit} on ${tkn_boldText_spaceName}');
+        break;
+      case REMOVE_FORT:
+        $text = clienttranslate('${player_name} removes ${tkn_unit} from ${tkn_boldText_spaceName}');
+        break;
+      case REMOVE_FORT_CONSTRUCTION_MARKER:
+        $text = clienttranslate('${player_name} removes ${tkn_marker} from ${tkn_boldText_spaceName}');
+        break;
+    }
+
+    self::notifyAll("constructionFort", $text, [
+      'player' => $player,
+      'tkn_marker' => FORT_CONSTRUCTION_MARKER,
+      'tkn_boldText_spaceName' => $space->getName(),
+      'faction' => $faction,
+      'fort' => $fort !== null ? $fort->jsonSerialize() : null,
+      'option' => $option,
+      'space' => $space->jsonSerialize(),
+      'i18n' => ['tkn_boldText_spaceName']
+    ]);
+  }
+
+  public static function constructionRoad($player, $connection, $sourceSpace, $destinationSpace)
+  {
+    $text = $connection->getRoad() === ROAD_UNDER_CONTRUCTION ?
+      clienttranslate('${player_name} places ${tkn_marker_construction} on Path between ${tkn_boldText_origin} and ${tkn_boldText_destination}') :
+      clienttranslate('Flip ${tkn_marker_construction} to ${tkn_marker_road} on Path between ${tkn_boldText_origin} and ${tkn_boldText_destination}?');
+
+    self::notifyAll("constructionRoad", $text, [
+      'player' => $player,
+      'tkn_marker_construction' => ROAD_CONSTRUCTION_MARKER,
+      'tkn_marker_road' => ROAD_MARKER,
+      'tkn_boldText_origin' => $sourceSpace->getName(),
+      'tkn_boldText_destination' => $destinationSpace->getName(),
+      'connection' => $connection->jsonSerialize(),
+      'i18n' => ['tkn_boldText_origin', 'tkn_boldText_destination']
+    ]);
+  }
+
   public static function drawCard($player, $card)
   {
     self::notify($player, 'drawCardPrivate', clienttranslate('Private: ${player_name} draws  ${cardId}'), [
@@ -518,9 +578,9 @@ class Notifications
 
   public static function marshalTroops($player, $activatedUnit, $targetSpace)
   {
-    self::notifyAll("marshalTroops", clienttranslate('${player_name} activates ${tkn_unit} to Marshal Troops on ${tkn_boldText_spaceName}'), [
+    self::notifyAll("addSpentMarkerToUnits", clienttranslate('${player_name} activates ${tkn_unit} to Marshal Troops on ${tkn_boldText_spaceName}'), [
       'player' => $player,
-      'activatedUnit' => $activatedUnit->jsonSerialize(),
+      'units' => [$activatedUnit->jsonSerialize()],
       'tkn_unit' => $activatedUnit->getCounterId(),
       'tkn_boldText_spaceName' => $targetSpace->getName(),
       'i18n' => ['tkn_boldText_spaceName'],

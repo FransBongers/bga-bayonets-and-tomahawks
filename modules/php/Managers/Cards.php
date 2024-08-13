@@ -191,8 +191,8 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
         'extra_data' => json_encode($extraData)
       ];
     }
-    Notifications::log('cards', $cards);
-    // // Create the cards
+
+    // Create the cards
     self::create($cards, null);
   }
 

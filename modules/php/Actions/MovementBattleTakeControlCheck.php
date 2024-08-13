@@ -85,13 +85,17 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
       }
     }
 
+    $source = $info['source'];
+
     // Movement possible if there are units that still can move
-    if ($this->unitsCanMove($space, $playerFaction)) {
+    if ($source !== CONSTRUCTION && $this->unitsCanMove($space, $playerFaction)) {
       $this->ctx->getParent()->insertAsBrother(Engine::buildTree([
         'action' => MOVEMENT,
-        'actionPointId' => $info['actionPointId'],
+        'source' => $source,
         'spaceId' => $spaceId,
         'playerId' => $player->getId(),
+        'destinationId' => $info['destinationId'],
+        'requiredUnitIds' => $info['requiredUnitIds'],
         'optional' => true,
       ]));
     }
@@ -112,7 +116,7 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
     $currentNumberOfMoves = count($this->ctx->getParent()->getParent()->getResolvedActions([MOVEMENT]));
 
     $units = $space->getUnits();
-    $mpMultiplier = in_array($this->ctx->getInfo()['actionPointId'], [ARMY_AP_2X, LIGHT_AP_2X, INDIAN_AP_2X, SAIL_ARMY_AP_2X]) ? 2 : 1;
+    $mpMultiplier = in_array($this->ctx->getInfo()['source'], [ARMY_AP_2X, LIGHT_AP_2X, INDIAN_AP_2X, SAIL_ARMY_AP_2X]) ? 2 : 1;
 
     return Utils::array_some($units, function ($unit) use ($mpMultiplier, $currentNumberOfMoves) {
       return $unit->getMpLimit() * $mpMultiplier > $currentNumberOfMoves && !$unit->isSpent();

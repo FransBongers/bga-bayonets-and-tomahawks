@@ -186,7 +186,6 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
       Notifications::log('Fleet retreat', []);
     } else if ($isAttacker) {
       // Attacker retreat priorities
-      Notifications::log('Attacker retreat', []);
       $optionsFriendlyStackEnteredFrom = Utils::filter($possibleRetreatOptions, function ($data) use ($spaceIdsAttackersEnteredFrom) {
         return in_array($data['space']->getId(), $spaceIdsAttackersEnteredFrom);
       });
@@ -197,7 +196,6 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
       }, $optionsFriendlyStackEnteredFrom);
     } else {
       // Defender retreat priorities
-      Notifications::log('Defender retreat', []);
 
       $possibleRetreatOptions = Utils::filter($possibleRetreatOptions, function ($data) use ($spaceIdsAttackersEnteredFrom) {
         return !in_array($data['space']->getId(), $spaceIdsAttackersEnteredFrom);

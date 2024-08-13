@@ -38,6 +38,7 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'lostAPIndian' => 'obj',
     'controlCherokee' => 'str',
     'controlIroquois' => 'str',
+    'placedConstructionMarkers' => 'obj',
   ];
 
   protected static $table = 'global_variables';
@@ -167,5 +168,6 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     self::setLostAPIndian([]);
     self::setControlCherokee(NEUTRAL);
     self::setControlIroquois(NEUTRAL);
+    self::setPlacedConstructionMarkers([]);
   }
 }

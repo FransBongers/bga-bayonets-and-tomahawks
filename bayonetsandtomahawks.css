@@ -653,27 +653,20 @@ body > .card {
   min-width: calc(var(--btMarkerScale) * 44px);
   max-width: calc(var(--btMarkerScale) * 44px);
 }
-.bt_connection .bt_road {
-  min-height: calc(var(--btMarkerScale) * 44px);
-  max-height: calc(var(--btMarkerScale) * 44px);
-  min-width: calc(var(--btMarkerScale) * 44px);
-  max-width: calc(var(--btMarkerScale) * 44px);
-  background-image: url("img/markers_2.webp");
-  background-size: 800% 600%;
-  box-sizing: border-box;
-  border: calc(var(--btMapScale) * 1px) solid black;
-  border-radius: 5%;
-}
-.bt_connection .bt_road[data-road=false] {
+.bt_connection .bt_marker_side[data-type=none] {
   display: none;
+  background-image: none;
 }
-.bt_connection .bt_road[data-road=construction] {
-  background-position-x: 71.4285714286%;
-  background-position-y: 0%;
+.bt_connection .bt_marker_side.bt_selectable {
+  display: initial;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) orange !important;
+  cursor: pointer;
 }
-.bt_connection .bt_road[data-road=true] {
-  background-position-x: 28.5714285714%;
-  background-position-y: 60%;
+.bt_connection .bt_marker_side.bt_selected,
+.bt_connection .bt_marker_side.bt_selectable:hover {
+  display: initial;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #0000ff !important;
+  cursor: pointer;
 }
 .bt_connection .bt_connection_limit_counter {
   min-width: calc(var(--btMapScale) * 34px);
@@ -993,13 +986,24 @@ body > .card {
   background-position-x: 100%;
 }
 
+#customActions .bt_log_token {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+}
 #customActions .bt_log_die {
   --btTokenScale: 0.7;
+}
+#customActions .bt_marker_side {
+  --btMarkerScale: 0.8;
+  margin-left: 4px;
+  border: 1px solid black;
 }
 #customActions .bt_token_side {
   --btTokenScale: 0.8;
   position: relative;
-  margin: 0px -5px;
+  top: -2px;
+  margin-top: 2px;
 }
 
 #pagemaintitletext .bt_card,
@@ -2879,6 +2883,21 @@ body > .card {
 .bt_marker_side[data-type=openSeasMarker][data-side=back] {
   background-position-x: 14.2857142857%;
   background-position-y: 0%;
+}
+
+.bt_marker_side[data-type=fortConstructionMarker] {
+  background-position-x: 57.1428571429%;
+  background-position-y: 0%;
+}
+
+.bt_marker_side[data-type=roadConstructionMarker] {
+  background-position-x: 71.4285714286%;
+  background-position-y: 0%;
+}
+
+.bt_marker_side[data-type=roadMarker] {
+  background-position-x: 28.5714285714%;
+  background-position-y: 60%;
 }
 
 #show_settings {

@@ -206,6 +206,11 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     return $this->state === 1;
   }
 
+  public function setReduced($value)
+  {
+    $this->setState($value);
+  }
+
   public function isSpent()
   {
     return $this->spent === 1;

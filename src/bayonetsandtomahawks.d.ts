@@ -129,6 +129,7 @@ interface BTSpace {
   colony: string | null;
   control: string;
   raided: BRITISH_FACTION | FRENCH_FACTION | null;
+  fortConstruction: boolean;
   homeSpace: BRITISH_FACTION | FRENCH_FACTION | null;
   defaultControl: string;
   name: string;

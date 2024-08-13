@@ -43,8 +43,6 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
   {
     $parentInfo = $this->ctx->getParent()->getInfo();
     $space = Spaces::get($parentInfo['spaceId']);
-    Notifications::log('stBattleOutcome', $parentInfo);
-
 
     $outcome = $this->determineOutcome($space);
 

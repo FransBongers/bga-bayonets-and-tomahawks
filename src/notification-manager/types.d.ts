@@ -71,6 +71,21 @@ interface NotifDrawnReinforcementsArgs {
   location: string;
 }
 
+interface NotifConstructionFortArgs extends NotifWithPlayerArgs {
+  
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+  fort: BTUnit | null;
+  option: string;
+  space: BTSpace;
+}
+
+interface NotifConstructionRoadArgs extends NotifWithPlayerArgs {
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+  option: string;
+  connection: BTConnection;
+  space: BTSpace;
+}
+
 interface NotifDiscardCardFromHandArgs extends NotifWithPlayerArgs {
   faction: Faction;
 }
@@ -143,7 +158,6 @@ interface NotifPlaceUnitsArgs extends NotifWithPlayerArgs {
 interface NotifPlaceStackMarkerArgs extends NotifWithPlayerArgs {
   marker: BTMarker;
 }
-
 
 interface NotifPlaceUnitInLossesArgs extends NotifWithPlayerArgs {
   unit: BTUnit;

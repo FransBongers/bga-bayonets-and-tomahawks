@@ -127,6 +127,10 @@ const ROUT_MARKER = 'routMarker';
 
 const STACK_MARKERS = [MARSHAL_TROOPS_MARKER, OUT_OF_SUPPLY_MARKER, ROUT_MARKER];
 
+const FORT_CONSTRUCTION_MARKER = 'fortConstructionMarker';
+const ROAD_CONSTRUCTION_MARKER = 'roadConstructionMarker';
+const ROAD_MARKER = 'roadMarker';
+
 // Raid track
 const RAID_TRACK_0 = 'raid_track_0';
 const RAID_TRACK_1 = 'raid_track_1';
@@ -255,3 +259,14 @@ const ACTION_ROUND_INDIAN_ACTIONS = 'ACTION_ROUND_INDIAN_ACTIONS';
 const NO_ROAD = 0;
 const ROAD_UNDER_CONTRUCTION = 1;
 const HAS_ROAD = 2;
+
+/**
+ * Construction options
+ */
+const PLACE_FORT_CONSTRUCTION_MARKER = 'placeFortConstructionMarker';
+const REPLACE_FORT_CONSTRUCTION_MARKER = 'replaceFortConstructionMarker';
+const REPAIR_FORT = 'repairFort';
+const REMOVE_FORT_CONSTRUCTION_MARKER = 'removeFortConstructionMarkerOrFort';
+const REMOVE_FORT = 'removeFort';
+const PLACE_ROAD_CONSTRUCTION_MARKER = 'placeRoadConstructionMarker';
+const FLIP_ROAD_CONSTRUCTION_MARKER = 'flipRoadConstructionMarker';
