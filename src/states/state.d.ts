@@ -134,6 +134,7 @@ interface OnEnteringMovementStateArgs extends CommonArgs {
   faction: BRITISH_FACTION | FRENCH_FACTION;
   destination: BTSpace;
   requiredUnitIds: string[];
+  source: string;
 }
 
 interface OnEnteringConstructionStateArgs extends CommonArgs {
@@ -220,6 +221,12 @@ interface OnEnteringLightMovementDestinationStateArgs extends CommonArgs {
   // isIndianAP: boolean;
   // origin: BTSpace;
   faction: Faction;
+}
+
+interface OnEnteringSailMovementStateArgs extends CommonArgs {
+  units: BTUnit[];
+  space: BTSpace;
+  faction: BRITISH_FACTION | FRENCH_FACTION;
 }
 
 interface OnEnteringRaidStateArgs extends CommonArgs {

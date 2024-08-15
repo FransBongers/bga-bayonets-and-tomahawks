@@ -43,6 +43,63 @@ class UnitStack extends ManualPositionStock<BTToken> {
     });
   }
 
+  // protected moveFromOtherStock(
+  //   card: BTToken,
+  //   cardElement: HTMLElement,
+  //   animation: CardAnimation<BTToken>,
+  //   settings?: AddCardSettings
+  // ): Promise<boolean> {
+  //   let promise: Promise<boolean>;
+
+  //   const element = animation.fromStock.contains(card)
+  //     ? this.manager.getCardElement(card)
+  //     : // @ts-ignore
+  //       animation.fromStock.element;
+  //   const fromRect = element?.getBoundingClientRect();
+  //   // Added hack
+  //   this.updateDisplay(this.element, [...this.getCards(), card], card, this);
+  //   this.addCardElementToParent(cardElement, settings);
+
+  //   this.removeSelectionClassesFromElement(cardElement);
+
+  //   promise = fromRect
+  //     ? this.animationFromElement(cardElement, fromRect, {
+  //         originalSide: animation.originalSide,
+  //         rotationDelta: animation.rotationDelta,
+  //         animation: animation.animation,
+  //       })
+  //     : Promise.resolve(false);
+  //   // in the case the card was move inside the same stock we don't remove it
+  //   if (animation.fromStock && animation.fromStock != this) {
+  //     animation.fromStock.removeCard(card);
+  //   }
+
+  //   if (!promise) {
+  //     console.warn(`CardStock.moveFromOtherStock didn't return a Promise`);
+  //     promise = Promise.resolve(false);
+  //   }
+
+  //   return promise;
+  // }
+
+  // /**
+  //  * Add a card to the stock.
+  //  *
+  //  * @param card the card to add
+  //  * @param animation a `CardAnimation` object
+  //  * @param settings a `AddCardSettings` object
+  //  * @returns the promise when the animation is done (true if it was animated, false if it wasn't)
+  //  */
+  // public async addCard(
+  //   card: BTToken,
+  //   animation?: CardAnimation<BTToken>,
+  //   settings?: AddCardSettings
+  // ): Promise<boolean> {
+  //   const result = await super.addCard(card, animation, settings);
+  //   this.updateDisplay(this.element, this.getCards(), card, this);
+  //   return result;
+  // }
+
   /**
    * Add a unit to the stock.
    *

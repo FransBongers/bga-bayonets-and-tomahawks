@@ -95,6 +95,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     marshalTroops: MarshalTroopsState;
     movement: MovementState;
     raid: RaidState;
+    sailMovement: SailMovementState;
     selectReserveCard: SelectReserveCardState;
   };
 
@@ -159,6 +160,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       marshalTroops: new MarshalTroopsState(this),
       movement: new MovementState(this),
       raid: new RaidState(this),
+      sailMovement: new SailMovementState(this),
       selectReserveCard: new SelectReserveCardState(this),
     };
 
@@ -308,7 +310,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  getUnitData({ counterId }: { counterId: string }) {
+  getUnitStaticData(counterId: string): BTUnitStaticData {
     return this.gamedatas.staticData.units[counterId];
   }
 

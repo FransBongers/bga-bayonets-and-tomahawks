@@ -462,8 +462,8 @@ class NotificationManager {
   }
 
   async notif_moveStack(notif: Notif<NotifMoveStackArgs>) {
-    const { stack, destination, faction, markers, connection } = notif.args;
-    const unitStack = this.game.gameMap.stacks[destination.id][faction];
+    const { stack, destinationId, faction, markers, connection } = notif.args;
+    const unitStack = this.game.gameMap.stacks[destinationId][faction];
 
     if (connection !== null) {
       const connectionUI = this.game.gameMap.connections[connection.id];

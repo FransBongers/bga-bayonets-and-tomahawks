@@ -2222,6 +2222,7 @@ var CHEROKEE = 'Cherokee';
 var IROQUOIS = 'Iroquois';
 var LOSSES_BOX_BRITISH = 'lossesBox_british';
 var LOSSES_BOX_FRENCH = 'lossesBox_french';
+var SAIL_BOX = 'sailBox';
 var MARKERS = 'markers';
 var UNITS = 'units';
 var VOW_FRENCH_NAVY_LOSSES_PUT_BACK = 'VOWFrenchNavyLossedPutBack';
@@ -2249,6 +2250,15 @@ var REMOVE_FORT_CONSTRUCTION_MARKER = 'removeFortConstructionMarkerOrFort';
 var REMOVE_FORT = 'removeFort';
 var PLACE_ROAD_CONSTRUCTION_MARKER = 'placeRoadConstructionMarker';
 var FLIP_ROAD_CONSTRUCTION_MARKER = 'flipRoadConstructionMarker';
+var ARMY_AP = 'ARMY_AP';
+var ARMY_AP_2X = 'ARMY_AP_2X';
+var LIGHT_AP = 'LIGHT_AP';
+var LIGHT_AP_2X = 'LIGHT_AP_2X';
+var INDIAN_AP = 'INDIAN_AP';
+var INDIAN_AP_2X = 'INDIAN_AP_2X';
+var SAIL_ARMY_AP = 'SAIL_ARMY_AP';
+var SAIL_ARMY_AP_2X = 'SAIL_ARMY_AP_2X';
+var FRENCH_LIGHT_ARMY_AP = 'FRENCH_LIGHT_ARMY_AP';
 define([
     'dojo',
     'dojo/_base/declare',
@@ -2317,6 +2327,7 @@ var BayonetsAndTomahawks = (function () {
             marshalTroops: new MarshalTroopsState(this),
             movement: new MovementState(this),
             raid: new RaidState(this),
+            sailMovement: new SailMovementState(this),
             selectReserveCard: new SelectReserveCardState(this),
         };
         this.infoPanel = new InfoPanel(this);
@@ -2387,8 +2398,7 @@ var BayonetsAndTomahawks = (function () {
     };
     BayonetsAndTomahawks.prototype.onUpdateActionButtons = function (stateName, args) {
     };
-    BayonetsAndTomahawks.prototype.getUnitData = function (_a) {
-        var counterId = _a.counterId;
+    BayonetsAndTomahawks.prototype.getUnitStaticData = function (counterId) {
         return this.gamedatas.staticData.units[counterId];
     };
     BayonetsAndTomahawks.prototype.addActionButtonClient = function (_a) {
@@ -3562,7 +3572,7 @@ var GameMap = (function () {
         });
     };
     GameMap.prototype.setupUnitsAndSpaces = function (_a) {
-        var _b;
+        var _b, _c;
         var _this = this;
         var gamedatas = _a.gamedatas;
         if (!this.losses) {
@@ -3626,6 +3636,23 @@ var GameMap = (function () {
                     _this.stacks[space.id][FRENCH].addUnit(unit);
                 }
             });
+        });
+        this.stacks[SAIL_BOX] = (_c = {},
+            _c[BRITISH] = new UnitStack(this.game.tokenManager, document.getElementById("".concat(SAIL_BOX, "_british_stack")), {}, BRITISH),
+            _c[FRENCH] = new UnitStack(this.game.tokenManager, document.getElementById("".concat(SAIL_BOX, "_french_stack")), {}, FRENCH),
+            _c);
+        gamedatas.units
+            .filter(function (unit) { return unit.location === SAIL_BOX; })
+            .forEach(function (unit) {
+            if (unit.faction === BRITISH) {
+                _this.stacks[SAIL_BOX][BRITISH].addUnit(unit);
+            }
+            else if (unit.faction === FRENCH) {
+                _this.stacks[SAIL_BOX][FRENCH].addUnit(unit);
+            }
+            else if (unit.faction === INDIAN) {
+                _this.stacks[SAIL_BOX][FRENCH].addUnit(unit);
+            }
         });
     };
     GameMap.prototype.setupMarkers = function (_a) {
@@ -3936,6 +3963,7 @@ var tplCommanderTrack = function () {
     }).join('');
 };
 var tplBattleMarkersPool = function () { return '<div id="battle_markers_pool"></div>'; };
+var tplSailBox = function () { return "\n  <div id=\"sailBox\">\n    <div id=\"".concat(SAIL_BOX, "_french_stack\"></div>\n    <div id=\"").concat(SAIL_BOX, "_british_stack\"></div>\n  </div>"); };
 var tplGameMap = function (_a) {
     var gamedatas = _a.gamedatas;
     var spaces = gamedatas.spaces;
@@ -3951,7 +3979,7 @@ var tplGameMap = function (_a) {
         id: "".concat(IROQUOIS_CONTROL, "_markers"),
         top: 1711.5,
         left: 585.5,
-    }), "\n  </div>");
+    }), "\n    ").concat(tplSailBox(), "\n  </div>");
 };
 var Hand = (function () {
     function Hand(game) {
@@ -4598,12 +4626,12 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_moveStack = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, stack, destination, faction, markers, connection, unitStack, connectionUI;
+            var _a, stack, destinationId, faction, markers, connection, unitStack, connectionUI;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = notif.args, stack = _a.stack, destination = _a.destination, faction = _a.faction, markers = _a.markers, connection = _a.connection;
-                        unitStack = this.game.gameMap.stacks[destination.id][faction];
+                        _a = notif.args, stack = _a.stack, destinationId = _a.destinationId, faction = _a.faction, markers = _a.markers, connection = _a.connection;
+                        unitStack = this.game.gameMap.stacks[destinationId][faction];
                         if (connection !== null) {
                             connectionUI = this.game.gameMap.connections[connection.id];
                             if (faction === 'british') {
@@ -8313,6 +8341,17 @@ var MovementState = (function () {
                 ? ''
                 : DISABLED,
         });
+        if ([SAIL_ARMY_AP, SAIL_ARMY_AP_2X].includes(this.args.source) &&
+            this.args.units.some(function (unit) {
+                return _this.game.gamedatas.staticData.units[unit.counterId].type === FLEET;
+            })) {
+            this.game.addPrimaryActionButton({
+                id: 'sail_move_btn',
+                text: _('Sail Move'),
+                callback: function () { return _this.updateInterfaceConfirm(true); },
+                extraClasses: this.isSailMovePossible() ? '' : DISABLED,
+            });
+        }
         this.game.addSecondaryActionButton({
             id: 'select_all_btn',
             text: _('Select all'),
@@ -8331,13 +8370,17 @@ var MovementState = (function () {
             this.game.addCancelButton();
         }
     };
-    MovementState.prototype.updateInterfaceConfirm = function () {
+    MovementState.prototype.updateInterfaceConfirm = function (sailMove) {
         var _this = this;
+        var _a;
+        if (sailMove === void 0) { sailMove = false; }
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _('Move selected units to ${spaceName}?'),
+            text: sailMove
+                ? _('Move selected units to the Sail Box?')
+                : _('Move selected units to ${spaceName}?'),
             args: {
-                spaceName: _(this.destination.name),
+                spaceName: _((_a = this.destination) === null || _a === void 0 ? void 0 : _a.name),
             },
         });
         this.game.setLocationSelected({ id: this.destination.id });
@@ -8438,6 +8481,16 @@ var MovementState = (function () {
             default:
                 return 0;
         }
+    };
+    MovementState.prototype.isSailMovePossible = function () {
+        var _this = this;
+        var selectedFleets = this.selectedUnits.filter(function (unit) {
+            return _this.game.gamedatas.staticData.units[unit.counterId].type === FLEET;
+        }).length;
+        var otherUnits = this.selectedUnits.filter(function (unit) {
+            return ![FLEET, COMMANDER].includes(_this.game.gamedatas.staticData.units[unit.counterId].type);
+        }).length;
+        return selectedFleets > 0 && otherUnits / selectedFleets <= 4;
     };
     return MovementState;
 }());
@@ -8585,6 +8638,112 @@ var RaidState = (function () {
         });
     };
     return RaidState;
+}());
+var SailMovementState = (function () {
+    function SailMovementState(game) {
+        this.selectedUnits = [];
+        this.destination = null;
+        this.game = game;
+    }
+    SailMovementState.prototype.onEnteringState = function (args) {
+        debug('Entering SailMovementState');
+        this.args = args;
+        this.selectedUnits = [];
+        this.updateInterfaceInitialStep();
+    };
+    SailMovementState.prototype.onLeavingState = function () {
+        debug('Leaving SailMovementState');
+    };
+    SailMovementState.prototype.setDescription = function (activePlayerId) { };
+    SailMovementState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select units to move to the Sail Box'),
+            args: {
+                you: '${you}',
+            },
+        });
+        var stack = this.game.gameMap.stacks[this.args.space.id][this.args.faction];
+        stack.open();
+        this.setUnitsSelectable();
+        this.setUnitsSelected();
+        if (this.destination !== null) {
+            this.game.setLocationSelected({ id: this.destination.id });
+        }
+        this.game.addPrimaryActionButton({
+            id: 'sail_move_btn',
+            text: _('Sail Move'),
+            callback: function () { return _this.updateInterfaceConfirm(); },
+            extraClasses: this.isSailMovePossible() ? '' : DISABLED,
+        });
+        this.game.addSecondaryActionButton({
+            id: 'select_all_btn',
+            text: _('Select all'),
+            callback: function () {
+                (_this.selectedUnits = _this.args.units),
+                    _this.updateInterfaceInitialStep();
+            },
+        });
+        if (this.selectedUnits.length === 0) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
+        }
+        else {
+            this.game.addCancelButton();
+        }
+    };
+    SailMovementState.prototype.updateInterfaceConfirm = function () {
+        var _this = this;
+        this.game.clearPossible();
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actSailMovement',
+                args: {
+                    selectedUnitIds: _this.selectedUnits.map(function (_a) {
+                        var id = _a.id;
+                        return id;
+                    }),
+                },
+            });
+        };
+        callback();
+    };
+    SailMovementState.prototype.setUnitsSelectable = function () {
+        var _this = this;
+        this.args.units.forEach(function (unit) {
+            _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () {
+                    if (_this.selectedUnits.some(function (selectedUnit) { return selectedUnit.id === unit.id; })) {
+                        _this.selectedUnits = _this.selectedUnits.filter(function (selectedUnit) { return selectedUnit.id !== unit.id; });
+                    }
+                    else {
+                        _this.selectedUnits.push(unit);
+                    }
+                    _this.updateInterfaceInitialStep();
+                },
+            });
+        });
+    };
+    SailMovementState.prototype.setUnitsSelected = function () {
+        var _this = this;
+        this.selectedUnits.forEach(function (unit) {
+            return _this.game.setUnitSelected({ id: unit.id });
+        });
+    };
+    SailMovementState.prototype.isSailMovePossible = function () {
+        var _this = this;
+        var selectedFleets = this.selectedUnits.filter(function (unit) { return _this.game.getUnitStaticData(unit.counterId).type === FLEET; }).length;
+        var otherUnits = this.selectedUnits.filter(function (unit) {
+            return ![FLEET, COMMANDER].includes(_this.game.getUnitStaticData(unit.counterId).type);
+        }).length;
+        return selectedFleets > 0 && otherUnits / selectedFleets <= 4;
+    };
+    return SailMovementState;
 }());
 var SelectReserveCardState = (function () {
     function SelectReserveCardState(game) {

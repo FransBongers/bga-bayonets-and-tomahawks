@@ -457,25 +457,15 @@ $machinestates = array(
         'transitions' => [],
     ],
 
-    // ST_SAIL_MOVEMENT => [
-    //     'name' => 'sailMovement',
-    //     'description' => clienttranslate('${actplayer} may move units'),
-    //     'descriptionmyturn' => clienttranslate('${you}'),
-    //     'type' => 'activeplayer',
-    //     'args' => 'argsAtomicAction',
-    //     'action' => 'stAtomicAction',
-    //     'possibleactions' => ['actSailMovement', 'actPassOptionalAction', 'actRestart'],
-    // ],
-
-    // ST_SAIL_MOVEMENT_DESTINATION => [
-    //     'name' => 'sailMovementDestination',
-    //     'description' => clienttranslate('${actplayer} may move units'),
-    //     'descriptionmyturn' => clienttranslate('${you}'),
-    //     'type' => 'activeplayer',
-    //     'args' => 'argsAtomicAction',
-    //     'action' => 'stAtomicAction',
-    //     'possibleactions' => ['actSailMovementDestination', 'actPassOptionalAction', 'actRestart'],
-    // ],
+    ST_SAIL_MOVEMENT => [
+        'name' => 'sailMovement',
+        'description' => clienttranslate('${actplayer} must select units'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actSailMovement', 'actPassOptionalAction', 'actRestart'],
+    ],
 
     ST_MARSHAL_TROOPS => [
         'name' => 'marshalTroops',

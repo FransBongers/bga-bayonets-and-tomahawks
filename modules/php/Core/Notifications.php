@@ -602,17 +602,21 @@ class Notifications
     ]);
   }
 
-  public static function moveStack($player, $units, $markers, $origin, $destination, $connection, $isRetreat = false)
+  public static function moveStack($player, $units, $markers, $origin, $destination = null, $connection = null, $isRetreat = false, $sailMove = false)
   {
-    $text = $isRetreat ?
-      clienttranslate('${player_name} retreats their stack from ${tkn_boldText_from} to ${tkn_boldText_to}') :
-      clienttranslate('${player_name} moves a stack from ${tkn_boldText_from} to ${tkn_boldText_to}');
+    $text = clienttranslate('${player_name} moves a stack from ${tkn_boldText_from} to ${tkn_boldText_to}');
+    
+      if ($isRetreat) {
+        $text = clienttranslate('${player_name} retreats their stack from ${tkn_boldText_from} to ${tkn_boldText_to}');
+      } else if ($sailMove) {
+        $text = clienttranslate('${player_name} moves a stack from ${tkn_boldText_from} to the ${tkn_boldText_to}');
+      }
 
     self::notifyAll("moveStack", $text, [
       'player' => $player,
       'tkn_boldText_from' => $origin->getName(),
-      'destination' => $destination,
-      'tkn_boldText_to' => $destination->getName(),
+      'destinationId' => $destination !== null ? $destination->getId() : SAIL_BOX,
+      'tkn_boldText_to' => $destination !== null ? $destination->getName() : clienttranslate('Sail Box'),
       'faction' => $player->getFaction(),
       'stack' => $units,
       'markers' => $markers,
@@ -678,12 +682,14 @@ class Notifications
 
   public static function removeMarkerFromStack($player, $marker, $previousLocation)
   {
+    $locationId = explode('_', $previousLocation)[0];
+
     self::notifyAll("removeMarkerFromStack", clienttranslate('${player_name} removes ${tkn_marker} from their stack in ${tkn_boldText_spaceName}'), [
       'player' => $player,
       'marker' => $marker->jsonSerialize(),
       'from' => $previousLocation,
       'tkn_marker' => $marker->getType(),
-      'tkn_boldText_spaceName' => Spaces::get(explode('_', $previousLocation)[0])->getName(),
+      'tkn_boldText_spaceName' => $locationId === SAIL_BOX ? clienttranslate('Sail Box') : Spaces::get($locationId)->getName(),
       'i18n' => ['tkn_boldText_spaceName']
     ]);
   }

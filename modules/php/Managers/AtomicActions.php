@@ -62,6 +62,7 @@ class AtomicActions
     MOVE_STACK => 'MoveStack',
     PLACE_MARKER_ON_STACK => 'PlaceMarkerOnStack',
     RAID => 'Raid',
+    SAIL_MOVEMENT => 'SailMovement',
     SELECT_RESERVE_CARD => 'SelectReserveCard',
     VAGARIES_OF_WAR_PICK_UNITS => 'VagariesOfWarPickUnits',
     VAGARIES_OF_WAR_PUT_BACK_IN_POOL => 'VagariesOfWarPutBackInPool',

@@ -150,6 +150,12 @@ const tplCommanderTrack = () =>
 
 const tplBattleMarkersPool = () => '<div id="battle_markers_pool"></div>';
 
+const tplSailBox = () => `
+  <div id="sailBox">
+    <div id="${SAIL_BOX}_french_stack"></div>
+    <div id="${SAIL_BOX}_british_stack"></div>
+  </div>`
+
 const tplGameMap = ({
   gamedatas,
 }: {
@@ -183,6 +189,7 @@ const tplGameMap = ({
       top: 1711.5,
       left: 585.5,
     })}
+    ${tplSailBox()}
   </div>`;
 };
 // <div class="bt_marker_test" data-marker-type="victory_point"></div>

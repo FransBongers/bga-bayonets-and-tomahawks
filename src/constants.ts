@@ -222,6 +222,7 @@ const IROQUOIS = 'Iroquois';
 // Losses Boxes
 const LOSSES_BOX_BRITISH = 'lossesBox_british';
 const LOSSES_BOX_FRENCH = 'lossesBox_french';
+const SAIL_BOX = 'sailBox';
 
 const MARKERS = 'markers';
 const UNITS = 'units';
@@ -270,3 +271,16 @@ const REMOVE_FORT_CONSTRUCTION_MARKER = 'removeFortConstructionMarkerOrFort';
 const REMOVE_FORT = 'removeFort';
 const PLACE_ROAD_CONSTRUCTION_MARKER = 'placeRoadConstructionMarker';
 const FLIP_ROAD_CONSTRUCTION_MARKER = 'flipRoadConstructionMarker';
+
+/**
+ * Action Points
+ */
+const ARMY_AP = 'ARMY_AP';
+const ARMY_AP_2X = 'ARMY_AP_2X';
+const LIGHT_AP = 'LIGHT_AP';
+const LIGHT_AP_2X = 'LIGHT_AP_2X';
+const INDIAN_AP = 'INDIAN_AP';
+const INDIAN_AP_2X = 'INDIAN_AP_2X';
+const SAIL_ARMY_AP = 'SAIL_ARMY_AP';
+const SAIL_ARMY_AP_2X = 'SAIL_ARMY_AP_2X';
+const FRENCH_LIGHT_ARMY_AP = 'FRENCH_LIGHT_ARMY_AP';

@@ -36,7 +36,7 @@ interface BayonetsAndTomahawksGame extends Game {
     args: Record<string, unknown>
   ) => string;
   getPlayerId: () => number;
-  getUnitData: ({ counterId }: { counterId: string }) => { faction: string };
+  getUnitStaticData: (counterId: string) => BTUnitStaticData;
   onCancel: () => void;
   openUnitStack: (unit: BTUnit) => void;
   setCardSelectable: (props: {
@@ -148,6 +148,14 @@ interface BTUnit {
   reduced: boolean;
 }
 
+interface BTUnitStaticData {
+  faction: 'british' | 'french';
+        colony?: string | null;
+        counterText: string;
+        metropolitan: boolean;
+        type: string;
+}
+
 type BTToken = BTMarker | BTUnit;
 
 interface BayonetsAndTomahawksGamedatas extends Gamedatas {
@@ -174,15 +182,7 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   players: Record<number, BayonetsAndTomahawksPlayerData>;
   staticData: {
     connections: Record<string, { id: string; top: number; left: number }>;
-    units: {
-      [counterId: string]: {
-        faction: 'british' | 'french';
-        colony?: string | null;
-        counterText: string;
-        metropolitan: boolean;
-        type: string;
-      };
-    };
+    units: Record<string, BTUnitStaticData>;
     spaces: Record<
       string,
       {

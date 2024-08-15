@@ -177,21 +177,6 @@ class GameMap {
             document.getElementById(`${space.id}_british_stack`),
             {},
             BRITISH
-            // (
-            //   element: HTMLElement,
-            //   cards: BTUnit[],
-            //   lastCard: BTUnit,
-            //   stock: UnitStack<BTUnit>
-            // ) => {
-            //   cards.forEach((card, index) => {
-            //     const unitDiv = stock.getCardElement(card);
-            //     unitDiv.style.position = 'absolute';
-            //     unitDiv.style.top = `${index * -5}px`;
-            //     unitDiv.style.left = `${index * 5}px`;
-            //   });
-            //   // console.log('card',lastCard);
-            //   // console.log('cards',cards);
-            // }
           ),
           [FRENCH]: new UnitStack(
             this.game.tokenManager,
@@ -215,6 +200,33 @@ class GameMap {
           }
         });
     });
+
+    this.stacks[SAIL_BOX] = {
+      [BRITISH]: new UnitStack(
+        this.game.tokenManager,
+        document.getElementById(`${SAIL_BOX}_british_stack`),
+        {},
+        BRITISH
+      ),
+      [FRENCH]: new UnitStack(
+        this.game.tokenManager,
+        document.getElementById(`${SAIL_BOX}_french_stack`),
+        {},
+        FRENCH
+      ),
+    };
+
+    gamedatas.units
+      .filter((unit) => unit.location === SAIL_BOX)
+      .forEach((unit) => {
+        if (unit.faction === BRITISH) {
+          this.stacks[SAIL_BOX][BRITISH].addUnit(unit);
+        } else if (unit.faction === FRENCH) {
+          this.stacks[SAIL_BOX][FRENCH].addUnit(unit);
+        } else if (unit.faction === INDIAN) {
+          this.stacks[SAIL_BOX][FRENCH].addUnit(unit);
+        }
+      });
   }
 
   setupMarkers({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {

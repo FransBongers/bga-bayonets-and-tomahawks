@@ -11,7 +11,7 @@ class SailArmyAP extends \BayonetsAndTomahawks\Models\ActionPoint
     $this->name = clienttranslate("Sail/Army AP");
     $this->actionsAllowed = [
       MOVEMENT,
-      // SAIL_MOVEMENT,
+      SAIL_MOVEMENT,
       MARSHAL_TROOPS,
       CONSTRUCTION,
     ];

@@ -297,7 +297,7 @@ body > .card {
 
 .bt_card_container.bt_selectable > .card-sides > .card-side {
   cursor: pointer;
-  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) orange !important;
+  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) #ffff00 !important;
 }
 
 .bt_card_container.bt_selectable:hover > .card-sides > .card-side,
@@ -643,6 +643,18 @@ body > .card {
   left: calc(var(--btMapScale) * 282px);
 }
 
+#sailBox {
+  position: absolute;
+  height: calc(var(--btMapScale) * 52px);
+  width: calc(var(--btMapScale) * 110px);
+  top: calc(var(--btMapScale) * 90px);
+  left: calc(var(--btMapScale) * 1233px);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
 .bt_connection {
   position: absolute;
   display: flex;
@@ -659,7 +671,7 @@ body > .card {
 }
 .bt_connection .bt_marker_side.bt_selectable {
   display: initial;
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) orange !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #ffff00 !important;
   cursor: pointer;
 }
 .bt_connection .bt_marker_side.bt_selected,
@@ -706,7 +718,7 @@ body > .card {
 }
 
 .bt_space.bt_selectable {
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) orange !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #ffff00 !important;
   cursor: pointer;
 }
 
@@ -770,7 +782,7 @@ body > .card {
 .bt_marker.bt_selectable > .card-sides > .card-side,
 .bt_token.bt_selectable > .card-sides > .card-side {
   cursor: pointer;
-  filter: drop-shadow(2px 0px 0px orange) drop-shadow(-2px 0px 0px orange) drop-shadow(0px 2px 0px orange) drop-shadow(0px -2px 0px orange);
+  filter: drop-shadow(2px 0px 0px #ffff00) drop-shadow(-2px 0px 0px #ffff00) drop-shadow(0px 2px 0px #ffff00) drop-shadow(0px -2px 0px #ffff00);
 }
 
 .bt_marker.bt_selectable:hover > .card-sides > .card-side,
@@ -782,7 +794,7 @@ body > .card {
 }
 
 .bt_stack.bt_selectable {
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) orange !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #ffff00 !important;
   cursor: pointer;
 }
 

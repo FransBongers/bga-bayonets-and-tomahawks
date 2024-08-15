@@ -31,6 +31,20 @@
   left: calc(var(--btMapScale) * 282px);
 }
 
+#sailBox {
+  position: absolute;
+  height: calc(var(--btMapScale) * 52px);
+  width: calc(var(--btMapScale) * 110px);
+  top: calc(var(--btMapScale) * 90px);
+  left: calc(var(--btMapScale) * 1233px);
+  // background-color: yellow;
+  // opacity: 0.5;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
 .bt_connection {
   position: absolute;
   display: flex;

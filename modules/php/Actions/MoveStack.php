@@ -53,16 +53,24 @@ class MoveStack extends \BayonetsAndTomahawks\Actions\UnitMovement
     $originId = $info['fromSpaceId'];
     $destinationId = $info['toSpaceId'];
     $unitIds = $info['unitIds'];
-    $connectionId = $info['connectionId'];
+    $connectionId = isset($info['connectionId']) ? $info['connectionId'] : null;
 
     $units = Units::getMany($unitIds)->toArray();
-    $destination = Spaces::get($destinationId);
+    $destination = $destinationId !== SAIL_BOX ? Spaces::get($destinationId) : null;
     $origin = Spaces::get($originId);
-    $connection = Connections::get($connectionId);
+    $connection = $connectionId !== null ? Connections::get($connectionId) : null;
 
+    $destinationUnits = [];
+    if ($destinationId === SAIL_BOX) {
+      Utils::filter(Units::getInLocation(SAIL_BOX)->toArray(), function ($unit) use ($playerFaction) {
+        return $unit->getFaction() === $playerFaction;
+      });
+    } else if ($destination !== null) {
+      $destinationUnits = $destination->getUnits($playerFaction);
+    }
 
     // Update markers
-    $destinationHasUnits = count($destination->getUnits($playerFaction)) > 0;
+    $destinationHasUnits = count($destinationUnits) > 0;
     $unitsRemainInOrigin = Utils::array_some($origin->getUnits($playerFaction), function ($unit) use ($unitIds) {
       return !in_array($unit->getId(), $unitIds);
     });
@@ -112,13 +120,14 @@ class MoveStack extends \BayonetsAndTomahawks\Actions\UnitMovement
     Units::move($unitIds, $destinationId, null, $originId);
 
     // Update connection limit
-    $connectionLimitIncrease = count(Utils::filter($units, function ($unit) {
-      return !$unit->isCommander() && !$unit->isFleet();
-    }));
-    $connection->incLimitUsed($playerFaction, $connectionLimitIncrease);
+    if ($connection !== null) {
+      $connectionLimitIncrease = count(Utils::filter($units, function ($unit) {
+        return !$unit->isCommander() && !$unit->isFleet();
+      }));
+      $connection->incLimitUsed($playerFaction, $connectionLimitIncrease);
+    }
 
-
-    Notifications::moveStack($player, $units, $movedMarkers, $origin, $destination, $connection);
+    Notifications::moveStack($player, $units, $movedMarkers, $origin, $destination, $connection, false, $destinationId === SAIL_BOX);
 
     // Add markers to remaining units
     foreach ($createInOrigin as $markerType) {
