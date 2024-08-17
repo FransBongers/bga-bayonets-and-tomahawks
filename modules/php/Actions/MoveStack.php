@@ -57,21 +57,30 @@ class MoveStack extends \BayonetsAndTomahawks\Actions\UnitMovement
 
     $units = Units::getMany($unitIds)->toArray();
     $destination = $destinationId !== SAIL_BOX ? Spaces::get($destinationId) : null;
-    $origin = Spaces::get($originId);
+    $origin = $originId !== SAIL_BOX ? Spaces::get($originId) : null;
     $connection = $connectionId !== null ? Connections::get($connectionId) : null;
 
     $destinationUnits = [];
     if ($destinationId === SAIL_BOX) {
-      Utils::filter(Units::getInLocation(SAIL_BOX)->toArray(), function ($unit) use ($playerFaction) {
+      $destinationUnits = Utils::filter(Units::getInLocation(SAIL_BOX)->toArray(), function ($unit) use ($playerFaction) {
         return $unit->getFaction() === $playerFaction;
       });
     } else if ($destination !== null) {
       $destinationUnits = $destination->getUnits($playerFaction);
     }
 
+    $originUnits = [];
+    if ($originId === SAIL_BOX) {
+      $originUnits = Utils::filter(Units::getInLocation(SAIL_BOX)->toArray(), function ($unit) use ($playerFaction) {
+        return $unit->getFaction() === $playerFaction;
+      });
+    } else if ($originId !== null) {
+      $originUnits = $destination->getUnits($playerFaction);
+    }
+
     // Update markers
     $destinationHasUnits = count($destinationUnits) > 0;
-    $unitsRemainInOrigin = Utils::array_some($origin->getUnits($playerFaction), function ($unit) use ($unitIds) {
+    $unitsRemainInOrigin = Utils::array_some($originUnits, function ($unit) use ($unitIds) {
       return !in_array($unit->getId(), $unitIds);
     });
 
@@ -127,11 +136,14 @@ class MoveStack extends \BayonetsAndTomahawks\Actions\UnitMovement
       $connection->incLimitUsed($playerFaction, $connectionLimitIncrease);
     }
 
-    Notifications::moveStack($player, $units, $movedMarkers, $origin, $destination, $connection, false, $destinationId === SAIL_BOX);
+    Notifications::moveStack($player, $units, $movedMarkers, $origin, $destination, $connection, false, $destinationId === SAIL_BOX || $originId === SAIL_BOX);
 
     // Add markers to remaining units
     foreach ($createInOrigin as $markerType) {
       GameMap::placeMarkerOnStack($player, $markerType, $origin, $playerFaction);
+    }
+    if ($originId === SAIL_BOX) {
+      GameMap::placeMarkerOnStack($player, LANDING_MARKER, $destination, $playerFaction);
     }
 
     foreach ($removeFromDestination as $marker) {

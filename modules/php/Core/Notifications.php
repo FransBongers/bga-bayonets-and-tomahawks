@@ -602,19 +602,21 @@ class Notifications
     ]);
   }
 
-  public static function moveStack($player, $units, $markers, $origin, $destination = null, $connection = null, $isRetreat = false, $sailMove = false)
+  public static function moveStack($player, $units, $markers, $origin = null, $destination = null, $connection = null, $isRetreat = false, $sailMove = false)
   {
     $text = clienttranslate('${player_name} moves a stack from ${tkn_boldText_from} to ${tkn_boldText_to}');
     
       if ($isRetreat) {
         $text = clienttranslate('${player_name} retreats their stack from ${tkn_boldText_from} to ${tkn_boldText_to}');
-      } else if ($sailMove) {
+      } else if ($sailMove && $destination === null) {
         $text = clienttranslate('${player_name} moves a stack from ${tkn_boldText_from} to the ${tkn_boldText_to}');
+      } else if ($sailMove && $origin === null) {
+        $text = clienttranslate('${player_name} Lands their units on the ${tkn_boldText_from} on ${tkn_boldText_to}');
       }
 
     self::notifyAll("moveStack", $text, [
       'player' => $player,
-      'tkn_boldText_from' => $origin->getName(),
+      'tkn_boldText_from' => $origin !== null ? $origin->getName() : clienttranslate('Sail Box'),
       'destinationId' => $destination !== null ? $destination->getId() : SAIL_BOX,
       'tkn_boldText_to' => $destination !== null ? $destination->getName() : clienttranslate('Sail Box'),
       'faction' => $player->getFaction(),

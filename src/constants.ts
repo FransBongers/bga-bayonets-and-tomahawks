@@ -121,11 +121,17 @@ const BRITISH_RAID_MARKER = 'british_raid_marker';
 const FRENCH_BATTLE_MARKER = 'french_battle_marker';
 const BRITISH_BATTLE_MARKER = 'british_battle_marker';
 // Stack markers
+const LANDING_MARKER = 'landingMarker';
 const MARSHAL_TROOPS_MARKER = 'marshalTroopsMarker';
 const OUT_OF_SUPPLY_MARKER = 'outOfSupplyMarker';
 const ROUT_MARKER = 'routMarker';
 
-const STACK_MARKERS = [MARSHAL_TROOPS_MARKER, OUT_OF_SUPPLY_MARKER, ROUT_MARKER];
+const STACK_MARKERS = [
+  LANDING_MARKER,
+  MARSHAL_TROOPS_MARKER,
+  OUT_OF_SUPPLY_MARKER,
+  ROUT_MARKER,
+];
 
 const FORT_CONSTRUCTION_MARKER = 'fortConstructionMarker';
 const ROAD_CONSTRUCTION_MARKER = 'roadConstructionMarker';

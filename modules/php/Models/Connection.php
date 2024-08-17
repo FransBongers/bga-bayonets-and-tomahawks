@@ -38,6 +38,7 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
     'id',
     'top',
     'left',
+    'coastal',
   ];
 
   public function getId()

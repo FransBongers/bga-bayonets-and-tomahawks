@@ -142,6 +142,11 @@
   background-position-y: math.div(3, 5) * 100%;
 }
 
+.bt_marker_side[data-type='landingMarker'] {
+  background-position-x: math.div(0, 7) * 100%;
+  background-position-y: math.div(0, 5) * 100%;
+}
+
 // .bt_marker_test {
 //   background-image: url('img/markers_2.webp');
 //   height: calc(var(--btMapScale) * 37px);

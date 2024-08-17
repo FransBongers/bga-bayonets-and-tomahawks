@@ -211,19 +211,26 @@ class MovementState implements State {
         return ![COMMANDER, FLEET].includes(staticData.type);
       }
     ).length;
-    const lightOnly = !this.selectedUnits.some(
-      (unit) => this.getUnitStaticData(unit).type !== LIGHT
+    const canUsePath = !this.selectedUnits.some(
+      (unit) => ![LIGHT, FLEET].includes(this.game.getUnitStaticData(unit).type)
     );
     const requiresHighway =
       this.selectedUnits.filter(
         (unit) => this.getUnitStaticData(unit).type === ARTILLERY
       ).length > 1;
 
+    const requiresCoastal = this.selectedUnits.some(
+      (unit) => this.game.getUnitStaticData(unit).type === FLEET
+    );
+
     const validDestinations = this.args.adjacent.filter(({ connection }) => {
       if (requiresHighway && connection.type !== HIGHWAY) {
         return false;
       }
-      if (!lightOnly && connection.type === PATH) {
+      if (requiresCoastal && !this.game.getConnectionStaticData(connection).coastal) {
+        return false;
+      }
+      if (!canUsePath && connection.type === PATH) {
         return false;
       }
       if (

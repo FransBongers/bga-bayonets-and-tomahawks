@@ -8,10 +8,12 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Players;
-use BayonetsAndTomahawks\Managers\Cards;
+use BayonetsAndTomahawks\Managers\Spaces;
+use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
 class ActionRoundSailBoxLanding extends \BayonetsAndTomahawks\Models\AtomicAction
@@ -39,8 +41,16 @@ class ActionRoundSailBoxLanding extends \BayonetsAndTomahawks\Models\AtomicActio
 
   public function stActionRoundSailBoxLanding()
   {
-    // TODO: check if there are friendly units currently on the Sail box
-    // TODO: how can we move this to PreAction?
+    $player = self::getPlayer();
+    $faction = $player->getFaction();
+
+    $units = Utils::filter(Units::getInLocation(SAIL_BOX)->toArray(), function ($unit) use ($faction) {
+      return $unit->getFaction() === $faction;
+    });
+
+    if (count($units) > 0) {
+      return;
+    }
     $this->resolveAction(['automatic' => true]);
   }
 
@@ -69,7 +79,9 @@ class ActionRoundSailBoxLanding extends \BayonetsAndTomahawks\Models\AtomicActio
   {
 
 
-    return [];
+    return [
+      'spaces' => $this->getOptions(),
+    ];
   }
 
   //  .########..##..........###....##....##.########.########.
@@ -99,7 +111,53 @@ class ActionRoundSailBoxLanding extends \BayonetsAndTomahawks\Models\AtomicActio
   {
     self::checkAction('actActionRoundSailBoxLanding');
 
-    Notifications::log('perform landing', []);
+    $spaceId = $args['spaceId'];
+
+    $options = $this->getOptions();
+
+    $space = Utils::array_find($options, function ($option) use ($spaceId) {
+      return $spaceId === $option->getId();
+    });
+
+    $player = self::getPlayer();
+    $faction = $player->getFaction();
+
+    $playerId = $player->getId();
+    $units = Utils::filter(Units::getInLocation(SAIL_BOX)->toArray(), function ($unit) use ($faction) {
+      return $unit->getFaction() === $faction;
+    });
+    $unitIds = array_map(function ($unit) {
+      return $unit->getId();
+    }, $units);
+
+    $this->ctx->insertAsBrother(Engine::buildTree([
+      'children' => [
+        [
+          'action' => MOVE_STACK,
+          'playerId' => $playerId,
+          'fromSpaceId' => SAIL_BOX,
+          'toSpaceId' => $spaceId,
+          'unitIds' => $unitIds,
+        ],
+        [
+          'action' => MOVEMENT_OVERWHELM_CHECK,
+          'playerId' => $player->getId(),
+          'spaceId' => $spaceId,
+        ],
+        [
+          'action' => MOVEMENT_BATTLE_AND_TAKE_CONTROL_CHECK,
+          'playerId' => $player->getId(),
+          'spaceId' => $spaceId,
+          'source' => ACTION_ROUND_SAIL_BOX_LANDING,
+          'destinationId' => null,
+          'requiredUnitIds' => [],
+        ],
+        [
+          'action' => MOVEMENT_PLACE_SPENT_MARKERS,
+          'playerId' => $playerId,
+        ],
+      ]
+    ]));
 
     $this->resolveAction($args);
   }
@@ -112,5 +170,19 @@ class ActionRoundSailBoxLanding extends \BayonetsAndTomahawks\Models\AtomicActio
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  private function getOptions()
+  {
+    $player = self::getPlayer();
+    $faction = $player->getFaction();
 
+
+    $spaces = Spaces::getAll()->toArray();
+    $friendlySeaZones = GameMap::getFriendlySeaZones($faction);
+
+    return Utils::filter($spaces, function ($space) use ($friendlySeaZones) {
+      return $space->isCoastal() && Utils::array_some($space->getAdjacentSeaZones(), function ($seaZone) use ($friendlySeaZones) {
+        return in_array($seaZone, $friendlySeaZones);
+      });
+    });
+  }
 }

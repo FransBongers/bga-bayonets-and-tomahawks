@@ -158,12 +158,12 @@ class SailMovementState implements State {
 
   private isSailMovePossible(): boolean {
     const selectedFleets = this.selectedUnits.filter(
-      (unit) => this.game.getUnitStaticData(unit.counterId).type === FLEET
+      (unit) => this.game.getUnitStaticData(unit).type === FLEET
     ).length;
     const otherUnits = this.selectedUnits.filter(
       (unit) =>
         ![FLEET, COMMANDER].includes(
-          this.game.getUnitStaticData(unit.counterId).type
+          this.game.getUnitStaticData(unit).type
         )
     ).length;
     return selectedFleets > 0 && otherUnits / selectedFleets <= 4;

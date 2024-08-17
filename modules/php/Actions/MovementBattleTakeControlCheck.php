@@ -88,7 +88,7 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
     $source = $info['source'];
 
     // Movement possible if there are units that still can move
-    if ($source !== CONSTRUCTION && $this->unitsCanMove($space, $playerFaction)) {
+    if (!in_array($source, [CONSTRUCTION, ACTION_ROUND_SAIL_BOX_LANDING])  && $this->unitsCanMove($space, $playerFaction)) {
       $this->ctx->getParent()->insertAsBrother(Engine::buildTree([
         'action' => MOVEMENT,
         'source' => $source,

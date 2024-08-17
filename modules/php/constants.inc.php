@@ -316,6 +316,7 @@ const BRITISH_BATTLE_MARKER = 'british_battle_marker';
 const MARSHAL_TROOPS_MARKER = 'marshalTroopsMarker';
 const ROUT_MARKER = 'routMarker';
 const OUT_OF_SUPPLY_MARKER = 'outOfSupplyMarker';
+const LANDING_MARKER = 'landingMarker';
 
 // Construction markers
 const FORT_CONSTRUCTION_MARKER = 'fortConstructionMarker';

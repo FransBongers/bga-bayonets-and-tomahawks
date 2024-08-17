@@ -2912,6 +2912,11 @@ body > .card {
   background-position-y: 60%;
 }
 
+.bt_marker_side[data-type=landingMarker] {
+  background-position-x: 0%;
+  background-position-y: 0%;
+}
+
 #show_settings {
   height: 40px;
   width: 50px;

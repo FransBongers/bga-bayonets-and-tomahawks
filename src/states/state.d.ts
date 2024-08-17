@@ -94,7 +94,9 @@ interface OnEnteringActionRoundChooseReactionStateArgs extends CommonArgs {
   actionPoints: BTActionPoint[];
 }
 
-interface OnEnteringActionRoundSailBoxLandingStateArgs extends CommonArgs {}
+interface OnEnteringActionRoundSailBoxLandingStateArgs extends CommonArgs {
+  spaces: BTSpace[];
+}
 
 interface OnEnteringLightMovementStateArgs extends CommonArgs {
   commanders: BTUnit[];

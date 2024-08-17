@@ -2138,10 +2138,16 @@ var FRENCH_RAID_MARKER = 'french_raid_marker';
 var BRITISH_RAID_MARKER = 'british_raid_marker';
 var FRENCH_BATTLE_MARKER = 'french_battle_marker';
 var BRITISH_BATTLE_MARKER = 'british_battle_marker';
+var LANDING_MARKER = 'landingMarker';
 var MARSHAL_TROOPS_MARKER = 'marshalTroopsMarker';
 var OUT_OF_SUPPLY_MARKER = 'outOfSupplyMarker';
 var ROUT_MARKER = 'routMarker';
-var STACK_MARKERS = [MARSHAL_TROOPS_MARKER, OUT_OF_SUPPLY_MARKER, ROUT_MARKER];
+var STACK_MARKERS = [
+    LANDING_MARKER,
+    MARSHAL_TROOPS_MARKER,
+    OUT_OF_SUPPLY_MARKER,
+    ROUT_MARKER,
+];
 var FORT_CONSTRUCTION_MARKER = 'fortConstructionMarker';
 var ROAD_CONSTRUCTION_MARKER = 'roadConstructionMarker';
 var ROAD_MARKER = 'roadMarker';
@@ -2302,8 +2308,6 @@ var BayonetsAndTomahawks = (function () {
             actionRoundChooseFirstPlayer: new ActionRoundChooseFirstPlayerState(this),
             actionRoundChooseReaction: new ActionRoundChooseReactionState(this),
             actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
-            armyMovement: new ArmyMovementState(this),
-            armyMovementDestination: new ArmyMovementDestinationState(this),
             battleApplyHits: new BattleApplyHitsState(this),
             battleRetreat: new BattleRetreatState(this),
             battleRollsRerolls: new BattleRollsRerollsState(this),
@@ -2322,8 +2326,6 @@ var BayonetsAndTomahawks = (function () {
             eventSmallpoxInfectedBlankets: new EventSmallpoxInfectedBlanketsState(this),
             vagariesOfWarPickUnits: new VagariesOfWarPickUnitsState(this),
             fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
-            lightMovement: new LightMovementState(this),
-            lightMovementDestination: new LightMovementDestinationState(this),
             marshalTroops: new MarshalTroopsState(this),
             movement: new MovementState(this),
             raid: new RaidState(this),
@@ -2398,8 +2400,11 @@ var BayonetsAndTomahawks = (function () {
     };
     BayonetsAndTomahawks.prototype.onUpdateActionButtons = function (stateName, args) {
     };
-    BayonetsAndTomahawks.prototype.getUnitStaticData = function (counterId) {
-        return this.gamedatas.staticData.units[counterId];
+    BayonetsAndTomahawks.prototype.getConnectionStaticData = function (connection) {
+        return this.gamedatas.staticData.connections[connection.id];
+    };
+    BayonetsAndTomahawks.prototype.getUnitStaticData = function (unit) {
+        return this.gamedatas.staticData.units[unit.counterId];
     };
     BayonetsAndTomahawks.prototype.addActionButtonClient = function (_a) {
         var id = _a.id, text = _a.text, callback = _a.callback, extraClasses = _a.extraClasses, _b = _a.color, color = _b === void 0 ? 'none' : _b;
@@ -5816,182 +5821,53 @@ var ActionRoundSailBoxLandingState = (function () {
         this.game = game;
     }
     ActionRoundSailBoxLandingState.prototype.onEnteringState = function (args) {
-        debug("Entering ActionRoundSailBoxLandingState");
+        debug('Entering ActionRoundSailBoxLandingState');
         this.args = args;
         this.updateInterfaceInitialStep();
     };
     ActionRoundSailBoxLandingState.prototype.onLeavingState = function () {
-        debug("Leaving ActionRoundSailBoxLandingState");
+        debug('Leaving ActionRoundSailBoxLandingState');
     };
     ActionRoundSailBoxLandingState.prototype.setDescription = function (activePlayerId) { };
     ActionRoundSailBoxLandingState.prototype.updateInterfaceInitialStep = function () {
         var _this = this;
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _("${you} must perform landing"),
-            args: {
-                you: "${you}",
-            },
-        });
-        this.game.addConfirmButton({
-            callback: function () {
-                return _this.game.takeAction({
-                    action: "actActionRoundSailBoxLanding",
-                    args: {},
-                });
-            },
-        });
-        this.game.addUndoButtons(this.args);
-    };
-    return ActionRoundSailBoxLandingState;
-}());
-var ArmyMovementState = (function () {
-    function ArmyMovementState(game) {
-        this.selectedUnits = [];
-        this.game = game;
-    }
-    ArmyMovementState.prototype.onEnteringState = function (args) {
-        debug('Entering ArmyMovementState');
-        this.args = args;
-        this.selectedUnits = [];
-        this.updateInterfaceInitialStep();
-    };
-    ArmyMovementState.prototype.onLeavingState = function () {
-        debug('Leaving ArmyMovementState');
-    };
-    ArmyMovementState.prototype.setDescription = function (activePlayerId) { };
-    ArmyMovementState.prototype.updateInterfaceInitialStep = function () {
-        var _this = this;
-        this.game.clearPossible();
-        this.game.clientUpdatePageTitle({
-            text: _('${you} must select units to move'),
+            text: _('${you} must select a Coastal Space'),
             args: {
                 you: '${you}',
             },
         });
-        var stack = this.game.gameMap.stacks[this.args.origin.id][this.args.faction];
-        stack.open();
-        this.setUnitsSelectable();
-        this.game.addConfirmButton({
-            callback: function () {
-                _this.game.clearPossible();
-                _this.game.takeAction({
-                    action: 'actArmyMovement',
-                    args: {
-                        unitIds: _this.selectedUnits.map(function (unit) { return unit.id; }),
-                    },
-                });
-            },
-        });
-        this.game.addPassButton({
-            optionalAction: this.args.optionalAction,
-        });
-        this.game.addUndoButtons(this.args);
-        this.checkConfirmDisabled();
-    };
-    ArmyMovementState.prototype.setUnitsSelectable = function () {
-        var _this = this;
-        this.args.units.forEach(function (unit) {
-            _this.game.setLocationSelectable({
-                id: '' + unit.id,
-                callback: function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    _this.handleUnitClick({ unit: unit });
-                },
+        this.args.spaces.forEach(function (space) {
+            return _this.game.setLocationSelectable({
+                id: space.id,
+                callback: function () { return _this.updateInterfaceConfirm(space); },
             });
         });
-    };
-    ArmyMovementState.prototype.handleUnitClick = function (_a) {
-        var unit = _a.unit;
-        var index = this.selectedUnits.findIndex(function (item) { return item.id === unit.id; });
-        var element = document.getElementById(unit.id + '');
-        if (!element) {
-            return;
-        }
-        if (index < 0) {
-            this.selectedUnits.push(unit);
-            element.classList.add(BT_SELECTED);
-            element.classList.remove(BT_SELECTABLE);
-            this.game.setUnitSelected({ id: '' + unit.id });
-        }
-        else {
-            this.selectedUnits.splice(index, 1);
-            element.classList.add(BT_SELECTABLE);
-            element.classList.remove(BT_SELECTED);
-        }
-        this.checkConfirmDisabled();
-    };
-    ArmyMovementState.prototype.checkConfirmDisabled = function () {
-        var button = document.getElementById('confirm_btn');
-        if (!button) {
-            return;
-        }
-        if (this.selectedUnits.length === 0) {
-            button.classList.add(DISABLED);
-        }
-        else {
-            button.classList.remove(DISABLED);
-        }
-    };
-    return ArmyMovementState;
-}());
-var ArmyMovementDestinationState = (function () {
-    function ArmyMovementDestinationState(game) {
-        this.selectedUnits = [];
-        this.game = game;
-    }
-    ArmyMovementDestinationState.prototype.onEnteringState = function (args) {
-        debug('Entering ArmyMovementDestinationState');
-        this.args = args;
-        this.selectedUnits = [];
-        this.updateInterfaceInitialStep();
-    };
-    ArmyMovementDestinationState.prototype.onLeavingState = function () {
-        debug('Leaving ArmyMovementDestinationState');
-    };
-    ArmyMovementDestinationState.prototype.setDescription = function (activePlayerId) { };
-    ArmyMovementDestinationState.prototype.updateInterfaceInitialStep = function () {
-        this.game.clearPossible();
-        this.game.clientUpdatePageTitle({
-            text: _('${you} must select a Space to move your units to'),
-            args: {
-                you: '${you}',
-            },
-        });
-        this.setUnitsSelected();
-        this.setSpacesSelectable();
         this.game.addPassButton({
             optionalAction: this.args.optionalAction,
         });
         this.game.addUndoButtons(this.args);
     };
-    ArmyMovementDestinationState.prototype.updateInterfaceConfirm = function (_a) {
+    ActionRoundSailBoxLandingState.prototype.updateInterfaceConfirm = function (space) {
         var _this = this;
-        var space = _a.space;
         this.game.clearPossible();
-        this.setUnitsSelected();
-        this.game.setLocationSelected({ id: space.id });
         this.game.clientUpdatePageTitle({
-            text: this.args.units.length === 1
-                ? _('Move ${unitName} to ${spaceName}?')
-                : _('Move selected units to ${spaceName}?'),
+            text: _('Land all your units in the Sail Box on ${spaceName}?'),
             args: {
-                you: '${you}',
                 spaceName: _(space.name),
-                unitName: _(this.game.gamedatas.staticData.units[this.args.units[0].counterId]
-                    .counterText),
             },
         });
         var callback = function () {
             _this.game.clearPossible();
             _this.game.takeAction({
-                action: 'actArmyMovementDestination',
+                action: 'actActionRoundSailBoxLanding',
                 args: {
                     spaceId: space.id,
                 },
             });
         };
+        this.game.setLocationSelected({ id: space.id });
         if (this.game.settings.get({
             id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
         }) === PREF_ENABLED) {
@@ -6002,25 +5878,9 @@ var ArmyMovementDestinationState = (function () {
                 callback: callback,
             });
         }
+        this.game.addCancelButton();
     };
-    ArmyMovementDestinationState.prototype.setSpacesSelectable = function () {
-        var _this = this;
-        Object.values(this.args.destinations).forEach(function (destination) {
-            _this.game.setLocationSelectable({
-                id: destination.space.id,
-                callback: function () {
-                    return _this.updateInterfaceConfirm({ space: destination.space });
-                },
-            });
-        });
-    };
-    ArmyMovementDestinationState.prototype.setUnitsSelected = function () {
-        var _this = this;
-        this.args.units.forEach(function (unit) {
-            _this.game.setUnitSelected({ id: unit.id });
-        });
-    };
-    return ArmyMovementDestinationState;
+    return ActionRoundSailBoxLandingState;
 }());
 var BattleApplyHitsState = (function () {
     function BattleApplyHitsState(game) {
@@ -7962,181 +7822,6 @@ var VagariesOfWarPickUnitsState = (function () {
     };
     return VagariesOfWarPickUnitsState;
 }());
-var LightMovementState = (function () {
-    function LightMovementState(game) {
-        this.selectedUnits = [];
-        this.game = game;
-    }
-    LightMovementState.prototype.onEnteringState = function (args) {
-        debug('Entering LightMovementState');
-        this.args = args;
-        this.selectedUnits = [];
-        this.updateInterfaceInitialStep();
-    };
-    LightMovementState.prototype.onLeavingState = function () {
-        debug('Leaving LightMovementState');
-    };
-    LightMovementState.prototype.setDescription = function (activePlayerId) { };
-    LightMovementState.prototype.updateInterfaceInitialStep = function () {
-        var _this = this;
-        this.game.clearPossible();
-        this.game.clientUpdatePageTitle({
-            text: _('${you} must select units to move'),
-            args: {
-                you: '${you}',
-            },
-        });
-        var stack = this.game.gameMap.stacks[this.args.origin.id][this.args.faction];
-        stack.open();
-        this.setUnitsSelectable();
-        this.game.addConfirmButton({
-            callback: function () {
-                _this.game.clearPossible();
-                _this.game.takeAction({
-                    action: 'actLightMovement',
-                    args: {
-                        unitIds: _this.selectedUnits.map(function (unit) { return unit.id; }),
-                    },
-                });
-            },
-        });
-        this.game.addPassButton({
-            optionalAction: this.args.optionalAction,
-        });
-        this.game.addUndoButtons(this.args);
-        this.checkConfirmDisabled();
-    };
-    LightMovementState.prototype.setUnitsSelectable = function () {
-        var _this = this;
-        this.args.lightUnits.forEach(function (unit) {
-            _this.game.setLocationSelectable({
-                id: '' + unit.id,
-                callback: function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    _this.handleUnitClick({ unit: unit });
-                },
-            });
-        });
-    };
-    LightMovementState.prototype.handleUnitClick = function (_a) {
-        var unit = _a.unit;
-        var index = this.selectedUnits.findIndex(function (item) { return item.id === unit.id; });
-        var element = document.getElementById(unit.id + '');
-        if (!element) {
-            return;
-        }
-        if (index < 0) {
-            this.selectedUnits.push(unit);
-            element.classList.add(BT_SELECTED);
-            element.classList.remove(BT_SELECTABLE);
-            this.game.setUnitSelected({ id: '' + unit.id });
-        }
-        else {
-            this.selectedUnits.splice(index, 1);
-            element.classList.add(BT_SELECTABLE);
-            element.classList.remove(BT_SELECTED);
-        }
-        this.checkConfirmDisabled();
-    };
-    LightMovementState.prototype.checkConfirmDisabled = function () {
-        var button = document.getElementById('confirm_btn');
-        if (!button) {
-            return;
-        }
-        if (this.selectedUnits.length === 0) {
-            button.classList.add(DISABLED);
-        }
-        else {
-            button.classList.remove(DISABLED);
-        }
-    };
-    return LightMovementState;
-}());
-var LightMovementDestinationState = (function () {
-    function LightMovementDestinationState(game) {
-        this.game = game;
-    }
-    LightMovementDestinationState.prototype.onEnteringState = function (args) {
-        debug('Entering LightMovementDestinationState');
-        this.args = args;
-        this.updateInterfaceInitialStep();
-    };
-    LightMovementDestinationState.prototype.onLeavingState = function () {
-        debug('Leaving LightMovementDestinationState');
-    };
-    LightMovementDestinationState.prototype.setDescription = function (activePlayerId) { };
-    LightMovementDestinationState.prototype.updateInterfaceInitialStep = function () {
-        this.game.clearPossible();
-        this.game.clientUpdatePageTitle({
-            text: _('${you} must select a Space to move your units to'),
-            args: {
-                you: '${you}',
-            },
-        });
-        this.setUnitsSelected();
-        this.setSpacesSelectable();
-        this.game.addPassButton({
-            optionalAction: this.args.optionalAction,
-        });
-        this.game.addUndoButtons(this.args);
-    };
-    LightMovementDestinationState.prototype.updateInterfaceConfirm = function (_a) {
-        var _this = this;
-        var space = _a.space;
-        this.game.clearPossible();
-        this.setUnitsSelected();
-        this.game.setLocationSelected({ id: space.id });
-        this.game.clientUpdatePageTitle({
-            text: this.args.units.length === 1
-                ? _('Move ${unitName} to ${spaceName}?')
-                : _('Move selected units to ${spaceName}?'),
-            args: {
-                you: '${you}',
-                spaceName: _(space.name),
-                unitName: _(this.game.gamedatas.staticData.units[this.args.units[0].counterId]
-                    .counterText),
-            },
-        });
-        var callback = function () {
-            _this.game.clearPossible();
-            _this.game.takeAction({
-                action: 'actLightMovementDestination',
-                args: {
-                    spaceId: space.id,
-                },
-            });
-        };
-        if (this.game.settings.get({
-            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
-        }) === PREF_ENABLED) {
-            callback();
-        }
-        else {
-            this.game.addConfirmButton({
-                callback: callback,
-            });
-        }
-    };
-    LightMovementDestinationState.prototype.setSpacesSelectable = function () {
-        var _this = this;
-        Object.values(this.args.destinations).forEach(function (destination) {
-            _this.game.setLocationSelectable({
-                id: destination.space.id,
-                callback: function () {
-                    return _this.updateInterfaceConfirm({ space: destination.space });
-                },
-            });
-        });
-    };
-    LightMovementDestinationState.prototype.setUnitsSelected = function () {
-        var _this = this;
-        this.args.units.forEach(function (unit) {
-            _this.game.setUnitSelected({ id: unit.id });
-        });
-    };
-    return LightMovementDestinationState;
-}());
 var MarshalTroopsState = (function () {
     function MarshalTroopsState(game) {
         this.marshalledUnits = {};
@@ -8434,14 +8119,18 @@ var MovementState = (function () {
             var staticData = _this.getUnitStaticData(unit);
             return ![COMMANDER, FLEET].includes(staticData.type);
         }).length;
-        var lightOnly = !this.selectedUnits.some(function (unit) { return _this.getUnitStaticData(unit).type !== LIGHT; });
+        var canUsePath = !this.selectedUnits.some(function (unit) { return ![LIGHT, FLEET].includes(_this.game.getUnitStaticData(unit).type); });
         var requiresHighway = this.selectedUnits.filter(function (unit) { return _this.getUnitStaticData(unit).type === ARTILLERY; }).length > 1;
+        var requiresCoastal = this.selectedUnits.some(function (unit) { return _this.game.getUnitStaticData(unit).type === FLEET; });
         var validDestinations = this.args.adjacent.filter(function (_a) {
             var connection = _a.connection;
             if (requiresHighway && connection.type !== HIGHWAY) {
                 return false;
             }
-            if (!lightOnly && connection.type === PATH) {
+            if (requiresCoastal && !_this.game.getConnectionStaticData(connection).coastal) {
+                return false;
+            }
+            if (!canUsePath && connection.type === PATH) {
                 return false;
             }
             if (numberOfUnitsForConnectionLimit > _this.getRemainingLimit(connection)) {
@@ -8737,9 +8426,9 @@ var SailMovementState = (function () {
     };
     SailMovementState.prototype.isSailMovePossible = function () {
         var _this = this;
-        var selectedFleets = this.selectedUnits.filter(function (unit) { return _this.game.getUnitStaticData(unit.counterId).type === FLEET; }).length;
+        var selectedFleets = this.selectedUnits.filter(function (unit) { return _this.game.getUnitStaticData(unit).type === FLEET; }).length;
         var otherUnits = this.selectedUnits.filter(function (unit) {
-            return ![FLEET, COMMANDER].includes(_this.game.getUnitStaticData(unit.counterId).type);
+            return ![FLEET, COMMANDER].includes(_this.game.getUnitStaticData(unit).type);
         }).length;
         return selectedFleets > 0 && otherUnits / selectedFleets <= 4;
     };

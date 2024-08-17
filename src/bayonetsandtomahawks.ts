@@ -70,8 +70,6 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     actionRoundChooseFirstPlayer: ActionRoundChooseFirstPlayerState;
     actionRoundChooseReaction: ActionRoundChooseReactionState;
     actionRoundSailBoxLanding: ActionRoundSailBoxLandingState;
-    armyMovement: ArmyMovementState;
-    armyMovementDestination: ArmyMovementDestinationState;
     battleApplyHits: BattleApplyHitsState;
     battleRetreat: BattleRetreatState;
     battleRollsRerolls: BattleRollsRerollsState;
@@ -90,8 +88,6 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     eventSmallpoxInfectedBlankets: EventSmallpoxInfectedBlanketsState;
     vagariesOfWarPickUnits: VagariesOfWarPickUnitsState;
     fleetsArriveUnitPlacement: FleetsArriveUnitPlacementState;
-    lightMovement: LightMovementState;
-    lightMovementDestination: LightMovementDestinationState;
     marshalTroops: MarshalTroopsState;
     movement: MovementState;
     raid: RaidState;
@@ -135,8 +131,6 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       actionRoundChooseFirstPlayer: new ActionRoundChooseFirstPlayerState(this),
       actionRoundChooseReaction: new ActionRoundChooseReactionState(this),
       actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
-      armyMovement: new ArmyMovementState(this),
-      armyMovementDestination: new ArmyMovementDestinationState(this),
       battleApplyHits: new BattleApplyHitsState(this),
       battleRetreat: new BattleRetreatState(this),
       battleRollsRerolls: new BattleRollsRerollsState(this),
@@ -146,17 +140,21 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       confirmTurn: new ConfirmTurnState(this),
       construction: new ConstructionState(this),
       eventArmedBattoemen: new EventArmedBattoemenState(this),
-      eventDelayedSuppliesFromFrance: new EventDelayedSuppliesFromFranceState(this),
+      eventDelayedSuppliesFromFrance: new EventDelayedSuppliesFromFranceState(
+        this
+      ),
       eventDiseaseInBritishCamp: new EventDiseaseInBritishCampState(this),
       eventDiseaseInFrenchCamp: new EventDiseaseInFrenchCampState(this),
       eventHesitantBritishGeneral: new EventHesitantBritishGeneralState(this),
-      eventPennsylvaniasPeacePromises: new EventPennsylvaniasPeacePromisesState(this),
+      eventPennsylvaniasPeacePromises: new EventPennsylvaniasPeacePromisesState(
+        this
+      ),
       eventRoundUpMenAndEquipment: new EventRoundUpMenAndEquipmentState(this),
-      eventSmallpoxInfectedBlankets: new EventSmallpoxInfectedBlanketsState(this),
+      eventSmallpoxInfectedBlankets: new EventSmallpoxInfectedBlanketsState(
+        this
+      ),
       vagariesOfWarPickUnits: new VagariesOfWarPickUnitsState(this),
       fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
-      lightMovement: new LightMovementState(this),
-      lightMovementDestination: new LightMovementDestinationState(this),
       marshalTroops: new MarshalTroopsState(this),
       movement: new MovementState(this),
       raid: new RaidState(this),
@@ -188,8 +186,6 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     this.gameMap = new GameMap(this);
     this.pools = new Pools(this);
     this.tooltipManager = new TooltipManager(this);
-
-    
 
     if (this.playerOrder.includes(this.getPlayerId())) {
       this.hand = new Hand(this);
@@ -310,8 +306,12 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  getUnitStaticData(counterId: string): BTUnitStaticData {
-    return this.gamedatas.staticData.units[counterId];
+  getConnectionStaticData(connection: BTConnection): BTConnectionStaticData {
+    return this.gamedatas.staticData.connections[connection.id];
+  }
+
+  getUnitStaticData(unit: BTUnit): BTUnitStaticData {
+    return this.gamedatas.staticData.units[unit.counterId];
   }
 
   ///////////////////////////////////////////////////

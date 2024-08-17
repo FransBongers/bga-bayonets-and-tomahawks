@@ -36,7 +36,8 @@ interface BayonetsAndTomahawksGame extends Game {
     args: Record<string, unknown>
   ) => string;
   getPlayerId: () => number;
-  getUnitStaticData: (counterId: string) => BTUnitStaticData;
+  getConnectionStaticData: (connection: BTConnection) => BTConnectionStaticData;
+  getUnitStaticData: (unit: BTUnit) => BTUnitStaticData;
   onCancel: () => void;
   openUnitStack: (unit: BTUnit) => void;
   setCardSelectable: (props: {
@@ -114,6 +115,13 @@ interface BTConnection {
   road: number;
 }
 
+interface BTConnectionStaticData {
+  id: string;
+  left: number;
+  top: number;
+  coastal: boolean;
+}
+
 interface BTMarker {
   manager: 'markers';
   id: string;
@@ -181,7 +189,7 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   playerOrder: number[];
   players: Record<number, BayonetsAndTomahawksPlayerData>;
   staticData: {
-    connections: Record<string, { id: string; top: number; left: number }>;
+    connections: Record<string, BTConnectionStaticData>;
     units: Record<string, BTUnitStaticData>;
     spaces: Record<
       string,
