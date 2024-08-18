@@ -279,16 +279,6 @@ $machinestates = array(
         'transitions' => [],
     ],
 
-    // ST_ACTION_ROUND_END => [
-    //     'name' => 'actionRoundEnd',
-    //     'description' => clienttranslate('${actplayer} may perform actions'),
-    //     'descriptionmyturn' => clienttranslate('${you}'),
-    //     'type' => 'activeplayer',
-    //     'args' => 'argsAtomicAction',
-    //     'action' => 'stAtomicAction',
-    //     'possibleactions' => ['actActionRoundEnd', 'actPassOptionalAction', 'actRestart'],
-    // ],
-
     ST_ACTION_ROUND_SAIL_BOX_LANDING => [
         'name' => 'actionRoundSailBoxLanding',
         'description' => clienttranslate('${actplayer} must perform landings'),
@@ -572,6 +562,14 @@ $machinestates = array(
         'args' => 'argsAtomicAction',
         'action' => 'stAtomicAction',
         'possibleactions' => ['actBattleRetreat', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_BATTLE_RETREAT_CHECK_OPTIONS => [
+        'name' => 'battleRetreatCheckOptions',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
     ],
 
     ST_BATTLE_ROLLS_REROLLS => [

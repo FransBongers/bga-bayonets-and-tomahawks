@@ -86,7 +86,7 @@ class MovementOverwhelmCheck extends \BayonetsAndTomahawks\Actions\UnitMovement
 
     if ($overwhelm) {
       $this->ctx->insertAsBrother(Engine::buildTree([
-        'action' => BATTLE_RETREAT,
+        'action' => BATTLE_RETREAT_CHECK_OPTIONS,
         'playerId' => Players::getOther($player->getId())->getId(),
         'faction' => BTHelpers::getOtherFaction($player->getFaction()),
         'spaceId' => $spaceId,

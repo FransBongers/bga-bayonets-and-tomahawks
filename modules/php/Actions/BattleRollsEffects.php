@@ -117,7 +117,7 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
     // Flag
     $diceWithFlagCount = count($this->getDiceWithFace($diceResults, FLAG));
     if ($diceWithFlagCount > 0) {
-      $this->advanceBattleVictoryMarker($player, $faction, $diceWithFlagCount);
+      $this->moveBattleVictoryMarker($player, $faction, $diceWithFlagCount);
     }
     // Miss
 
@@ -246,7 +246,7 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
         // No enemy brigades to take a hit
         continue;
       }
-      $newPosition = $this->advanceBattleVictoryMarker($player, $faction);
+      $newPosition = $this->moveBattleVictoryMarker($player, $faction);
       if ($newPosition <= 0) {
         continue;
       }
@@ -448,7 +448,7 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
         break;
       }
       // Hit is scored, advance battle victory marker
-      $newPosition = $this->advanceBattleVictoryMarker($player, $faction);
+      $newPosition = $this->moveBattleVictoryMarker($player, $faction);
       if ($newPosition <= 0) {
         continue;
       }

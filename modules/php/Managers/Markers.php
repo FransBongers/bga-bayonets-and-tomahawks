@@ -81,6 +81,14 @@ class Markers extends \BayonetsAndTomahawks\Helpers\Pieces
       ->toArray();
   }
 
+  public static function getInLocationLike($location)
+  {
+    return self::getSelectQuery()
+      ->where(static::$prefix . 'location', 'LIKE', $location . '%')
+      ->get()
+      ->toArray();
+  }
+
   // public static function getUiData()
   // {
   //   return self::getPool()

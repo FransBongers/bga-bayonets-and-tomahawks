@@ -49,7 +49,7 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
     $loser = $outcome['loser'];
 
     $this->ctx->insertAsBrother(new LeafNode([
-      'action' => BATTLE_RETREAT,
+      'action' => BATTLE_RETREAT_CHECK_OPTIONS,
       'playerId' => $loser['player']->getId(),
       'faction' => $loser['faction'],
       'spaceId' => $space->getId(),

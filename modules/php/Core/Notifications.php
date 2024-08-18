@@ -209,12 +209,22 @@ class Notifications
     ]);
   }
 
-  public static function advanceBattleVictoryMarker($player, $marker, $numberOfPositions)
+  public static function moveBattleVictoryMarker($player, $marker, $numberOfPositions)
   {
-    $text = $numberOfPositions === 1 ?
-      clienttranslate('${player_name} advances their Battle Victory Marker 1 position') :
-      clienttranslate('${player_name} advances their Battle Victory Marker ${numberOfPositions} positions');
-    self::notifyAll('advanceBattleVictoryMarker', $text, [
+    $backward = $numberOfPositions < 0;
+    $numberOfPositions = abs($numberOfPositions);
+
+    $text = clienttranslate('${player_name} advances their Battle Victory Marker 1 position');
+
+    if (!$backward && $numberOfPositions > 1) {
+      $text = clienttranslate('${player_name} advances their Battle Victory Marker ${numberOfPositions} positions');
+    } else if ($backward && $numberOfPositions === 1) {
+      $text = clienttranslate('${player_name} moves their Battle Victory Marker 1 position backward');
+    } else if ($backward) {
+      $text = clienttranslate('${player_name} moves their Battle Victory Marker ${numberOfPositions} positions backward');
+    }
+      
+    self::notifyAll('moveBattleVictoryMarker', $text, [
       'player' => $player,
       'marker' => $marker->jsonSerialize(),
       'numberOfPositions' => $numberOfPositions,
@@ -605,14 +615,14 @@ class Notifications
   public static function moveStack($player, $units, $markers, $origin = null, $destination = null, $connection = null, $isRetreat = false, $sailMove = false)
   {
     $text = clienttranslate('${player_name} moves a stack from ${tkn_boldText_from} to ${tkn_boldText_to}');
-    
-      if ($isRetreat) {
-        $text = clienttranslate('${player_name} retreats their stack from ${tkn_boldText_from} to ${tkn_boldText_to}');
-      } else if ($sailMove && $destination === null) {
-        $text = clienttranslate('${player_name} moves a stack from ${tkn_boldText_from} to the ${tkn_boldText_to}');
-      } else if ($sailMove && $origin === null) {
-        $text = clienttranslate('${player_name} Lands their units on the ${tkn_boldText_from} on ${tkn_boldText_to}');
-      }
+
+    if ($isRetreat) {
+      $text = clienttranslate('${player_name} retreats their stack from ${tkn_boldText_from} to ${tkn_boldText_to}');
+    } else if ($sailMove && $destination === null) {
+      $text = clienttranslate('${player_name} moves a stack from ${tkn_boldText_from} to the ${tkn_boldText_to}');
+    } else if ($sailMove && $origin === null) {
+      $text = clienttranslate('${player_name} Lands their units on the ${tkn_boldText_from} on ${tkn_boldText_to}');
+    }
 
     self::notifyAll("moveStack", $text, [
       'player' => $player,

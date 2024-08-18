@@ -61,7 +61,7 @@ class NotificationManager {
       'log',
       'message',
       'addSpentMarkerToUnits',
-      'advanceBattleVictoryMarker',
+      'moveBattleVictoryMarker',
       'battle',
       'battleCleanup',
       'battleRemoveMarker',
@@ -236,8 +236,8 @@ class NotificationManager {
     });
   }
 
-  async notif_advanceBattleVictoryMarker(
-    notif: Notif<NotifAdvanceBattleVictoryMarkerArgs>
+  async notif_moveBattleVictoryMarker(
+    notif: Notif<NotifMoveBattleVictoryMarkerArgs>
   ) {
     const { marker } = notif.args;
 

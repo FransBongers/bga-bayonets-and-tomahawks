@@ -30,6 +30,7 @@ class AtomicActions
     BATTLE_OUTCOME => 'BattleOutcome',
     BATTLE_PREPARATION => 'BattlePreparation',
     BATTLE_RETREAT => 'BattleRetreat',
+    BATTLE_RETREAT_CHECK_OPTIONS => 'BattleRetreatCheckOptions',
     BATTLE_ROLLS => 'BattleRolls',
     BATTLE_ROLLS_EFFECTS => 'BattleRollsEffects',
     BATTLE_ROLLS_REROLLS => 'BattleRollsRerolls',

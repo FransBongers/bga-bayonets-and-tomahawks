@@ -4141,7 +4141,7 @@ var NotificationManager = (function () {
             'log',
             'message',
             'addSpentMarkerToUnits',
-            'advanceBattleVictoryMarker',
+            'moveBattleVictoryMarker',
             'battle',
             'battleCleanup',
             'battleRemoveMarker',
@@ -4266,7 +4266,7 @@ var NotificationManager = (function () {
             });
         });
     };
-    NotificationManager.prototype.notif_advanceBattleVictoryMarker = function (notif) {
+    NotificationManager.prototype.notif_moveBattleVictoryMarker = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var marker;
             return __generator(this, function (_a) {

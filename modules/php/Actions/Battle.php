@@ -69,7 +69,7 @@ class Battle extends \BayonetsAndTomahawks\Models\AtomicAction
     return $value;
   }
 
-  protected function advanceBattleVictoryMarker($player, $faction, $positions = 1)
+  protected function moveBattleVictoryMarker($player, $faction, $positions = 1)
   {
     $marker = $this->getBattleMarker($faction);
     $value = $this->getBattleMarkerValue($marker);
@@ -81,7 +81,7 @@ class Battle extends \BayonetsAndTomahawks\Models\AtomicAction
     $isAttacker = explode('_', $marker->getLocation())[2] === 'attacker';
 
     $marker->setLocation(Locations::battleTrack($isAttacker, $value));
-    Notifications::advanceBattleVictoryMarker($player, $marker, $positions);
+    Notifications::moveBattleVictoryMarker($player, $marker, $positions);
     return $value;
   }
 

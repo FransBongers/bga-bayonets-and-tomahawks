@@ -22,7 +22,7 @@ interface NotifAddSpentMarkerToUnitsArgs {
   units: BTUnit[];
 }
 
-interface NotifAdvanceBattleVictoryMarkerArgs {
+interface NotifMoveBattleVictoryMarkerArgs {
   marker: BTMarker;
 }
 

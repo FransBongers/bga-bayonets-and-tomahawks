@@ -46,7 +46,8 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
   public function stBattlePreparation()
   {
     $parentInfo = $this->ctx->getParent()->getInfo();
-    $space = Spaces::get($parentInfo['spaceId']);
+    $spaceId = $parentInfo['spaceId'];
+    $space = Spaces::get($spaceId);
     Notifications::log('stBattlePreparation', $parentInfo);
     $units = $space->getUnits();
 
@@ -61,17 +62,18 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     $this->ctx->getParent()->updateInfo('attacker', $attackingFaction);
     $this->ctx->getParent()->updateInfo('defender', $defendingFaction);
 
-    $players = Players::getAll()->toArray();
-    $attackingPlayer = Utils::array_find($players, function ($player) use ($attackingFaction) {
-      return $player->getFaction() === $attackingFaction;
-    });
-    $defendingPlayer = Utils::array_find($players, function ($player) use ($defendingFaction) {
-      return $player->getFaction() === $defendingFaction;
-    });
+    // $players = Players::getAll()->toArray();
+    $playersPerFaction = Players::getPlayersForFactions();
+
+    $attackingPlayer = $playersPerFaction[$attackingFaction];
+    $defendingPlayer = $playersPerFaction[$defendingFaction];
 
     $this->placeMarkers($space, $attackingFaction, $defendingFaction);
 
-    $this->selectCommanders($units,[$attackingPlayer, $defendingPlayer], $space);
+
+    $this->battlePenalties($space, $attackingPlayer, $attackingFaction, $defendingPlayer, $defendingFaction);
+
+    $this->selectCommanders($units, [$attackingPlayer, $defendingPlayer], $space);
 
     $this->resolveAction(['automatic' => true]);
   }
@@ -152,5 +154,83 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     $defenderMarker->setLocation(Locations::battleTrack(false, 0));
 
     Notifications::battleStart($space, $attackerMarker, $defenderMarker);
+  }
+
+  private function battlePenalties($space, $attackingPlayer, $attackingFaction, $defendingPlayer, $defendingFaction)
+  {
+    $markers = Markers::getInLocationLike($space->getId());
+    $units = $space->getUnits();
+
+    $attackingUnits = Utils::filter($units, function ($unit) use ($attackingFaction) {
+      return !$unit->isCommander() && $unit->getFaction() === $attackingFaction;
+    });
+    $defendingUnits = Utils::filter($units, function ($unit) use ($defendingFaction) {
+      return !$unit->isCommander() && $unit->getFaction() === $defendingFaction;
+    });
+
+    $unitCount = [
+      BRITISH => 0,
+      FRENCH => 0,
+    ];
+    $unitCount[$attackingFaction] = count($attackingUnits);
+    $unitCount[$defendingFaction] = count($defendingUnits);
+
+    $markersPerFaction = [
+      BRITISH => [],
+      FRENCH => [],
+    ];
+
+    $penalties = [
+      BRITISH => 0,
+      FRENCH => 0,
+    ];
+
+    foreach ($markers as $marker) {
+      $markerType = $marker->getType();
+      if (!in_array($markerType, [LANDING_MARKER, OUT_OF_SUPPLY_MARKER, MARSHAL_TROOPS_MARKER, ROUT_MARKER])) {
+        continue;
+      }
+
+      $faction = explode('_', $marker->getLocation())[1];
+      $markersPerFaction[$faction][] = $marker;
+      if ($markerType === OUT_OF_SUPPLY_MARKER && $unitCount[$faction] >= 8) {
+        $penalties[$faction] = $penalties[$faction] - 2;
+      } else {
+        $penalties[$faction] = $penalties[$faction] - 1;
+      }
+    }
+
+    $defenderHasFort = Utils::array_some($defendingUnits, function ($unit) {
+      return $unit->isFort();
+    });
+    $attackerHasArtillery = Utils::array_some($attackingUnits, function ($unit) {
+      return $unit->isArtillery();
+    });
+
+    if ($defenderHasFort) {
+      $penalty = $attackerHasArtillery ? 1 : 2;
+      $penalties[$attackingFaction] = $penalties[$attackingFaction] - $penalty;
+    }
+
+    foreach ([BRITISH, FRENCH] as $faction) {
+      if ($penalties[$faction] < -5) {
+        $penalties[$faction] = -5;
+      }
+    }
+
+    if ($penalties[$attackingFaction] < 0) {
+      Notifications::message('${player_name} receives ${penaltyCount} Battle Penalties', [
+        'player' => $attackingPlayer,
+        'penaltyCount' => abs($penalties[$attackingFaction]),
+      ]);
+      $this->moveBattleVictoryMarker($attackingPlayer, $attackingFaction, $penalties[$attackingFaction]);
+    }
+    if ($penalties[$defendingFaction] < 0) {
+      Notifications::message('${player_name} receives ${penaltyCount} Battle Penalties', [
+        'player' => $defendingPlayer,
+        'penaltyCount' => abs($penalties[$defendingFaction]),
+      ]);
+      $this->moveBattleVictoryMarker($defendingPlayer, $defendingFaction, $penalties[$attackingFaction]);
+    }
   }
 }
