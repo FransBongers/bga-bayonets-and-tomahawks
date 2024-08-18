@@ -496,6 +496,13 @@ const WOLASTOKUK = 'Wolastokuk';
 const YORK = 'York';
 const ZAWAKWTEGOK = 'Zawakwtegok';
 
+const BASTIONS = [
+  LOUISBOURG_BASTION_1,
+  LOUISBOURG_BASTION_2,
+  QUEBEC_BASTION_1,
+  QUEBEC_BASTION_2,
+];
+
 const SPACES = [
   ALBANY,
   ALEXANDRIA,

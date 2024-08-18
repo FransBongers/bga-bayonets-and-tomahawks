@@ -8,7 +8,7 @@ class Keowee_NinetySix extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = KEOWEE_NINETY_SIX;
-    $this->indianPath = true;
+    $this->indianNationPath = CHEROKEE;
     $this->top = 2195;
     $this->left = 1113;
   }

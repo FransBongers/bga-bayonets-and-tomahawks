@@ -165,6 +165,22 @@ class Notifications
     ];
   }
 
+  public static function diceResultsLog($diceResults)
+  {
+    $diceResultsLog = [];
+    $diceResultsArgs = [];
+    foreach ($diceResults as $index => $dieResult) {
+      $key = 'tkn_dieResult_' . $index;
+      $diceResultsLog[] = '${' . $key . '}';
+      $diceResultsArgs[$key] = $dieResult;
+    };
+
+    return [
+      'log' => $diceResultsLog,
+      'args' => $diceResultsArgs,
+    ];
+  }
+
   // ..######......###....##.....##.########
   // .##....##....##.##...###...###.##......
   // .##.........##...##..####.####.##......
@@ -268,6 +284,7 @@ class Notifications
 
   public static function battleRolls($player, $battleRollsSequenceStep, $diceResults, $unitIds)
   {
+    // TODO: replace with utility function
     // ${tkn_dieResult}
     $diceResultsLog = [];
     $diceResultsArgs = [];
@@ -716,10 +733,11 @@ class Notifications
     ]);
   }
 
-  public static function removeMarkersEndOfActionRound($spentUnits)
+  public static function removeMarkersEndOfActionRound($spentUnits, $markers)
   {
     self::notifyAll("removeMarkersEndOfActionRound", clienttranslate('All Spent, Landing and Marshal markers are removed'), [
       'spentUnits' => $spentUnits,
+      'markers' => $markers,
     ]);
   }
 

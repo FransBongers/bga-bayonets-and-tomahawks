@@ -18,7 +18,7 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
   protected $frenchLimit;
   protected $road;
   protected $type;
-  protected $indianPath = false;
+  protected $indianNationPath = null;
   protected $coastal = false;
   protected $top = 0;
   protected $left = 0;
@@ -39,6 +39,7 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
     'top',
     'left',
     'coastal',
+    'indianNationPath'
   ];
 
   public function getId()
@@ -101,6 +102,15 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
   public function isCoastalConnection()
   {
     return $this->coastal;
+  }
+
+  public function isPath()
+  {
+    return $this->getType() === PATH;
+  }
+
+  public function isPathOfIndianNation($nation) {
+    return $this->indianNationPath === $nation;
   }
 
   public function canBeUsedByUnit($unit, $ignoreLimit = false)

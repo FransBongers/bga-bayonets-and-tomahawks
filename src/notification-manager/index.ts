@@ -560,7 +560,7 @@ class NotificationManager {
   async notif_removeMarkersEndOfActionRound(
     notif: Notif<NotifRemoveMarkersEndOfActionRoundArgs>
   ) {
-    const { spentUnits } = notif.args;
+    const { spentUnits, markers } = notif.args;
 
     spentUnits.forEach((unit) => {
       const element = document.getElementById(`spent_marker_${unit.id}`);
@@ -570,6 +570,9 @@ class NotificationManager {
     });
     this.game.gameMap.resetConnectionLimits();
     // TODO: markers
+    await Promise.all(
+      markers.map((marker) => this.game.tokenManager.removeCard(marker))
+    );
   }
 
   async notif_returnToPool(notif: Notif<NotifReturnToPoolArgs>) {

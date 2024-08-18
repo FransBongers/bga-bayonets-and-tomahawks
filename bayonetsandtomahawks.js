@@ -4796,17 +4796,24 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_removeMarkersEndOfActionRound = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var spentUnits;
-            return __generator(this, function (_a) {
-                spentUnits = notif.args.spentUnits;
-                spentUnits.forEach(function (unit) {
-                    var element = document.getElementById("spent_marker_".concat(unit.id));
-                    if (element) {
-                        element.setAttribute('data-spent', 'false');
-                    }
-                });
-                this.game.gameMap.resetConnectionLimits();
-                return [2];
+            var _a, spentUnits, markers;
+            var _this = this;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = notif.args, spentUnits = _a.spentUnits, markers = _a.markers;
+                        spentUnits.forEach(function (unit) {
+                            var element = document.getElementById("spent_marker_".concat(unit.id));
+                            if (element) {
+                                element.setAttribute('data-spent', 'false');
+                            }
+                        });
+                        this.game.gameMap.resetConnectionLimits();
+                        return [4, Promise.all(markers.map(function (marker) { return _this.game.tokenManager.removeCard(marker); }))];
+                    case 1:
+                        _b.sent();
+                        return [2];
+                }
             });
         });
     };

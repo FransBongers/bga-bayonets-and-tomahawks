@@ -8,7 +8,7 @@ class Minisink_Oquaga extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = MINISINK_OQUAGA;
-    $this->indianPath = true;
+    $this->indianNationPath = IROQUOIS;
     $this->top = 1643;
     $this->left = 790;
   }

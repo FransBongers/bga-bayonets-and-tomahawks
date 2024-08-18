@@ -37,63 +37,168 @@ trait DebugTrait
   //   Scenario::setup();
   // }
 
-  function getStacks()
-  {
-    $spaces = Spaces::getAll();
+  // function getStacksAndSupplySources()
+  // {
+  //   $spaces = Spaces::getAll();
+  //   $units = Units::getAll()->toArray();
 
-    $stacks = [];
-    foreach ($spaces as $space) {
-      $units = $space->getUnits();
-      // if (count($units) > 0) {
-      //   Notifications::log('units '.$space->getId(),$units);
-      // }
+  //   $stacks = [
+  //     BRITISH => [],
+  //     FRENCH => [],
+  //   ];
 
-      $hasUnitToActivate = Utils::array_some($units, function ($unit) {
-        $faction = $unit->getFaction();
-        Notifications::log('faction', $faction);
-        return $faction === INDIAN;
-      });
-      if ($hasUnitToActivate) {
-        $stacks[] = $space->getId();
-      }
-    }
-    Notifications::log('stacks', $stacks);
-  }
+  //   foreach ($units as $unit) {
+  //     $location = $unit->getLocation();
+  //     if (!(in_array($location, SPACES) && !in_array($location, BASTIONS))) {
+  //       continue;
+  //     }
+  //     $faction = $unit->getFaction();
+  //     // location is a Space
+  //     if (isset($stacks[$faction][$location])) {
+  //       $stacks[$faction][$location]['units'][] = $unit;
+  //     } else {
+  //       $stacks[$faction][$location] = [
+  //         'units' => [$unit],
+  //         'space' => $spaces[$location]
+  //       ];
+  //     }
+  //   }
+
+  //   $supplySources = [
+  //     BRITISH => [],
+  //     FRENCH => [],
+  //   ];
+
+  //   // Friendly colony homespaces
+  //   foreach ($spaces as $spaceId => $space) {
+  //     $isColonyHomeSpace = $space->getColony() !== null && $space->getHomeSpace() !== null;
+  //     if (!$isColonyHomeSpace) {
+  //       continue;
+  //     }
+  //     foreach ([BRITISH, FRENCH] as $faction) {
+  //       if ($space->getControl() === $faction) {
+  //         $supplySources[$faction][] = $spaceId;
+  //       }
+  //     }
+  //   }
+
+  //   // Spaces with friendly fleets
+  //   foreach ([BRITISH, FRENCH] as $faction) {
+  //     foreach ($stacks[$faction] as $spaceId => $data) {
+  //       if (Utils::array_some($data['units'], function ($unit) {
+  //         return $unit->isFleet();
+  //       }) && !in_array($spaceId, $supplySources[$faction])) {
+  //         $supplySources[$faction][] = $spaceId;
+  //       };
+  //     }
+  //   }
+
+  //   return [
+  //     'stacks' => $stacks,
+  //     'supplySources' => $supplySources,
+  //   ];
+  // }
 
 
-
-  private function getRemainingActionPoints($usedActionPoints, $card)
-  {
-    $cardActionPoints = $card->getActionPoints();
-
-    $result = [];
-    foreach ($cardActionPoints as $cIndex => $actionPoint) {
-      $uIndex = Utils::array_find_index($usedActionPoints, function ($uActionPointId) use ($actionPoint) {
-        return $uActionPointId === $actionPoint['id'];
-      });
-      if ($uIndex === null) {
-        $result[] = $actionPoint;
-      } else {
-        unset($usedActionPoints[$uIndex]);
-        $usedActionPoints = array_values($usedActionPoints);
-      }
-    }
-
-    return $result;
-  }
 
   function debug_getUnit($unitId)
   {
     Notifications::log('unit', Units::get($unitId));
   }
 
- 
+  // function checkSupplyForFaction($faction, $stacks, $supplySources, $enemyStacks)
+  // {
+  //   $spaces = Spaces::getAll();
+  //   $connections = Connections::getAll();
+  //   $enemyFaction = BTHelpers::getOtherFaction($faction);
+  //   $indianNationControl = [
+  //     CHEROKEE => Globals::getControlCherokee(),
+  //     IROQUOIS => Globals::getControlIroquois(),
+  //   ];
+
+  //   foreach ($stacks as $spaceId => $stackInSpaceData) {
+  //     $canUsePaths = !Utils::array_some($stackInSpaceData['units'], function ($unit) {
+  //       return !$unit->isLight();
+  //     });
+
+  //     // Check supply
+  //     $visited = [];
+  //     $queue = [$spaceId];
+  //     $inSupply = false;
+
+  //     while (count($queue) > 0) {
+  //       $currentSpaceId = array_shift($queue);
+  //       if (isset($visited[$currentSpaceId]) && $visited[$currentSpaceId]) {
+  //         continue;
+  //       }
+  //       $visited[$currentSpaceId] = true;
+
+  //       if (in_array($spaceId, $supplySources)) {
+  //         $inSupply = true;
+  //         break;
+  //       }
+
+  //       $currentSpace = $spaces[$currentSpaceId];
+  //       $adjacentSpaces = $currentSpace->getAdjacentSpaces();
+
+  //       foreach ($adjacentSpaces as $adjacentSpaceId => $connectionId) {
+  //         if (isset($visited[$adjacentSpaceId]) && $visited[$currentSpaceId]) {
+  //           continue;
+  //         }
+
+  //         // Cannot use paths if stack is not entirely composed of Light Units
+  //         $connection = $connections[$connectionId];
+  //         if ($connection->isPath() && !$canUsePaths) {
+  //           continue;
+  //         }
+
+  //         // Cannot use paths of Neutral Indian Nations
+  //         $indianPath = $connection->getIndianNationPath();
+  //         if ($canUsePaths && $indianPath !== null && $indianNationControl[$indianPath] === NEUTRAL) {
+  //           continue;
+  //         }
+
+  //         $adjacentSpace = $spaces[$adjacentSpaceId];
+
+  //         // Cannot trace through enemy controlled spaces, unless Outpost with no enemy units
+  //         if ($adjacentSpace->getControl() === $enemyFaction && !($adjacentSpace->isOutpost() && !isset($enemyStacks[$adjacentSpaceId]))) {
+  //           continue;
+  //         }
+
+  //         // Can use Wilderness Spaces unless they contain enemy units
+  //         if ($adjacentSpace->getControl() === NEUTRAL && isset($enemyStacks[$adjacentSpaceId])) {
+  //           continue;
+  //         }
+
+  //         if (in_array($adjacentSpaceId, $supplySources)) {
+  //           $inSupply = true;
+  //           break;
+  //         }
+  //         $queue[] = $adjacentSpaceId;
+  //       }
+  //     }
+
+  //     if (!$inSupply) {
+  //       Notifications::log('stack not in supply', $stackInSpaceData);
+  //     }
+  //   }
+  // }
 
   function debug_test()
   {
-    $this->battlePenalties(Spaces::get(LOUISBOURG), BRITISH, FRENCH);
+    GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH) , OUT_OF_SUPPLY_MARKER, Spaces::get(LAKE_GEORGE), BRITISH);
 
-    // Units::get('unit_48')->setReduced(1);
+    // Units::get('unit_41')->setLocation(GOASEK);
+    // $data = $this->getStacksAndSupplySources();
+    // Notifications::log('getStacksAndSupplySources', $data);
+
+    // foreach ([BRITISH, FRENCH] as $faction) {
+    //   $otherFaction = BTHelpers::getOtherFaction($faction);
+    //   $this->checkSupplyForFaction($faction, $data['stacks'][$faction], $data['supplySources'][$faction], $data['stacks'][$otherFaction]);
+    // }
+
+
+    
     // Connections::get('Loyalhanna_RaysTown')->setRoad(1);
     // Connections::get('RaysTown_Shamokin')->setRoad(2);
     // Globals::setPlacedConstructionMarkers([]);

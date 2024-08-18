@@ -8,7 +8,7 @@ class Kingston_Oquaga extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = KINGSTON_OQUAGA;
-    $this->indianPath = true;
+    $this->indianNationPath = IROQUOIS;
     $this->top = 1543;
     $this->left = 800;
   }

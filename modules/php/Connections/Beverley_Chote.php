@@ -8,7 +8,7 @@ class Beverley_Chote extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = BEVERLEY_CHOTE;
-    $this->indianPath = true;
+    $this->indianNationPath = CHEROKEE;
     $this->top = 2141;
     $this->left = 1006;
   }

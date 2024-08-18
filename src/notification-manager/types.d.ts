@@ -176,6 +176,7 @@ interface NotifRemoveMarkerFromStackArgs {
 
 interface NotifRemoveMarkersEndOfActionRoundArgs {
   spentUnits: BTUnit[];
+  markers: BTMarker[];
 }
 
 interface NotifReturnToPoolArgs {

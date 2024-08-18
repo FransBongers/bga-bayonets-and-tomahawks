@@ -40,6 +40,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
 
   protected $staticAttributes = [
     'adjacentSeaZones',
+    'adjacentSpaces',
     'battlePriority',
     'britishBase',
     'coastal',
@@ -164,6 +165,12 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   public function isHomeSpace($faction)
   {
     return $this->homeSpace === $faction;
+  }
+
+  public function isOutpost()
+  {
+    // Can change this to based on value === 1?
+    return $this->outpost;
   }
 
   public function isVictorySpace()

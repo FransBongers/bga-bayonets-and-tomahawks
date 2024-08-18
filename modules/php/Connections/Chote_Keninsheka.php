@@ -8,7 +8,7 @@ class Chote_Keninsheka extends \BayonetsAndTomahawks\Models\Connections\Path
   {
     parent::__construct($row);
     $this->id = CHOTE_KENINSHEKA;
-    $this->indianPath = true;
+    $this->indianNationPath = CHEROKEE;
     $this->top = 2149;
     $this->left = 815;
   }
