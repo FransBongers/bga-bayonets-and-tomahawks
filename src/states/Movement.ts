@@ -223,7 +223,7 @@ class MovementState implements State {
       (unit) => this.game.getUnitStaticData(unit).type === FLEET
     );
 
-    const validDestinations = this.args.adjacent.filter(({ connection }) => {
+    const validDestinations = this.args.adjacent.filter(({ connection, space }) => {
       if (requiresHighway && connection.type !== HIGHWAY) {
         return false;
       }
@@ -238,6 +238,10 @@ class MovementState implements State {
       ) {
         return false;
       }
+      if (this.args.faction === FRENCH && this.game.getSpaceStaticData(space).britishBase) {
+        return false;
+      }
+
       return true;
     });
 

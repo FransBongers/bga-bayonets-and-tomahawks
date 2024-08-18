@@ -37,6 +37,7 @@ interface BayonetsAndTomahawksGame extends Game {
   ) => string;
   getPlayerId: () => number;
   getConnectionStaticData: (connection: BTConnection) => BTConnectionStaticData;
+  getSpaceStaticData: (space: BTSpace) => BTSpaceStaticData;
   getUnitStaticData: (unit: BTUnit) => BTUnitStaticData;
   onCancel: () => void;
   openUnitStack: (unit: BTUnit) => void;
@@ -146,6 +147,11 @@ interface BTSpace {
   left?: number;
 }
 
+interface BTSpaceStaticData {
+  britishBase: boolean;
+  name: string;
+}
+
 interface BTUnit {
   manager: 'units';
   id: string;
@@ -158,10 +164,10 @@ interface BTUnit {
 
 interface BTUnitStaticData {
   faction: 'british' | 'french';
-        colony?: string | null;
-        counterText: string;
-        metropolitan: boolean;
-        type: string;
+  colony?: string | null;
+  counterText: string;
+  metropolitan: boolean;
+  type: string;
 }
 
 type BTToken = BTMarker | BTUnit;
@@ -191,12 +197,7 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   staticData: {
     connections: Record<string, BTConnectionStaticData>;
     units: Record<string, BTUnitStaticData>;
-    spaces: Record<
-      string,
-      {
-        name: string;
-      }
-    >;
+    spaces: Record<string, BTSpaceStaticData>;
   };
   spaces: BTSpace[];
   units: BTUnit[];

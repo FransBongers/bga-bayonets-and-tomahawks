@@ -310,6 +310,10 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     return this.gamedatas.staticData.connections[connection.id];
   }
 
+  getSpaceStaticData(space: BTSpace): BTSpaceStaticData {
+    return this.gamedatas.staticData.spaces[space.id];
+  }
+
   getUnitStaticData(unit: BTUnit): BTUnitStaticData {
     return this.gamedatas.staticData.units[unit.counterId];
   }

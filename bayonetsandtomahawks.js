@@ -2403,6 +2403,9 @@ var BayonetsAndTomahawks = (function () {
     BayonetsAndTomahawks.prototype.getConnectionStaticData = function (connection) {
         return this.gamedatas.staticData.connections[connection.id];
     };
+    BayonetsAndTomahawks.prototype.getSpaceStaticData = function (space) {
+        return this.gamedatas.staticData.spaces[space.id];
+    };
     BayonetsAndTomahawks.prototype.getUnitStaticData = function (unit) {
         return this.gamedatas.staticData.units[unit.counterId];
     };
@@ -8130,7 +8133,7 @@ var MovementState = (function () {
         var requiresHighway = this.selectedUnits.filter(function (unit) { return _this.getUnitStaticData(unit).type === ARTILLERY; }).length > 1;
         var requiresCoastal = this.selectedUnits.some(function (unit) { return _this.game.getUnitStaticData(unit).type === FLEET; });
         var validDestinations = this.args.adjacent.filter(function (_a) {
-            var connection = _a.connection;
+            var connection = _a.connection, space = _a.space;
             if (requiresHighway && connection.type !== HIGHWAY) {
                 return false;
             }
@@ -8141,6 +8144,9 @@ var MovementState = (function () {
                 return false;
             }
             if (numberOfUnitsForConnectionLimit > _this.getRemainingLimit(connection)) {
+                return false;
+            }
+            if (_this.args.faction === FRENCH && _this.game.getSpaceStaticData(space).britishBase) {
                 return false;
             }
             return true;

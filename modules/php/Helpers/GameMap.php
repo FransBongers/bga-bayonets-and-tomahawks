@@ -43,6 +43,7 @@ class GameMap extends \APP_DbObject
 
     foreach ($units as $index => $unit) {
       $space = Spaces::get($indianNationVillages[$index]);
+      $space->setControlStartOfTurn($faction);
       $unit->setLocation($space->getId());
       if ($faction === BRITISH) {
         $unit->setReduced(1); // Set to reduced to show the back (British side) of the Indian token

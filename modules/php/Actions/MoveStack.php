@@ -126,6 +126,18 @@ class MoveStack extends \BayonetsAndTomahawks\Actions\UnitMovement
       }
     }
 
+    /**
+     * TODO: check what needs to be done with these markers.
+     * They are only moved during retreat anyway?
+     */
+    $otherMarkers = Utils::filter($originMarkers, function ($marker) {
+      return !in_array($marker->getType(), [OUT_OF_SUPPLY_MARKER, ROUT_MARKER]);
+    });
+    foreach($otherMarkers as $marker) {
+      $marker->setLocation(Locations::stackMarker($destinationId, $playerFaction));
+      $movedMarkers[] = $marker;
+    }
+
     Units::move($unitIds, $destinationId, null, $originId);
 
     // Update connection limit
@@ -148,6 +160,15 @@ class MoveStack extends \BayonetsAndTomahawks\Actions\UnitMovement
 
     foreach ($removeFromDestination as $marker) {
       $marker->remove($player);
+    }
+
+    // Check if stack enters village of neutral Indian Nation
+    if ($destination !== null && in_array($destination->getIndianVillage(), [CHEROKEE, IROQUOIS])) {
+      $indianNation = $destination->getIndianVillage();
+      $control = $indianNation === CHEROKEE ? Globals::getControlCherokee() : Globals::getControlIroquois();
+      if ($control === NEUTRAL) {
+        GameMap::performIndianNationControlProcedure($indianNation, BTHelpers::getOtherFaction($playerFaction));
+      }
     }
 
     $this->resolveAction(['automatic' => true, 'unitIds' => $unitIds]);

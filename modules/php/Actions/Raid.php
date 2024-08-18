@@ -391,6 +391,9 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
         if (isset($visited[$spaceId])) {
           continue;
         }
+        if ($playerFaction === FRENCH && $allSpaces[$spaceId]->getBritishBase()) {
+          continue;
+        }
         $queue[] = $spaceId;
 
         $weight = 1; // No units in target
