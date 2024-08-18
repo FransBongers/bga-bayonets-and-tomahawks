@@ -57,8 +57,9 @@ CREATE TABLE IF NOT EXISTS `units` (
   `unit_state` int(10) DEFAULT 0,
   `counter_id` VARCHAR(255) NOT NULL,
   `previous_location` varchar(64) DEFAULT NULL,
-  `spent` int(10) DEFAULT 0,
-  `extra_data` JSON NULL,
+  `reduced` tinyint(1) DEFAULT 0,
+  `spent` tinyint(1) DEFAULT 0,
+  -- `extra_data` JSON NULL,
   PRIMARY KEY (`unit_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

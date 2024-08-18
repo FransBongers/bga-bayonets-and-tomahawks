@@ -93,7 +93,7 @@ trait DebugTrait
   {
     $this->battlePenalties(Spaces::get(LOUISBOURG), BRITISH, FRENCH);
 
-    // Units::get('unit_48')->setState(1);
+    // Units::get('unit_48')->setReduced(1);
     // Connections::get('Loyalhanna_RaysTown')->setRoad(1);
     // Connections::get('RaysTown_Shamokin')->setRoad(2);
     // Globals::setPlacedConstructionMarkers([]);

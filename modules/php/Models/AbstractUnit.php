@@ -18,6 +18,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     'state' => ['unit_state', 'int'],
     'counterId' => ['counter_id', 'str'],
     'previousLocation' => ['previous_location', 'str'],
+    'reduced' => ['reduced', 'int'],
     'spent' => ['spent', 'int'],
     'extraData' => ['extra_data', 'obj'],
   ];
@@ -26,6 +27,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   protected $colony = null;
   protected $counterId;
   protected $spent = 0;
+  protected $reduced = 0;
   protected $faction = null;
   protected $previousLocation = null;
   protected $location = null;
@@ -77,7 +79,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
       'previousLocation' => $this->previousLocation,
       'spent' => $this->spent,
       'manager' => UNITS,
-      'reduced' => $this->state === 1,
+      'reduced' => $this->reduced === 1,
     ];
   }
 
@@ -203,13 +205,13 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
 
   public function isReduced()
   {
-    return $this->state === 1;
+    return $this->reduced === 1;
   }
 
-  public function setReduced($value)
-  {
-    $this->setState($value);
-  }
+  // public function setReduced($value)
+  // {
+  //   $this->setReduced($value);
+  // }
 
   public function isSpent()
   {
@@ -235,14 +237,14 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
 
   public function reduce($player)
   {
-    $this->setState(1);
+    $this->setReduced(1);
     Notifications::flipUnit($player, $this);
   }
 
   public function eliminate($player)
   {
     $previousLocation = $this->getLocation();
-    $this->setState(0);
+    $this->setReduced(0);
     $this->setLocation(Locations::lossesBox($this->getFaction()));
     Notifications::eliminateUnit($player, $this, $previousLocation);
   }
@@ -251,7 +253,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   {
     $player = $player === null ? Players::get() : $player;
     $previousLocation = $this->getLocation();
-    // $this->setState(0);
+    // $this->setReduced(0);
     $this->setLocation(REMOVED_FROM_PLAY);
     // TODO: use Notifications::removeFromPlay?
     Notifications::eliminateUnit($player, $this, $previousLocation);
@@ -276,7 +278,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
 
   public function flipToFull($player)
   {
-    $this->setState(0);
+    $this->setReduced(0);
     Notifications::flipUnit($player, $this);
   }
 

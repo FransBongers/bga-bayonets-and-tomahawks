@@ -17,8 +17,9 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
   protected static $customFields = [
     'counter_id',
     'previous_location',
+    'reduced',
     'spent',
-    'extra_data',
+    // 'extra_data',
   ];
   protected static $autoremovePrefix = false;
   protected static $autoreshuffle = false;
@@ -165,10 +166,11 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
           'id' => 'unit_' . $unitIdIndex,
           'location' => $location['id'],
           'counter_id' => $unit,
+          'reduced' => 0,
           'spent' => 0,
           // 'type' => $unit,
         ];
-        $data['extra_data'] = ['properties' => []];
+        // $data['extra_data'] = ['properties' => []];
         $units[$id] = $data;
         $unitIdIndex += 1;
       }
@@ -187,10 +189,11 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
           'id' => 'unit_' . $unitIdIndex,
           'location' => $location['id'],
           'counter_id' => $unit,
+          'reduced' => 0,
           'spent' => 0,
           // 'type' => $unit,
         ];
-        $data['extra_data'] = ['properties' => []];
+        // $data['extra_data'] = ['properties' => []];
         $units[$id] = $data;
         $unitIdIndex += 1;
       }

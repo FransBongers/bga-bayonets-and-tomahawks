@@ -75,7 +75,7 @@ class MoveStack extends \BayonetsAndTomahawks\Actions\UnitMovement
         return $unit->getFaction() === $playerFaction;
       });
     } else if ($originId !== null) {
-      $originUnits = $destination->getUnits($playerFaction);
+      $originUnits = $origin->getUnits($playerFaction);
     }
 
     // Update markers
@@ -94,7 +94,7 @@ class MoveStack extends \BayonetsAndTomahawks\Actions\UnitMovement
      * Remove marker if:
      * - destination already has units with marker
      * - destination has units without marker
-     * -Unless units remain
+     * - Unless units remain
      */
     foreach ([OUT_OF_SUPPLY_MARKER, ROUT_MARKER] as $markerType) {
       $destinationMarker = Utils::array_find($destinationMarkers, function ($marker) use ($markerType) {

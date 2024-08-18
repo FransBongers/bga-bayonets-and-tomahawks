@@ -669,13 +669,13 @@ class Notifications
 
   public static function flipUnit($player, $unit)
   {
-    $text = $unit->getState() === 1 ? clienttranslate('${player_name} flips ${tkn_unit} in ${tkn_boldText_spaceName} to Reduced') : clienttranslate('${player_name} flips ${tkn_unit} in ${tkn_boldText_spaceName} to Full');
+    $text = $unit->getReduced() === 1 ? clienttranslate('${player_name} flips ${tkn_unit} in ${tkn_boldText_spaceName} to Reduced') : clienttranslate('${player_name} flips ${tkn_unit} in ${tkn_boldText_spaceName} to Full');
 
     self::notifyAll("flipUnit", $text, [
       'player' => $player,
       'unit' => $unit->jsonSerialize(),
       'tkn_boldText_spaceName' => Spaces::get($unit->getLocation())->getName(),
-      'tkn_unit' => $unit->getCounterId() . ':' . ($unit->getState() === 0 ? 'reduced' : 'full'),
+      'tkn_unit' => $unit->getCounterId() . ':' . ($unit->getReduced() === 0 ? 'reduced' : 'full'), // reversed because we show the 'before' side in the log
       'i18n' => ['tkn_boldText_spaceName']
     ]);
   }

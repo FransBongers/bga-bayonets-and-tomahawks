@@ -14,7 +14,7 @@ class Fort extends AbstractUnit
   public function eliminate($player)
   {
     $previousLocation = $this->getLocation();
-    $this->setState(0);
+    $this->setReduced(0);
     $this->setLocation(REMOVED_FROM_PLAY);
     Notifications::eliminateUnit($player, $this, $previousLocation);
   }
