@@ -2341,6 +2341,7 @@ var BayonetsAndTomahawks = (function () {
         });
         this.cardManager = new BTCardManager(this);
         this.tokenManager = new TokenManager(this);
+        this.wieChitManager = new WieChitManager(this);
         this.discard = new VoidStock(this.cardManager, document.getElementById('bt_discard'));
         this.deck = new LineStock(this.cardManager, document.getElementById('bt_deck'));
         this.gameMap = new GameMap(this);
@@ -3793,6 +3794,32 @@ var GameMap = (function () {
     GameMap.prototype.updateGameMap = function (_a) {
         var gamedatas = _a.gamedatas;
     };
+    GameMap.prototype.setupWieChits = function (_a) {
+        var gamedatas = _a.gamedatas;
+        this.wieChitPlaceholders = {
+            british: new LineStock(this.game.wieChitManager, document.getElementById('wieChitPlaceholder_british'), {
+                center: false,
+            }),
+            french: new LineStock(this.game.wieChitManager, document.getElementById('wieChitPlaceholder_french'), {
+                center: false,
+            }),
+        };
+        this.updateWieChits({ gamedatas: gamedatas });
+    };
+    GameMap.prototype.updateWieChits = function (_a) {
+        var _this = this;
+        var gamedatas = _a.gamedatas;
+        Object.values(gamedatas.players).forEach(function (player) {
+            if (player.wieChit.hasChit && player.wieChit.chit === null) {
+                _this.placeFakeWieChit(player.faction);
+            }
+            else if (player.wieChit.chit !== null) {
+                var chit = player.wieChit.chit;
+                chit.revealed = true;
+                _this.wieChitPlaceholders[player.faction].addCard(chit);
+            }
+        });
+    };
     GameMap.prototype.setupGameMap = function (_a) {
         var gamedatas = _a.gamedatas;
         document
@@ -3801,6 +3828,7 @@ var GameMap = (function () {
         this.setupUnitsAndSpaces({ gamedatas: gamedatas });
         this.setupMarkers({ gamedatas: gamedatas });
         this.setupConnections({ gamedatas: gamedatas });
+        this.setupWieChits({ gamedatas: gamedatas });
     };
     GameMap.prototype.moveRoundMarker = function (_a) {
         var nextRoundStep = _a.nextRoundStep;
@@ -3841,6 +3869,19 @@ var GameMap = (function () {
                         _b.sent();
                         return [2];
                 }
+            });
+        });
+    };
+    GameMap.prototype.placeFakeWieChit = function (faction) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.wieChitPlaceholders[faction].addCard({
+                    id: "wieChit_".concat(faction),
+                    revealed: false,
+                    value: 0,
+                    location: "wieChitPlaceholder_".concat(faction),
+                });
+                return [2];
             });
         });
     };
@@ -3987,7 +4028,15 @@ var tplGameMap = function (_a) {
         id: "".concat(IROQUOIS_CONTROL, "_markers"),
         top: 1711.5,
         left: 585.5,
-    }), "\n    ").concat(tplSailBox(), "\n  </div>");
+    }), "\n    ").concat(tplSailBox(), "\n    ").concat(tplMarkerSpace({
+        id: "wieChitPlaceholder_french",
+        top: 24.5,
+        left: 108.5,
+    }), "\n    ").concat(tplMarkerSpace({
+        id: "wieChitPlaceholder_british",
+        top: 24.5,
+        left: 1074.5,
+    }), "    \n  </div>");
 };
 var Hand = (function () {
     function Hand(game) {
@@ -4078,6 +4127,7 @@ var LOG_TOKEN_BOLD_TEXT = 'boldText';
 var LOG_TOKEN_NEW_LINE = 'newLine';
 var LOG_TOKEN_CARD = 'card';
 var LOG_TOKEN_MARKER = 'marker';
+var LOG_TOKEN_WIE_CHIT = 'wieChit';
 var LOG_TOKEN_ROAD = 'road';
 var LOG_TOKEN_UNIT = 'unit';
 var LOG_TOKEN_DIE_RESULT = 'dieResult';
@@ -4105,6 +4155,8 @@ var getTokenDiv = function (_a) {
             var counterId = splitCounterId[0];
             var reduced = (splitCounterId === null || splitCounterId === void 0 ? void 0 : splitCounterId[1]) === 'reduced';
             return tplLogTokenUnit(counterId, (_b = game.gamedatas.staticData.units[counterId]) === null || _b === void 0 ? void 0 : _b.type, reduced);
+        case LOG_TOKEN_WIE_CHIT:
+            return tplLogTokenWieChit(value);
         default:
             return value;
     }
@@ -4131,6 +4183,13 @@ var tplLogTokenUnit = function (counterId, type, reduced) {
 };
 var tplLogDieResult = function (dieResult) {
     return "<div class=\"bt_log_die\" data-die-result=\"".concat(dieResult, "\"></div>");
+};
+var tplLogTokenWieChit = function (input) {
+    var split = input.split(':');
+    console.log('split', split);
+    var side = split[1] === 'back' ? 'back' : 'front';
+    var value = split[1] === 'back' ? '0' : split[1];
+    return "<div class=\"bt_log_token bt_marker_side\" data-type=\"wieChit\" data-faction=\"".concat(split[0], "\" data-side=\"").concat(side, "\" data-value=\"").concat(value, "\"></div>");
 };
 var NotificationManager = (function () {
     function NotificationManager(game) {
@@ -4173,6 +4232,8 @@ var NotificationManager = (function () {
             'placeUnits',
             'raidPoints',
             'flipUnit',
+            'placeWieChit',
+            'placeWieChitPrivate',
             'removeMarkerFromStack',
             'removeMarkersEndOfActionRound',
             'returnToPool',
@@ -4206,10 +4267,12 @@ var NotificationManager = (function () {
                 }
             }));
             _this.game.framework().notifqueue.setSynchronous(notifName, undefined);
-            _this.game
-                .framework()
-                .notifqueue.setIgnoreNotificationCheck('discardCardFromHand', function (notif) {
-                return notif.args.playerId == _this.game.getPlayerId();
+            ['discardCardFromHand', 'drawWieChit', 'placeWieChit'].forEach(function (notifId) {
+                _this.game
+                    .framework()
+                    .notifqueue.setIgnoreNotificationCheck(notifId, function (notif) {
+                    return notif.args.playerId == _this.game.getPlayerId();
+                });
             });
         });
     };
@@ -4778,6 +4841,45 @@ var NotificationManager = (function () {
                 unit = notif.args.unit;
                 this.game.tokenManager.updateCardInformations(unit);
                 return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_placeWieChit = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, placeChit, faction;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = notif.args, placeChit = _a.placeChit, faction = _a.faction;
+                        if (!placeChit) return [3, 2];
+                        return [4, this.game.gameMap.placeFakeWieChit(faction)];
+                    case 1:
+                        _b.sent();
+                        _b.label = 2;
+                    case 2: return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_placeWieChitPrivate = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, chit, currentChit, faction;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = notif.args, chit = _a.chit, currentChit = _a.currentChit, faction = _a.faction;
+                        if (!(currentChit !== null)) return [3, 2];
+                        return [4, this.game.wieChitManager.removeCard(currentChit)];
+                    case 1:
+                        _b.sent();
+                        _b.label = 2;
+                    case 2:
+                        chit.revealed = true;
+                        return [4, this.game.gameMap.wieChitPlaceholders[faction].addCard(chit)];
+                    case 3:
+                        _b.sent();
+                        return [2];
+                }
             });
         });
     };
@@ -8606,6 +8708,44 @@ var TooltipManager = (function () {
     };
     return TooltipManager;
 }());
+var WieChitManager = (function (_super) {
+    __extends(WieChitManager, _super);
+    function WieChitManager(game) {
+        var _this = _super.call(this, game, {
+            getId: function (card) { return "".concat(card.id); },
+            setupDiv: function (card, div) { return _this.setupDiv(card, div); },
+            setupFrontDiv: function (card, div) { return _this.setupFrontDiv(card, div); },
+            setupBackDiv: function (card, div) { return _this.setupBackDiv(card, div); },
+            isCardVisible: function (card) { return _this.isCardVisible(card); },
+            animationManager: game.animationManager,
+        }) || this;
+        _this.game = game;
+        return _this;
+    }
+    WieChitManager.prototype.clearInterface = function () { };
+    WieChitManager.prototype.setupDiv = function (token, div) {
+        div.classList.add('bt_marker');
+    };
+    WieChitManager.prototype.setupFrontDiv = function (token, div) {
+        var faction = token.id.split('_')[1];
+        div.classList.add('bt_marker_side');
+        div.setAttribute('data-side', 'front');
+        div.setAttribute('data-faction', faction);
+        div.setAttribute('data-type', "wieChit");
+        div.setAttribute('data-value', token.value + '');
+    };
+    WieChitManager.prototype.setupBackDiv = function (token, div) {
+        var faction = token.id.split('_')[1];
+        div.classList.add('bt_marker_side');
+        div.setAttribute('data-side', 'back');
+        div.setAttribute('data-faction', faction);
+        div.setAttribute('data-type', "wieChit");
+    };
+    WieChitManager.prototype.isCardVisible = function (token) {
+        return token.revealed;
+    };
+    return WieChitManager;
+}(CardManager));
 var UnitStack = (function (_super) {
     __extends(UnitStack, _super);
     function UnitStack(manager, element, settings, faction) {

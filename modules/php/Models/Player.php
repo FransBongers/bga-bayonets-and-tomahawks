@@ -11,6 +11,7 @@ use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Events;
 use BayonetsAndTomahawks\Managers\Players;
+use BayonetsAndTomahawks\Managers\WarInEuropeChits;
 
 /*
  * Player: all utility functions concerning a player
@@ -45,11 +46,17 @@ class Player extends \BayonetsAndTomahawks\Helpers\DB_Model
     $data = parent::jsonSerialize();
     $isCurrentPlayer = intval($currentPlayerId) == $this->getId();
 
+    $wieChit = WarInEuropeChits::getTopOf(Locations::wieChitPlaceholder($this->getFaction()));
+
     return array_merge(
       $data,
       [
         'faction' => $this->getFaction(),
         'hand' => $isCurrentPlayer ? $this->getHand() : [],
+        'wieChit' => [
+          'hasChit' => $wieChit !== null,
+          'chit' => $isCurrentPlayer || ($wieChit !== null && $wieChit->isRevealed()) ? $wieChit : null,
+        ],
       ],
     );
   }
@@ -63,7 +70,7 @@ class Player extends \BayonetsAndTomahawks\Helpers\DB_Model
   {
     $faction = $this->getFaction();
     if ($faction === BRITISH) {
-      return array_merge(Cards::getInLocationOrdered(Locations::hand(BRITISH))->toArray(),Cards::getInLocationOrdered(Locations::selected(BRITISH))->toArray());
+      return array_merge(Cards::getInLocationOrdered(Locations::hand(BRITISH))->toArray(), Cards::getInLocationOrdered(Locations::selected(BRITISH))->toArray());
     } else if ($faction === FRENCH) {
       return array_merge(
         Cards::getInLocationOrdered(Locations::hand(FRENCH))->toArray(),
@@ -83,7 +90,7 @@ class Player extends \BayonetsAndTomahawks\Helpers\DB_Model
   public function discardReserveCard()
   {
     $cards = $this->getHand();
-    foreach($cards as $card) {
+    foreach ($cards as $card) {
       $card->discard();
     }
   }

@@ -62,6 +62,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public hand: Hand;
   public pools: Pools;
   public tokenManager: TokenManager;
+  public wieChitManager: WieChitManager;
 
   public activeStates: {
     actionActivateStack: ActionActivateStackState;
@@ -174,6 +175,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
 
     this.cardManager = new BTCardManager(this);
     this.tokenManager = new TokenManager(this);
+    this.wieChitManager = new WieChitManager(this);
     this.discard = new VoidStock(
       this.cardManager,
       document.getElementById('bt_discard')

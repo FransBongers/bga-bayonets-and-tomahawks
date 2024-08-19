@@ -1,12 +1,11 @@
 @use 'sass:math';
-@use "sass:map";
-
+@use 'sass:map';
 
 .bt_marker {
-  min-height: calc(var(--btMapScale)* 44px);
-  max-height: calc(var(--btMapScale)* 44px);
-  min-width: calc(var(--btMapScale)* 44px);
-  max-width: calc(var(--btMapScale)* 44px);
+  min-height: calc(var(--btMapScale) * 44px);
+  max-height: calc(var(--btMapScale) * 44px);
+  min-width: calc(var(--btMapScale) * 44px);
+  max-width: calc(var(--btMapScale) * 44px);
 }
 
 .bt_marker_side {
@@ -23,12 +22,12 @@
   border-radius: 5%;
 }
 
-.bt_marker_side[data-type="year_marker"][data-side="front"] {
+.bt_marker_side[data-type='year_marker'][data-side='front'] {
   background-position-x: math.div(6, 7) * 100%;
   background-position-y: math.div(3, 5) * 100%;
 }
 
-.bt_marker_side[data-type="round_marker"][data-side="front"] {
+.bt_marker_side[data-type='round_marker'][data-side='front'] {
   background-position-x: math.div(3, 7) * 100%;
   background-position-y: math.div(3, 5) * 100%;
   min-height: calc(var(--btMarkerScale) * 44px);
@@ -37,97 +36,97 @@
   max-width: calc(var(--btMarkerScale) * 44px);
 }
 
-.bt_marker_side[data-type="battle_marker"][data-side="front"] {
+.bt_marker_side[data-type='battle_marker'][data-side='front'] {
   background-position-x: math.div(6, 7) * 100%;
   background-position-y: 0%;
 }
 
-.bt_marker_side[data-type="british_raid_marker"][data-side="front"] {
+.bt_marker_side[data-type='british_raid_marker'][data-side='front'] {
   background-position-x: math.div(7, 7) * 100%;
   background-position-y: math.div(4, 5) * 100%;
 }
 
-.bt_marker_side[data-type="french_raid_marker"][data-side="front"] {
+.bt_marker_side[data-type='french_raid_marker'][data-side='front'] {
   background-position-x: math.div(0, 7) * 100%;
   background-position-y: math.div(5, 5) * 100%;
 }
 
-.bt_marker_side[data-type="victory_marker"][data-side="front"] {
+.bt_marker_side[data-type='victory_marker'][data-side='front'] {
   background-position-x: math.div(5, 7) * 100%;
   background-position-y: math.div(3, 5) * 100%;
 }
 
-.bt_marker_side[data-type="victory_marker"][data-side="back"] {
+.bt_marker_side[data-type='victory_marker'][data-side='back'] {
   background-position-x: math.div(4, 7) * 100%;
   background-position-y: math.div(3, 5) * 100%;
 }
 
-.bt_marker_side[data-type='british_raided_marker'][data-side="front"] {
+.bt_marker_side[data-type='british_raided_marker'][data-side='front'] {
   background-position-x: math.div(1, 7) * 100%;
   background-position-y: math.div(5, 5) * 100%;
 }
 
-.bt_marker_side[data-type='french_raided_marker'][data-side="front"] {
+.bt_marker_side[data-type='french_raided_marker'][data-side='front'] {
   background-position-x: math.div(2, 7) * 100%;
   background-position-y: math.div(5, 5) * 100%;
 }
 
-.bt_marker_side[data-type='british_control_marker'][data-side="front"] {
+.bt_marker_side[data-type='british_control_marker'][data-side='front'] {
   background-position-x: math.div(0, 7) * 100%;
   background-position-y: math.div(3, 5) * 100%;
 }
 
-.bt_marker_side[data-type='french_control_marker'][data-side="front"] {
+.bt_marker_side[data-type='french_control_marker'][data-side='front'] {
   background-position-x: math.div(1, 7) * 100%;
   background-position-y: math.div(3, 5) * 100%;
 }
 
-.bt_marker_side[data-type="british_battle_marker"][data-side="front"] {
+.bt_marker_side[data-type='british_battle_marker'][data-side='front'] {
   background-position-x: math.div(1, 7) * 100%;
   background-position-y: math.div(1, 5) * 100%;
 }
 
-.bt_marker_side[data-type="french_battle_marker"][data-side="front"] {
+.bt_marker_side[data-type='french_battle_marker'][data-side='front'] {
   background-position-x: math.div(2, 7) * 100%;
   background-position-y: math.div(1, 5) * 100%;
 }
 
-.bt_marker_side[data-type="british_battle_marker"][data-side="back"] {
+.bt_marker_side[data-type='british_battle_marker'][data-side='back'] {
   background-position-x: math.div(3, 7) * 100%;
   background-position-y: math.div(1, 5) * 100%;
 }
 
-.bt_marker_side[data-type="french_battle_marker"][data-side="back"] {
+.bt_marker_side[data-type='french_battle_marker'][data-side='back'] {
   background-position-x: math.div(4, 7) * 100%;
   background-position-y: math.div(1, 5) * 100%;
 }
 
-.bt_marker_side[data-type="marshalTroopsMarker"] {
+.bt_marker_side[data-type='marshalTroopsMarker'] {
   background-position-x: math.div(3, 7) * 100%;
   background-position-y: math.div(0, 5) * 100%;
 }
 
-.bt_marker_side[data-type="routMarker"] {
+.bt_marker_side[data-type='routMarker'] {
   background-position-x: math.div(5, 7) * 100%;
   background-position-y: math.div(1, 5) * 100%;
 }
 
-.bt_marker_side[data-type="outOfSupplyMarker"] {
+.bt_marker_side[data-type='outOfSupplyMarker'] {
   background-position-x: math.div(7, 7) * 100%;
   background-position-y: math.div(1, 5) * 100%;
 }
 
-.bt_marker_side[data-type="openSeasMarker"][data-side="front"] {
+.bt_marker_side[data-type='openSeasMarker'][data-side='front'] {
   background-position-x: math.div(2, 7) * 100%;
   background-position-y: math.div(0, 5) * 100%;
 }
 
-.bt_marker_side[data-type="openSeasMarker"][data-side="back"] {
+.bt_marker_side[data-type='openSeasMarker'][data-side='back'] {
   background-position-x: math.div(1, 7) * 100%;
   background-position-y: math.div(0, 5) * 100%;
 }
 
-.bt_marker_side[data-type="fortConstructionMarker"] {
+.bt_marker_side[data-type='fortConstructionMarker'] {
   background-position-x: math.div(4, 7) * 100%;
   background-position-y: math.div(0, 5) * 100%;
 }
@@ -145,6 +144,51 @@
 .bt_marker_side[data-type='landingMarker'] {
   background-position-x: math.div(0, 7) * 100%;
   background-position-y: math.div(0, 5) * 100%;
+}
+
+.bt_marker_side[data-type='landingMarker'] {
+  background-position-x: math.div(0, 7) * 100%;
+  background-position-y: math.div(0, 5) * 100%;
+}
+
+.bt_marker_side[data-type='wieChit'][data-faction='british'][data-side='back'] {
+  background-position-x: math.div(3, 7) * 100%;
+  background-position-y: math.div(2, 5) * 100%;
+}
+
+.bt_marker_side[data-type='wieChit'][data-faction='british'][data-side='front'][data-value='0'] {
+  background-position-x: math.div(0, 7) * 100%;
+  background-position-y: math.div(2, 5) * 100%;
+}
+
+.bt_marker_side[data-type='wieChit'][data-faction='british'][data-side='front'][data-value='1'] {
+  background-position-x: math.div(1, 7) * 100%;
+  background-position-y: math.div(2, 5) * 100%;
+}
+
+.bt_marker_side[data-type='wieChit'][data-faction='british'][data-side='front'][data-value='2'] {
+  background-position-x: math.div(2, 7) * 100%;
+  background-position-y: math.div(2, 5) * 100%;
+}
+
+.bt_marker_side[data-type='wieChit'][data-faction='french'][data-side='back'] {
+  background-position-x: math.div(7, 7) * 100%;
+  background-position-y: math.div(2, 5) * 100%;
+}
+
+.bt_marker_side[data-type='wieChit'][data-faction='french'][data-side='front'][data-value='0'] {
+  background-position-x: math.div(4, 7) * 100%;
+  background-position-y: math.div(2, 5) * 100%;
+}
+
+.bt_marker_side[data-type='wieChit'][data-faction='french'][data-side='front'][data-value='1'] {
+  background-position-x: math.div(5, 7) * 100%;
+  background-position-y: math.div(2, 5) * 100%;
+}
+
+.bt_marker_side[data-type='wieChit'][data-faction='french'][data-side='front'][data-value='2'] {
+  background-position-x: math.div(6, 7) * 100%;
+  background-position-y: math.div(2, 5) * 100%;
 }
 
 // .bt_marker_test {

@@ -49,6 +49,7 @@ use BayonetsAndTomahawks\Managers\Scenarios;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Units;
+use BayonetsAndTomahawks\Managers\WarInEuropeChits;
 
 use const BayonetsAndTomahawks\OPTION_SCENARIO;
 
@@ -115,6 +116,7 @@ class bayonetsandtomahawks extends Table
         Scenarios::setup($options[OPTION_SCENARIO]);
         Cards::setupNewGame();
         Markers::setupNewGame();
+        WarInEuropeChits::setupNewGame();
 
         $this->setGameStateInitialValue('logging', false);
 

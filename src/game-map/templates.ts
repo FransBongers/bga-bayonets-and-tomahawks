@@ -154,7 +154,7 @@ const tplSailBox = () => `
   <div id="sailBox">
     <div id="${SAIL_BOX}_french_stack"></div>
     <div id="${SAIL_BOX}_british_stack"></div>
-  </div>`
+  </div>`;
 
 const tplGameMap = ({
   gamedatas,
@@ -190,6 +190,16 @@ const tplGameMap = ({
       left: 585.5,
     })}
     ${tplSailBox()}
+    ${tplMarkerSpace({
+      id: `wieChitPlaceholder_french`,
+      top: 24.5,
+      left: 108.5,
+    })}
+    ${tplMarkerSpace({
+      id: `wieChitPlaceholder_british`,
+      top: 24.5,
+      left: 1074.5,
+    })}    
   </div>`;
 };
 // <div class="bt_marker_test" data-marker-type="victory_point"></div>

@@ -239,7 +239,7 @@ class Notifications
     } else if ($backward) {
       $text = clienttranslate('${player_name} moves their Battle Victory Marker ${numberOfPositions} positions backward');
     }
-      
+
     self::notifyAll('moveBattleVictoryMarker', $text, [
       'player' => $player,
       'marker' => $marker->jsonSerialize(),
@@ -471,6 +471,48 @@ class Notifications
       'cardId' => $card->getId(),
     ]);
   }
+
+  public static function drawWieChit($player, $chit)
+  {
+    $text = clienttranslate('${player_name} draws ${tkn_wieChit} from their WIE chit pool');
+
+    self::notify($player, 'drawWieChitPrivate', $text, [
+      'player' => $player,
+      'tkn_wieChit' => implode(':', [$player->getFaction(), $chit->getValue()]),
+    ]);
+
+    self::notifyAll("drawWieChit", $text, [
+      'player' => $player,
+      'tkn_wieChit' => implode(':', [$player->getFaction(), 'back']),
+      'preserve' => ['playerId'],
+    ]);
+  }
+
+  public static function placeWieChit($player, $currentChit, $drawnChit)
+  {
+    $text = $currentChit === null ?
+      clienttranslate('${player_name} places ${tkn_wieChit} on their WIE placeholder') :
+      clienttranslate('${player_name} replaces the token on their WIE placeholder with ${tkn_wieChit}');
+
+    $faction = $player->getFaction();
+
+    self::notify($player, 'placeWieChitPrivate', $text, [
+      'player' => $player,
+      'chit' => $drawnChit,
+      'currentChit' => $currentChit,
+      'faction' => $faction,
+      'tkn_wieChit' => implode(':', [$faction, $drawnChit->getValue()]),
+    ]);
+
+    self::notifyAll("placeWieChit", $text, [
+      'player' => $player,
+      'tkn_wieChit' => implode(':', [$faction, 'back']),
+      'placeChit' => $currentChit === null,
+      'faction' => $faction,
+      'preserve' => ['playerId'],
+    ]);
+  }
+
 
   public static function discardCardFromHand($player, $card)
   {

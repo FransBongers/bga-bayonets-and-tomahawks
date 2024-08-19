@@ -18,6 +18,7 @@ use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\StackActions;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Managers\Markers;
+use BayonetsAndTomahawks\Managers\WarInEuropeChits;
 use BayonetsAndTomahawks\Models\AtomicAction;
 use BayonetsAndTomahawks\Models\Space;
 use BayonetsAndTomahawks\Helpers\BTDice;
@@ -186,7 +187,14 @@ trait DebugTrait
 
   function debug_test()
   {
-    GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH) , OUT_OF_SUPPLY_MARKER, Spaces::get(LAKE_GEORGE), BRITISH);
+    WarInEuropeChits::drawChit(FRENCH);
+
+    // $chit = WarInEuropeChits::getTopOf(Locations::wieChitPool(BRITISH));
+    // $chit->setLocation(Locations::wieChitPlaceholder(BRITISH));
+    // $chit = WarInEuropeChits::getTopOf(Locations::wieChitPool(FRENCH));
+    // $chit->setLocation(Locations::wieChitPlaceholder(FRENCH));
+
+    // Notifications::log('british', WarInEuropeChits::getTopOf(Locations::wieChitPool(BRITISH)));
 
     // Units::get('unit_41')->setLocation(GOASEK);
     // $data = $this->getStacksAndSupplySources();

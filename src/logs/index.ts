@@ -4,6 +4,7 @@ const LOG_TOKEN_NEW_LINE = 'newLine';
 // Game specific
 const LOG_TOKEN_CARD = 'card';
 const LOG_TOKEN_MARKER = 'marker';
+const LOG_TOKEN_WIE_CHIT = 'wieChit';
 const LOG_TOKEN_ROAD = 'road';
 const LOG_TOKEN_UNIT = 'unit';
 const LOG_TOKEN_DIE_RESULT = 'dieResult';
@@ -43,6 +44,8 @@ const getTokenDiv = ({
         game.gamedatas.staticData.units[counterId]?.type,
         reduced
       );
+    case LOG_TOKEN_WIE_CHIT:
+      return tplLogTokenWieChit(value);
     // case LOG_TOKEN_PLAYER_NAME:
     //   const player = game.playerManager
     //     .getPlayers()

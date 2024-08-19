@@ -28,6 +28,11 @@ class GameMap {
   public raidTrack: Record<string, LineStock<BTToken>> = {};
   public openSeasMarkerSailBox: LineStock<BTToken>;
 
+  public wieChitPlaceholders: {
+    [BRITISH]: LineStock<BTWIEChit>;
+    [FRENCH]: LineStock<BTWIEChit>;
+  };
+
   public commanderRerollsTrack: Record<string, LineStock<BTToken>> = {};
   // {
   //   attacker: Record<string, LineStock<BTToken>>;
@@ -412,6 +417,40 @@ class GameMap {
 
   updateGameMap({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {}
 
+  setupWieChits({ gamedatas }) {
+    this.wieChitPlaceholders = {
+      british: new LineStock<BTWIEChit>(
+        this.game.wieChitManager,
+        document.getElementById('wieChitPlaceholder_british'),
+        {
+          center: false,
+        }
+      ),
+      french: new LineStock<BTWIEChit>(
+        this.game.wieChitManager,
+        document.getElementById('wieChitPlaceholder_french'),
+        {
+          center: false,
+        }
+      ),
+    };
+
+    this.updateWieChits({ gamedatas });
+  }
+
+  updateWieChits({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
+    Object.values(gamedatas.players).forEach((player) => {
+      if (player.wieChit.hasChit && player.wieChit.chit === null) {
+        // chit is not visible, add fake one
+        this.placeFakeWieChit(player.faction);
+      } else if (player.wieChit.chit !== null) {
+        const chit = player.wieChit.chit;
+        chit.revealed = true;
+        this.wieChitPlaceholders[player.faction].addCard(chit);
+      }
+    });
+  }
+
   // Setup functions
   setupGameMap({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
     document
@@ -420,6 +459,7 @@ class GameMap {
     this.setupUnitsAndSpaces({ gamedatas });
     this.setupMarkers({ gamedatas });
     this.setupConnections({ gamedatas });
+    this.setupWieChits({ gamedatas });
   }
 
   // ..######...########.########.########.########.########...######.
@@ -475,6 +515,15 @@ class GameMap {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  public async placeFakeWieChit(faction: BRITISH_FACTION | FRENCH_FACTION) {
+    this.wieChitPlaceholders[faction].addCard({
+      id: `wieChit_${faction}`,
+      revealed: false,
+      value: 0,
+      location: `wieChitPlaceholder_${faction}`,
+    });
+  }
 
   public resetConnectionLimits() {
     Object.values(this.connections).forEach((connection) => {

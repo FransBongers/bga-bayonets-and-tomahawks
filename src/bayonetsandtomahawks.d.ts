@@ -74,7 +74,7 @@ interface BayonetsAndTomahawksGame extends Game {
   settings: Settings;
   tokenManager: TokenManager;
   tooltipManager: TooltipManager;
-
+  wieChitManager: WieChitManager;
   cardManager: BTCardManager;
   discard: VoidStock<BTCard>;
   deck: LineStock<BTCard>;
@@ -170,6 +170,13 @@ interface BTUnitStaticData {
   type: string;
 }
 
+interface BTWIEChit {
+  id: string;
+  location: string;
+  value: number;
+  revealed: boolean;
+}
+
 type BTToken = BTMarker | BTUnit;
 
 interface BayonetsAndTomahawksGamedatas extends Gamedatas {
@@ -206,4 +213,8 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
 interface BayonetsAndTomahawksPlayerData extends BgaPlayer {
   hand: BTCard[];
   faction: BRITISH_FACTION | FRENCH_FACTION;
+  wieChit: {
+    chit: BTWIEChit | null;
+    hasChit: boolean;
+  }
 }

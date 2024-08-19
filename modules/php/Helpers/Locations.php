@@ -85,4 +85,12 @@ abstract class Locations extends \APP_DbObject
   {
     return 'victory_points_' . $faction . '_' . $score;
   }
+
+  public static function wieChitPool($faction) {
+    return 'wieChitPool_' . $faction;
+  }
+
+  public static function wieChitPlaceholder($faction) {
+    return 'wieChitPlaceholder_' . $faction;
+  }
 }

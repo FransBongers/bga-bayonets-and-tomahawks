@@ -91,6 +91,8 @@ class NotificationManager {
       'placeUnits',
       'raidPoints',
       'flipUnit',
+      'placeWieChit',
+      'placeWieChitPrivate',
       'removeMarkerFromStack',
       'removeMarkersEndOfActionRound',
       'returnToPool',
@@ -142,13 +144,17 @@ class NotificationManager {
       );
       this.game.framework().notifqueue.setSynchronous(notifName, undefined);
 
-      this.game
-        .framework()
-        .notifqueue.setIgnoreNotificationCheck(
-          'discardCardFromHand',
-          (notif: Notif<{ playerId: number }>) =>
-            notif.args.playerId == this.game.getPlayerId()
-        );
+      ['discardCardFromHand', 'drawWieChit', 'placeWieChit'].forEach(
+        (notifId) => {
+          this.game
+            .framework()
+            .notifqueue.setIgnoreNotificationCheck(
+              notifId,
+              (notif: Notif<{ playerId: number }>) =>
+                notif.args.playerId == this.game.getPlayerId()
+            );
+        }
+      );
     });
   }
 
@@ -546,6 +552,23 @@ class NotificationManager {
   async notif_flipUnit(notif: Notif<NotifReduceUnitArgs>) {
     const { unit } = notif.args;
     this.game.tokenManager.updateCardInformations(unit);
+  }
+
+  async notif_placeWieChit(notif: Notif<NotifPlaceWieChitArgs>) {
+    const { placeChit, faction } = notif.args;
+    if (placeChit) {
+      await this.game.gameMap.placeFakeWieChit(faction);
+    }
+  }
+
+  async notif_placeWieChitPrivate(notif: Notif<NotifPlaceWieChitPrivateArgs>) {
+    const { chit, currentChit, faction } = notif.args;
+    if (currentChit !== null) {
+      await this.game.wieChitManager.removeCard(currentChit);
+    }
+
+    chit.revealed = true;
+    await this.game.gameMap.wieChitPlaceholders[faction].addCard(chit);
   }
 
   async notif_removeMarkerFromStack(

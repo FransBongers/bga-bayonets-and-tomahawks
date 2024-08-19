@@ -3,6 +3,8 @@
 namespace BayonetsAndTomahawks\Models;
 
 use BayonetsAndTomahawks\Core\Globals;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
+use BayonetsAndTomahawks\Managers\WarInEuropeChits;
 
 class Brigade extends AbstractUnit
 {
@@ -30,5 +32,13 @@ class Brigade extends AbstractUnit
   public function hasOfficerGorget()
   {
     return $this->officerGorget;
+  }
+
+  public function eliminate($player)
+  {
+    parent::eliminate($player);
+    if ($this->metropolitan) {
+      WarInEuropeChits::drawChit(BTHelpers::getOtherFaction($this->getFaction()));
+    }
   }
 }
