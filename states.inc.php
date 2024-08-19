@@ -505,6 +505,15 @@ $machinestates = array(
         'possibleactions' => ['actBattleCombineReducedUnits', 'actPassOptionalAction', 'actRestart'],
     ],
 
+    ST_BATTLE_FORT_ELIMINATION => [
+        'name' => 'battleFortElimination',
+        'description' => clienttranslate('${actplayer} may eliminate their Fort'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actBattleFortElimination', 'actPassOptionalAction', 'actRestart'],
+    ],
 
     ST_BATTLE_MILITIA_ROLLS => [
         'name' => 'battleMilitiaRolls',

@@ -9,20 +9,18 @@ use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\BTHelpers;
-use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
-use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Models\Player;
 
-class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
+class BattleFortElimination extends \BayonetsAndTomahawks\Actions\Battle
 {
   public function getState()
   {
-    return ST_BATTLE_RETREAT;
+    return ST_BATTLE_FORT_ELIMINATION;
   }
 
   // ..######..########....###....########.########
@@ -41,17 +39,25 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stBattleRetreat()
+  public function stBattleFortElimination()
   {
     $info = $this->ctx->getInfo();
-    $retreatOptionIds = $info['retreatOptionIds'];
+    $spaceId = $info['spaceId'];
+    $faction = $info['faction'];
+    $isRouted = $info['isRouted'];
+    $space = Spaces::get($spaceId);
 
-    if (count($retreatOptionIds) > 1) {
+    if (!$isRouted) {
       return;
     }
 
-    // Retreat to single option
-    $this->retreat($retreatOptionIds[0]);
+    $fort = Utils::array_find($space->getUnits($faction), function ($unit) {
+      return $unit->isFort();
+    });
+
+    if ($fort !== null) {
+      $this->replaceFort($space, $fort, self::getPlayer());
+    }
 
     $this->resolveAction(['automatic' => true]);
   }
@@ -64,7 +70,7 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreBattleRetreat()
+  public function stPreBattleFortElimination()
   {
   }
 
@@ -77,22 +83,22 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsBattleRetreat()
+  public function argsBattleFortElimination()
   {
     $info = $this->ctx->getInfo();
-    $retreatOptionIds = $info['retreatOptionIds'];
+    $spaceId = $info['spaceId'];
+    $faction = $info['faction'];
+    $space = Spaces::get($spaceId);
 
-    $retreatOptions = [];
-
-    // Add extra check here since args can be executed before state function
-    // that should handle the SAIL_BOX case
-    if ($retreatOptionIds[0] !== SAIL_BOX) {
-      $retreatOptions = Spaces::getMany($retreatOptionIds)->toArray();
-    }
+    $fort = Utils::array_find($space->getUnits($faction), function ($unit) {
+      return $unit->isFort();
+    });
 
     return [
-      'retreatOptions' => $retreatOptions,
-      'retreatOptionIds' => $retreatOptionIds
+      'fort' => $fort,
+      'enemyFort' => Units::getTopOf($faction === BRITISH ? POOL_FRENCH_FORTS : POOL_BRITISH_FORTS),
+      'space' => $space,
+      'faction' => $faction,
     ];
   }
 
@@ -112,30 +118,32 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassBattleRetreat()
+  public function actPassBattleFortElimination()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actBattleRetreat($args)
+  public function actBattleFortElimination($args)
   {
-    self::checkAction('actBattleRetreat');
+    self::checkAction('actBattleFortElimination');
 
-    $spaceId = $args['spaceId'];
+    $choice = $args['choice'];
 
-    $options = $this->argsBattleRetreat()['retreatOptions'];
-
-    $space = Utils::array_find($options, function ($space) use ($spaceId) {
-      return $space->getId() === $spaceId;
-    });
-
-    if ($space === null) {
-      throw new \feException("ERROR 013");
+    if (!in_array($choice, ['eliminate', 'replace'])) {
+      throw new \feException("ERROR 067");
     }
 
-    $this->retreat($spaceId);
+    $stateArgs = $this->argsBattleFortElimination();
+    $fort = $stateArgs['fort'];
+
+    $player = self::getPlayer();
+    if ($choice === 'eliminate') {
+      $fort->eliminate($player);
+    } else {
+      $this->replaceFort($stateArgs['space'], $fort, $player);
+    }
 
     $this->resolveAction($args);
   }
@@ -148,35 +156,24 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  private function retreat($toSpaceId)
+
+  private function replaceFort($space, $fort, $player)
   {
-    $info = $this->ctx->getInfo();
-    $playerId = $this->ctx->getPlayerId();
-    $faction = $info['faction'];
+    $faction = $fort->getFaction();
+    $reducedState = $fort->getReduced();
 
-    $fromSpace = Spaces::get($info['spaceId']);
+    $fort->eliminate($player);
 
-    $units = Utils::filter($fromSpace->getUnits($faction), function ($unit) {
-      return !$unit->isFort();
-    });
+    $newFort = Units::getTopOf($faction === BRITISH ? POOL_FRENCH_FORTS : POOL_BRITISH_FORTS);
 
-    $unitIds = array_map(function ($unit) {
-      return $unit->getId();
-    }, $units);
+    // What should happen if there are no forts left and cannot be replaced?
+    if ($newFort === null) {
+      return;
+    }
 
+    $newFort->setLocation($space->getId());
+    $newFort->setReduced($reducedState);
 
-    // $markers = Markers::getInLocation(Locations::stackMarker($fromSpace->getId(), $faction))->toArray();
-    // Markers::move(array_map(function ($marker) {
-    //   return $marker->getId();
-    // }, $markers), Locations::stackMarker($space->getId(), $faction));
-
-    // Notifications::moveStack(self::getPlayer(), $units, $markers, $fromSpace, $space, null, true);
-    $this->ctx->insertAsBrother(Engine::buildTree([
-      'action' => MOVE_STACK,
-      'playerId' => $playerId,
-      'fromSpaceId' => $fromSpace->getId(),
-      'toSpaceId' => $toSpaceId,
-      'unitIds' => $unitIds,
-    ]));
+    Notifications::placeUnits(Players::getOther($player->getId()), [$newFort], $space, BTHelpers::getOtherFaction($faction));
   }
 }

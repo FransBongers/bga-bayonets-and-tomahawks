@@ -2314,6 +2314,7 @@ var BayonetsAndTomahawks = (function () {
             actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
             battleApplyHits: new BattleApplyHitsState(this),
             battleCombineReducedUnits: new BattleCombineReducedUnitsState(this),
+            battleFortElimination: new BattleFortEliminationState(this),
             battleRetreat: new BattleRetreatState(this),
             battleRollsRerolls: new BattleRollsRerollsState(this),
             battleSelectCommander: new BattleSelectCommanderState(this),
@@ -6191,6 +6192,65 @@ var BattleCombineReducedUnitsState = (function () {
         this.game.addCancelButton();
     };
     return BattleCombineReducedUnitsState;
+}());
+var BattleFortEliminationState = (function () {
+    function BattleFortEliminationState(game) {
+        this.game = game;
+    }
+    BattleFortEliminationState.prototype.onEnteringState = function (args) {
+        debug('Entering BattleFortEliminationState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    BattleFortEliminationState.prototype.onLeavingState = function () {
+        debug('Leaving BattleFortEliminationState');
+    };
+    BattleFortEliminationState.prototype.setDescription = function (activePlayerId) { };
+    BattleFortEliminationState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must eliminate ${tkn_unit_fort} in ${spaceName} or replace with ${tkn_unit_enemyFort}?'),
+            args: {
+                you: '${you}',
+                tkn_unit_fort: "".concat(this.args.fort.counterId, ":").concat(this.args.fort.reduced ? 'reduced' : 'full'),
+                tkn_unit_enemyFort: "".concat(this.args.enemyFort.counterId, ":").concat(this.args.fort.reduced ? 'reduced' : 'full'),
+                spaceName: _(this.args.space.name),
+            },
+        });
+        var stack = this.game.gameMap.stacks[this.args.space.id][this.args.faction];
+        stack.open();
+        this.game.setUnitSelected({ id: this.args.fort.id });
+        this.game.addPrimaryActionButton({
+            text: _('Eliminate'),
+            id: 'eliminate_btn',
+            callback: function () { return _this.updateInterfaceConfirm('eliminate'); },
+        });
+        this.game.addPrimaryActionButton({
+            text: _('Replace'),
+            id: 'replace_btn',
+            callback: function () { return _this.updateInterfaceConfirm('replace'); },
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    BattleFortEliminationState.prototype.updateInterfaceConfirm = function (choice) {
+        var _this = this;
+        this.game.clearPossible();
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actBattleFortElimination',
+                args: {
+                    choice: choice,
+                },
+            });
+        };
+        callback();
+    };
+    return BattleFortEliminationState;
 }());
 var BattleRetreatState = (function () {
     function BattleRetreatState(game) {

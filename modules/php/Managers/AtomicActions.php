@@ -28,6 +28,7 @@ class AtomicActions
     BATTLE_APPLY_HITS => 'BattleApplyHits',
     BATTLE_CLEANUP => 'BattleCleanup',
     BATTLE_COMBINE_REDUCED_UNITS => 'BattleCombineReducedUnits',
+    BATTLE_FORT_ELIMINATION => 'BattleFortElimination',
     BATTLE_MILITIA_ROLLS => 'BattleMilitiaRolls',
     BATTLE_OUTCOME => 'BattleOutcome',
     BATTLE_PENALTIES => 'BattlePenalties',

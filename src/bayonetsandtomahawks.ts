@@ -73,6 +73,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     actionRoundSailBoxLanding: ActionRoundSailBoxLandingState;
     battleApplyHits: BattleApplyHitsState;
     battleCombineReducedUnits: BattleCombineReducedUnitsState;
+    battleFortElimination: BattleFortEliminationState;
     battleRetreat: BattleRetreatState;
     battleRollsRerolls: BattleRollsRerollsState;
     battleSelectCommander: BattleSelectCommanderState;
@@ -135,6 +136,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
       battleApplyHits: new BattleApplyHitsState(this),
       battleCombineReducedUnits: new BattleCombineReducedUnitsState(this),
+      battleFortElimination: new BattleFortEliminationState(this),
       battleRetreat: new BattleRetreatState(this),
       battleRollsRerolls: new BattleRollsRerollsState(this),
       battleSelectCommander: new BattleSelectCommanderState(this),

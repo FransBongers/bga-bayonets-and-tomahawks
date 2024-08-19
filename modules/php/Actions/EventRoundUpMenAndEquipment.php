@@ -248,7 +248,7 @@ class EventRoundUpMenAndEquipment extends \BayonetsAndTomahawks\Models\AtomicAct
     ];
   }
 
-  private function getOptions($faction)
+  public function getOptions($faction)
   {
     if ($faction === BRITISH) {
       return $this->getBritishOptions();

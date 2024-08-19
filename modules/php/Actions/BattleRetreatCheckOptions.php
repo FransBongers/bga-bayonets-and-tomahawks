@@ -55,7 +55,9 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     $info = $this->ctx->getInfo();
     $faction = $info['faction'];
     $space = Spaces::get($info['spaceId']);
-    $units = $space->getUnits($faction);
+    $units = Utils::filter($space->getUnits($faction), function ($unit) {
+      return !$unit->isFort();
+    });
     $player = self::getPlayer();
 
     $nonLightUnits = Utils::filter($units, function ($unit) {

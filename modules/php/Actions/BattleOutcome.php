@@ -47,11 +47,23 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
     $outcome = $this->determineOutcome($space);
 
     $loser = $outcome['loser'];
+    $loserPlayerId = $loser['player']->getId();
+    $loserFaction = $loser['faction'];
+
+    if (Utils::array_find($space->getUnits($loserFaction), function ($unit) {return $unit->isFort();}) !== null) {
+      $this->ctx->insertAsBrother(new LeafNode([
+        'action' => BATTLE_FORT_ELIMINATION,
+        'playerId' => $loserPlayerId,
+        'faction' => $loserFaction,
+        'spaceId' => $space->getId(),
+        'isRouted' => $loser['isRouted'],
+      ]));
+    }
 
     $this->ctx->insertAsBrother(new LeafNode([
       'action' => BATTLE_RETREAT_CHECK_OPTIONS,
-      'playerId' => $loser['player']->getId(),
-      'faction' => $loser['faction'],
+      'playerId' => $loserPlayerId,
+      'faction' => $loserFaction,
       'spaceId' => $space->getId(),
       'isAttacker' => $loser['isAttacker']
     ]));
@@ -59,8 +71,8 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
     if ($loser['isRouted']) {
       $this->ctx->insertAsBrother(new LeafNode([
         'action' => BATTLE_ROUT,
-        'playerId' => $loser['player']->getId(),
-        'faction' => $loser['faction'],
+        'playerId' => $loserPlayerId,
+        'faction' => $loserFaction,
         'spaceId' => $space->getId(),
       ]));
     }
@@ -72,7 +84,7 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
 
     $this->resolveAction([
       'automatic' => true,
-      'loser' => $loser['faction'],
+      'loser' => $loserFaction,
       'winner' => $outcome['winner']['faction']
     ]);
   }

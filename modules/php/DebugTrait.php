@@ -188,21 +188,13 @@ trait DebugTrait
   function debug_test()
   {
 
-    Units::get('unit_7')->setReduced(1);
-    Units::get('unit_11')->setReduced(1);
-    Units::get('unit_10')->setReduced(1);
+    Units::get('unit_36')->setLocation(ALBANY);
+    Units::get('unit_35')->setLocation(ALBANY);
     
     
+    
 
-    $action = AtomicActions::get(BATTLE_COMBINE_REDUCED_UNITS);
 
-    $options = $action->getOptions(Spaces::get(QUEBEC), FRENCH);
-
-    Notifications::log('options', $options);
-    $canCombineReduced = Utils::array_some(array_values($options), function ($reducedUnitsForType) {
-      return count($reducedUnitsForType) >= 2;
-    });
-    Notifications::log('canCombineReduced', $canCombineReduced);
 
     // WarInEuropeChits::drawChit(FRENCH);
 
