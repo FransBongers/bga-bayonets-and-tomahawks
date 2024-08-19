@@ -8,6 +8,7 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Markers;
@@ -70,7 +71,10 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
 
     $this->placeMarkers($space, $attackingFaction, $defendingFaction);
 
+    // Add militia markers
+    $this->placeMilitia($space, $playersPerFaction);
 
+    
     $this->battlePenalties($space, $attackingPlayer, $attackingFaction, $defendingPlayer, $defendingFaction);
 
     $this->selectCommanders($units, [$attackingPlayer, $defendingPlayer], $space);
@@ -154,6 +158,30 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     $defenderMarker->setLocation(Locations::battleTrack(false, 0));
 
     Notifications::battleStart($space, $attackerMarker, $defenderMarker);
+  }
+
+  private function placeMilitia($space, $playersPerFaction)
+  {
+    $numberOfMilitia = $space->getMilitia();
+    $militiaFaction = $space->getDefaultControl();
+
+    if ($space->getControl() !== $militiaFaction) {
+      $numberOfMilitia--;
+    }
+    if ($numberOfMilitia <= 0) {
+      return;
+    }
+
+    $markerLocation = Locations::stackMarker($space->getId(), $militiaFaction);
+
+    $type = $militiaFaction === BRITISH ? BRITISH_MILITIA_MARKER : FRENCH_MILITIA_MARKER;
+    $markers = Markers::getMarkersFromSupply($type, $numberOfMilitia);
+    
+    foreach($markers as $marker) {
+      $marker->setLocation($markerLocation);
+    }
+
+    Notifications::placeStackMarker($playersPerFaction[$militiaFaction], $markers, $space);
   }
 
   private function battlePenalties($space, $attackingPlayer, $attackingFaction, $defendingPlayer, $defendingFaction)

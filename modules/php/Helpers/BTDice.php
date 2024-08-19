@@ -8,4 +8,12 @@ class BTDice extends \APP_DbObject
     $result = bga_rand(0,5);
     return DIE_FACES[$result];
   }
+
+  public static function rollMultiple($nbr) {
+    $diceResults = [];
+    for ($i = 0; $i < $nbr; $i++) {
+      $diceResults[] = self::roll();
+    }
+    return $diceResults;
+  }
 }

@@ -3,6 +3,7 @@
 namespace BayonetsAndTomahawks\Core;
 
 use BayonetsAndTomahawks\Helpers\Locations;
+use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Spaces;
 
 class Notifications
@@ -165,6 +166,23 @@ class Notifications
     ];
   }
 
+  public static function getMarkersLog($markers)
+  {
+    $markersLog = '';
+    $markersLogArgs = [];
+
+    foreach ($markers as $index => $unit) {
+      $key = 'tkn_marker_' . $index;
+      $markersLog = $markersLog . '${' . $key . '}';
+      $markersLogArgs[$key] = $unit->getType();
+    }
+
+    return [
+      'log' => $markersLog,
+      'args' => $markersLogArgs,
+    ];
+  }
+
   public static function diceResultsLog($diceResults)
   {
     $diceResultsLog = [];
@@ -176,7 +194,7 @@ class Notifications
     };
 
     return [
-      'log' => $diceResultsLog,
+      'log' => implode('', $diceResultsLog),
       'args' => $diceResultsArgs,
     ];
   }
@@ -282,6 +300,14 @@ class Notifications
     ]);
   }
 
+  public static function battleMilitiaRoll($player, $diceResults)
+  {
+    self::message(clienttranslate('${player_name} rolls ${diceResultsLog} with their remaining Militia'), [
+      'player' => $player,
+      'diceResultsLog' => self::diceResultsLog($diceResults),
+    ]);
+  }
+
   public static function battleRolls($player, $battleRollsSequenceStep, $diceResults, $unitIds)
   {
     // TODO: replace with utility function
@@ -298,10 +324,11 @@ class Notifications
       'player' => $player,
       // 'tkn_boldText_space' => $space->getName(),
       // 'space' => $space,
-      'diceResultsLog' => [
-        'log' => implode('', $diceResultsLog),
-        'args' => $diceResultsArgs,
-      ],
+      'diceResultsLog' => self::diceResultsLog($diceResults),
+      //  [
+      //   'log' => implode('', $diceResultsLog),
+      //   'args' => $diceResultsArgs,
+      // ],
       'battleRollsSequenceStep' => $battleRollsSequenceStep,
       // 'i18n' => ['tkn_boldText_space']
     ]);
@@ -716,12 +743,12 @@ class Notifications
     self::message(clienttranslate('No French Fleet in the fleet pool to remove'), []);
   }
 
-  public static function placeStackMarker($player, $marker, $space)
+  public static function placeStackMarker($player, $markers, $space)
   {
-    self::notifyAll("placeStackMarker", clienttranslate('${player_name} places ${tkn_marker} on their stack in ${tkn_boldText_spaceName}'), [
+    self::notifyAll("placeStackMarker", clienttranslate('${player_name} places ${markerLog} on their stack in ${tkn_boldText_spaceName}'), [
       'player' => $player,
-      'marker' => $marker->jsonSerialize(),
-      'tkn_marker' => $marker->getType(),
+      'markers' => Utils::jsonSerialize($markers),
+      'markerLog' => self::getMarkersLog($markers),
       'tkn_boldText_spaceName' => $space->getName(),
       'i18n' => ['tkn_boldText_spaceName'],
     ]);

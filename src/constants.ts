@@ -125,12 +125,16 @@ const LANDING_MARKER = 'landingMarker';
 const MARSHAL_TROOPS_MARKER = 'marshalTroopsMarker';
 const OUT_OF_SUPPLY_MARKER = 'outOfSupplyMarker';
 const ROUT_MARKER = 'routMarker';
+const BRITISH_MILITIA_MARKER = 'britishMilitiaMarker';
+const FRENCH_MILITIA_MARKER = 'frenchMilitiaMarker';
 
 const STACK_MARKERS = [
   LANDING_MARKER,
   MARSHAL_TROOPS_MARKER,
   OUT_OF_SUPPLY_MARKER,
   ROUT_MARKER,
+  BRITISH_MILITIA_MARKER,
+  FRENCH_MILITIA_MARKER,
 ];
 
 const FORT_CONSTRUCTION_MARKER = 'fortConstructionMarker';

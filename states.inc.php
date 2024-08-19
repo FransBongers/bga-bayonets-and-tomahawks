@@ -495,6 +495,14 @@ $machinestates = array(
         'transitions' => [],
     ],
 
+    ST_BATTLE_MILITIA_ROLLS => [
+        'name' => 'battleMilitiaRolls',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
     ST_BATTLE_PREPARATION => [
         'name' => 'battlePreparation',
         'description' => '',

@@ -526,8 +526,11 @@ class NotificationManager {
   }
 
   async notif_placeStackMarker(notif: Notif<NotifPlaceStackMarkerArgs>) {
-    const { marker } = notif.args;
-    await this.game.gameMap.addMarkerToStack(marker);
+    const { markers } = notif.args;
+
+    await Promise.all(
+      markers.map((marker) => this.game.gameMap.addMarkerToStack(marker))
+    );
   }
 
   async notif_placeUnitInLosses(notif: Notif<NotifPlaceUnitInLossesArgs>) {

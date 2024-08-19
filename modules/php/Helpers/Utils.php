@@ -105,6 +105,19 @@ abstract class Utils extends \APP_DbObject
     return (substr($string, 0, $len) === $startString);
   }
 
+  public static function getIds($arrayOfItems)
+  {
+    return array_map(function ($item) {
+      return $item->getId();
+    }, $arrayOfItems);
+  }
+
+  public static function jsonSerialize($arrayOfItems)
+  {
+    return array_map(function ($item) {
+      return $item->jsonSerialize();
+    }, $arrayOfItems);
+  }
 
   // .##.....##.########.##.......########..########.########...######.
   // .##.....##.##.......##.......##.....##.##.......##.....##.##....##

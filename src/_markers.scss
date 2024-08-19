@@ -191,6 +191,17 @@
   background-position-y: math.div(2, 5) * 100%;
 }
 
+.bt_marker_side[data-type='britishMilitiaMarker'] {
+  background-position-x: math.div(7, 7) * 100%;
+  background-position-y: math.div(0, 5) * 100%;
+}
+
+.bt_marker_side[data-type='frenchMilitiaMarker'] {
+  background-position-x: math.div(0, 7) * 100%;
+  background-position-y: math.div(1, 5) * 100%;
+}
+
+
 // .bt_marker_test {
 //   background-image: url('img/markers_2.webp');
 //   height: calc(var(--btMapScale) * 37px);

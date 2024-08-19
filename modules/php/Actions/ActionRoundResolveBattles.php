@@ -59,6 +59,9 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
             'playerId' => $playerId,
           ],
           [
+            'action' => BATTLE_MILITIA_ROLLS,
+          ],
+          [
             'action' => BATTLE_OUTCOME,
             'playerId' => $playerId,
           ],

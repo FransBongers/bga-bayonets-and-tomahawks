@@ -70,7 +70,11 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
     // Place commanders with their respective stack
     // retreat defeated force
 
-    $this->resolveAction(['automatic' => true]);
+    $this->resolveAction([
+      'automatic' => true,
+      'loser' => $loser['faction'],
+      'winner' => $outcome['winner']['faction']
+    ]);
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##

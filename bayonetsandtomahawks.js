@@ -2142,11 +2142,15 @@ var LANDING_MARKER = 'landingMarker';
 var MARSHAL_TROOPS_MARKER = 'marshalTroopsMarker';
 var OUT_OF_SUPPLY_MARKER = 'outOfSupplyMarker';
 var ROUT_MARKER = 'routMarker';
+var BRITISH_MILITIA_MARKER = 'britishMilitiaMarker';
+var FRENCH_MILITIA_MARKER = 'frenchMilitiaMarker';
 var STACK_MARKERS = [
     LANDING_MARKER,
     MARSHAL_TROOPS_MARKER,
     OUT_OF_SUPPLY_MARKER,
     ROUT_MARKER,
+    BRITISH_MILITIA_MARKER,
+    FRENCH_MILITIA_MARKER,
 ];
 var FORT_CONSTRUCTION_MARKER = 'fortConstructionMarker';
 var ROAD_CONSTRUCTION_MARKER = 'roadConstructionMarker';
@@ -3895,9 +3899,14 @@ var GameMap = (function () {
         return __awaiter(this, void 0, void 0, function () {
             var splitLocation;
             return __generator(this, function (_a) {
-                splitLocation = marker.location.split('_');
-                this.stacks[splitLocation[0]][splitLocation[1]].addCard(marker);
-                return [2];
+                switch (_a.label) {
+                    case 0:
+                        splitLocation = marker.location.split('_');
+                        return [4, this.stacks[splitLocation[0]][splitLocation[1]].addCard(marker)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
             });
         });
     };
@@ -4792,12 +4801,13 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_placeStackMarker = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var marker;
+            var markers;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        marker = notif.args.marker;
-                        return [4, this.game.gameMap.addMarkerToStack(marker)];
+                        markers = notif.args.markers;
+                        return [4, Promise.all(markers.map(function (marker) { return _this.game.gameMap.addMarkerToStack(marker); }))];
                     case 1:
                         _a.sent();
                         return [2];

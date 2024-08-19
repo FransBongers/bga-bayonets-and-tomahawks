@@ -103,3 +103,8 @@ html {
 #turnBasedNotesIncent {
   display: none;
 }
+
+/* Hide player is now online, player is now offline messages */
+.notif_playerstatus {
+  display: none !important;
+}

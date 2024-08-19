@@ -11,6 +11,18 @@ use BayonetsAndTomahawks\Managers\Units;
 
 class GameMap extends \APP_DbObject
 {
+  public static function updateControl($player, $space)
+  {
+    $faction = $player->getFaction();
+
+    $space->setControl($faction);
+    Notifications::takeControl($player, $space);
+
+    if ($space->getVictorySpace()) {
+      Players::scoreVictoryPoints($player, $space->getValue());
+    }
+  }
+
   public static function getFriendlySeaZones($faction)
   {
     if ($faction === FRENCH) {
@@ -85,10 +97,10 @@ class GameMap extends \APP_DbObject
     $markerLocation = Locations::stackMarker($space->getId(), $faction);
     $existingMarker = Markers::getOfTypeInLocation($type, $markerLocation);
     if (count($existingMarker) === 0) {
-      $marker = Markers::getMarkerFromSupply($type);
+      $marker = Markers::getMarkersFromSupply($type)[0];
       $marker->setLocation($markerLocation);
 
-      Notifications::placeStackMarker($player, $marker, $space);
+      Notifications::placeStackMarker($player, [$marker], $space);
     }
   }
 

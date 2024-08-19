@@ -8,7 +8,8 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
-use BayonetsAndTomahawks\Helpers\GameMap;
+use BayonetsAndTomahawks\Helpers\BTDice;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Markers;
@@ -16,12 +17,11 @@ use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Models\Player;
 
-class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
+class BattleMilitiaRolls extends \BayonetsAndTomahawks\Actions\Battle
 {
-
   public function getState()
   {
-    return ST_BATTLE_CLEANUP;
+    return ST_BATTLE_MILITIA_ROLLS;
   }
 
   // ..######..########....###....########.########
@@ -40,36 +40,34 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stBattleCleanup()
+  public function stBattleMilitiaRolls()
   {
-    $parentInfo = $this->ctx->getParent()->getInfo();
-    $space = Spaces::get($parentInfo['spaceId']);
-
-    $defender = $space->getDefender();
-    $attacker = Players::otherFaction($defender);
-
-    // Return battle markers
-    $attackerMarker = Markers::get($this->factionBattleMarkerMap[$attacker]);
-    $defenderMarker = Markers::get($this->factionBattleMarkerMap[$defender]);
-
-    $attackerMarker->setLocation(BATTLE_MARKERS_POOL);
-    $defenderMarker->setLocation(BATTLE_MARKERS_POOL);
-
-    // Do not remove battle marker if defeated defender on Fortress
-    $space->setBattle(0);
-    $space->setDefender(null);
-
-    // Flip Open Seas marker if applicable
-
     $playersPerFaction = Players::getPlayersForFactions();
-    $outcomeResolutionArgs = $this->ctx->getParent()->getResolvedActions([BATTLE_OUTCOME])[0]->getActionResolutionArgs();
-    $winningFaction = $outcomeResolutionArgs['winner'];
 
-    $this->removeMarkers($space, $playersPerFaction);
+    $parentInfo = $this->ctx->getParent()->getInfo();
+    $spaceId = $parentInfo['spaceId'];
+    $space = Spaces::get($spaceId);
 
-    $this->updateControl($space, $winningFaction, $playersPerFaction);
+    $militia = [
+      BRITISH => Markers::getOfTypeInLocation(BRITISH_MILITIA_MARKER, $space->getId()),
+      FRENCH => Markers::getOfTypeInLocation(FRENCH_MILITIA_MARKER, $space->getId()),
+    ];
 
-    Notifications::battleCleanup($space, $attackerMarker, $defenderMarker);
+    foreach ([BRITISH, FRENCH] as $faction) {
+      $militiaCount = count($militia[$faction]);
+      if (count($militia[$faction]) === 0) {
+        continue;
+      }
+      $diceResults = BTDice::rollMultiple($militiaCount);
+      // Notifications::log('diceResults', $diceResults);
+      Notifications::battleMilitiaRoll($playersPerFaction[$faction], $diceResults);
+      $flagCount = count(Utils::filter($diceResults, function ($dieResult) {
+        return $dieResult === FLAG;
+      }));
+      if ($flagCount > 0) {
+        $this->moveBattleVictoryMarker($playersPerFaction[$faction], $faction, $flagCount);
+      }
+    }
 
     $this->resolveAction(['automatic' => true]);
   }
@@ -82,7 +80,7 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreBattleCleanup()
+  public function stPreBattleMilitiaRolls()
   {
   }
 
@@ -95,7 +93,7 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsBattleCleanup()
+  public function argsBattleMilitiaRolls()
   {
 
 
@@ -118,16 +116,16 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassBattleCleanup()
+  public function actPassBattleMilitiaRolls()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actBattleCleanup($args)
+  public function actBattleMilitiaRolls($args)
   {
-    self::checkAction('actBattleCleanup');
+    self::checkAction('actBattleMilitiaRolls');
 
 
 
@@ -142,24 +140,19 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  private function removeMarkers($space, $playersPerFaction)
+  private function getDiceWithFace($diceResults, $dieFace)
   {
-    $markers = Markers::getInLocationLike($space->getId());
-    $markersToRemove = [BRITISH_MILITIA_MARKER, FRENCH_MILITIA_MARKER, LANDING_MARKER, MARSHAL_TROOPS_MARKER];
-    foreach($markers as $marker) {
-      if (!in_array($marker->getType(), $markersToRemove)) {
-        continue;
-      }
-      $owner = explode('_', $marker->getLocation())[1];
-      $marker->remove($playersPerFaction[$owner]);
-    }
+    return Utils::filter($diceResults, function ($dieResult) use ($dieFace) {
+      return $dieResult === $dieFace;
+    });
   }
 
-  private function updateControl($space, $winningFaction, $playersPerFaction)
-  {
-    if ($space->getControl() === $winningFaction) {
-      return;
-    }
-    GameMap::updateControl($playersPerFaction[$winningFaction], $space);
-  }
+  // .########........###....##....##.########.....########
+  // .##.....##......##.##...###...##.##.....##.......##...
+  // .##.....##.....##...##..####..##.##.....##.......##...
+  // .########.....##.....##.##.##.##.##.....##.......##...
+  // .##.....##....#########.##..####.##.....##.......##...
+  // .##.....##....##.....##.##...###.##.....##.......##...
+  // .########.....##.....##.##....##.########........##...
+
 }

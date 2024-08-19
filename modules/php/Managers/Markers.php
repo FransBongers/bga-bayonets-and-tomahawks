@@ -43,25 +43,27 @@ class Markers extends \BayonetsAndTomahawks\Helpers\Pieces
   // .##....##..##..........##.......##....##.......##....##..##....##
   // ..######...########....##.......##....########.##.....##..######.
 
-  public static function getMarkerFromSupply($type)
+  public static function getMarkersFromSupply($type, $nbr = 1)
   {
-    $marker = self::getTopOf(Locations::markerSupply($type));
-    if ($marker !== null) {
-      return $marker;
+    $markers = self::getTopOf(Locations::markerSupply($type), $nbr, false)->toArray();
+
+    if (count($markers) === $nbr) {
+      return $markers;
     }
 
-    // Out of markers, add extra to supply
+    // Not enough markers, add extra to supply
     $extraMarkers = [
       [
         "id" => $type . "_{INDEX}",
-        "nbr" => 10,
+        "nbr" => $nbr + 9,
         "nbrStart" => count(self::getMarkersOfType($type)) + 1,
         "location" => Locations::markerSupply($type),
       ]
     ];
 
     self::create($extraMarkers, null);
-    return self::getTopOf(Locations::markerSupply($type));
+    $markers = self::getTopOf(Locations::markerSupply($type), $nbr, false)->toArray();
+    return $markers;
   }
 
   public static function getMarkersOfType($type)

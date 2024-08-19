@@ -9,6 +9,7 @@ use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\BTHelpers;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
@@ -77,12 +78,13 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
       $space->getControl() !== $playerFaction;
 
     if ($playerTakesControl) {
-      $space->setControl($playerFaction);
-      Notifications::takeControl($player, $space);
+      GameMap::updateControl($player, $space);
+      // $space->setControl($playerFaction);
+      // Notifications::takeControl($player, $space);
 
-      if ($space->getVictorySpace()) {
-        Players::scoreVictoryPoints($player, $space->getValue());
-      }
+      // if ($space->getVictorySpace()) {
+      //   Players::scoreVictoryPoints($player, $space->getValue());
+      // }
     }
 
     $source = $info['source'];

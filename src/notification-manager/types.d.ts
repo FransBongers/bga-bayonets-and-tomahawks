@@ -152,7 +152,7 @@ interface NotifPlaceUnitsArgs extends NotifWithPlayerArgs {
 }
 
 interface NotifPlaceStackMarkerArgs extends NotifWithPlayerArgs {
-  marker: BTMarker;
+  markers: BTMarker[];
 }
 
 interface NotifPlaceUnitInLossesArgs extends NotifWithPlayerArgs {

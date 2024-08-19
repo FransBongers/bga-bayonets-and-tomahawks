@@ -9,6 +9,7 @@ use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\BTDice;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Markers;
@@ -215,6 +216,8 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
     $processedDice = [];
     $possibleUnitsToApplyHitTo = [];
 
+
+    // B & T result has not effect for these unit types
     if (in_array($battleRollsSequenceStep, [NON_INDIAN_LIGHT, INDIAN, MILITIA])) {
       return [
         'unprocessedDice' => [],
@@ -225,6 +228,8 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
     $enemyBrigades = Utils::filter($space->getUnits(), function ($unit) use ($faction) {
       return $unit->getFaction() !== $faction && $unit->isBrigade();
     });
+    $enemyMilitiaMarkers = Markers::getOfTypeInLocation($faction === BRITISH ? FRENCH_MILITIA_MARKER : BRITISH_MILITIA_MARKER, $space->getId());
+    $enemyPlayer = Players::getPlayerForFaction(BTHelpers::getOtherFaction($faction));
 
     while (count($unprocessedDice) > 0) {
       $dieResult = array_pop($unprocessedDice);
@@ -235,8 +240,10 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
         break;
       }
 
-      if (in_array($battleRollsSequenceStep, [HIGHLAND_BRIGADES, METROPOLITAN_BRIGADES, NON_METROPOLITAN_BRIGADES])) {
+      if (in_array($battleRollsSequenceStep, [HIGHLAND_BRIGADES, METROPOLITAN_BRIGADES, NON_METROPOLITAN_BRIGADES]) && count($enemyMilitiaMarkers) > 0) {
         // Remove 1 enemy Militia
+        $militia = array_pop($enemyMilitiaMarkers);
+        $militia->remove($enemyPlayer);
       }
 
       if (!in_array($battleRollsSequenceStep, [HIGHLAND_BRIGADES, METROPOLITAN_BRIGADES, ARTILLERY, FORT, BASTION])) {
@@ -284,7 +291,7 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
   // .##.....##.####....##.....######.
 
   /**
-   * allDiceResults for this stap as in info
+   * allDiceResults for this step as in info
    * processedDice, dice that were being resolved (ie all hit dice, all B&Ts)
    * unprocessedDice, all dice that of processedDice, that still need to be processed
    */

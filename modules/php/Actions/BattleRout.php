@@ -50,13 +50,14 @@ class BattleRout extends \BayonetsAndTomahawks\Actions\Battle
 
     Notifications::battleRout($faction);
 
+    // TODO: refactor to use GameMap function?
     $markerLocation = Locations::stackMarker($space->getId(), $faction);
     $existingMarker = Markers::getOfTypeInLocation(ROUT_MARKER, $markerLocation);
     if (count($existingMarker) === 0) {
-      $marker = Markers::getMarkerFromSupply(ROUT_MARKER);
+      $marker = Markers::getMarkersFromSupply(ROUT_MARKER)[0];
       $marker->setLocation($markerLocation);
   
-      Notifications::placeStackMarker($player, $marker, $space);
+      Notifications::placeStackMarker($player, [$marker], $space);
     }
 
     $unitsToEliminate = $this->getUnitsToEliminate($space, $faction);

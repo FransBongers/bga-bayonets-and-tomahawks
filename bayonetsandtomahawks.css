@@ -1042,6 +1042,8 @@ body > .card {
   margin-top: 3px;
   vertical-align: middle;
   border: 1px solid black;
+  margin-left: 1px;
+  margin-right: 1px;
 }
 #pagemaintitletext .bt_log_die,
 #gameaction_status .bt_log_die {
@@ -1050,6 +1052,8 @@ body > .card {
   vertical-align: middle;
   top: -3px;
   margin-top: 3px;
+  margin-left: 1px;
+  margin-right: 1px;
 }
 
 .log > .roundedbox .bt_log_card,
@@ -1078,6 +1082,8 @@ body > .card {
   margin-top: 3px;
   vertical-align: middle;
   border: 1px solid black;
+  margin-left: 1px;
+  margin-right: 1px;
 }
 .log > .roundedbox .bt_log_die,
 .log > .roundedboxinner .bt_log_die {
@@ -2962,6 +2968,16 @@ body > .card {
   background-position-y: 40%;
 }
 
+.bt_marker_side[data-type=britishMilitiaMarker] {
+  background-position-x: 100%;
+  background-position-y: 0%;
+}
+
+.bt_marker_side[data-type=frenchMilitiaMarker] {
+  background-position-x: 0%;
+  background-position-y: 20%;
+}
+
 #show_settings {
   height: 40px;
   width: 50px;
@@ -3480,6 +3496,11 @@ html {
 /* Hide the "You may note something for next time..." popup that would appear. */
 #turnBasedNotesIncent {
   display: none;
+}
+
+/* Hide player is now online, player is now offline messages */
+.notif_playerstatus {
+  display: none !important;
 }
 
 /*# sourceMappingURL=bayonetsandtomahawks.css.map */

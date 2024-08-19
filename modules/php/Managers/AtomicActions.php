@@ -27,6 +27,7 @@ class AtomicActions
     ACTION_ROUND_SAIL_BOX_LANDING => 'ActionRoundSailBoxLanding',
     BATTLE_APPLY_HITS => 'BattleApplyHits',
     BATTLE_CLEANUP => 'BattleCleanup',
+    BATTLE_MILITIA_ROLLS => 'BattleMilitiaRolls',
     BATTLE_OUTCOME => 'BattleOutcome',
     BATTLE_PREPARATION => 'BattlePreparation',
     BATTLE_RETREAT => 'BattleRetreat',

@@ -534,7 +534,7 @@ class GameMap {
 
   public async addMarkerToStack(marker: BTMarker) {
     const splitLocation = marker.location.split('_');
-    this.stacks[splitLocation[0]][splitLocation[1]].addCard(marker);
+    await this.stacks[splitLocation[0]][splitLocation[1]].addCard(marker);
   }
 
   public addMarkerToSpace({
