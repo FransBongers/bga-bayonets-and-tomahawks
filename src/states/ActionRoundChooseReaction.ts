@@ -45,7 +45,7 @@ class ActionRoundChooseReactionState implements State {
 
     this.addActionPointButtons();
 
-    this.game.addPassButton({ optionalAction: this.args.optionalAction });
+    this.game.addPassButton({ optionalAction: this.args.optionalAction, text: _('Do not hold AP for Reaction') });
     this.game.addUndoButtons(this.args);
   }
 

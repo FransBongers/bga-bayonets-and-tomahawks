@@ -187,7 +187,7 @@ trait DebugTrait
 
   function debug_test()
   {
-    WarInEuropeChits::drawChit(FRENCH);
+    // WarInEuropeChits::drawChit(FRENCH);
 
     // $chit = WarInEuropeChits::getTopOf(Locations::wieChitPool(BRITISH));
     // $chit->setLocation(Locations::wieChitPlaceholder(BRITISH));
@@ -196,7 +196,7 @@ trait DebugTrait
 
     // Notifications::log('british', WarInEuropeChits::getTopOf(Locations::wieChitPool(BRITISH)));
 
-    // Units::get('unit_41')->setLocation(GOASEK);
+    Units::get('unit_31')->setLocation(ALBANY);
     // $data = $this->getStacksAndSupplySources();
     // Notifications::log('getStacksAndSupplySources', $data);
 

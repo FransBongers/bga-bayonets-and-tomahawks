@@ -265,7 +265,7 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
       // }
     }
 
-    $this->resolveAction($args);
+    $this->resolveAction($args, true);
   }
 
   //  .##.....##.########.####.##.......####.########.##....##

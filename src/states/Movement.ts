@@ -87,20 +87,20 @@ class MovementState implements State {
           : DISABLED,
     });
 
-    if (
-      [SAIL_ARMY_AP, SAIL_ARMY_AP_2X].includes(this.args.source) &&
-      this.args.units.some(
-        (unit) =>
-          this.game.gamedatas.staticData.units[unit.counterId].type === FLEET
-      )
-    ) {
-      this.game.addPrimaryActionButton({
-        id: 'sail_move_btn',
-        text: _('Sail Move'),
-        callback: () => this.updateInterfaceConfirm(true),
-        extraClasses: this.isSailMovePossible() ? '' : DISABLED,
-      });
-    }
+    // if (
+    //   [SAIL_ARMY_AP, SAIL_ARMY_AP_2X].includes(this.args.source) &&
+    //   this.args.units.some(
+    //     (unit) =>
+    //       this.game.gamedatas.staticData.units[unit.counterId].type === FLEET
+    //   )
+    // ) {
+    //   this.game.addPrimaryActionButton({
+    //     id: 'sail_move_btn',
+    //     text: _('Sail Move'),
+    //     callback: () => this.updateInterfaceConfirm(true),
+    //     extraClasses: this.isSailMovePossible() ? '' : DISABLED,
+    //   });
+    // }
 
     this.game.addSecondaryActionButton({
       id: 'select_all_btn',

@@ -5891,7 +5891,7 @@ var ActionRoundChooseReactionState = (function () {
             },
         });
         this.addActionPointButtons();
-        this.game.addPassButton({ optionalAction: this.args.optionalAction });
+        this.game.addPassButton({ optionalAction: this.args.optionalAction, text: _('Do not hold AP for Reaction') });
         this.game.addUndoButtons(this.args);
     };
     ActionRoundChooseReactionState.prototype.updateInterfaceConfirm = function (_a) {
@@ -8138,17 +8138,6 @@ var MovementState = (function () {
                 ? ''
                 : DISABLED,
         });
-        if ([SAIL_ARMY_AP, SAIL_ARMY_AP_2X].includes(this.args.source) &&
-            this.args.units.some(function (unit) {
-                return _this.game.gamedatas.staticData.units[unit.counterId].type === FLEET;
-            })) {
-            this.game.addPrimaryActionButton({
-                id: 'sail_move_btn',
-                text: _('Sail Move'),
-                callback: function () { return _this.updateInterfaceConfirm(true); },
-                extraClasses: this.isSailMovePossible() ? '' : DISABLED,
-            });
-        }
         this.game.addSecondaryActionButton({
             id: 'select_all_btn',
             text: _('Select all'),

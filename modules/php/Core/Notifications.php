@@ -440,6 +440,7 @@ class Notifications
       'tkn_boldText_spaceName' => $space->getName(),
       'faction' => $faction,
       'fort' => $fort !== null ? $fort->jsonSerialize() : null,
+      'tkn_unit' => $fort !== null ? $fort->getCounterId() : null,
       'option' => $option,
       'space' => $space->jsonSerialize(),
       'i18n' => ['tkn_boldText_spaceName']
