@@ -39,6 +39,12 @@ interface OnEnteringBattleApplyHitsStateArgs extends CommonArgs {
   eliminate: boolean;
 }
 
+interface OnEnteringBattleCombineReducedUnitsStateArgs extends CommonArgs {
+  options: Record<string, BTUnit[]>;
+  spaceId: string;
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+}
+
 interface OnEnteringBattleRetreatStateArgs extends CommonArgs {
   retreatOptions: BTSpace[];
 }

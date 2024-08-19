@@ -11,6 +11,7 @@ use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\AtomicActions;
 use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
@@ -66,18 +67,20 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     // $players = Players::getAll()->toArray();
     $playersPerFaction = Players::getPlayersForFactions();
 
-    $attackingPlayer = $playersPerFaction[$attackingFaction];
-    $defendingPlayer = $playersPerFaction[$defendingFaction];
+    // $attackingPlayer = $playersPerFaction[$attackingFaction];
+    // $defendingPlayer = $playersPerFaction[$defendingFaction];
 
     $this->placeMarkers($space, $attackingFaction, $defendingFaction);
 
     // Add militia markers
     $this->placeMilitia($space, $playersPerFaction);
 
-    
-    $this->battlePenalties($space, $attackingPlayer, $attackingFaction, $defendingPlayer, $defendingFaction);
+    // Check combining reduced units
+    foreach ([$defendingFaction, $attackingFaction] as $faction) {
+      $this->checkIfReducedUnitsCanBeCombined($space, $faction, $playersPerFaction[$faction]);
+    }
 
-    $this->selectCommanders($units, [$attackingPlayer, $defendingPlayer], $space);
+    // $this->selectCommanders($units, [$attackingPlayer, $defendingPlayer], $space);
 
     $this->resolveAction(['automatic' => true]);
   }
@@ -150,6 +153,8 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+
+
   private function placeMarkers($space, $attackingFaction, $defendingFaction)
   {
     $attackerMarker = Markers::get($this->factionBattleMarkerMap[$attackingFaction]);
@@ -176,89 +181,89 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
 
     $type = $militiaFaction === BRITISH ? BRITISH_MILITIA_MARKER : FRENCH_MILITIA_MARKER;
     $markers = Markers::getMarkersFromSupply($type, $numberOfMilitia);
-    
-    foreach($markers as $marker) {
+
+    foreach ($markers as $marker) {
       $marker->setLocation($markerLocation);
     }
 
     Notifications::placeStackMarker($playersPerFaction[$militiaFaction], $markers, $space);
   }
 
-  private function battlePenalties($space, $attackingPlayer, $attackingFaction, $defendingPlayer, $defendingFaction)
-  {
-    $markers = Markers::getInLocationLike($space->getId());
-    $units = $space->getUnits();
+  // private function battlePenalties($space, $attackingPlayer, $attackingFaction, $defendingPlayer, $defendingFaction)
+  // {
+  //   $markers = Markers::getInLocationLike($space->getId());
+  //   $units = $space->getUnits();
 
-    $attackingUnits = Utils::filter($units, function ($unit) use ($attackingFaction) {
-      return !$unit->isCommander() && $unit->getFaction() === $attackingFaction;
-    });
-    $defendingUnits = Utils::filter($units, function ($unit) use ($defendingFaction) {
-      return !$unit->isCommander() && $unit->getFaction() === $defendingFaction;
-    });
+  //   $attackingUnits = Utils::filter($units, function ($unit) use ($attackingFaction) {
+  //     return !$unit->isCommander() && $unit->getFaction() === $attackingFaction;
+  //   });
+  //   $defendingUnits = Utils::filter($units, function ($unit) use ($defendingFaction) {
+  //     return !$unit->isCommander() && $unit->getFaction() === $defendingFaction;
+  //   });
 
-    $unitCount = [
-      BRITISH => 0,
-      FRENCH => 0,
-    ];
-    $unitCount[$attackingFaction] = count($attackingUnits);
-    $unitCount[$defendingFaction] = count($defendingUnits);
+  //   $unitCount = [
+  //     BRITISH => 0,
+  //     FRENCH => 0,
+  //   ];
+  //   $unitCount[$attackingFaction] = count($attackingUnits);
+  //   $unitCount[$defendingFaction] = count($defendingUnits);
 
-    $markersPerFaction = [
-      BRITISH => [],
-      FRENCH => [],
-    ];
+  //   $markersPerFaction = [
+  //     BRITISH => [],
+  //     FRENCH => [],
+  //   ];
 
-    $penalties = [
-      BRITISH => 0,
-      FRENCH => 0,
-    ];
+  //   $penalties = [
+  //     BRITISH => 0,
+  //     FRENCH => 0,
+  //   ];
 
-    foreach ($markers as $marker) {
-      $markerType = $marker->getType();
-      if (!in_array($markerType, [LANDING_MARKER, OUT_OF_SUPPLY_MARKER, MARSHAL_TROOPS_MARKER, ROUT_MARKER])) {
-        continue;
-      }
+  //   foreach ($markers as $marker) {
+  //     $markerType = $marker->getType();
+  //     if (!in_array($markerType, [LANDING_MARKER, OUT_OF_SUPPLY_MARKER, MARSHAL_TROOPS_MARKER, ROUT_MARKER])) {
+  //       continue;
+  //     }
 
-      $faction = explode('_', $marker->getLocation())[1];
-      $markersPerFaction[$faction][] = $marker;
-      if ($markerType === OUT_OF_SUPPLY_MARKER && $unitCount[$faction] >= 8) {
-        $penalties[$faction] = $penalties[$faction] - 2;
-      } else {
-        $penalties[$faction] = $penalties[$faction] - 1;
-      }
-    }
+  //     $faction = explode('_', $marker->getLocation())[1];
+  //     $markersPerFaction[$faction][] = $marker;
+  //     if ($markerType === OUT_OF_SUPPLY_MARKER && $unitCount[$faction] >= 8) {
+  //       $penalties[$faction] = $penalties[$faction] - 2;
+  //     } else {
+  //       $penalties[$faction] = $penalties[$faction] - 1;
+  //     }
+  //   }
 
-    $defenderHasFort = Utils::array_some($defendingUnits, function ($unit) {
-      return $unit->isFort();
-    });
-    $attackerHasArtillery = Utils::array_some($attackingUnits, function ($unit) {
-      return $unit->isArtillery();
-    });
+  //   $defenderHasFort = Utils::array_some($defendingUnits, function ($unit) {
+  //     return $unit->isFort();
+  //   });
+  //   $attackerHasArtillery = Utils::array_some($attackingUnits, function ($unit) {
+  //     return $unit->isArtillery();
+  //   });
 
-    if ($defenderHasFort) {
-      $penalty = $attackerHasArtillery ? 1 : 2;
-      $penalties[$attackingFaction] = $penalties[$attackingFaction] - $penalty;
-    }
+  //   if ($defenderHasFort) {
+  //     $penalty = $attackerHasArtillery ? 1 : 2;
+  //     $penalties[$attackingFaction] = $penalties[$attackingFaction] - $penalty;
+  //   }
 
-    foreach ([BRITISH, FRENCH] as $faction) {
-      if ($penalties[$faction] < -5) {
-        $penalties[$faction] = -5;
-      }
-    }
+  //   foreach ([BRITISH, FRENCH] as $faction) {
+  //     if ($penalties[$faction] < -5) {
+  //       $penalties[$faction] = -5;
+  //     }
+  //   }
 
-    if ($penalties[$attackingFaction] < 0) {
-      Notifications::message('${player_name} receives ${penaltyCount} Battle Penalties', [
-        'player' => $attackingPlayer,
-        'penaltyCount' => abs($penalties[$attackingFaction]),
-      ]);
-      $this->moveBattleVictoryMarker($attackingPlayer, $attackingFaction, $penalties[$attackingFaction]);
-    }
-    if ($penalties[$defendingFaction] < 0) {
-      Notifications::message('${player_name} receives ${penaltyCount} Battle Penalties', [
-        'player' => $defendingPlayer,
-        'penaltyCount' => abs($penalties[$defendingFaction]),
-      ]);
-      $this->moveBattleVictoryMarker($defendingPlayer, $defendingFaction, $penalties[$attackingFaction]);
-    }
-  }
+  //   if ($penalties[$attackingFaction] < 0) {
+  //     Notifications::message('${player_name} receives ${penaltyCount} Battle Penalties', [
+  //       'player' => $attackingPlayer,
+  //       'penaltyCount' => abs($penalties[$attackingFaction]),
+  //     ]);
+  //     $this->moveBattleVictoryMarker($attackingPlayer, $attackingFaction, $penalties[$attackingFaction]);
+  //   }
+  //   if ($penalties[$defendingFaction] < 0) {
+  //     Notifications::message('${player_name} receives ${penaltyCount} Battle Penalties', [
+  //       'player' => $defendingPlayer,
+  //       'penaltyCount' => abs($penalties[$defendingFaction]),
+  //     ]);
+  //     $this->moveBattleVictoryMarker($defendingPlayer, $defendingFaction, $penalties[$attackingFaction]);
+  //   }
+  // }
 }

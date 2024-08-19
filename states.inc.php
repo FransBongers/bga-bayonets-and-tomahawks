@@ -495,8 +495,35 @@ $machinestates = array(
         'transitions' => [],
     ],
 
+    ST_BATTLE_COMBINE_REDUCED_UNITS => [
+        'name' => 'battleCombineReducedUnits',
+        'description' => clienttranslate('${actplayer} must combine Reduced units'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actBattleCombineReducedUnits', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+
     ST_BATTLE_MILITIA_ROLLS => [
         'name' => 'battleMilitiaRolls',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_BATTLE_PENALTIES => [
+        'name' => 'battlePenalties',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_BATTLE_PRE_SELECT_COMMANDER => [
+        'name' => 'battlePreSelectCommander',
         'description' => '',
         'type' => 'game',
         'action' => 'stAtomicAction',

@@ -72,6 +72,7 @@
     "src/states/ActionRoundChooseReaction.ts",
     "src/states/ActionRoundSailBoxLanding.ts",
     "src/states/BattleApplyHitsState.ts",
+    "src/states/BattleCombineReducedUnits.ts",
     "src/states/BattleRetreatState.ts",
     "src/states/BattleRollsRerolls.ts",
     "src/states/BattleSelectCommanderState.ts",

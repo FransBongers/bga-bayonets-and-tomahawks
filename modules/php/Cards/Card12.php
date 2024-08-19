@@ -3,6 +3,8 @@
 namespace BayonetsAndTomahawks\Cards;
 
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
+use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Managers\AtomicActions;
 use BayonetsAndTomahawks\Managers\Players;
 
 class Card12 extends \BayonetsAndTomahawks\Models\Card
@@ -37,6 +39,13 @@ class Card12 extends \BayonetsAndTomahawks\Models\Card
 
   public function resolveARStart($ctx)
   {
+    $action = AtomicActions::get(EVENT_ROUND_UP_MEN_AND_EQUIPMENT);
+    $options = $action->getOptions(BRITISH);
+    if (count($options['reduced']) + count($options['lossesBox']) === 0) {
+      Notifications::message('No Reduced units to flip to Full or place from the Losses Box');
+      return;
+    }
+
     $ctx->insertAsBrother(new LeafNode([
       'action' => EVENT_ROUND_UP_MEN_AND_EQUIPMENT,
       'cardId' => $this->getId(),

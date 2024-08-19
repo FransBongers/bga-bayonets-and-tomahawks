@@ -45,10 +45,11 @@ class EventRoundUpMenAndEquipment extends \BayonetsAndTomahawks\Models\AtomicAct
 
   public function argsEventRoundUpMenAndEquipment()
   {
-
+    $info = $this->ctx->getInfo();
+    $faction = $info['faction'];
     // Notifications::log('argsEventRoundUpMenAndEquipment',[]);
     return [
-      'options' => $this->getOptions(),
+      'options' => $this->getOptions($faction),
     ];
   }
 
@@ -80,8 +81,10 @@ class EventRoundUpMenAndEquipment extends \BayonetsAndTomahawks\Models\AtomicAct
     self::checkAction('actEventRoundUpMenAndEquipment');
     $selectedReducedUnitIds = $args['selectedReducedUnitIds'];
     $placedUnit = $args['placedUnit'];
+    $info = $this->ctx->getInfo();
+    $faction = $info['faction'];
 
-    $options = $this->getOptions();
+    $options = $this->getOptions($faction);
 
     if (count($selectedReducedUnitIds) > 0) {
       $this->flipReducedUnitsToFull($selectedReducedUnitIds, $options['reduced']);
@@ -245,11 +248,8 @@ class EventRoundUpMenAndEquipment extends \BayonetsAndTomahawks\Models\AtomicAct
     ];
   }
 
-  private function getOptions()
+  private function getOptions($faction)
   {
-    $info = $this->ctx->getInfo();
-    $faction = $info['faction'];
-
     if ($faction === BRITISH) {
       return $this->getBritishOptions();
     } else {

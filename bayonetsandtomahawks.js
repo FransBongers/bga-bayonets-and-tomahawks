@@ -2313,6 +2313,7 @@ var BayonetsAndTomahawks = (function () {
             actionRoundChooseReaction: new ActionRoundChooseReactionState(this),
             actionRoundSailBoxLanding: new ActionRoundSailBoxLandingState(this),
             battleApplyHits: new BattleApplyHitsState(this),
+            battleCombineReducedUnits: new BattleCombineReducedUnitsState(this),
             battleRetreat: new BattleRetreatState(this),
             battleRollsRerolls: new BattleRollsRerollsState(this),
             battleSelectCommander: new BattleSelectCommanderState(this),
@@ -6079,6 +6080,117 @@ var BattleApplyHitsState = (function () {
         });
     };
     return BattleApplyHitsState;
+}());
+var BattleCombineReducedUnitsState = (function () {
+    function BattleCombineReducedUnitsState(game) {
+        this.game = game;
+    }
+    BattleCombineReducedUnitsState.prototype.onEnteringState = function (args) {
+        debug('Entering BattleCombineReducedUnitsState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    BattleCombineReducedUnitsState.prototype.onLeavingState = function () {
+        debug('Leaving BattleCombineReducedUnitsState');
+    };
+    BattleCombineReducedUnitsState.prototype.setDescription = function (activePlayerId) { };
+    BattleCombineReducedUnitsState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a unit to flip to Full'),
+            args: {
+                you: '${you}',
+            },
+        });
+        var stack = this.game.gameMap.stacks[this.args.spaceId][this.args.faction];
+        stack.open();
+        Object.entries(this.args.options).forEach(function (_a) {
+            var unitType = _a[0], units = _a[1];
+            if (units.length < 2) {
+                return;
+            }
+            units.forEach(function (unit) {
+                return _this.game.setUnitSelectable({
+                    id: unit.id,
+                    callback: function () {
+                        return _this.updateInterfaceSelectUnitToFlip({ flip: unit, unitType: unitType });
+                    },
+                });
+            });
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    BattleCombineReducedUnitsState.prototype.updateInterfaceSelectUnitToFlip = function (_a) {
+        var _this = this;
+        var flip = _a.flip, unitType = _a.unitType;
+        var unitsToEliminate = this.args.options[unitType].filter(function (unit) { return unit.id !== flip.id; });
+        if (unitsToEliminate.length === 1) {
+            this.updateInterfaceConfirm({
+                flip: flip,
+                unitType: unitType,
+                eliminate: unitsToEliminate[0],
+            });
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a unit to eliminate'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.game.setUnitSelected({ id: flip.id });
+        unitsToEliminate.forEach(function (unit) {
+            return _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () {
+                    return _this.updateInterfaceConfirm({ flip: flip, unitType: unitType, eliminate: unit });
+                },
+            });
+        });
+        this.game.addCancelButton();
+    };
+    BattleCombineReducedUnitsState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var flip = _a.flip, eliminate = _a.eliminate, unitType = _a.unitType;
+        this.game.clearPossible();
+        this.game.setUnitSelected({ id: flip.id });
+        this.game.setUnitSelected({ id: eliminate.id });
+        this.game.clientUpdatePageTitle({
+            text: _('Eliminate ${tkn_unit_eliminate} and flip ${tkn_unit_flip} to Full ?'),
+            args: {
+                tkn_unit_eliminate: "".concat(eliminate.counterId, ":reduced"),
+                tkn_unit_flip: "".concat(flip.counterId, ":reduced"),
+            },
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actBattleCombineReducedUnits',
+                args: {
+                    flipUnitId: flip.id,
+                    eliminateUnitId: eliminate.id,
+                    unitType: unitType,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    return BattleCombineReducedUnitsState;
 }());
 var BattleRetreatState = (function () {
     function BattleRetreatState(game) {

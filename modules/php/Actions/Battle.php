@@ -10,6 +10,7 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\AtomicActions;
 use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Units;
@@ -164,6 +165,27 @@ class Battle extends \BayonetsAndTomahawks\Models\AtomicAction
           ])
         );
       }
+    }
+  }
+
+  protected function checkIfReducedUnitsCanBeCombined($space, $faction, $player)
+  {
+    $action = AtomicActions::get(BATTLE_COMBINE_REDUCED_UNITS);
+
+
+    $options = $action->getOptions($space, $faction);
+    $canCombineReduced = Utils::array_some(array_values($options), function ($reducedUnitsForType) {
+      return count($reducedUnitsForType) >= 2;
+    });
+    if ($canCombineReduced) {
+      $this->ctx->insertAsBrother(
+        Engine::buildTree([
+          'playerId' => $player->getId(),
+          'action' => BATTLE_COMBINE_REDUCED_UNITS,
+          'spaceId' => $space->getId(),
+          'faction' => $faction,
+        ])
+      );
     }
   }
 }

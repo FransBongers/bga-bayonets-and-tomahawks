@@ -188,6 +188,22 @@ trait DebugTrait
   function debug_test()
   {
 
+    Units::get('unit_7')->setReduced(1);
+    Units::get('unit_11')->setReduced(1);
+    Units::get('unit_10')->setReduced(1);
+    
+    
+
+    $action = AtomicActions::get(BATTLE_COMBINE_REDUCED_UNITS);
+
+    $options = $action->getOptions(Spaces::get(QUEBEC), FRENCH);
+
+    Notifications::log('options', $options);
+    $canCombineReduced = Utils::array_some(array_values($options), function ($reducedUnitsForType) {
+      return count($reducedUnitsForType) >= 2;
+    });
+    Notifications::log('canCombineReduced', $canCombineReduced);
+
     // WarInEuropeChits::drawChit(FRENCH);
 
     // $chit = WarInEuropeChits::getTopOf(Locations::wieChitPool(BRITISH));
@@ -195,7 +211,7 @@ trait DebugTrait
     // $chit = WarInEuropeChits::getTopOf(Locations::wieChitPool(FRENCH));
     // $chit->setLocation(Locations::wieChitPlaceholder(FRENCH));
 
-    Notifications::log('markers', Markers::getInLocationLike(HALIFAX));
+    // Notifications::log('markers', Markers::getInLocationLike(HALIFAX));
 
     // Units::get('unit_31')->setLocation(ALBANY);
     // $data = $this->getStacksAndSupplySources();
@@ -207,7 +223,7 @@ trait DebugTrait
     // }
 
 
-    
+
     // Connections::get('Loyalhanna_RaysTown')->setRoad(1);
     // Connections::get('RaysTown_Shamokin')->setRoad(2);
     // Globals::setPlacedConstructionMarkers([]);

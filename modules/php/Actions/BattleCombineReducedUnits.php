@@ -10,15 +10,16 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Models\Player;
 
-class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicAction
+class BattleCombineReducedUnits extends \BayonetsAndTomahawks\Actions\Battle
 {
   public function getState()
   {
-    return ST_ACTION_ROUND_RESOLVE_BATTLES;
+    return ST_BATTLE_COMBINE_REDUCED_UNITS;
   }
 
   // ..######..########....###....########.########
@@ -37,55 +38,8 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stActionRoundResolveBattles()
+  public function stBattleCombineReducedUnits()
   {
-    $battleLocations = Spaces::getBattleLocations();
-    $playerId = self::getPlayer()->getId();
-
-    $battleNodes = [
-      'children' => []
-    ];
-
-    foreach ($battleLocations as $space) {
-      $battleNodes['children'][] = [
-        'spaceId' => $space->getId(),
-        'children' => [
-          [
-            'action' => BATTLE_PREPARATION,
-            'playerId' => $playerId,
-          ],
-          [
-            'action' => BATTLE_PRE_SELECT_COMMANDER,
-          ],
-          [
-            'action' => BATTLE_PENALTIES,
-          ],
-          [
-            'action' => BATTLE_ROLLS,
-            'playerId' => $playerId,
-          ],
-          [
-            'action' => BATTLE_MILITIA_ROLLS,
-          ],
-          [
-            'action' => BATTLE_OUTCOME,
-            'playerId' => $playerId,
-          ],
-          [
-            'action' => BATTLE_CLEANUP,
-            'playerId' => $playerId,
-          ]
-        ]
-      ];
-    }
-
-    if (count($battleNodes['children']) > 0) {
-      $this->ctx->insertAsBrother(Engine::buildTree($battleNodes));
-    }
-
-
-
-    $this->resolveAction(['automatic' => true]);
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##
@@ -96,7 +50,7 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreActionRoundResolveBattles()
+  public function stPreBattleCombineReducedUnits()
   {
   }
 
@@ -109,11 +63,17 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsActionRoundResolveBattles()
+  public function argsBattleCombineReducedUnits()
   {
+    $info = $this->ctx->getInfo();
+    $spaceId = $info['spaceId'];
+    $faction = $info['faction'];
 
-
-    return [];
+    return [
+      'options' => $this->getOptions(Spaces::get($spaceId), $faction),
+      'spaceId' => $spaceId,
+      'faction' => $faction,
+    ];
   }
 
   //  .########..##..........###....##....##.########.########.
@@ -132,20 +92,56 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassActionRoundResolveBattles()
+  public function actPassBattleCombineReducedUnits()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actActionRoundResolveBattles($args)
+  public function actBattleCombineReducedUnits($args)
   {
-    self::checkAction('actActionRoundResolveBattles');
+    self::checkAction('actBattleCombineReducedUnits');
+    $flipUnitId = $args['flipUnitId'];
+    $eliminateUnitId = $args['eliminateUnitId'];
+    $unitType = $args['unitType'];
 
+    if ($flipUnitId === $eliminateUnitId) {
+      throw new \feException("ERROR 063");
+    }
 
+    $stateArgs = $this->argsBattleCombineReducedUnits();
 
-    $this->resolveAction($args, true);
+    if (!isset($stateArgs['options'][$unitType])) {
+      throw new \feException("ERROR 064");
+    }
+
+    $units = $stateArgs['options'][$unitType];
+
+    $unitToFlip = Utils::array_find($units, function ($unit) use ($flipUnitId) {
+      return $unit->getId() === $flipUnitId;
+    });
+
+    if ($unitToFlip === null) {
+      throw new \feException("ERROR 065");
+    }
+
+    $unitToEliminate = Utils::array_find($units, function ($unit) use ($eliminateUnitId) {
+      return $unit->getId() === $eliminateUnitId;
+    });
+
+    if ($unitToEliminate === null) {
+      throw new \feException("ERROR 066");
+    }
+
+    $player = self::getPlayer();
+
+    $unitToEliminate->eliminate($player);
+    $unitToFlip->flipToFull($player);
+
+    $this->checkIfReducedUnitsCanBeCombined(Spaces::get($stateArgs['spaceId']), $stateArgs['faction'], $player);
+
+    $this->resolveAction($args);
   }
 
   //  .##.....##.########.####.##.......####.########.##....##
@@ -156,5 +152,34 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  public function getOptions($space, $faction)
+  {
+    $units = Utils::filter($space->getUnits($faction), function ($unit) {
+      return $unit->isReduced() && !$unit->isIndian();
+    });
 
+    $data = [
+      ARTILLERY => [],
+      FLEET => [],
+      NON_INDIAN_LIGHT => [],
+      METROPOLITAN_BRIGADES => [],
+      NON_METROPOLITAN_BRIGADES => [],
+    ];
+
+    foreach ($units as $unit) {
+      if ($unit->isArtillery()) {
+        $data[ARTILLERY][] = $unit;
+      } else if ($unit->isFleet()) {
+        $data[FLEET][] = $unit;
+      } else if ($unit->isNonIndianLight()) {
+        $data[NON_INDIAN_LIGHT][] = $unit;
+      } else if ($unit->isMetropolitanBrigade()) {
+        $data[METROPOLITAN_BRIGADES][] = $unit;
+      } else if ($unit->isNonMetropolitanBrigade()) {
+        $data[NON_METROPOLITAN_BRIGADES][] = $unit;
+      }
+    }
+
+    return $data;
+  }
 }

@@ -8,17 +8,19 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Models\Player;
 
-class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicAction
+class BattlePreSelectCommander extends \BayonetsAndTomahawks\Actions\Battle
 {
   public function getState()
   {
-    return ST_ACTION_ROUND_RESOLVE_BATTLES;
+    return ST_BATTLE_PRE_SELECT_COMMANDER;
   }
 
   // ..######..########....###....########.########
@@ -37,53 +39,23 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stActionRoundResolveBattles()
+  public function stBattlePreSelectCommander()
   {
-    $battleLocations = Spaces::getBattleLocations();
-    $playerId = self::getPlayer()->getId();
+    $parentInfo = $this->ctx->getParent()->getInfo();
+    $spaceId = $parentInfo['spaceId'];
+    $space = Spaces::get($spaceId);
+    $units = $space->getUnits();
 
-    $battleNodes = [
-      'children' => []
-    ];
+    $attackingFaction = $parentInfo['attacker'];
+    $defendingFaction = $parentInfo['defender'];
 
-    foreach ($battleLocations as $space) {
-      $battleNodes['children'][] = [
-        'spaceId' => $space->getId(),
-        'children' => [
-          [
-            'action' => BATTLE_PREPARATION,
-            'playerId' => $playerId,
-          ],
-          [
-            'action' => BATTLE_PRE_SELECT_COMMANDER,
-          ],
-          [
-            'action' => BATTLE_PENALTIES,
-          ],
-          [
-            'action' => BATTLE_ROLLS,
-            'playerId' => $playerId,
-          ],
-          [
-            'action' => BATTLE_MILITIA_ROLLS,
-          ],
-          [
-            'action' => BATTLE_OUTCOME,
-            'playerId' => $playerId,
-          ],
-          [
-            'action' => BATTLE_CLEANUP,
-            'playerId' => $playerId,
-          ]
-        ]
-      ];
-    }
+    // $players = Players::getAll()->toArray();
+    $playersPerFaction = Players::getPlayersForFactions();
 
-    if (count($battleNodes['children']) > 0) {
-      $this->ctx->insertAsBrother(Engine::buildTree($battleNodes));
-    }
+    $attackingPlayer = $playersPerFaction[$attackingFaction];
+    $defendingPlayer = $playersPerFaction[$defendingFaction];
 
-
+    $this->selectCommanders($units, [$attackingPlayer, $defendingPlayer], $space);
 
     $this->resolveAction(['automatic' => true]);
   }
@@ -96,7 +68,7 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreActionRoundResolveBattles()
+  public function stPreBattlePreSelectCommander()
   {
   }
 
@@ -109,7 +81,7 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsActionRoundResolveBattles()
+  public function argsBattlePreSelectCommander()
   {
 
 
@@ -132,16 +104,16 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassActionRoundResolveBattles()
+  public function actPassBattlePreSelectCommander()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actActionRoundResolveBattles($args)
+  public function actBattlePreSelectCommander($args)
   {
-    self::checkAction('actActionRoundResolveBattles');
+    self::checkAction('actBattlePreSelectCommander');
 
 
 
@@ -155,6 +127,5 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
-
 
 }
