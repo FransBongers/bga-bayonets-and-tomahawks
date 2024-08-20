@@ -18,6 +18,22 @@ class Pools {
     this.setupPools({ gamedatas });
   }
 
+    // .##.....##.##....##.########...#######.
+  // .##.....##.###...##.##.....##.##.....##
+  // .##.....##.####..##.##.....##.##.....##
+  // .##.....##.##.##.##.##.....##.##.....##
+  // .##.....##.##..####.##.....##.##.....##
+  // .##.....##.##...###.##.....##.##.....##
+  // ..#######..##....##.########...#######.
+
+  clearInterface() {
+    Object.values(this.stocks).forEach((stock) => stock.removeAll());
+  }
+
+  updateInterface(gamedatas: BayonetsAndTomahawksGamedatas) {
+    this.updatePools(gamedatas);
+  }
+
   // ..######..########.########.##.....##.########.
   // .##....##.##..........##....##.....##.##.....##
   // .##.......##..........##....##.....##.##.....##
@@ -39,25 +55,17 @@ class Pools {
       );
     });
 
-    this.updatePools({ gamedatas });
+    this.updatePools(gamedatas);
   }
 
-  updatePools({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
+  private updatePools(gamedatas: BayonetsAndTomahawksGamedatas) {
     POOLS.forEach((poolId: string) => {
       const units = gamedatas.units.filter((unit) => unit.location === poolId);
-      // console.log('units ' + pool,units);
       if (units.length === 0) {
         return;
       }
 
       this.stocks[poolId].addCards(units);
-
-      // units.forEach((unit) => {
-      //   node[0].insertAdjacentHTML(
-      //     'beforeend',
-      //     tplUnit({ counterId: unit.counterId, style: 'position: relative;' })
-      //   );
-      // });
     });
   }
 
@@ -68,8 +76,6 @@ class Pools {
       .insertAdjacentHTML('beforeend', tplPoolsContainer());
     this.setupPoolsStocks({ gamedatas });
   }
-
-  clearInterface() {}
 
   // ..######...########.########.########.########.########...######.
   // .##....##..##..........##.......##....##.......##.....##.##....##

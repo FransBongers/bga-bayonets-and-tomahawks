@@ -12,6 +12,7 @@ interface AddActionButtonProps extends AddButtonProps {
 interface BayonetsAndTomahawksGame extends Game {
   addCancelButton: ({ callback }?: { callback?: Function }) => void;
   addConfirmButton: (props: { callback: Function | string }) => void;
+  addLogClass: () => void;
   addPassButton: (props: { optionalAction: boolean; text?: string }) => void;
   addPlayerButton: ({
     player,
@@ -24,6 +25,7 @@ interface BayonetsAndTomahawksGame extends Game {
   addSecondaryActionButton: (props: AddButtonProps) => void;
   addDangerActionButton: (props: AddButtonProps) => void;
   addUndoButtons: (props: CommonArgs) => void;
+  cancelLogs: (notifIds: string[]) => void;
   clearInterface: () => void;
   clearPossible: () => void;
   clientUpdatePageTitle: (props: {

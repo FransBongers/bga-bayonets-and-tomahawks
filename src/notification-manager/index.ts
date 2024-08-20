@@ -34,32 +34,18 @@ class NotificationManager {
   setupNotifications() {
     console.log('notifications subscriptions setup');
 
-    // const notifs: [
-    //   id: string,
-    //   wait: number,
-    //   predicate?: (notif: Notif<{ playerId: number }>) => void
-    // ][] = [
-    //   // checked
-    //   ["log", undefined],
-    //   [
-    //     "discardCardFromHand",
-    //     undefined,
-    //     (notif) => notif.args.playerId == this.game.getPlayerId(),
-    //   ],
-    //   ["discardCardFromHandPrivate", undefined],
-    //   ["drawCardPrivate", undefined],
-    //   ["revealCardsInPlay", undefined],
-    //   ["selectReserveCard", undefined],
-    //   ["selectReserveCardPrivate", undefined],
-    //   // [
-    //   //   "selectReserveCard",
-    //   //   undefined,
-    //   //   (notif) => notif.args.playerId == this.game.getPlayerId(),
-    //   // ],
-    // ];
+    dojo.connect(this.game.framework().notifqueue, 'addToLog', () => {
+      this.game.addLogClass();
+    });
+
     const notifs: string[] = [
+      // Boilerplate
       'log',
       'message',
+      'clearTurn',
+      'refreshUI',
+      'refreshUIPrivate',
+      // Game
       'addSpentMarkerToUnits',
       'moveBattleVictoryMarker',
       'battle',
@@ -207,6 +193,11 @@ class NotificationManager {
     // Only here so messages get displayed in title bar
   }
 
+  async notif_clearTurn(notif: Notif<NotifClearTurnArgs>) {
+    const { notifIds } = notif.args;
+    this.game.cancelLogs(notifIds);
+  }
+
   // notif_smallRefreshHand(notif: Notif<NotifSmallRefreshHandArgs>) {
   //   const { hand, playerId } = notif.args;
   //   const player = this.getPlayer({ playerId });
@@ -214,17 +205,26 @@ class NotificationManager {
   //   player.setupHand({ hand });
   // }
 
-  async notif_smallRefreshInterface(
-    notif: Notif<NotifSmallRefreshInterfaceArgs>
-  ) {
+  async notif_refreshUI(notif: Notif<NotifRefreshUIArgs>) {
     const updatedGamedatas = {
       ...this.game.gamedatas,
-      ...notif.args,
+      ...notif.args.datas,
     };
-    this.game.clearInterface();
+
     this.game.gamedatas = updatedGamedatas;
+    this.game.clearInterface();
+
     this.game.playerManager.updatePlayers({ gamedatas: updatedGamedatas });
-    this.game.gameMap.updateInterface({ gamedatas: updatedGamedatas });
+    this.game.gameMap.updateInterface(updatedGamedatas);
+    this.game.pools.updateInterface(updatedGamedatas);
+  }
+
+  async notif_refreshUIPrivate(notif: Notif<NotifRefreshUIPrivateArgs>) {
+    const { wieChit, faction } = notif.args;
+    if (wieChit) {
+      wieChit.revealed = true;
+      this.game.gameMap.wieChitPlaceholders[faction].addCard(wieChit);
+    }
   }
 
   async notif_addSpentMarkerToUnits(

@@ -71,7 +71,20 @@ class GameMap {
       element.replaceChildren();
     });
 
-    // TODO: replace with remove all?
+    ['iroquoisControl_markers', 'cherokeeControl_markers'].forEach(
+      (markerSpot) => {
+        const element = document.getElementById(markerSpot);
+        if (!element) {
+          return;
+        }
+        element.replaceChildren();
+      }
+    );
+
+    Object.values(this.commanderRerollsTrack).forEach((stock) =>
+      stock.removeAll()
+    );
+
     [
       YEAR_MARKER,
       ROUND_MARKER,
@@ -79,17 +92,30 @@ class GameMap {
       FRENCH_RAID_MARKER,
       VICTORY_MARKER,
       OPEN_SEAS_MARKER,
+      BRITISH_BATTLE_MARKER,
+      FRENCH_BATTLE_MARKER,
     ].forEach((markerId) => {
-      const node = document.getElementById(markerId);
-      if (node) {
-        node.remove();
-      }
+      this.game.tokenManager.removeCard({
+        id: markerId,
+        manager: 'markers',
+      } as BTMarker);
+    });
+
+    [BRITISH, FRENCH].forEach((faction) => {
+      this.wieChitPlaceholders[faction].removeAll();
     });
   }
 
-  updateInterface({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
-    this.setupUnitsAndSpaces({ gamedatas });
-    this.setupMarkers({ gamedatas });
+  updateInterface(gamedatas: BayonetsAndTomahawksGamedatas) {
+    this.updateUnitsAndSpaces(gamedatas);
+    this.updateMarkers(gamedatas);
+
+    // update connections
+    gamedatas.connections.forEach((connection) => {
+      this.connections[connection.id].updateInterface(connection);
+    });
+
+    this.updateWieChits(gamedatas);
   }
 
   // ..######..########.########.##.....##.########.
@@ -118,24 +144,73 @@ class GameMap {
   }: {
     gamedatas: BayonetsAndTomahawksGamedatas;
   }) {
-    if (!this.losses) {
-      this.losses = {
-        [LOSSES_BOX_BRITISH]: new LineStock<BTToken>(
+    this.losses = {
+      [LOSSES_BOX_BRITISH]: new LineStock<BTToken>(
+        this.game.tokenManager,
+        document.getElementById(LOSSES_BOX_BRITISH),
+        {
+          center: false,
+        }
+      ),
+      [LOSSES_BOX_FRENCH]: new LineStock<BTToken>(
+        this.game.tokenManager,
+        document.getElementById(LOSSES_BOX_FRENCH),
+        {
+          center: false,
+        }
+      ),
+    };
+
+    gamedatas.spaces.forEach((space) => {
+      // [BRITISH, FRENCH].forEach((faction) => {
+      this.stacks[space.id] = {
+        [BRITISH]: new UnitStack(
           this.game.tokenManager,
-          document.getElementById(LOSSES_BOX_BRITISH),
-          {
-            center: false,
-          }
+          document.getElementById(`${space.id}_british_stack`),
+          {},
+          BRITISH
         ),
-        [LOSSES_BOX_FRENCH]: new LineStock<BTToken>(
+        [FRENCH]: new UnitStack(
           this.game.tokenManager,
-          document.getElementById(LOSSES_BOX_FRENCH),
-          {
-            center: false,
-          }
+          document.getElementById(`${space.id}_french_stack`),
+          {},
+          FRENCH
         ),
       };
-    }
+      // });
+    });
+
+    this.stacks[SAIL_BOX] = {
+      [BRITISH]: new UnitStack(
+        this.game.tokenManager,
+        document.getElementById(`${SAIL_BOX}_british_stack`),
+        {},
+        BRITISH
+      ),
+      [FRENCH]: new UnitStack(
+        this.game.tokenManager,
+        document.getElementById(`${SAIL_BOX}_french_stack`),
+        {},
+        FRENCH
+      ),
+    };
+
+    // gamedatas.units
+    //   .filter((unit) => unit.location === SAIL_BOX)
+    //   .forEach((unit) => {
+    //     if (unit.faction === BRITISH) {
+    //       this.stacks[SAIL_BOX][BRITISH].addUnit(unit);
+    //     } else if (unit.faction === FRENCH) {
+    //       this.stacks[SAIL_BOX][FRENCH].addUnit(unit);
+    //     } else if (unit.faction === INDIAN) {
+    //       this.stacks[SAIL_BOX][FRENCH].addUnit(unit);
+    //     }
+    //   });
+
+    this.updateUnitsAndSpaces(gamedatas);
+  }
+
+  updateUnitsAndSpaces(gamedatas: BayonetsAndTomahawksGamedatas) {
     [LOSSES_BOX_BRITISH, LOSSES_BOX_FRENCH].forEach((box) => {
       const units = gamedatas.units.filter((unit) => unit.location === box);
       this.losses[box].addCards(units);
@@ -174,25 +249,6 @@ class GameMap {
         });
       }
 
-      if (!this.stacks[space.id]) {
-        // [BRITISH, FRENCH].forEach((faction) => {
-        this.stacks[space.id] = {
-          [BRITISH]: new UnitStack(
-            this.game.tokenManager,
-            document.getElementById(`${space.id}_british_stack`),
-            {},
-            BRITISH
-          ),
-          [FRENCH]: new UnitStack(
-            this.game.tokenManager,
-            document.getElementById(`${space.id}_french_stack`),
-            {},
-            FRENCH
-          ),
-        };
-        // });
-      }
-
       gamedatas.units
         .filter((unit) => unit.location === space.id)
         .forEach((unit) => {
@@ -205,21 +261,6 @@ class GameMap {
           }
         });
     });
-
-    this.stacks[SAIL_BOX] = {
-      [BRITISH]: new UnitStack(
-        this.game.tokenManager,
-        document.getElementById(`${SAIL_BOX}_british_stack`),
-        {},
-        BRITISH
-      ),
-      [FRENCH]: new UnitStack(
-        this.game.tokenManager,
-        document.getElementById(`${SAIL_BOX}_french_stack`),
-        {},
-        FRENCH
-      ),
-    };
 
     gamedatas.units
       .filter((unit) => unit.location === SAIL_BOX)
@@ -338,10 +379,10 @@ class GameMap {
       }
     );
 
-    this.updateMarkers({ gamedatas });
+    this.updateMarkers(gamedatas);
   }
 
-  updateMarkers({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
+  updateMarkers(gamedatas: BayonetsAndTomahawksGamedatas) {
     const { markers } = gamedatas;
     const yearMarker = markers[YEAR_MARKER];
     if (yearMarker && this.yearTrack[yearMarker.location]) {
@@ -415,8 +456,6 @@ class GameMap {
     });
   }
 
-  updateGameMap({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {}
-
   setupWieChits({ gamedatas }) {
     this.wieChitPlaceholders = {
       british: new LineStock<BTWIEChit>(
@@ -435,15 +474,15 @@ class GameMap {
       ),
     };
 
-    this.updateWieChits({ gamedatas });
+    this.updateWieChits(gamedatas);
   }
 
-  updateWieChits({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
+  updateWieChits(gamedatas: BayonetsAndTomahawksGamedatas) {
     Object.values(gamedatas.players).forEach((player) => {
-      if (player.wieChit.hasChit && player.wieChit.chit === null) {
+      if (player.wieChit.hasChit && this.game.getPlayerId() !== Number(player.id)) {
         // chit is not visible, add fake one
         this.placeFakeWieChit(player.faction);
-      } else if (player.wieChit.chit !== null) {
+      } else if (player.wieChit.chit && this.game.getPlayerId() === Number(player.id)) {
         const chit = player.wieChit.chit;
         chit.revealed = true;
         this.wieChitPlaceholders[player.faction].addCard(chit);

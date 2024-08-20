@@ -187,9 +187,15 @@ trait DebugTrait
 
   function debug_test()
   {
+    WarInEuropeChits::drawChit(BRITISH);
+    WarInEuropeChits::drawChit(FRENCH);
 
-    Units::get('unit_36')->setLocation(ALBANY);
-    Units::get('unit_35')->setLocation(ALBANY);
+    // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(BOSTON), BRITISH);
+    // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(NEW_YORK), BRITISH);
+    // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(ALBANY), BRITISH);
+
+    // Units::get('unit_36')->setLocation(ALBANY);
+    // Units::get('unit_35')->setLocation(ALBANY);
     
     
     

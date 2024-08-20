@@ -4,7 +4,9 @@ namespace BayonetsAndTomahawks\Core;
 
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
+use BayonetsAndTomahawks\Managers\WarInEuropeChits;
 
 class Notifications
 {
@@ -75,20 +77,42 @@ class Notifications
     ]);
   }
 
-  public static function refreshUI($datas)
+  public static function refreshUI($data)
   {
     // Keep only the thing that matters
-    $fDatas = [
+    $refreshedData = [
       // Add data here that needs to be refreshed
+      'connections' => $data['connections'],
+      'constrolIndianNations' => $data['constrolIndianNations'],
+      'markers' => $data['markers'],
+      'spaces' => $data['spaces'],
+      'units' => $data['units'],
+      'players' => [],
     ];
 
-    unset($datas['staticData']);
+    foreach ($data['players'] as $playerId => $player) {
+      unset($player['wieChit']['chit']);
+      $refreshedData['players'][$playerId] = $player;
+    }
 
     self::notifyAll('refreshUI', '', [
       // 'datas' => $fDatas,
-      'datas' => $datas,
+      'datas' => $refreshedData,
     ]);
+
+    $players = Players::getAll();
+    foreach ($players as $playerId => $player) {
+      $faction = $player->getFaction();
+      $wieChit = WarInEuropeChits::getTopOf(Locations::wieChitPlaceholder($faction));
+
+      self::notify($player, 'refreshUIPrivate', '', [
+        'wieChit' => $wieChit,
+        'faction' => $faction,
+      ]);
+    }
   }
+
+
 
   public static function log($message, $data)
   {
@@ -310,27 +334,10 @@ class Notifications
 
   public static function battleRolls($player, $battleRollsSequenceStep, $diceResults, $unitIds)
   {
-    // TODO: replace with utility function
-    // ${tkn_dieResult}
-    $diceResultsLog = [];
-    $diceResultsArgs = [];
-    foreach ($diceResults as $index => $dieResult) {
-      $key = 'tkn_dieResult_' . $index;
-      $diceResultsLog[] = '${' . $key . '}';
-      $diceResultsArgs[$key] = $dieResult;
-    };
-
-    self::notifyAll('battleRolls', clienttranslate('${player_name} rolls ${diceResultsLog} with ${battleRollsSequenceStep}'), [
+    self::message(clienttranslate('${player_name} rolls ${diceResultsLog} with ${battleRollsSequenceStep}'), [
       'player' => $player,
-      // 'tkn_boldText_space' => $space->getName(),
-      // 'space' => $space,
       'diceResultsLog' => self::diceResultsLog($diceResults),
-      //  [
-      //   'log' => implode('', $diceResultsLog),
-      //   'args' => $diceResultsArgs,
-      // ],
       'battleRollsSequenceStep' => $battleRollsSequenceStep,
-      // 'i18n' => ['tkn_boldText_space']
     ]);
   }
 

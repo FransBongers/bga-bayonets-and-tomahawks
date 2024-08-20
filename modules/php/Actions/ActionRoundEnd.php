@@ -433,16 +433,20 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
 
 
         if (in_array(FLAG, $diceResults) || ($lightUnitsOnly && in_array(B_AND_T, $diceResults))) {
-          Notifications::message(clienttranslate('${player_name} rolls ${diceResults} for their stack in ${tkn_boldText_spaceName}: the stack Rallies', [
+          Notifications::message(clienttranslate('${player_name} rolls ${diceResults} for their stack in ${tkn_boldText_spaceName}: the stack Rallies'), [
             'player' => $players[$faction],
             'diceResults' => Notifications::diceResultsLog($diceResults),
-          ]));
+            'tkn_boldText_spaceName' => $data['space']->getName(),
+            'i18n' => ['tkn_boldText_spaceName'],
+          ]);
           $marker->remove($players[$faction]);
         } else {
-          Notifications::message(clienttranslate('${player_name} rolls ${diceResults} for their stack in ${tkn_boldText_spaceName}: the stack does not Rally', [
+          Notifications::message(clienttranslate('${player_name} rolls ${diceResults} for their stack in ${tkn_boldText_spaceName}: the stack does not Rally'), [
             'player' => $players[$faction],
             'diceResults' => Notifications::diceResultsLog($diceResults),
-          ]));
+            'tkn_boldText_spaceName' => $data['space']->getName(),
+            'i18n' => ['tkn_boldText_spaceName'],
+          ]);
         }
       }
     }

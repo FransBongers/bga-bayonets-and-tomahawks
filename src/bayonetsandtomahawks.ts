@@ -533,6 +533,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     console.log('clear interface');
     this.playerManager.clearInterface();
     this.gameMap.clearInterface();
+    this.pools.clearInterface();
   }
 
   clearPossible() {
@@ -758,6 +759,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     // this.takeAction('actUndoToStep', args: { stepId });
     this.takeAction({
       action: 'actUndoToStep',
+      atomicAction: false,
       args: {
         stepId,
       },
@@ -895,7 +897,6 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
    * Handle cancelling log messages for restart turn
    */
   onPlaceLogOnChannel(msg: Notif<unknown>) {
-    // console.log('msg', msg);
     const currentLogId = this.framework().notifqueue.next_log_id;
     const currentMobileLogId = this.framework().next_log_id;
     const res = this.framework().inherited(arguments);
@@ -962,7 +963,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     // while (this.tooltipsToMap.length) {
     //   const tooltipToMap = this.tooltipsToMap.pop();
     //   if (!tooltipToMap || !tooltipToMap[1]) {
-    //     console.error("error tooltipToMap", tooltipToMap);
+    //     console.error('error tooltipToMap', tooltipToMap);
     //   } else {
     //     this.addLogTooltip({
     //       tooltipId: tooltipToMap[0],

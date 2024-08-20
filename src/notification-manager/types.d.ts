@@ -13,10 +13,23 @@ interface NotifWithPlayerArgs {
   player_name: string;
 }
 
-type NotifSmallRefreshInterfaceArgs = Omit<
-  BayonetsAndTomahawksGamedatas,
-  'staticData'
->;
+interface NotifClearTurnArgs extends NotifWithPlayerArgs {
+  notifIds: string[];
+}
+
+// type NotifSmallRefreshInterfaceArgs = Omit<
+//   BayonetsAndTomahawksGamedatas,
+//   'staticData'
+// >;
+
+interface NotifRefreshUIArgs {
+  datas: Omit<BayonetsAndTomahawksGamedatas, 'staticData'>;
+}
+
+interface NotifRefreshUIPrivateArgs extends NotifWithPlayerArgs {
+  wieChit: BTWIEChit | null;
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+}
 
 interface NotifAddSpentMarkerToUnitsArgs {
   units: BTUnit[];
@@ -72,7 +85,7 @@ interface NotifDrawnReinforcementsArgs {
 }
 
 interface NotifConstructionFortArgs extends NotifWithPlayerArgs {
-    faction: BRITISH_FACTION | FRENCH_FACTION;
+  faction: BRITISH_FACTION | FRENCH_FACTION;
   fort: BTUnit | null;
   option: string;
   space: BTSpace;

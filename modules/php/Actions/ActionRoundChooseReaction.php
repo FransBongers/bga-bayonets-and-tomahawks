@@ -101,6 +101,11 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
       throw new \feException("ERROR 007");
     }
 
+    Notifications::message(clienttranslate('${player_name} holds ${actionPoint} for Reaction'), [
+      'player' => self::getPlayer(),
+      'actionPoint' => $actionPointId,
+    ]);
+
     Globals::setReactionActionPointId($actionPointId);
 
     $this->resolveAction($args);

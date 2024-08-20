@@ -32,11 +32,9 @@ class Connection {
 
   clearInterface() {}
 
-  updateInterface({
-    gamedatas,
-  }: {
-    gamedatas: BayonetsAndTomahawksGamedatas;
-  }) {}
+  updateInterface(connection: BTConnection) {
+    this.updateUI(connection);
+  }
 
   // ..######..########.########.##.....##.########.
   // .##....##.##..........##....##.....##.##.....##
@@ -59,7 +57,7 @@ class Connection {
     this.updateUI(connection);
   }
 
-  updateUI(connection: BTConnection) {
+  private updateUI(connection: BTConnection) {
     this.setLimitValue({ faction: 'british', value: connection.britishLimit });
     this.setLimitValue({ faction: 'french', value: connection.frenchLimit });
     this.setRoad(connection.road);

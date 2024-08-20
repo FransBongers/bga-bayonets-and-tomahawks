@@ -2539,6 +2539,7 @@ var BayonetsAndTomahawks = (function () {
         console.log('clear interface');
         this.playerManager.clearInterface();
         this.gameMap.clearInterface();
+        this.pools.clearInterface();
     };
     BayonetsAndTomahawks.prototype.clearPossible = function () {
         this.framework().removeActionButtons();
@@ -2688,6 +2689,7 @@ var BayonetsAndTomahawks = (function () {
         var stepId = _a.stepId;
         this.takeAction({
             action: 'actUndoToStep',
+            atomicAction: false,
             args: {
                 stepId: stepId,
             },
@@ -3470,8 +3472,8 @@ var Connection = (function () {
         this.setup(connection);
     }
     Connection.prototype.clearInterface = function () { };
-    Connection.prototype.updateInterface = function (_a) {
-        var gamedatas = _a.gamedatas;
+    Connection.prototype.updateInterface = function (connection) {
+        this.updateUI(connection);
     };
     Connection.prototype.setup = function (connection) {
         var _a = this.game.gamedatas.staticData.connections[this.connection.id], top = _a.top, left = _a.left, id = _a.id;
@@ -3557,6 +3559,16 @@ var GameMap = (function () {
             }
             element.replaceChildren();
         });
+        ['iroquoisControl_markers', 'cherokeeControl_markers'].forEach(function (markerSpot) {
+            var element = document.getElementById(markerSpot);
+            if (!element) {
+                return;
+            }
+            element.replaceChildren();
+        });
+        Object.values(this.commanderRerollsTrack).forEach(function (stock) {
+            return stock.removeAll();
+        });
         [
             YEAR_MARKER,
             ROUND_MARKER,
@@ -3564,17 +3576,26 @@ var GameMap = (function () {
             FRENCH_RAID_MARKER,
             VICTORY_MARKER,
             OPEN_SEAS_MARKER,
+            BRITISH_BATTLE_MARKER,
+            FRENCH_BATTLE_MARKER,
         ].forEach(function (markerId) {
-            var node = document.getElementById(markerId);
-            if (node) {
-                node.remove();
-            }
+            _this.game.tokenManager.removeCard({
+                id: markerId,
+                manager: 'markers',
+            });
+        });
+        [BRITISH, FRENCH].forEach(function (faction) {
+            _this.wieChitPlaceholders[faction].removeAll();
         });
     };
-    GameMap.prototype.updateInterface = function (_a) {
-        var gamedatas = _a.gamedatas;
-        this.setupUnitsAndSpaces({ gamedatas: gamedatas });
-        this.setupMarkers({ gamedatas: gamedatas });
+    GameMap.prototype.updateInterface = function (gamedatas) {
+        var _this = this;
+        this.updateUnitsAndSpaces(gamedatas);
+        this.updateMarkers(gamedatas);
+        gamedatas.connections.forEach(function (connection) {
+            _this.connections[connection.id].updateInterface(connection);
+        });
+        this.updateWieChits(gamedatas);
     };
     GameMap.prototype.setupConnections = function (_a) {
         var _this = this;
@@ -3590,22 +3611,34 @@ var GameMap = (function () {
         var _b, _c;
         var _this = this;
         var gamedatas = _a.gamedatas;
-        if (!this.losses) {
-            this.losses = (_b = {},
-                _b[LOSSES_BOX_BRITISH] = new LineStock(this.game.tokenManager, document.getElementById(LOSSES_BOX_BRITISH), {
-                    center: false,
-                }),
-                _b[LOSSES_BOX_FRENCH] = new LineStock(this.game.tokenManager, document.getElementById(LOSSES_BOX_FRENCH), {
-                    center: false,
-                }),
-                _b);
-        }
+        this.losses = (_b = {},
+            _b[LOSSES_BOX_BRITISH] = new LineStock(this.game.tokenManager, document.getElementById(LOSSES_BOX_BRITISH), {
+                center: false,
+            }),
+            _b[LOSSES_BOX_FRENCH] = new LineStock(this.game.tokenManager, document.getElementById(LOSSES_BOX_FRENCH), {
+                center: false,
+            }),
+            _b);
+        gamedatas.spaces.forEach(function (space) {
+            var _a;
+            _this.stacks[space.id] = (_a = {},
+                _a[BRITISH] = new UnitStack(_this.game.tokenManager, document.getElementById("".concat(space.id, "_british_stack")), {}, BRITISH),
+                _a[FRENCH] = new UnitStack(_this.game.tokenManager, document.getElementById("".concat(space.id, "_french_stack")), {}, FRENCH),
+                _a);
+        });
+        this.stacks[SAIL_BOX] = (_c = {},
+            _c[BRITISH] = new UnitStack(this.game.tokenManager, document.getElementById("".concat(SAIL_BOX, "_british_stack")), {}, BRITISH),
+            _c[FRENCH] = new UnitStack(this.game.tokenManager, document.getElementById("".concat(SAIL_BOX, "_french_stack")), {}, FRENCH),
+            _c);
+        this.updateUnitsAndSpaces(gamedatas);
+    };
+    GameMap.prototype.updateUnitsAndSpaces = function (gamedatas) {
+        var _this = this;
         [LOSSES_BOX_BRITISH, LOSSES_BOX_FRENCH].forEach(function (box) {
             var units = gamedatas.units.filter(function (unit) { return unit.location === box; });
             _this.losses[box].addCards(units);
         });
         gamedatas.spaces.forEach(function (space) {
-            var _a;
             if (space.raided) {
                 var element = document.getElementById("".concat(space.id, "_markers"));
                 if (!element) {
@@ -3632,12 +3665,6 @@ var GameMap = (function () {
                     type: FORT_CONSTRUCTION_MARKER,
                 });
             }
-            if (!_this.stacks[space.id]) {
-                _this.stacks[space.id] = (_a = {},
-                    _a[BRITISH] = new UnitStack(_this.game.tokenManager, document.getElementById("".concat(space.id, "_british_stack")), {}, BRITISH),
-                    _a[FRENCH] = new UnitStack(_this.game.tokenManager, document.getElementById("".concat(space.id, "_french_stack")), {}, FRENCH),
-                    _a);
-            }
             gamedatas.units
                 .filter(function (unit) { return unit.location === space.id; })
                 .forEach(function (unit) {
@@ -3652,10 +3679,6 @@ var GameMap = (function () {
                 }
             });
         });
-        this.stacks[SAIL_BOX] = (_c = {},
-            _c[BRITISH] = new UnitStack(this.game.tokenManager, document.getElementById("".concat(SAIL_BOX, "_british_stack")), {}, BRITISH),
-            _c[FRENCH] = new UnitStack(this.game.tokenManager, document.getElementById("".concat(SAIL_BOX, "_french_stack")), {}, FRENCH),
-            _c);
         gamedatas.units
             .filter(function (unit) { return unit.location === SAIL_BOX; })
             .forEach(function (unit) {
@@ -3733,11 +3756,10 @@ var GameMap = (function () {
             wrap: 'nowrap',
             gap: '0px',
         });
-        this.updateMarkers({ gamedatas: gamedatas });
+        this.updateMarkers(gamedatas);
     };
-    GameMap.prototype.updateMarkers = function (_a) {
+    GameMap.prototype.updateMarkers = function (gamedatas) {
         var _this = this;
-        var gamedatas = _a.gamedatas;
         var markers = gamedatas.markers;
         var yearMarker = markers[YEAR_MARKER];
         if (yearMarker && this.yearTrack[yearMarker.location]) {
@@ -3797,9 +3819,6 @@ var GameMap = (function () {
             }
         });
     };
-    GameMap.prototype.updateGameMap = function (_a) {
-        var gamedatas = _a.gamedatas;
-    };
     GameMap.prototype.setupWieChits = function (_a) {
         var gamedatas = _a.gamedatas;
         this.wieChitPlaceholders = {
@@ -3810,16 +3829,15 @@ var GameMap = (function () {
                 center: false,
             }),
         };
-        this.updateWieChits({ gamedatas: gamedatas });
+        this.updateWieChits(gamedatas);
     };
-    GameMap.prototype.updateWieChits = function (_a) {
+    GameMap.prototype.updateWieChits = function (gamedatas) {
         var _this = this;
-        var gamedatas = _a.gamedatas;
         Object.values(gamedatas.players).forEach(function (player) {
-            if (player.wieChit.hasChit && player.wieChit.chit === null) {
+            if (player.wieChit.hasChit && _this.game.getPlayerId() !== Number(player.id)) {
                 _this.placeFakeWieChit(player.faction);
             }
-            else if (player.wieChit.chit !== null) {
+            else if (player.wieChit.chit && _this.game.getPlayerId() === Number(player.id)) {
                 var chit = player.wieChit.chit;
                 chit.revealed = true;
                 _this.wieChitPlaceholders[player.faction].addCard(chit);
@@ -4210,9 +4228,15 @@ var NotificationManager = (function () {
     NotificationManager.prototype.setupNotifications = function () {
         var _this = this;
         console.log('notifications subscriptions setup');
+        dojo.connect(this.game.framework().notifqueue, 'addToLog', function () {
+            _this.game.addLogClass();
+        });
         var notifs = [
             'log',
             'message',
+            'clearTurn',
+            'refreshUI',
+            'refreshUIPrivate',
             'addSpentMarkerToUnits',
             'moveBattleVictoryMarker',
             'battle',
@@ -4315,15 +4339,39 @@ var NotificationManager = (function () {
             });
         });
     };
-    NotificationManager.prototype.notif_smallRefreshInterface = function (notif) {
+    NotificationManager.prototype.notif_clearTurn = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var notifIds;
+            return __generator(this, function (_a) {
+                notifIds = notif.args.notifIds;
+                this.game.cancelLogs(notifIds);
+                return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_refreshUI = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var updatedGamedatas;
             return __generator(this, function (_a) {
-                updatedGamedatas = __assign(__assign({}, this.game.gamedatas), notif.args);
-                this.game.clearInterface();
+                updatedGamedatas = __assign(__assign({}, this.game.gamedatas), notif.args.datas);
                 this.game.gamedatas = updatedGamedatas;
+                this.game.clearInterface();
                 this.game.playerManager.updatePlayers({ gamedatas: updatedGamedatas });
-                this.game.gameMap.updateInterface({ gamedatas: updatedGamedatas });
+                this.game.gameMap.updateInterface(updatedGamedatas);
+                this.game.pools.updateInterface(updatedGamedatas);
+                return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_refreshUIPrivate = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, wieChit, faction;
+            return __generator(this, function (_b) {
+                _a = notif.args, wieChit = _a.wieChit, faction = _a.faction;
+                if (wieChit) {
+                    wieChit.revealed = true;
+                    this.game.gameMap.wieChitPlaceholders[faction].addCard(wieChit);
+                }
                 return [2];
             });
         });
@@ -5084,7 +5132,7 @@ var PlayerManager = (function () {
     PlayerManager.prototype.updatePlayers = function (_a) {
         var gamedatas = _a.gamedatas;
         for (var playerId in gamedatas.players) {
-            this.players[playerId].updatePlayer({ gamedatas: gamedatas });
+            this.players[playerId].updatePlayer(gamedatas.players[playerId]);
         }
     };
     PlayerManager.prototype.clearInterface = function () {
@@ -5108,8 +5156,8 @@ var BatPlayer = (function () {
         var gamedatas = game.gamedatas;
         this.setupPlayer({ gamedatas: gamedatas });
     }
-    BatPlayer.prototype.updatePlayer = function (_a) {
-        var gamedatas = _a.gamedatas;
+    BatPlayer.prototype.updatePlayer = function (playerGamedatas) {
+        this.updatePlayerPanel({ playerGamedatas: playerGamedatas });
     };
     BatPlayer.prototype.setupPlayer = function (_a) {
         var gamedatas = _a.gamedatas;
@@ -5163,17 +5211,22 @@ var Pools = (function () {
         var gamedatas = game.gamedatas;
         this.setupPools({ gamedatas: gamedatas });
     }
+    Pools.prototype.clearInterface = function () {
+        Object.values(this.stocks).forEach(function (stock) { return stock.removeAll(); });
+    };
+    Pools.prototype.updateInterface = function (gamedatas) {
+        this.updatePools(gamedatas);
+    };
     Pools.prototype.setupPoolsStocks = function (_a) {
         var _this = this;
         var gamedatas = _a.gamedatas;
         POOLS.forEach(function (poolId) {
             _this.stocks[poolId] = new LineStock(_this.game.tokenManager, document.getElementById(poolId), { center: false, gap: '2px' });
         });
-        this.updatePools({ gamedatas: gamedatas });
+        this.updatePools(gamedatas);
     };
-    Pools.prototype.updatePools = function (_a) {
+    Pools.prototype.updatePools = function (gamedatas) {
         var _this = this;
-        var gamedatas = _a.gamedatas;
         POOLS.forEach(function (poolId) {
             var units = gamedatas.units.filter(function (unit) { return unit.location === poolId; });
             if (units.length === 0) {
@@ -5189,7 +5242,6 @@ var Pools = (function () {
             .insertAdjacentHTML('beforeend', tplPoolsContainer());
         this.setupPoolsStocks({ gamedatas: gamedatas });
     };
-    Pools.prototype.clearInterface = function () { };
     return Pools;
 }());
 var tplPoolsContainer = function () {

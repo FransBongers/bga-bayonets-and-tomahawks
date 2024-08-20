@@ -25,10 +25,8 @@ class PlayerManager {
 
     for (const playerId in game.gamedatas.players) {
       const player = game.gamedatas.players[playerId];
-        this.players[playerId] = new BatPlayer({ player, game: this.game });
-     
+      this.players[playerId] = new BatPlayer({ player, game: this.game });
     }
-
   }
 
   getPlayer({ playerId }: { playerId: number }): BatPlayer {
@@ -45,7 +43,7 @@ class PlayerManager {
 
   updatePlayers({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
     for (const playerId in gamedatas.players) {
-      this.players[playerId].updatePlayer({ gamedatas });
+      this.players[playerId].updatePlayer(gamedatas.players[playerId]);
     }
   }
 

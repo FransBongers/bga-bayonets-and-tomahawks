@@ -126,6 +126,11 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
       throw new \feException("ERROR 006");
     }
 
+    Notifications::message(clienttranslate('${player_name} uses ${actionPoint}'),[
+      'player' => $player,
+      'actionPoint' => $actionPointId,
+    ]);
+
     // If there are more actionPoints insert same action
     // Check for more than one as the one is resolved with this action
     if (count($stateArgs['availableActionPoints']) > 1) {

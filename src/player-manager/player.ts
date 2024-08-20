@@ -49,7 +49,9 @@ class BatPlayer {
   // .##....##.##..........##....##.....##.##.......
   // ..######..########....##.....#######..##.......
 
-  updatePlayer({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {}
+  updatePlayer(playerGamedatas: BayonetsAndTomahawksPlayerData ) {
+    this.updatePlayerPanel({ playerGamedatas });
+  }
 
   // Setup functions
   setupPlayer({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
