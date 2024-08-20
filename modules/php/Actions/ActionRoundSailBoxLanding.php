@@ -179,7 +179,11 @@ class ActionRoundSailBoxLanding extends \BayonetsAndTomahawks\Models\AtomicActio
     $spaces = Spaces::getAll()->toArray();
     $friendlySeaZones = GameMap::getFriendlySeaZones($faction);
 
-    return Utils::filter($spaces, function ($space) use ($friendlySeaZones) {
+    return Utils::filter($spaces, function ($space) use ($friendlySeaZones, $faction) {
+      if ($faction === FRENCH && $space->getBritishBase()) {
+        return false;
+      }
+
       return $space->isCoastal() && Utils::array_some($space->getAdjacentSeaZones(), function ($seaZone) use ($friendlySeaZones) {
         return in_array($seaZone, $friendlySeaZones);
       });

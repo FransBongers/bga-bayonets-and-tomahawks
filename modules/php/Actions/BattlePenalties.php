@@ -44,16 +44,16 @@ class BattlePenalties extends \BayonetsAndTomahawks\Actions\Battle
     $parentInfo = $this->ctx->getParent()->getInfo();
     $spaceId = $parentInfo['spaceId'];
     $space = Spaces::get($spaceId);
-        
+
     $attackingFaction = $parentInfo['attacker'];
     $defendingFaction = $parentInfo['defender'];
-    
+
     $playersPerFaction = Players::getPlayersForFactions();
 
     $attackingPlayer = $playersPerFaction[$attackingFaction];
     $defendingPlayer = $playersPerFaction[$defendingFaction];
 
-    
+
     $this->battlePenalties($space, $attackingPlayer, $attackingFaction, $defendingPlayer, $defendingFaction);
 
     $this->resolveAction(['automatic' => true]);
@@ -187,19 +187,16 @@ class BattlePenalties extends \BayonetsAndTomahawks\Actions\Battle
       }
     }
 
-    if ($penalties[$attackingFaction] < 0) {
-      Notifications::message('${player_name} receives ${penaltyCount} Battle Penalties', [
-        'player' => $attackingPlayer,
-        'penaltyCount' => abs($penalties[$attackingFaction]),
-      ]);
-      $this->moveBattleVictoryMarker($attackingPlayer, $attackingFaction, $penalties[$attackingFaction]);
-    }
-    if ($penalties[$defendingFaction] < 0) {
-      Notifications::message('${player_name} receives ${penaltyCount} Battle Penalties', [
-        'player' => $defendingPlayer,
-        'penaltyCount' => abs($penalties[$defendingFaction]),
-      ]);
-      $this->moveBattleVictoryMarker($defendingPlayer, $defendingFaction, $penalties[$attackingFaction]);
+    foreach ([$attackingFaction, $defendingFaction] as $index => $faction) {
+      $penalty = abs($penalties[$faction]);
+      if ($penalty > 0) {
+        $text = $penalty === 1 ? clienttranslate('${player_name} receives 1 Battle Penalty') : clienttranslate('${player_name} receives ${penaltyCount} Battle Penalties');
+        Notifications::message($text, [
+          'player' => $index === 0 ? $attackingPlayer : $defendingPlayer,
+          'penaltyCount' => $penalty,
+        ]);
+        $this->moveBattleVictoryMarker($attackingPlayer, $attackingFaction, $penalties[$attackingFaction]);
+      }
     }
   }
 }

@@ -302,6 +302,7 @@ trait TurnTrait
       'children' => [
         [
           'action' => DRAW_REINFORCEMENTS,
+          'playerId' => $britishPlayerId,
           'pool' => POOL_BRITISH_COLONIAL_VOW,
         ],
         [
@@ -336,6 +337,7 @@ trait TurnTrait
       'children' => [
         [
           'action' => DRAW_REINFORCEMENTS,
+          'playerId' => $britishPlayerId,
           'pool' => POOL_FLEETS,
         ],
         [
@@ -346,6 +348,7 @@ trait TurnTrait
         ],
         [
           'action' => DRAW_REINFORCEMENTS,
+          'playerId' => $britishPlayerId,
           'pool' => POOL_BRITISH_METROPOLITAN_VOW,
         ],
         [
@@ -368,6 +371,7 @@ trait TurnTrait
         ],
         [
           'action' => DRAW_REINFORCEMENTS,
+          'playerId' => $frenchPlayerId,
           'pool' => POOL_FRENCH_METROPOLITAN_VOW,
         ],
         [
