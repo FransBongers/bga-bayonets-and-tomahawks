@@ -264,7 +264,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     $player = $player !== null ? $player : Players::getPlayerForFaction($this->getFaction());
     $eliminated = false;
 
-    if ($this->state === 1 || $this->isIndian()) {
+    if ($this->reduced === 1 || $this->isIndian()) {
       $this->eliminate($player);
       $eliminated = true;
     } else {

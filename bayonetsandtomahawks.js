@@ -2269,6 +2269,54 @@ var INDIAN_AP_2X = 'INDIAN_AP_2X';
 var SAIL_ARMY_AP = 'SAIL_ARMY_AP';
 var SAIL_ARMY_AP_2X = 'SAIL_ARMY_AP_2X';
 var FRENCH_LIGHT_ARMY_AP = 'FRENCH_LIGHT_ARMY_AP';
+var AR_START = 'arStart';
+var ARMED_BATTOEMEN = 'armedBattoemen';
+var A_RIGHT_TO_PLUNDER_AND_CAPTIVES = 'aRightToPlunderCaptives';
+var BRITISH_ENCROACHMENT = 'britishEncroachment';
+var CHEROKEE_DIPLOMACY = 'cherokeeDiplomacy';
+var CONSTRUCTION_FRENZY = 'constructionFrenzy';
+var COUP_DE_MAIN = 'coupDeMain';
+var DELAYED_SUPPLIES_FROM_FRANCE = 'delayedSuppliesFromFrance';
+var DISEASE_IN_BRITISH_CAMP = 'diseaseInBritishCamp';
+var DISEASE_IN_FRENCH_CAMP = 'diseaseInFrenchCamp';
+var FORCED_MARCH = 'forcedMarch';
+var FRENCH_LAKE_WARSHIPS = 'frenchLakeWarships';
+var FRENCH_TRADE_GOODS_DESTROYED = 'frenchTradeGoodsDestroyed';
+var FRONTIERS_ABLAZE = 'frontiersAblaze';
+var HESITANT_BRITISH_GENERAL = 'hesitantBritishGeneral';
+var INDOMITABLE_ABBATIS = 'indomitableAbbatis';
+var IROQUOIS_DIPLOMACY = 'iroquoisDiplomacy';
+var LETS_SEE_HOW_THE_FRENCH_FIGHT = 'letsSeeHowTheFrenchFight';
+var LUCKY_CANNONBALL = 'luckyCannonball';
+var PENNSYLVANIAS_PEACE_PROMISES = 'pennsylvaniasPeacePromises';
+var PERFECT_VOLLEYS = 'perfectVolleys';
+var PURSUIT_OF_ELEVATED_STATUS = 'pursuitOfElevatedStatus';
+var RELUCTANT_WAGONEERS = 'reluctantWagoneers';
+var ROUGH_SEAS = 'roughSeas';
+var ROUND_UP_MEN_AND_EQUIPMENT = 'roundUpMenAndEquipment';
+var SMALLPOX_EPIDEMIC = 'smallpoxEpidemic';
+var SMALLPOX_INFECTED_BLANKETS = 'smallpoxInfectedBlankets';
+var STAGED_LACROSSE_GAME = 'stagedLacrosseGame';
+var SURPRISE_LANDING = 'surpriseLanding';
+var WILDERNESS_AMBUSH = 'wildernessAmbush';
+var WINTERING_REAR_ADMIRAL = 'winteringRearAdmiral';
+var NON_INDIAN_LIGHT = 'NON_INDIAN_LIGHT';
+var HIGHLAND_BRIGADES = 'HIGHLAND_BRIGADES';
+var METROPOLITAN_BRIGADES = 'METROPOLITAN_BRIGADES';
+var NON_METROPOLITAN_BRIGADES = 'NON_METROPOLITAN_BRIGADES';
+var FLEETS = 'FLEETS';
+var BASTIONS_OR_FORT = 'BASTIONS_OR_FORT';
+var MILITIA = 'MILITIA';
+var BATTLE_ROLL_SEQUENCE = [
+    NON_INDIAN_LIGHT,
+    INDIAN,
+    HIGHLAND_BRIGADES,
+    METROPOLITAN_BRIGADES,
+    NON_METROPOLITAN_BRIGADES,
+    FLEETS,
+    BASTIONS_OR_FORT,
+    ARTILLERY
+];
 define([
     'dojo',
     'dojo/_base/declare',
@@ -6378,6 +6426,8 @@ var BattleRollsRerollsState = (function () {
     BattleRollsRerollsState.prototype.onEnteringState = function (args) {
         debug('Entering BattleRollsRerollsState');
         this.args = args;
+        this.singleSource = false;
+        this.singleDie = false;
         this.updateInterfaceInitialStep();
     };
     BattleRollsRerollsState.prototype.onLeavingState = function () {
@@ -6386,6 +6436,11 @@ var BattleRollsRerollsState = (function () {
     BattleRollsRerollsState.prototype.setDescription = function (activePlayerId) { };
     BattleRollsRerollsState.prototype.updateInterfaceInitialStep = function () {
         var _this = this;
+        if (this.args.diceResults.length === 1) {
+            this.singleDie = true;
+            this.updateInterfaceSelectSource({ dieResult: this.args.diceResults[0] });
+            return;
+        }
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
             text: _('${you} may select a die to reroll'),
@@ -6399,7 +6454,7 @@ var BattleRollsRerollsState = (function () {
                 text: _this.game.format_string_recursive('${tkn_dieResult}', {
                     tkn_dieResult: dieResult.result,
                 }),
-                callback: function () { return _this.updateInterfaceConfirm({ dieResult: dieResult }); },
+                callback: function () { return _this.updateInterfaceSelectSource({ dieResult: dieResult }); },
             });
         });
         this.game.addPassButton({
@@ -6407,14 +6462,55 @@ var BattleRollsRerollsState = (function () {
         });
         this.game.addUndoButtons(this.args);
     };
-    BattleRollsRerollsState.prototype.updateInterfaceConfirm = function (_a) {
+    BattleRollsRerollsState.prototype.updateInterfaceSelectSource = function (_a) {
         var _this = this;
         var dieResult = _a.dieResult;
+        if (dieResult.availableRerollSources.length === 1) {
+            this.singleSource = true;
+            this.updateInterfaceConfirm({
+                dieResult: dieResult,
+                rerollSource: dieResult.availableRerollSources[0],
+            });
+            return;
+        }
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _('Reroll ${tkn_dieResult} ?'),
+            text: this.singleDie
+                ? _('${you} may select a source to Reroll ${tkn_dieResult}')
+                : _('${you} must select a source to Reroll ${tkn_dieResult}'),
             args: {
                 tkn_dieResult: dieResult.result,
+                you: '${you}',
+            },
+        });
+        dieResult.availableRerollSources.forEach(function (source) {
+            return _this.game.addPrimaryActionButton({
+                id: "reroll_".concat(source, "_btn"),
+                text: _this.getSourceText(source),
+                callback: function () {
+                    return _this.updateInterfaceConfirm({ dieResult: dieResult, rerollSource: source });
+                },
+            });
+        });
+        if (this.singleDie) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
+        }
+        else {
+            this.game.addCancelButton();
+        }
+    };
+    BattleRollsRerollsState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var dieResult = _a.dieResult, rerollSource = _a.rerollSource;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Use ${source} to Reroll ${tkn_dieResult} ?'),
+            args: {
+                tkn_dieResult: dieResult.result,
+                source: this.getSourceText(rerollSource),
             },
         });
         var callback = function () {
@@ -6423,21 +6519,36 @@ var BattleRollsRerollsState = (function () {
                 action: 'actBattleRollsRerolls',
                 args: {
                     dieResult: dieResult,
-                    rerollSource: dieResult.availableRerollSources[0]
+                    rerollSource: rerollSource,
                 },
             });
         };
-        if (this.game.settings.get({
-            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
-        }) === PREF_ENABLED) {
-            callback();
+        this.game.addConfirmButton({
+            callback: callback,
+        });
+        if (this.singleDie && this.singleSource) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
         }
         else {
-            this.game.addConfirmButton({
-                callback: callback,
-            });
+            this.game.addCancelButton();
         }
-        this.game.addCancelButton();
+    };
+    BattleRollsRerollsState.prototype.getSourceText = function (source) {
+        switch (source) {
+            case COMMANDER:
+                return _('Commander');
+            case HIGHLAND_BRIGADES:
+                return _('Highland Brigade');
+            case PERFECT_VOLLEYS:
+                return _('Perfect Volleys');
+            case LUCKY_CANNONBALL:
+                return _('Lucky Cannonball');
+            default:
+                return 'Unknown source';
+        }
     };
     return BattleRollsRerollsState;
 }());

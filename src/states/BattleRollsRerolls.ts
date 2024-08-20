@@ -1,6 +1,8 @@
 class BattleRollsRerollsState implements State {
   private game: BayonetsAndTomahawksGame;
   private args: OnEnteringBattleRollsRerollsStateArgs;
+  private singleSource: boolean;
+  private singleDie: boolean;
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
@@ -9,6 +11,8 @@ class BattleRollsRerollsState implements State {
   onEnteringState(args: OnEnteringBattleRollsRerollsStateArgs) {
     debug('Entering BattleRollsRerollsState');
     this.args = args;
+    this.singleSource = false;
+    this.singleDie = false;
     this.updateInterfaceInitialStep();
   }
 
@@ -35,6 +39,11 @@ class BattleRollsRerollsState implements State {
   // ..######.....##....########.##.........######.
 
   private updateInterfaceInitialStep() {
+    if (this.args.diceResults.length === 1) {
+      this.singleDie = true;
+      this.updateInterfaceSelectSource({ dieResult: this.args.diceResults[0] });
+      return;
+    }
     this.game.clearPossible();
 
     this.game.clientUpdatePageTitle({
@@ -50,7 +59,7 @@ class BattleRollsRerollsState implements State {
         text: this.game.format_string_recursive('${tkn_dieResult}', {
           tkn_dieResult: dieResult.result,
         }),
-        callback: () => this.updateInterfaceConfirm({ dieResult }),
+        callback: () => this.updateInterfaceSelectSource({ dieResult }),
       })
     );
 
@@ -65,17 +74,64 @@ class BattleRollsRerollsState implements State {
     this.game.addUndoButtons(this.args);
   }
 
-  private updateInterfaceConfirm({
+  private updateInterfaceSelectSource({
     dieResult,
   }: {
     dieResult: BTDieResultWithRerollSources;
   }) {
+    if (dieResult.availableRerollSources.length === 1) {
+      this.singleSource = true;
+      this.updateInterfaceConfirm({
+        dieResult,
+        rerollSource: dieResult.availableRerollSources[0],
+      });
+      return;
+    }
     this.game.clearPossible();
 
     this.game.clientUpdatePageTitle({
-      text: _('Reroll ${tkn_dieResult} ?'),
+      text: this.singleDie
+        ? _('${you} may select a source to Reroll ${tkn_dieResult}')
+        : _('${you} must select a source to Reroll ${tkn_dieResult}'),
       args: {
         tkn_dieResult: dieResult.result,
+        you: '${you}',
+      },
+    });
+
+    dieResult.availableRerollSources.forEach((source) =>
+      this.game.addPrimaryActionButton({
+        id: `reroll_${source}_btn`,
+        text: this.getSourceText(source),
+        callback: () =>
+          this.updateInterfaceConfirm({ dieResult, rerollSource: source }),
+      })
+    );
+
+    if (this.singleDie) {
+      this.game.addPassButton({
+        optionalAction: this.args.optionalAction,
+      });
+      this.game.addUndoButtons(this.args);
+    } else {
+      this.game.addCancelButton();
+    }
+  }
+
+  private updateInterfaceConfirm({
+    dieResult,
+    rerollSource,
+  }: {
+    dieResult: BTDieResultWithRerollSources;
+    rerollSource: string;
+  }) {
+    this.game.clearPossible();
+
+    this.game.clientUpdatePageTitle({
+      text: _('Use ${source} to Reroll ${tkn_dieResult} ?'),
+      args: {
+        tkn_dieResult: dieResult.result,
+        source: this.getSourceText(rerollSource),
       },
     });
 
@@ -85,24 +141,31 @@ class BattleRollsRerollsState implements State {
         action: 'actBattleRollsRerolls',
         args: {
           dieResult: dieResult,
-          rerollSource: dieResult.availableRerollSources[0]
+          rerollSource,
         },
       });
     };
 
-    if (
-      this.game.settings.get({
-        id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
-      }) === PREF_ENABLED
-    ) {
-      callback();
-    } else {
-      this.game.addConfirmButton({
-        callback,
-      });
-    }
+    // if (
+    //   this.game.settings.get({
+    //     id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+    //   }) === PREF_ENABLED
+    // ) {
+    //   callback();
+    // } else {
+    this.game.addConfirmButton({
+      callback,
+    });
+    // }
 
-    this.game.addCancelButton();
+    if (this.singleDie && this.singleSource) {
+      this.game.addPassButton({
+        optionalAction: this.args.optionalAction,
+      });
+      this.game.addUndoButtons(this.args);
+    } else {
+      this.game.addCancelButton();
+    }
   }
 
   //  .##.....##.########.####.##.......####.########.##....##
@@ -112,6 +175,21 @@ class BattleRollsRerollsState implements State {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  private getSourceText(source: string) {
+    switch (source) {
+      case COMMANDER:
+        return _('Commander');
+      case HIGHLAND_BRIGADES:
+        return _('Highland Brigade');
+      case PERFECT_VOLLEYS:
+        return _('Perfect Volleys');
+      case LUCKY_CANNONBALL:
+        return _('Lucky Cannonball');
+      default:
+        return 'Unknown source';
+    }
+  }
 
   //  ..######..##.......####..######..##....##
   //  .##....##.##........##..##....##.##...##.

@@ -11,6 +11,7 @@ use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
@@ -68,6 +69,8 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
     $this->removeMarkers($space, $playersPerFaction);
 
     $this->updateControl($space, $winningFaction, $playersPerFaction);
+
+    $this->updateLuckyCannonballAndPerfectVolleysEventAbilities();
 
     Notifications::battleCleanup($space, $attackerMarker, $defenderMarker);
 
@@ -142,11 +145,28 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  /**
+   * These abilities can only be used in one battle so if they have been used
+   * set them to their limit so they will not be available in another battle
+   */
+  private function updateLuckyCannonballAndPerfectVolleysEventAbilities()
+  {
+    foreach ([BRITISH, FRENCH] as $faction) {
+      $cardInPlay = Cards::getTopOf(Locations::cardInPlay($faction));
+      $event = $cardInPlay->getEvent();
+      if ($event !== null && $event['id'] === PERFECT_VOLLEYS && Globals::getUsedEventCount($faction) > 0 && Globals::getUsedEventCount($faction) < 3) {
+        Globals::setUsedEventCount($faction, 3);
+      } else if ($event !== null && $event['id'] === LUCKY_CANNONBALL && Globals::getUsedEventCount($faction) > 0 && Globals::getUsedEventCount($faction) < 3) {
+        Globals::setUsedEventCount($faction, 3);
+      }
+    }
+  }
+
   private function removeMarkers($space, $playersPerFaction)
   {
     $markers = Markers::getInLocationLike($space->getId());
     $markersToRemove = [BRITISH_MILITIA_MARKER, FRENCH_MILITIA_MARKER, LANDING_MARKER, MARSHAL_TROOPS_MARKER];
-    foreach($markers as $marker) {
+    foreach ($markers as $marker) {
       if (!in_array($marker->getType(), $markersToRemove)) {
         continue;
       }

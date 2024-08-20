@@ -11,6 +11,7 @@ use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\AtomicActions;
+use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Units;
@@ -113,6 +114,11 @@ class Battle extends \BayonetsAndTomahawks\Models\AtomicAction
       in_array($this->battleRollsSequenceStepShapeMap[$battleRollsSequenceStep], $commander->getRerollShapes()) && // Shape matches
       intval(explode('_', $commander->getLocation())[4]) > 0; // Rerolls are available
 
+    $cardInPlay = Cards::getTopOf(Locations::cardInPlay($faction));
+    $event = $cardInPlay->getEvent();
+    $perfectVolleysAvailable = $event !== null && $event['id'] === PERFECT_VOLLEYS && Globals::getUsedEventCount($faction) < 3;
+    $luckyCannonballAvailable = $event !== null && $event['id'] === LUCKY_CANNONBALL && Globals::getUsedEventCount($faction) < 3;
+
     $result = [];
 
     foreach ($diceResultsWithRerollSources as $dieResult) {
@@ -124,6 +130,14 @@ class Battle extends \BayonetsAndTomahawks\Models\AtomicAction
 
       if ($commanderRerollAvailable && !in_array(COMMANDER, $dieResult['usedRerollSources'])) {
         $dieResult['availableRerollSources'][] = COMMANDER;
+      }
+
+      if ($perfectVolleysAvailable && in_array($battleRollsSequenceStep,  [HIGHLAND_BRIGADES, METROPOLITAN_BRIGADES]) && !in_array(PERFECT_VOLLEYS, $dieResult['usedRerollSources'])) {
+        $dieResult['availableRerollSources'][] = PERFECT_VOLLEYS;
+      }
+
+      if ($luckyCannonballAvailable && in_array($battleRollsSequenceStep,  [FLEETS, BASTIONS_OR_FORT, ARTILLERY]) && !in_array(LUCKY_CANNONBALL, $dieResult['usedRerollSources'])) {
+        $dieResult['availableRerollSources'][] = LUCKY_CANNONBALL;
       }
 
       $result[] = $dieResult;

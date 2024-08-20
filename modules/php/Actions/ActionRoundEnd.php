@@ -129,6 +129,9 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     Globals::setLostAPIndian([]);
     Globals::setPlacedConstructionMarkers([]);
     Spaces::setStartOfTurnControl();
+    Globals::setUsedEventBritish(0);
+    Globals::setUsedEventFrench(0);
+    Globals::setUsedEventIndian(0);
 
     Markers::move(ROUND_MARKER, $nextActionRound);
     Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), $nextActionRound);

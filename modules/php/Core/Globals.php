@@ -39,6 +39,9 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'controlCherokee' => 'str',
     'controlIroquois' => 'str',
     'placedConstructionMarkers' => 'obj',
+    'usedEventBritish' => 'int',
+    'usedEventFrench' => 'int', 
+    'usedEventIndian' => 'int', 
   ];
 
   protected static $table = 'global_variables';
@@ -169,5 +172,41 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     self::setControlCherokee(NEUTRAL);
     self::setControlIroquois(NEUTRAL);
     self::setPlacedConstructionMarkers([]);
+    self::setUsedEventBritish(0);
+    self::setUsedEventFrench(0);
+    self::setUsedEventIndian(0);
+  }
+
+  public static function getUsedEventCount($faction) {
+    if ($faction === BRITISH) {
+      return self::getUsedEventBritish();
+    } else if ($faction === FRENCH) {
+      return self::getUsedEventFrench();
+    } else if ($faction === INDIAN) {
+      return self::getUsedEventIndian();
+    }
+    return null;
+  }
+
+  public static function setUsedEventCount($faction, $value) {
+    if ($faction === BRITISH) {
+      return self::setUsedEventBritish($value);
+    } else if ($faction === FRENCH) {
+      return self::setUsedEventFrench($value);
+    } else if ($faction === INDIAN) {
+      return self::setUsedEventIndian($value);
+    }
+    return null;
+  }
+
+  public static function incUsedEventCount($faction, $increase) {
+    if ($faction === BRITISH) {
+      return self::incUsedEventBritish($increase);
+    } else if ($faction === FRENCH) {
+      return self::incUsedEventFrench($increase);
+    } else if ($faction === INDIAN) {
+      return self::incUsedEventIndian($increase);
+    }
+    return null;
   }
 }

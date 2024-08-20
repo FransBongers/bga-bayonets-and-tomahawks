@@ -187,8 +187,10 @@ trait DebugTrait
 
   function debug_test()
   {
-    WarInEuropeChits::drawChit(BRITISH);
-    WarInEuropeChits::drawChit(FRENCH);
+    Notifications::log('globals', Globals::getUsedEventCount(BRITISH));
+
+    // WarInEuropeChits::drawChit(BRITISH);
+    // WarInEuropeChits::drawChit(FRENCH);
 
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(BOSTON), BRITISH);
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(NEW_YORK), BRITISH);
@@ -202,55 +204,8 @@ trait DebugTrait
 
 
 
-    // WarInEuropeChits::drawChit(FRENCH);
-
-    // $chit = WarInEuropeChits::getTopOf(Locations::wieChitPool(BRITISH));
-    // $chit->setLocation(Locations::wieChitPlaceholder(BRITISH));
-    // $chit = WarInEuropeChits::getTopOf(Locations::wieChitPool(FRENCH));
-    // $chit->setLocation(Locations::wieChitPlaceholder(FRENCH));
-
-    // Notifications::log('markers', Markers::getInLocationLike(HALIFAX));
-
-    // Units::get('unit_31')->setLocation(ALBANY);
-    // $data = $this->getStacksAndSupplySources();
-    // Notifications::log('getStacksAndSupplySources', $data);
-
-    // foreach ([BRITISH, FRENCH] as $faction) {
-    //   $otherFaction = BTHelpers::getOtherFaction($faction);
-    //   $this->checkSupplyForFaction($faction, $data['stacks'][$faction], $data['supplySources'][$faction], $data['stacks'][$otherFaction]);
-    // }
-
-
-
-    // Connections::get('Loyalhanna_RaysTown')->setRoad(1);
-    // Connections::get('RaysTown_Shamokin')->setRoad(2);
-    // Globals::setPlacedConstructionMarkers([]);
-    // Notifications::log('marker', Markers::get('marshalTroopsMarker_1'));
-    // Notifications::log('hasStackMarker', Spaces::get(ALBANY)->hasStackMarker(OUT_OF_SUPPLY_MARKER, BRITISH));
-
-
-
-    // $next = Engine::getNextUnresolved();
-    // Notifications::log('index', GameMap::factionOutnumbersEnemyInSpace(Spaces::get(TICONDEROGA), FRENCH));
-
-    // Notifications::log('markers', GameMap::getMarkersOnMap(OUT_OF_SUPPLY_MARKER,BRITISH));
-
-    // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), ROUT_MARKER, Spaces::get(ALBANY), BRITISH);
-    // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), OUT_OF_SUPPLY_MARKER, Spaces::get(BOSTON), BRITISH);
-    // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), OUT_OF_SUPPLY_MARKER, Spaces::get(CARLISLE), BRITISH);
-
-    // Players::scoreVictoryPoints(Players::getPlayerForFaction(FRENCH),3);
-    // GameMap::performIndianNationControlProcedure(IROQUOIS, BRITISH);
-    // GameMap::performIndianNationControlProcedure(CHEROKEE, FRENCH);
-    // Globals::setControlCherokee(NEUTRAL);
-    // Globals::setControlIroquois(NEUTRAL);
-
-    // Globals::setLostAPIndian([]);
-    // Globals::setLostAPBritish([]);
-    // Globals::setLostAPFrench([]);
-
-    // Cards::get('Card33')->insertOnTop(Locations::buildUpDeck(FRENCH));
-    // Cards::get('Card21')->insertOnTop(Locations::buildUpDeck(BRITISH));
+    // Cards::get('Card27')->insertOnTop(Locations::buildUpDeck(FRENCH));
+    // Cards::get('Card14')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card38')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card13')->insertOnTop(Locations::campaignDeck(BRITISH));
 

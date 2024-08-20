@@ -294,3 +294,62 @@ const INDIAN_AP_2X = 'INDIAN_AP_2X';
 const SAIL_ARMY_AP = 'SAIL_ARMY_AP';
 const SAIL_ARMY_AP_2X = 'SAIL_ARMY_AP_2X';
 const FRENCH_LIGHT_ARMY_AP = 'FRENCH_LIGHT_ARMY_AP';
+
+/**
+ * Events
+ */
+const AR_START = 'arStart';
+const ARMED_BATTOEMEN = 'armedBattoemen';
+const A_RIGHT_TO_PLUNDER_AND_CAPTIVES = 'aRightToPlunderCaptives';
+const BRITISH_ENCROACHMENT = 'britishEncroachment';
+const CHEROKEE_DIPLOMACY = 'cherokeeDiplomacy';
+const CONSTRUCTION_FRENZY = 'constructionFrenzy';
+const COUP_DE_MAIN = 'coupDeMain';
+const DELAYED_SUPPLIES_FROM_FRANCE = 'delayedSuppliesFromFrance';
+const DISEASE_IN_BRITISH_CAMP = 'diseaseInBritishCamp';
+const DISEASE_IN_FRENCH_CAMP = 'diseaseInFrenchCamp';
+const FORCED_MARCH = 'forcedMarch';
+const FRENCH_LAKE_WARSHIPS = 'frenchLakeWarships';
+const FRENCH_TRADE_GOODS_DESTROYED = 'frenchTradeGoodsDestroyed';
+const FRONTIERS_ABLAZE = 'frontiersAblaze';
+const HESITANT_BRITISH_GENERAL = 'hesitantBritishGeneral';
+const INDOMITABLE_ABBATIS = 'indomitableAbbatis';
+const IROQUOIS_DIPLOMACY = 'iroquoisDiplomacy';
+const LETS_SEE_HOW_THE_FRENCH_FIGHT = 'letsSeeHowTheFrenchFight';
+const LUCKY_CANNONBALL = 'luckyCannonball';
+const PENNSYLVANIAS_PEACE_PROMISES = 'pennsylvaniasPeacePromises';
+const PERFECT_VOLLEYS = 'perfectVolleys';
+const PURSUIT_OF_ELEVATED_STATUS = 'pursuitOfElevatedStatus';
+const RELUCTANT_WAGONEERS = 'reluctantWagoneers';
+const ROUGH_SEAS = 'roughSeas';
+const ROUND_UP_MEN_AND_EQUIPMENT = 'roundUpMenAndEquipment';
+const SMALLPOX_EPIDEMIC = 'smallpoxEpidemic';
+const SMALLPOX_INFECTED_BLANKETS = 'smallpoxInfectedBlankets';
+const STAGED_LACROSSE_GAME = 'stagedLacrosseGame';
+const SURPRISE_LANDING = 'surpriseLanding';
+const WILDERNESS_AMBUSH = 'wildernessAmbush';
+const WINTERING_REAR_ADMIRAL = 'winteringRearAdmiral';
+
+/**
+ * Battle roll sequence
+ */
+const NON_INDIAN_LIGHT = 'NON_INDIAN_LIGHT';
+// const INDIAN = 'INDIAN'; // Already defined
+const HIGHLAND_BRIGADES = 'HIGHLAND_BRIGADES';
+const METROPOLITAN_BRIGADES = 'METROPOLITAN_BRIGADES';
+const NON_METROPOLITAN_BRIGADES = 'NON_METROPOLITAN_BRIGADES';
+const FLEETS = 'FLEETS';
+const BASTIONS_OR_FORT = 'BASTIONS_OR_FORT';
+// const ARTILLERY = 'ARTILLERY'; // Already defined
+const MILITIA = 'MILITIA';
+
+const BATTLE_ROLL_SEQUENCE = [
+  NON_INDIAN_LIGHT,
+  INDIAN,
+  HIGHLAND_BRIGADES,
+  METROPOLITAN_BRIGADES,
+  NON_METROPOLITAN_BRIGADES,
+  FLEETS,
+  BASTIONS_OR_FORT,
+  ARTILLERY
+];

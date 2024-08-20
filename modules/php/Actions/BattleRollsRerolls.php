@@ -169,6 +169,10 @@ class BattleRollsRerolls extends \BayonetsAndTomahawks\Actions\Battle
     $commander = null;
     if ($rerollSource === COMMANDER) {
       $commander = $this->moveCommanderLeft($faction);
+    } else if ($rerollSource === LUCKY_CANNONBALL) {
+      Globals::incUsedEventCount($faction, 1);
+    } else if ($rerollSource === PERFECT_VOLLEYS) {
+      Globals::incUsedEventCount($faction, 1);
     }
 
     Notifications::battleReroll($player, $oldResult, $newResult, $rerollSource, $commander);
