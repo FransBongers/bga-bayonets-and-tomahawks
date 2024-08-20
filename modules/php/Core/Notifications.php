@@ -905,6 +905,11 @@ class Notifications
     ]);
   }
 
+  public static function returnWIEChitsToPool()
+  {
+    self::notifyAll("returnWIEChitsToPool", '', []);
+  }
+
   public static function revealCardsInPlay($britishCard, $frenchCard, $indianCard)
   {
     self::notifyAll("revealCardsInPlay", clienttranslate('Both players have selected a card. Cards are revealed'), [

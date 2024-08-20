@@ -207,6 +207,10 @@ interface NotifReturnToPoolArgs {
   unit: BTUnit;
 }
 
+interface NotifReturnWIEChitsToPoolArgs {
+ 
+}
+
 interface NotifRevealCardsInPlayArgs {
   british: BTCard;
   french: BTCard;

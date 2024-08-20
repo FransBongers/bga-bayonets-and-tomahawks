@@ -82,6 +82,7 @@ class NotificationManager {
       'removeMarkerFromStack',
       'removeMarkersEndOfActionRound',
       'returnToPool',
+      'returnWIEChitsToPool',
       'revealCardsInPlay',
       'scoreVictoryPoints',
       'selectReserveCard',
@@ -604,6 +605,14 @@ class NotificationManager {
   async notif_returnToPool(notif: Notif<NotifReturnToPoolArgs>) {
     const { unit } = notif.args;
     await this.game.pools.stocks[unit.location].addCard(unit);
+  }
+
+  async notif_returnWIEChitsToPool(
+    notif: Notif<NotifReturnWIEChitsToPoolArgs>
+  ) {
+    [BRITISH, FRENCH].forEach((faction: BRITISH_FACTION | FRENCH_FACTION) =>
+      this.game.gameMap.wieChitPlaceholders[faction].removeAll()
+    );
   }
 
   async notif_revealCardsInPlay(notif: Notif<NotifRevealCardsInPlayArgs>) {

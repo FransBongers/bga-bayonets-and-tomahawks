@@ -15,6 +15,7 @@ use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Scenarios;
+use BayonetsAndTomahawks\Managers\WarInEuropeChits;
 use BayonetsAndTomahawks\Models\Marker;
 use BayonetsAndTomahawks\Models\Player;
 use BayonetsAndTomahawks\Scenario;
@@ -65,6 +66,8 @@ class WinterQuartersGameEndCheck extends \BayonetsAndTomahawks\Models\AtomicActi
     /**
      * 2. WIE Bonus
      */
+    $this->wieChitYearEndScoring($players);
+
 
     // 3. Check Victory Threshold
     foreach ([BRITISH, FRENCH] as $faction) {
@@ -150,5 +153,40 @@ class WinterQuartersGameEndCheck extends \BayonetsAndTomahawks\Models\AtomicActi
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  private function wieChitYearEndScoring($playersPerFaction)
+  {
+    $chits = [];
+    $values = [];
+    
+    foreach([BRITISH, FRENCH] as $faction) {
+      $chit = WarInEuropeChits::getTopOf(Locations::wieChitPlaceholder($faction));
+      $chits[$faction] = $chit;
+      $values[$faction] = $chit !== null ? $chit->getValue() : 0;
+      if ($chit !== null) {
+        Notifications::message(clienttranslate('${player_name} reveals their WIE chit: ${tkn_wieChit}'),[
+          'player' => $playersPerFaction[$faction],
+          'tkn_wieChit' => implode(':', [$faction, $chit->getValue()]),
+        ]);
+      }
+      
+    }
 
+    if ($values[BRITISH] === $values[FRENCH]) {
+      Notifications::message(clienttranslate('No VPs scored for WIE Chits'),[]);
+    } else {
+      $difference = abs($values[BRITISH] = $values[FRENCH]);
+      $winningFaction = $values[BRITISH] > $values[FRENCH] ? BRITISH : FRENCH;
+      Players::scoreVictoryPoints($playersPerFaction[$winningFaction], $difference);
+      
+    }
+
+    // return chits
+    foreach([BRITISH, FRENCH] as $faction) {
+      if ($chits[$faction] === null) {
+        continue;
+      }
+      $chits[$faction]->setLocation(Locations::wieChitPool($faction));
+    }
+    Notifications::returnWIEChitsToPool();
+  }
 }

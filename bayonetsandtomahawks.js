@@ -4320,6 +4320,7 @@ var NotificationManager = (function () {
             'removeMarkerFromStack',
             'removeMarkersEndOfActionRound',
             'returnToPool',
+            'returnWIEChitsToPool',
             'revealCardsInPlay',
             'scoreVictoryPoints',
             'selectReserveCard',
@@ -5042,6 +5043,17 @@ var NotificationManager = (function () {
                         _a.sent();
                         return [2];
                 }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_returnWIEChitsToPool = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                [BRITISH, FRENCH].forEach(function (faction) {
+                    return _this.game.gameMap.wieChitPlaceholders[faction].removeAll();
+                });
+                return [2];
             });
         });
     };
