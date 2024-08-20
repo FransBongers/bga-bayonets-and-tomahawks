@@ -33,6 +33,32 @@ class EventDiseaseInFrenchCamp extends \BayonetsAndTomahawks\Models\AtomicAction
   {
   }
 
+  // ..######..########....###....########.########
+  // .##....##....##......##.##......##....##......
+  // .##..........##.....##...##.....##....##......
+  // ..######.....##....##.....##....##....######..
+  // .......##....##....#########....##....##......
+  // .##....##....##....##.....##....##....##......
+  // ..######.....##....##.....##....##....########
+
+  // ....###.....######..########.####..#######..##....##
+  // ...##.##...##....##....##.....##..##.....##.###...##
+  // ..##...##..##..........##.....##..##.....##.####..##
+  // .##.....##.##..........##.....##..##.....##.##.##.##
+  // .#########.##..........##.....##..##.....##.##..####
+  // .##.....##.##....##....##.....##..##.....##.##...###
+  // .##.....##..######.....##....####..#######..##....##
+
+  public function stEventDiseaseInFrenchCamp()
+  {
+    $options = $this->getOptions();
+
+    if (count($options) === 0) {
+      Notifications::message(_('No French Brigade to eliminate'),[]);
+      $this->resolveAction(['automatic' => true]);
+    }
+  }
+
 
   // ....###....########...######....######.
   // ...##.##...##.....##.##....##..##....##
@@ -108,7 +134,7 @@ class EventDiseaseInFrenchCamp extends \BayonetsAndTomahawks\Models\AtomicAction
     $frenchBrigades = Utils::filter($units, function ($unit) {
       return $unit->getFaction() === FRENCH &&
         $unit->isBrigade() &&
-        in_array($unit->getLocation(), SPACES);
+        ($unit->getLocation() === SAIL_BOX || in_array($unit->getLocation(), SPACES));
     });
     $metropolitan = Utils::filter($frenchBrigades, function ($unit) {
       return $unit->isMetropolitanBrigade();

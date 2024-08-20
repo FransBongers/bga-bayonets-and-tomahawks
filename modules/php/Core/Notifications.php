@@ -596,6 +596,8 @@ class Notifications
       $spaceName = clienttranslate('British Losses Box');
     } else if ($previousLocation === Locations::lossesBox(FRENCH)) {
       $spaceName = clienttranslate('French Losses Box');
+    } else if ($previousLocation === SAIL_BOX) {
+      $spaceName = clienttranslate('Sail Box');
     } else {
       $spaceName = Spaces::get($previousLocation)->getName();
     }
@@ -885,7 +887,7 @@ class Notifications
       clienttranslate('${player_name} gains ${tkn_boldText} Raid Point') :
       clienttranslate('${player_name} gains ${tkn_boldText} Raid Points');
 
-    self::notifyAll("raidPoints", $message, [
+    self::message($message, [
       'player' => $player,
       'faction' => $player->getFaction(),
       'space' => $space,

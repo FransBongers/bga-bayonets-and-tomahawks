@@ -5,6 +5,7 @@ namespace BayonetsAndTomahawks\Actions;
 use BayonetsAndTomahawks\Core\Game;
 use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Core\Engine;
+use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\BTDice;
@@ -12,6 +13,7 @@ use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\PathCalculator;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Markers;
@@ -244,25 +246,21 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
       $space->setRaided($playerFaction);
       Notifications::raidPoints($player, $space, $raidPoints);
 
+      if ($playerFaction === FRENCH && Cards::getTopOf(Locations::cardInPlay(FRENCH))->getId() === 'Card36' && Globals::getUsedEventCount(FRENCH) === 0) {
+        Notifications::message(
+          clienttranslate('${player_name} gains ${tkn_boldText_raidPoints} bonus Raid Points with ${tkn_boldText_eventName}'),
+          [
+            'player' => $player,
+            'tkn_boldText_raidPoints' => '2',
+            'tkn_boldText_eventName' => clienttranslate('Frontiers Ablaze'),
+            'i18n' => ['tkn_boldText_eventName']
+          ]
+        );
+        $raidPoints += 2;
+        Globals::setUsedEventCount(FRENCH, 1);
+      }
+
       GameMap::awardRaidPoints($player, $playerFaction, $raidPoints);
-
-      // // Award raid points
-      // $raidMarker = Markers::get($playerFaction === BRITISH ? BRITISH_RAID_MARKER : FRENCH_RAID_MARKER);
-      // $position = intval(explode('_', $raidMarker->getLocation())[2]);
-      // $newPosition = $position + $raidPoints;
-      // if ($newPosition < 8) {
-      //   $raidMarker->setLocation(Locations::raidTrack($newPosition));
-      //   Notifications::moveRaidPointsMarker($raidMarker);
-      // } else {
-      //   $remainingRaidPoints = $newPosition - 8;
-      //   $raidMarker->setLocation(RAID_TRACK_8);
-      //   Notifications::moveRaidPointsMarker($raidMarker);
-
-      //   Players::scoreVictoryPoints($player, 1);
-
-      //   $raidMarker->setLocation(Locations::raidTrack($remainingRaidPoints));
-      //   Notifications::moveRaidPointsMarker($raidMarker);
-      // }
     }
 
     $this->resolveAction($args, true);

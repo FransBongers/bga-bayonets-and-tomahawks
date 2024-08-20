@@ -76,6 +76,9 @@ class EventPennsylvaniasPeacePromisesState implements State {
         unitsLog: createUnitsLog(this.selectedUnits),
       },
     });
+    this.selectedUnits.forEach((unit) =>
+      this.game.setUnitSelected({ id: unit.id })
+    );
 
     const callback = () => {
       this.game.clearPossible();

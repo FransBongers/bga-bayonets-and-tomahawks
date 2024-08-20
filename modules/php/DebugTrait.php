@@ -187,7 +187,7 @@ trait DebugTrait
 
   function debug_test()
   {
-    Notifications::log('globals', Globals::getUsedEventCount(BRITISH));
+    // Notifications::log('globals', Globals::getUsedEventCount(BRITISH));
 
     // WarInEuropeChits::drawChit(BRITISH);
     // WarInEuropeChits::drawChit(FRENCH);
@@ -206,8 +206,8 @@ trait DebugTrait
 
     // Cards::get('Card27')->insertOnTop(Locations::buildUpDeck(FRENCH));
     // Cards::get('Card14')->insertOnTop(Locations::buildUpDeck(BRITISH));
-    // Cards::get('Card38')->insertOnTop(Locations::campaignDeck(FRENCH));
-    // Cards::get('Card13')->insertOnTop(Locations::campaignDeck(BRITISH));
+    Cards::get('Card36')->insertOnTop(Locations::campaignDeck(FRENCH));
+    // Cards::get('Card09')->insertOnTop(Locations::campaignDeck(BRITISH));
 
 
     // Units::get('unit_51')->setLocation(Locations::lossesBox(FRENCH));

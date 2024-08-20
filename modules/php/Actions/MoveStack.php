@@ -154,7 +154,9 @@ class MoveStack extends \BayonetsAndTomahawks\Actions\UnitMovement
     foreach ($createInOrigin as $markerType) {
       GameMap::placeMarkerOnStack($player, $markerType, $origin, $playerFaction);
     }
-    if ($originId === SAIL_BOX) {
+
+    // Card09 is cardId of the card with Surprise Landing Event
+    if ($originId === SAIL_BOX && !($playerFaction === BRITISH && Cards::getTopOf(Locations::cardInPlay(BRITISH))->getId() === 'Card09')) {
       GameMap::placeMarkerOnStack($player, LANDING_MARKER, $destination, $playerFaction);
     }
 

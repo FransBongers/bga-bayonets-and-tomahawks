@@ -7576,6 +7576,9 @@ var EventPennsylvaniasPeacePromisesState = (function () {
                 unitsLog: createUnitsLog(this.selectedUnits),
             },
         });
+        this.selectedUnits.forEach(function (unit) {
+            return _this.game.setUnitSelected({ id: unit.id });
+        });
         var callback = function () {
             _this.game.clearPossible();
             _this.game.takeAction({

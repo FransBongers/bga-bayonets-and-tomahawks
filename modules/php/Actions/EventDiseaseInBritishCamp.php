@@ -34,6 +34,31 @@ class EventDiseaseInBritishCamp extends \BayonetsAndTomahawks\Models\AtomicActio
   {
   }
 
+  // ..######..########....###....########.########
+  // .##....##....##......##.##......##....##......
+  // .##..........##.....##...##.....##....##......
+  // ..######.....##....##.....##....##....######..
+  // .......##....##....#########....##....##......
+  // .##....##....##....##.....##....##....##......
+  // ..######.....##....##.....##....##....########
+
+  // ....###.....######..########.####..#######..##....##
+  // ...##.##...##....##....##.....##..##.....##.###...##
+  // ..##...##..##..........##.....##..##.....##.####..##
+  // .##.....##.##..........##.....##..##.....##.##.##.##
+  // .#########.##..........##.....##..##.....##.##..####
+  // .##.....##.##....##....##.....##..##.....##.##...###
+  // .##.....##..######.....##....####..#######..##....##
+
+  public function stEventDiseaseInFrenchCamp()
+  {
+    $result = $this->getOptions();
+
+    if (count(array_merge($result['brigades'], $result['colonialBrigades'], $result['metropolitanBrigades'])) === 0) {
+      Notifications::message(_('No British Brigade to eliminate'),[]);
+      $this->resolveAction(['automatic' => true]);
+    }
+  }
 
   // ....###....########...######....######.
   // ...##.##...##.....##.##....##..##....##
@@ -136,7 +161,7 @@ class EventDiseaseInBritishCamp extends \BayonetsAndTomahawks\Models\AtomicActio
     ];
 
     $britishBrigades = Utils::filter(Units::getAll()->toArray(), function ($unit) {
-      return $unit->isBrigade() && $unit->getFaction() === BRITISH && in_array($unit->getLocation(), SPACES);
+      return $unit->isBrigade() && $unit->getFaction() === BRITISH && ($unit->getLocation() === SAIL_BOX || in_array($unit->getLocation(), SPACES));
     });
 
     if (in_array($year, [1755, 1756])) {
