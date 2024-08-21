@@ -132,10 +132,11 @@ class Construction extends \BayonetsAndTomahawks\Actions\UnitMovement
     Notifications::construction($player, $activatedUnit, $space);
 
     if ($fortOption !== null) {
-      $this->fortConstruction($player, $stateArgs, $space, $fortOption);
+      $this->fortConstruction($player, $stateArgs, $space, $fortOption, $activatedUnit);
     } else {
-      $this->roadConstruction($player, $stateArgs, $space, $connectionId, $activatedUnitId);
+      $this->roadConstruction($player, $stateArgs, $space, $connectionId, $activatedUnit);
     }
+
 
 
     $this->resolveAction($args);
@@ -156,7 +157,7 @@ class Construction extends \BayonetsAndTomahawks\Actions\UnitMovement
     Globals::setPlacedConstructionMarkers($current);
   }
 
-  private function fortConstruction($player, $stateArgs, $space, $option)
+  private function fortConstruction($player, $stateArgs, $space, $option, $activatedUnit)
   {
     $fortOptions = $stateArgs['fortOptions'];
     if (!in_array($option, $fortOptions)) {
@@ -182,11 +183,14 @@ class Construction extends \BayonetsAndTomahawks\Actions\UnitMovement
       $fort->setLocation($space->getId());
     }
     Notifications::constructionFort($player, $space, $fort, $faction, $option);
+    $activatedUnit->setSpent(1);
+    Notifications::addSpentMarkerToUnits($player, [$activatedUnit]);
   }
 
-  private function roadConstruction($player, $stateArgs, $space, $connectionId, $activatedUnitId)
+  private function roadConstruction($player, $stateArgs, $space, $connectionId, $activatedUnit)
   {
     $roadOptions = $stateArgs['roadOptions'];
+    $activatedUnitId = $activatedUnit->getId();
 
     if (!isset($roadOptions[$connectionId])) {
       throw new \feException("ERROR 059");
@@ -210,6 +214,10 @@ class Construction extends \BayonetsAndTomahawks\Actions\UnitMovement
       )));
     }
     Notifications::constructionRoad($player, $connection, $space, $destinationSpace);
+    if ($option['roadOption']) {
+      $activatedUnit->setSpent(1);
+      Notifications::addSpentMarkerToUnits($player, [$activatedUnit]);
+    }
   }
 
   public function getUiData()
@@ -222,6 +230,14 @@ class Construction extends \BayonetsAndTomahawks\Actions\UnitMovement
 
   public function canBePerformedBy($units, $space, $actionPoint, $playerFaction)
   {
+    $markers = Markers::getInLocation(Locations::stackMarker($space->getId(), $playerFaction))->toArray();
+
+    if (Utils::array_some($markers, function ($marker) {
+      return in_array($marker->getType(), [ROUT_MARKER, OUT_OF_SUPPLY_MARKER]);
+    })) {
+      return false;
+    }
+
     $options = $this->getOptions($units, $space, $playerFaction);
     return count($options['activate']) > 0 && count($options['fortOptions']) + count($options['roadOptions']) > 0;
   }

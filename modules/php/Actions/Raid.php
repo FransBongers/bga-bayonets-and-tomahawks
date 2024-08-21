@@ -85,7 +85,7 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
     $allUnits = Spaces::get($spaceId)->getUnits();
 
     $units = Utils::filter($allUnits, function ($unit) use ($actionPointId, $playerFaction) {
-      if ($unit->getType() !== LIGHT) {
+      if (!$unit->isLight() || $unit->isSpent()) {
         return false;
       }
       $unitFaction = $unit->getFaction();
@@ -302,11 +302,13 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
 
   public function canBePerformedBy($units, $space, $actionPoint, $playerFaction)
   {
+    $routMarkers = Markers::getOfTypeInLocation(ROUT_MARKER, Locations::stackMarker($space->getId(), $playerFaction));
+    if (count($routMarkers) > 0) {
+      return false;
+    }
+
     $hasLightUnit = Utils::array_some($units, function ($unit) {
-      $unitType = $unit->getType();
-      return $unitType === LIGHT;
-      // TODO: unit may not have moved already?
-      // non-routed
+      return $unit->isLight() && !$unit->isSpent();
     });
     if (!$hasLightUnit) {
       return false;

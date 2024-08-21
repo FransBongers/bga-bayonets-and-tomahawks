@@ -887,7 +887,7 @@ class Notifications
       clienttranslate('${player_name} gains ${tkn_boldText} Raid Point') :
       clienttranslate('${player_name} gains ${tkn_boldText} Raid Points');
 
-    self::message($message, [
+    self::notifyAll('raidPoints', $message, [
       'player' => $player,
       'faction' => $player->getFaction(),
       'space' => $space,

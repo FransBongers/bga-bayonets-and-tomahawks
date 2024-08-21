@@ -187,6 +187,8 @@ trait DebugTrait
 
   function debug_test()
   {
+    GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), OUT_OF_SUPPLY_MARKER, Spaces::get(HALIFAX), BRITISH);
+
     // Notifications::log('globals', Globals::getUsedEventCount(BRITISH));
 
     // WarInEuropeChits::drawChit(BRITISH);
@@ -198,15 +200,15 @@ trait DebugTrait
 
     // Units::get('unit_36')->setLocation(ALBANY);
     // Units::get('unit_35')->setLocation(ALBANY);
-    
-    
-    
+
+
+
 
 
 
     // Cards::get('Card27')->insertOnTop(Locations::buildUpDeck(FRENCH));
     // Cards::get('Card14')->insertOnTop(Locations::buildUpDeck(BRITISH));
-    Cards::get('Card36')->insertOnTop(Locations::campaignDeck(FRENCH));
+    // Cards::get('Card36')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card09')->insertOnTop(Locations::campaignDeck(BRITISH));
 
 

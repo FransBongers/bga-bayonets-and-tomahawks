@@ -209,6 +209,14 @@ class MarshalTroops extends \BayonetsAndTomahawks\Actions\UnitMovement
 
   public function canBePerformedBy($units, $space, $actionPoint, $playerFaction)
   {
+    $markers = Markers::getInLocation(Locations::stackMarker($space->getId(), $playerFaction))->toArray();
+
+    if (Utils::array_some($markers, function ($marker) {
+      return in_array($marker->getType(), [ROUT_MARKER]);
+    })) {
+      return false;
+    }
+
     $options = $this->getOptions($units, $space, $playerFaction);
     return count($options['activate']) > 0 && count($options['marshal']);
   }
