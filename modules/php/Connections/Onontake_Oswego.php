@@ -9,7 +9,7 @@ class Onontake_Oswego extends \BayonetsAndTomahawks\Models\Connections\Path
     parent::__construct($row);
     $this->id = ONONTAKE_OSWEGO;
     $this->indianNationPath = IROQUOIS;
-    $this->top = 1550;
-    $this->left = 424;
+    $this->top = 1577;
+    $this->left = 524;
   }
 }

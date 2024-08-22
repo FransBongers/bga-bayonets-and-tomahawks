@@ -8661,71 +8661,10 @@ var RaidSelectTargetState = (function () {
     };
     RaidSelectTargetState.prototype.setDescription = function (activePlayerId) { };
     RaidSelectTargetState.prototype.updateInterfaceInitialStep = function () {
-        this.game.clearPossible();
-        this.game.clientUpdatePageTitle({
-            text: _('${you} must select a target Space to raid'),
-            args: {
-                you: '${you}',
-            },
-        });
-        this.setTargetsSelectable();
-        this.game.addPassButton({
-            optionalAction: this.args.optionalAction,
-        });
-        this.game.addUndoButtons(this.args);
-    };
-    RaidSelectTargetState.prototype.updateInterfaceSelectPath = function (_a) {
         var _this = this;
-        var space = _a.space, paths = _a.paths;
-        if (paths.length === 1) {
-            this.updateInterfaceSelectUnit({ space: space, path: paths[0] });
-            return;
-        }
         this.game.clearPossible();
-        var counts = {};
-        paths.forEach(function (path, index) {
-            path.forEach(function (spaceId) {
-                if (counts[spaceId]) {
-                    counts[spaceId].count += 1;
-                    counts[spaceId].paths.push(index);
-                }
-                else {
-                    counts[spaceId] = {
-                        count: 1,
-                        paths: [index],
-                    };
-                }
-            });
-        });
-        Object.entries(counts).forEach(function (_a) {
-            var id = _a[0], count = _a[1];
-            if (count.count > 1) {
-                _this.game.setLocationSelected({ id: id });
-            }
-            else {
-                _this.game.setLocationSelectable({
-                    id: id,
-                    callback: function () {
-                        _this.updateInterfaceSelectUnit({
-                            path: paths[count.paths[0]],
-                            space: space,
-                        });
-                    },
-                });
-            }
-        });
-        this.game.clientUpdatePageTitle({
-            text: _('${you} must select the path to the target of the Raid'),
-            args: {
-                you: '${you}',
-            },
-        });
-    };
-    RaidSelectTargetState.prototype.updateInterfaceSelectUnit = function (_a) {
-        var _this = this;
-        var space = _a.space, path = _a.path;
         if (this.args.units.length === 1) {
-            this.updateInterfaceConfirm({ space: space, path: path, unit: this.args.units[0] });
+            this.updateInterfaceSelectTargetSpace({ unit: this.args.units[0] });
             return;
         }
         this.game.clearPossible();
@@ -8735,28 +8674,67 @@ var RaidSelectTargetState = (function () {
                 you: '${you}',
             },
         });
-        this.game.setLocationSelected({ id: space.id });
-        path.forEach(function (spaceId) {
-            _this.game.setLocationSelected({ id: spaceId });
-        });
         var stack = this.game.gameMap.stacks[this.args.originId][this.args.faction];
         stack.open();
         this.args.units.forEach(function (unit) {
             _this.game.setUnitSelectable({
                 id: unit.id,
-                callback: function () { return _this.updateInterfaceConfirm({ space: space, path: path, unit: unit }); },
+                callback: function () { return _this.updateInterfaceSelectTargetSpace({ unit: unit }); },
             });
         });
-        this.game.addCancelButton();
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    RaidSelectTargetState.prototype.updateInterfaceSelectTargetSpace = function (_a) {
+        var _this = this;
+        var unit = _a.unit;
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a target Space to raid'),
+            args: {
+                you: '${you}',
+            },
+        });
+        Object.values(this.args.raidTargets).forEach(function (target) {
+            _this.game.setLocationSelectable({
+                id: target.space.id,
+                callback: function () {
+                    _this.updateInterfaceConfirm(__assign(__assign({}, target), { unit: unit }));
+                },
+            });
+        });
+        this.game.setUnitSelected({ id: unit.id });
+        if (this.args.units.length === 1) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
+        }
+        else {
+            this.game.addCancelButton();
+        }
     };
     RaidSelectTargetState.prototype.updateInterfaceConfirm = function (_a) {
         var _this = this;
         var space = _a.space, path = _a.path, unit = _a.unit;
         this.game.clearPossible();
-        this.game.setLocationSelected({ id: space.id });
         this.game.setUnitSelected({ id: unit.id });
-        path.forEach(function (spaceId) {
+        path.forEach(function (spaceId, index) {
+            if (index === 0 && path.length !== 1) {
+                return;
+            }
             _this.game.setLocationSelected({ id: spaceId });
+        });
+        Object.values(this.args.raidTargets)
+            .filter(function (target) { return target.space.id !== space.id; })
+            .forEach(function (target) {
+            _this.game.setLocationSelectable({
+                id: target.space.id,
+                callback: function () {
+                    _this.updateInterfaceConfirm(__assign(__assign({}, target), { unit: unit }));
+                },
+            });
         });
         this.game.clientUpdatePageTitle({
             text: _('Raid ${spaceName}?'),
@@ -8770,7 +8748,6 @@ var RaidSelectTargetState = (function () {
                 _this.game.takeAction({
                     action: 'actRaidSelectTarget',
                     args: {
-                        path: path,
                         spaceId: space.id,
                         unitId: unit.id,
                     },
@@ -8778,17 +8755,6 @@ var RaidSelectTargetState = (function () {
             },
         });
         this.game.addCancelButton();
-    };
-    RaidSelectTargetState.prototype.setTargetsSelectable = function () {
-        var _this = this;
-        Object.values(this.args.raidTargets).forEach(function (target) {
-            _this.game.setLocationSelectable({
-                id: target.space.id,
-                callback: function () {
-                    _this.updateInterfaceSelectPath(target);
-                },
-            });
-        });
     };
     return RaidSelectTargetState;
 }());

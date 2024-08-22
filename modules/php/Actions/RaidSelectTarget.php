@@ -9,11 +9,13 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\BTDice;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\PathCalculator;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
+use BayonetsAndTomahawks\Managers\Connections;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Markers;
@@ -131,7 +133,7 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
   public function actRaidSelectTarget($args)
   {
     self::checkAction('actRaidSelectTarget');
-    $path = $args['path'];
+    // $path = $args['path'];
     $spaceId = $args['spaceId'];
     $unitId = $args['unitId'];
 
@@ -154,24 +156,7 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
     }
 
     $raidTarget = $stateArgs['raidTargets'][$spaceId];
-
-    $path = Utils::array_find($raidTarget['paths'], function ($targetPath) use ($path) {
-      if (count($targetPath) !== count($path)) {
-        return false;
-      }
-      $pathMatches = true;
-      for ($i = 0; $i < count($path); $i++) {
-        if ($path[$i] !== $targetPath[$i]) {
-          $pathMatches = false;
-          break;
-        }
-      }
-      return $pathMatches;
-    });
-
-    if ($path === null) {
-      throw new \feException("ERROR 005");
-    }
+    $path = $raidTarget['path'];
 
     $player = self::getPlayer();
     $playerId = $player->getId();
@@ -247,7 +232,6 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
 
     $destinations = $this->getAllRaidPaths($space->getId(), $maxDistance, $playerFaction);
 
-    // Notifications::log('destinations', $destinations);
 
     return count($destinations) > 0;
   }
@@ -255,8 +239,6 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
   public function getFlow($actionPointId, $playerId, $originId)
   {
     return [
-      // 'stackAction' => LIGHT_MOVEMENT,
-      // 'actionPointId' => $actionPointId,
       'originId' => $originId,
       'children' => [
         [
@@ -266,14 +248,6 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
         ],
       ],
     ];
-  }
-
-  function spaceHasEnemyUnits($space, $playerFaction)
-  {
-    $units = $space->getUnits();
-    return Utils::array_some($units, function ($unit) use ($playerFaction) {
-      return $unit->getFaction() !== $playerFaction;
-    });
   }
 
   function getPath($destinationId, $visited)
@@ -287,24 +261,66 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
     return $path;
   }
 
-  function getAllRaidPaths($source, $maxLevel, $playerFaction)
+  function getShortestHighestSuccessProbabilityPath($paths, $visited)
+  {
+    $data = [];
+    foreach ($paths as $path) {
+      $accruedWeight = 1;
+      foreach ($path as $spaceId) {
+        $accruedWeight = $accruedWeight * $visited[$spaceId]['weight'];
+      }
+      $data[] = [
+        'path' => $path,
+        'accruedWeight' => $accruedWeight,
+      ];
+    }
+
+    usort($data, function ($a, $b) {
+      return $a['accruedWeight'] - $b['accruedWeight'];
+    });
+
+    $bestProbability = $data[0]['accruedWeight'];
+
+    $data = Utils::filter($data, function ($pathWithWeight) use ($bestProbability) {
+      return $pathWithWeight['accruedWeight'] === $bestProbability;
+    });
+
+    if (count($data) > 0) {
+      usort($data, function ($a, $b) {
+        return count($a['path']) - count($b['path']);
+      });
+    }
+
+    return $data[0]['path'];
+  }
+
+  function getAllRaidPaths($sourceSpaceId, $maxLevel, $playerFaction)
   {
     $allSpaces = Spaces::getAll();
-    $sourceHasEnemeyUnits = $this->spaceHasEnemyUnits($allSpaces[$source], $playerFaction);
+    $connections = Connections::getAll();
+    $units = Units::getAll()->toArray();
+    $indianNationControl = [
+      CHEROKEE => Globals::getControlCherokee(),
+      IROQUOIS => Globals::getControlIroquois(),
+    ];
+
+    $sourceWeight = $this->getSpaceWeight($units, $sourceSpaceId, $playerFaction);
 
     $visited = [
-      $source => [
+      $sourceSpaceId => [
         'level' => 0,
         'parent' => null,
-        'space' => $allSpaces[$source],
-        'weight' => 0,
-        'spaceHasEnemeyUnits' => $sourceHasEnemeyUnits,
+        'space' => $allSpaces[$sourceSpaceId],
+        'weight' => $sourceWeight,
+        'accruedWeight' => $sourceWeight
+        // 'spaceHasEnemyUnits' => $sourceHasEnemyUnits,
       ],
     ];
-    $queue = [$source];
+    $queue = [$sourceSpaceId];
     // $nextLevelQueue = [];
     // $level = 1;
 
+    // First get all spaces within range
     while (count($queue) > 0) {
       $currentSpaceId = array_shift($queue);
 
@@ -314,38 +330,39 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
 
       $currentSpace = $allSpaces[$currentSpaceId];
 
-      $adjacentIds = $currentSpace->getAdjacentSpacesIds();
+      $adjacentSpaces = $currentSpace->getAdjacentSpaces();
 
-      foreach ($adjacentIds as $spaceId) {
+      foreach ($adjacentSpaces as $spaceId => $connectionId) {
         if (isset($visited[$spaceId])) {
           continue;
         }
         if ($playerFaction === FRENCH && $allSpaces[$spaceId]->getBritishBase()) {
           continue;
         }
+        $connection = $connections[$connectionId];
+        $indianPath = $connection->getIndianNationPath();
+        if ($indianPath !== null && $indianNationControl[$indianPath] === NEUTRAL) {
+          continue;
+        }
+
         $queue[] = $spaceId;
 
-        $weight = 1; // No units in target
-
-        // For now just check if enemy units or not
-        if ($this->spaceHasEnemyUnits($allSpaces[$spaceId], $playerFaction)) {
-          $weight = 100;
-        }
+        $weight = $this->getSpaceWeight($units, $spaceId, $playerFaction);
 
         $visited[$spaceId] = [
           'level' => $visited[$currentSpaceId]['level'] + 1,
           'parent' => $currentSpaceId,
           'space' => $allSpaces[$spaceId],
-          'weight' => $visited[$currentSpaceId]['weight'] + $weight,
-          'spaceHasEnemeyUnits' => $weight === 100,
+          'weight' => $weight,
+          'accruedWeight' => $weight * $visited[$currentSpaceId]['accruedWeight'],
         ];
       }
     }
 
     $destinations = [];
     $set = array_keys($visited);
-    // Notifications::log('set', $set);
-    $enemyFaction = $playerFaction === BRITISH ? FRENCH : BRITISH;
+
+    $enemyFaction = BTHelpers::getOtherFaction($playerFaction);
 
     foreach ($visited as $spaceId => $data) {
       $space = $allSpaces[$spaceId];
@@ -354,41 +371,33 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
         continue;
       }
       $homeSpace = $space->getHomeSpace();
-      if ($homeSpace === null && !Utils::array_some($space->getUnits(), function ($unit) use ($playerFaction) {
-        return $unit->getType() === FORT && $unit->getFaction() !== $playerFaction;
+      // Can raid home spaces or wilderness space with Fort
+      if ($homeSpace === null && !Utils::array_some($units, function ($unit) use ($playerFaction, $spaceId) {
+        return $unit->getLocation() === $spaceId && $unit->isFort() && $unit->getFaction() !== $playerFaction;
       })) {
         continue;
       }
-      if (($homeSpace !== null && $homeSpace !== $enemyFaction)) {
+      if (($homeSpace !== $enemyFaction)) {
         continue;
       }
-      // We found shortest route without enemy units
+
+
+      // We found shortest route without enemy units othert then possibly in starting space
       if (
-        $data['weight'] < 100 ||
-        ($sourceHasEnemeyUnits && $data['weight'] < 200) ||
-        ($data['spaceHasEnemeyUnits'] && $data['weight'] < 200) ||
-        ($sourceHasEnemeyUnits && $data['spaceHasEnemeyUnits'] && $data['weight'] < 300)
+        $data['accruedWeight'] === $sourceWeight
       ) {
         $destinations[$spaceId] =
           [
             'space' => $visited[$spaceId]['space'],
-            'paths' => [$this->getPath($spaceId, $visited)],
+            'path' => $this->getPath($spaceId, $visited),
           ];
       } else {
         $pathCalculator = new PathCalculator($maxLevel);
-
-        $paths = $pathCalculator->findAllPathsBetweenSpaces($source, $spaceId, $set);
-        // Notifications::log('paths',[
-        //   'spaceId' => $spaceId,
-        //   'paths' => $paths,
-        // ]);
+        $paths = $pathCalculator->findAllPathsBetweenSpaces($allSpaces, $connections, $sourceSpaceId, $spaceId, $set);
         $destinations[$spaceId] =
           [
             'space' => $visited[$spaceId]['space'],
-            // 'paths' => Utils::filter($paths, function ($path) use ($maxLevel) {
-            //   return count($path) <= $maxLevel + 1;
-            // }),
-            'paths' => $paths
+            'path' => $this->getShortestHighestSuccessProbabilityPath($paths, $visited)
           ];
       }
     }

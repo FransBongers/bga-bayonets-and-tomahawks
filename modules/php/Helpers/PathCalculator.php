@@ -28,7 +28,7 @@ class PathCalculator extends \APP_DbObject
       // Notifications::log('path',$localPathList);
       // Todo: check if necessary to clone?
       $clone = [];
-      foreach($localPathList as $spaceId) {
+      foreach ($localPathList as $spaceId) {
         $clone[] = $spaceId;
       }
       $this->result[] = $clone;
@@ -44,7 +44,7 @@ class PathCalculator extends \APP_DbObject
 
     $adjacentSpaceIds = $allSpaces[$sourceId]->getAdjacentSpacesIds();
 
-    foreach($adjacentSpaceIds as $spaceId) {
+    foreach ($adjacentSpaceIds as $spaceId) {
       if (!in_array($spaceId, $set) || $visited[$spaceId]) {
         continue;
       };
@@ -62,13 +62,11 @@ class PathCalculator extends \APP_DbObject
   }
 
 
-  public function findAllPathsBetweenSpaces($sourceId, $destinationId, $set)
+  public function findAllPathsBetweenSpaces($allSpaces, $connections, $sourceId, $destinationId, $set)
   {
-    $allSpaces = Spaces::getAll();
-
     $visited = [];
 
-    foreach($set as $spaceId) {
+    foreach ($set as $spaceId) {
       $visited[$spaceId] = false;
     }
 
@@ -78,9 +76,9 @@ class PathCalculator extends \APP_DbObject
     // function findPaths($paths, $path, $parent, $n, $u) {
     //   // Base case
     //   if ($u === -1) {
-        
+
     //   }
     // }
-      return $this->result;
+    return $this->result;
   }
 }

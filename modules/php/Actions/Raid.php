@@ -37,4 +37,24 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
       return $unit->getFaction() !== $playerFaction;
     });
   }
+
+  protected function getSpaceWeight($units, $spaceId, $playerFaction)
+  {
+    // Notifications::log('getSpaceWeight', $spaceId);
+    $enemyUnits = Utils::filter($units, function ($unit) use ($spaceId, $playerFaction) {
+      return $unit->getLocation() === $spaceId && $unit->getFaction() !== $playerFaction;
+    });
+    // Notifications::log('enemyUnits', $enemyUnits);
+    if (count($enemyUnits) === 0) {
+      return 1;
+    }
+    $hasEnemyLightUnit = Utils::array_some($enemyUnits, function ($unit) {
+      return $unit->isLight();
+    });
+    if ($hasEnemyLightUnit) {
+      return 0.333333;
+    } else {
+      return 0.666666;
+    }
+  }
 }

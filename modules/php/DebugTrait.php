@@ -187,7 +187,14 @@ trait DebugTrait
 
   function debug_test()
   {
-    Notifications::log('oos', GameMap::getMarkersOnMap(ROUT_MARKER, BRITISH));
+    // $pathCalculator = new PathCalculator(3);
+    // $set = [CHIGNECTOU, ANNAPOLIS_ROYAL, HALIFAX, CAPE_SABLE, PORT_LA_JOYE, LOUISBOURG, PORT_DAUPHIN, MIRAMICHY, KWANOSKWAMCOK, ST_GEORGE. POINTE_SAINTE_ANNE, GRAND_SAULT];
+    // $paths = $pathCalculator->findAllPathsBetweenSpaces(CHIGNECTOU, CAPE_SABLE, $set);
+
+    $result = AtomicActions::get(RAID_SELECT_TARGET)->getAllRaidPaths(KITHANINK, 6, FRENCH);
+    Notifications::log('result', $result);
+
+    // Notifications::log('oos', GameMap::getMarkersOnMap(ROUT_MARKER, BRITISH));
     // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), OUT_OF_SUPPLY_MARKER, Spaces::get(HALIFAX), BRITISH);
 
     // Notifications::log('globals', Globals::getUsedEventCount(BRITISH));
@@ -536,8 +543,8 @@ trait DebugTrait
   //     if (
   //       $data['weight'] < 100 ||
   //       ($sourceHasEnemeyUnits && $data['weight'] < 200) ||
-  //       ($data['spaceHasEnemeyUnits'] && $data['weight'] < 200) ||
-  //       ($sourceHasEnemeyUnits && $data['spaceHasEnemeyUnits'] && $data['weight'] < 300)
+  //       ($data['spaceHasEnemyUnits'] && $data['weight'] < 200) ||
+  //       ($sourceHasEnemeyUnits && $data['spaceHasEnemyUnits'] && $data['weight'] < 300)
   //     ) {
   //       $destinations[$spaceId] =
   //         [

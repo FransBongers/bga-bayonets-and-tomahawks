@@ -249,7 +249,7 @@ interface OnEnteringRaidSelectTargetStateArgs extends CommonArgs {
     string,
     {
       space: BTSpace;
-      paths: string[][];
+      path: string[];
     }
   >;
   units: BTUnit[];
