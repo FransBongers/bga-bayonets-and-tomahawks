@@ -89,6 +89,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     eventPennsylvaniasPeacePromises: EventPennsylvaniasPeacePromisesState;
     eventRoundUpMenAndEquipment: EventRoundUpMenAndEquipmentState;
     eventSmallpoxInfectedBlankets: EventSmallpoxInfectedBlanketsState;
+    eventStagedLacrosseGame: EventStagedLacrosseGameState;
     vagariesOfWarPickUnits: VagariesOfWarPickUnitsState;
     fleetsArriveUnitPlacement: FleetsArriveUnitPlacementState;
     marshalTroops: MarshalTroopsState;
@@ -158,6 +159,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       eventSmallpoxInfectedBlankets: new EventSmallpoxInfectedBlanketsState(
         this
       ),
+      eventStagedLacrosseGame: new EventStagedLacrosseGameState(this),
       vagariesOfWarPickUnits: new VagariesOfWarPickUnitsState(this),
       fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
       marshalTroops: new MarshalTroopsState(this),

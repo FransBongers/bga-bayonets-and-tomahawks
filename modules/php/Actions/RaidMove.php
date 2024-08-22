@@ -73,7 +73,7 @@ class RaidMove extends \BayonetsAndTomahawks\Actions\Raid
       });
 
       // Roll for interception
-      $dieResult = FLAG;// BTDice::roll();
+      $dieResult = BTDice::roll();
       $intercepted = ($hasEnemyLightUnit && in_array($dieResult, [FLAG, HIT_TRIANGLE_CIRCLE, B_AND_T])) || $dieResult === FLAG;
       Notifications::interception($otherPlayer, $space, $dieResult, $intercepted);
 

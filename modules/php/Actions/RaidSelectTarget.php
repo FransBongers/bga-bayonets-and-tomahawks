@@ -134,7 +134,7 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
   {
     self::checkAction('actRaidSelectTarget');
     // $path = $args['path'];
-    $spaceId = $args['spaceId'];
+    $targetSpaceId = $args['spaceId'];
     $unitId = $args['unitId'];
 
     $stateArgs = $this->argsRaidSelectTarget();
@@ -151,11 +151,11 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
       throw new \feException("ERROR 003");
     }
 
-    if (!isset($stateArgs['raidTargets'][$spaceId])) {
+    if (!isset($stateArgs['raidTargets'][$targetSpaceId])) {
       throw new \feException("ERROR 004");
     }
 
-    $raidTarget = $stateArgs['raidTargets'][$spaceId];
+    $raidTarget = $stateArgs['raidTargets'][$targetSpaceId];
     $path = $raidTarget['path'];
 
     $player = self::getPlayer();
@@ -176,11 +176,29 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
         ];
       }
     }
+
+    $canUseStagedLacrosseGame = $player->getFaction() === FRENCH &&
+      $unit->isIndian() &&
+      Cards::getTopOf(Locations::cardInPlay(INDIAN))->getId() === STAGED_LACROSSE_GAME_CARD_ID &&
+      Globals::getUsedEventCount(INDIAN) === 0;
+
+    if ($canUseStagedLacrosseGame) {
+      $units = Spaces::get($targetSpaceId)->getUnits(BRITISH);
+      if (count($units) === 1 && $units[0]->isFort()) {
+        $flow['children'][] = [
+          'action' => EVENT_STAGED_LACROSSE_GAME,
+          'playerId' => $playerId,
+          'spaceId' => $targetSpaceId,
+          'optional' => true,
+        ];
+      }
+    }
+
     $flow['children'][] = [
       'action' => RAID_RESOLUTION,
       'playerId' => $playerId,
       'unitId' => $unitId,
-      'spaceId' => $path[count($path) - 1],
+      'spaceId' => $targetSpaceId,
       'startSpaceId' => $path[0],
     ];
 

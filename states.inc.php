@@ -738,6 +738,16 @@ $machinestates = array(
         'possibleactions' => ['actEventSmallpoxInfectedBlankets', 'actPassOptionalAction', 'actRestart'],
     ],
 
+    ST_EVENT_STAGED_LACROSSE_GAME => [
+        'name' => 'eventStagedLacrosseGame',
+        'description' => clienttranslate('${actplayer} may declare to use Staged Lacrosse Game'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actEventStagedLacrosseGame', 'actPassOptionalAction', 'actRestart'],
+    ],
+
     ST_PLACE_MARKER_ON_STACK => [
         'name' => 'placeMarkerOnStack',
         'description' => '',

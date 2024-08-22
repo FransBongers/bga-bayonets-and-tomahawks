@@ -90,6 +90,13 @@ class RaidResolution extends \BayonetsAndTomahawks\Actions\Raid
       }
 
       GameMap::awardRaidPoints($player, $playerFaction, $raidPoints);
+
+      // Use Staged Lacrosse game
+      if (isset($info['useStagedLacrossGame']) && $info['useStagedLacrossGame']) {
+        $britishFort = $space->getUnits(BRITISH)[0];
+        $britishFort->eliminate($player);
+      }
+
     }
 
     $this->resolveAction(['automatic' => true], true);

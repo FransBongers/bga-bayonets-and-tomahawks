@@ -7,7 +7,7 @@ class Card46 extends \BayonetsAndTomahawks\Models\Card
   public function __construct($row)
   {
     parent::__construct($row);
-    $this->id = 'Card46';
+    $this->id = STAGED_LACROSSE_GAME_CARD_ID;
     $this->actionPoints = [
       [
         'id' => INDIAN_AP_2X

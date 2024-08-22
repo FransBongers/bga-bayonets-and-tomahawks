@@ -2378,6 +2378,7 @@ var BayonetsAndTomahawks = (function () {
             eventPennsylvaniasPeacePromises: new EventPennsylvaniasPeacePromisesState(this),
             eventRoundUpMenAndEquipment: new EventRoundUpMenAndEquipmentState(this),
             eventSmallpoxInfectedBlankets: new EventSmallpoxInfectedBlanketsState(this),
+            eventStagedLacrosseGame: new EventStagedLacrosseGameState(this),
             vagariesOfWarPickUnits: new VagariesOfWarPickUnitsState(this),
             fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
             marshalTroops: new MarshalTroopsState(this),
@@ -7915,6 +7916,49 @@ var EventSmallpoxInfectedBlanketsState = (function () {
         });
     };
     return EventSmallpoxInfectedBlanketsState;
+}());
+var EventStagedLacrosseGameState = (function () {
+    function EventStagedLacrosseGameState(game) {
+        this.game = game;
+    }
+    EventStagedLacrosseGameState.prototype.onEnteringState = function (args) {
+        debug('Entering EventStagedLacrosseGameState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    EventStagedLacrosseGameState.prototype.onLeavingState = function () {
+        debug('Leaving EventStagedLacrosseGameState');
+    };
+    EventStagedLacrosseGameState.prototype.setDescription = function (activePlayerId) { };
+    EventStagedLacrosseGameState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} may declare to use Staged Lacrosse Game'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.game.addPrimaryActionButton({
+            id: 'declate_btn',
+            text: _('Use Staged Lacrosse Game'),
+            callback: function () {
+                _this.game.clearPossible();
+                _this.game.takeAction({
+                    action: 'actEventStagedLacrosseGame',
+                    args: {
+                        useStagedLacrosseGame: true,
+                    },
+                });
+            },
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+            text: _('Do not use'),
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    return EventStagedLacrosseGameState;
 }());
 var FleetsArriveUnitPlacementState = (function () {
     function FleetsArriveUnitPlacementState(game) {

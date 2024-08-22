@@ -107,92 +107,9 @@ trait DebugTrait
     Notifications::log('unit', Units::get($unitId));
   }
 
-  // function checkSupplyForFaction($faction, $stacks, $supplySources, $enemyStacks)
-  // {
-  //   $spaces = Spaces::getAll();
-  //   $connections = Connections::getAll();
-  //   $enemyFaction = BTHelpers::getOtherFaction($faction);
-  //   $indianNationControl = [
-  //     CHEROKEE => Globals::getControlCherokee(),
-  //     IROQUOIS => Globals::getControlIroquois(),
-  //   ];
-
-  //   foreach ($stacks as $spaceId => $stackInSpaceData) {
-  //     $canUsePaths = !Utils::array_some($stackInSpaceData['units'], function ($unit) {
-  //       return !$unit->isLight();
-  //     });
-
-  //     // Check supply
-  //     $visited = [];
-  //     $queue = [$spaceId];
-  //     $inSupply = false;
-
-  //     while (count($queue) > 0) {
-  //       $currentSpaceId = array_shift($queue);
-  //       if (isset($visited[$currentSpaceId]) && $visited[$currentSpaceId]) {
-  //         continue;
-  //       }
-  //       $visited[$currentSpaceId] = true;
-
-  //       if (in_array($spaceId, $supplySources)) {
-  //         $inSupply = true;
-  //         break;
-  //       }
-
-  //       $currentSpace = $spaces[$currentSpaceId];
-  //       $adjacentSpaces = $currentSpace->getAdjacentSpaces();
-
-  //       foreach ($adjacentSpaces as $adjacentSpaceId => $connectionId) {
-  //         if (isset($visited[$adjacentSpaceId]) && $visited[$currentSpaceId]) {
-  //           continue;
-  //         }
-
-  //         // Cannot use paths if stack is not entirely composed of Light Units
-  //         $connection = $connections[$connectionId];
-  //         if ($connection->isPath() && !$canUsePaths) {
-  //           continue;
-  //         }
-
-  //         // Cannot use paths of Neutral Indian Nations
-  //         $indianPath = $connection->getIndianNationPath();
-  //         if ($canUsePaths && $indianPath !== null && $indianNationControl[$indianPath] === NEUTRAL) {
-  //           continue;
-  //         }
-
-  //         $adjacentSpace = $spaces[$adjacentSpaceId];
-
-  //         // Cannot trace through enemy controlled spaces, unless Outpost with no enemy units
-  //         if ($adjacentSpace->getControl() === $enemyFaction && !($adjacentSpace->isOutpost() && !isset($enemyStacks[$adjacentSpaceId]))) {
-  //           continue;
-  //         }
-
-  //         // Can use Wilderness Spaces unless they contain enemy units
-  //         if ($adjacentSpace->getControl() === NEUTRAL && isset($enemyStacks[$adjacentSpaceId])) {
-  //           continue;
-  //         }
-
-  //         if (in_array($adjacentSpaceId, $supplySources)) {
-  //           $inSupply = true;
-  //           break;
-  //         }
-  //         $queue[] = $adjacentSpaceId;
-  //       }
-  //     }
-
-  //     if (!$inSupply) {
-  //       Notifications::log('stack not in supply', $stackInSpaceData);
-  //     }
-  //   }
-  // }
 
   function debug_test()
   {
-    // $pathCalculator = new PathCalculator(3);
-    // $set = [CHIGNECTOU, ANNAPOLIS_ROYAL, HALIFAX, CAPE_SABLE, PORT_LA_JOYE, LOUISBOURG, PORT_DAUPHIN, MIRAMICHY, KWANOSKWAMCOK, ST_GEORGE. POINTE_SAINTE_ANNE, GRAND_SAULT];
-    // $paths = $pathCalculator->findAllPathsBetweenSpaces(CHIGNECTOU, CAPE_SABLE, $set);
-
-    $result = AtomicActions::get(RAID_SELECT_TARGET)->getAllRaidPaths(KITHANINK, 6, FRENCH);
-    Notifications::log('result', $result);
 
     // Notifications::log('oos', GameMap::getMarkersOnMap(ROUT_MARKER, BRITISH));
     // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), OUT_OF_SUPPLY_MARKER, Spaces::get(HALIFAX), BRITISH);
@@ -218,6 +135,7 @@ trait DebugTrait
     // Cards::get('Card14')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card36')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card09')->insertOnTop(Locations::campaignDeck(BRITISH));
+    Cards::get(STAGED_LACROSSE_GAME_CARD_ID)->insertOnTop(Locations::campaignDeck(INDIAN));
 
 
     // Units::get('unit_51')->setLocation(Locations::lossesBox(FRENCH));

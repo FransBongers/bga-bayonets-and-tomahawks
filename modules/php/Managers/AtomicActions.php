@@ -56,6 +56,7 @@ class AtomicActions
     EVENT_ROUND_UP_MEN_AND_EQUIPMENT => 'EventRoundUpMenAndEquipment',
     EVENT_SMALLPOX_EPIDEMIC => 'EventSmallpoxEpidemic',
     EVENT_SMALLPOX_INFECTED_BLANKETS => 'EventSmallpoxInfectedBlankets',
+    EVENT_STAGED_LACROSSE_GAME => 'EventStagedLacrosseGame',
     FLEETS_ARRIVE_COMMANDER_DRAW => 'FleetsArriveCommanderDraw',
     FLEETS_ARRIVE_UNIT_PLACEMENT => 'FleetsArriveUnitPlacement',
     LOGISTICS_ROUND_END => 'LogisticsRoundEnd',
