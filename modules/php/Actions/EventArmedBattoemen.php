@@ -32,9 +32,33 @@ class EventArmedBattoemen extends \BayonetsAndTomahawks\Models\AtomicAction
 
   public function stPreEventArmedBattoemen()
   {
+  }
+
+  // ..######..########....###....########.########
+  // .##....##....##......##.##......##....##......
+  // .##..........##.....##...##.....##....##......
+  // ..######.....##....##.....##....##....######..
+  // .......##....##....#########....##....##......
+  // .##....##....##....##.....##....##....##......
+  // ..######.....##....##.....##....##....########
+
+  // ....###.....######..########.####..#######..##....##
+  // ...##.##...##....##....##.....##..##.....##.###...##
+  // ..##...##..##..........##.....##..##.....##.####..##
+  // .##.....##.##..........##.....##..##.....##.##.##.##
+  // .#########.##..........##.....##..##.....##.##..####
+  // .##.....##.##....##....##.....##..##.....##.##...###
+  // .##.....##..######.....##....####..#######..##....##
+
+  public function stEventArmedBattoemen()
+  {
     $options = $this->getOptions();
     if (count($options) === 0) {
-      Notifications::message(clienttranslate('No Out of Supply or Rout markers to remove'),[]);
+      Notifications::message(clienttranslate('${player_name} cannot remove any ${tkn_marker_oos} or ${tkn_marker_rout}'), [
+        'player' => self::getPlayer(),
+        'tkn_marker_oos' => OUT_OF_SUPPLY_MARKER,
+        'tkn_marker_rout' => ROUT_MARKER,
+      ]);
       $this->resolveAction(['automatic' => true]);
     }
   }
