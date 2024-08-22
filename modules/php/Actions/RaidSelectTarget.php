@@ -71,7 +71,6 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
   public function argsRaidSelectTarget()
   {
     $info = $this->ctx->getInfo();
-    $parentInfo = $this->ctx->getParent()->getInfo();
 
     $spaceId = $info['spaceId'];
     $player = self::getPlayer();
@@ -156,8 +155,6 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
 
     $raidTarget = $stateArgs['raidTargets'][$spaceId];
 
-    $space = $raidTarget['space'];
-
     $path = Utils::array_find($raidTarget['paths'], function ($targetPath) use ($path) {
       if (count($targetPath) !== count($path)) {
         return false;
@@ -172,101 +169,37 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
       return $pathMatches;
     });
 
-    Notifications::log('raidTarget', $raidTarget);
-
     if ($path === null) {
       throw new \feException("ERROR 005");
     }
 
-    /**
-     * Perform raid: 
-     * - move selected unit along path
-     * - check for interception in each space
-     * - raid resolution if not intercepted
-     * - spent marker on unit
-     */
     $player = self::getPlayer();
-    $playerFaction = $player->getFaction();
+    $playerId = $player->getId();
 
-    $otherPlayer = Players::getOther();
-    $otherPlayerFaction = $otherPlayer->getFaction();
+    $flow = [
+      'children' => []
+    ];
 
-    
-
-    // Move unit along path and check roll for interception
     foreach ($path as $index => $spaceId) {
-      $space = Spaces::get($spaceId);
-      // 0 is start space so unit does not move
       if ($index !== 0) {
-        // Move unit to space
-        $origin = Spaces::get($unit->getLocation());
-        Units::move($unitId, $spaceId);
-        $unit->setLocation($spaceId);
-        Notifications::moveUnit($player, $unit, $origin, $space);
-      };
-      // Check for interception
-      $unitsOnSpace = $space->getUnits();
-      $hasEnemyUnit = Utils::array_some($unitsOnSpace, function ($unitOnSpace) use ($otherPlayerFaction) {
-        return $unitOnSpace->getFaction() === $otherPlayerFaction;
-      });
-
-      if ($hasEnemyUnit) {
-        $hasEnemyLightUnit = Utils::array_some($unitsOnSpace, function ($unitOnSpace) use ($otherPlayerFaction) {
-          return $unitOnSpace->getFaction() === $otherPlayerFaction && $unitOnSpace->getType() === LIGHT;
-        });
-
-        // Roll for interception
-        $dieResult = BTDice::roll();
-        $intercepted = ($hasEnemyLightUnit && in_array($dieResult, [FLAG, HIT_TRIANGLE_CIRCLE, B_AND_T])) || $dieResult === FLAG;
-        Notifications::interception($otherPlayer, $space, $dieResult, $intercepted);
-
-        // If intercepted move unit back to starting space
-        if ($intercepted) {
-          $this->returnUnitToStartingSpace($player, $unit, $path, $space);
-          // Units::move($unitId, $path[0]);
-          // Notifications::moveUnit($player, $unit, $space, Spaces::get($path[0]));
-          $this->resolveAction($args);
-          return;
-        }
+        $flow['children'][] = [
+          'action' => RAID_MOVE,
+          'playerId' => $playerId,
+          'unitId' => $unitId,
+          'toSpaceId' => $spaceId,
+          'startSpaceId' => $path[0],
+        ];
       }
     }
-    $raidResolution = BTDice::roll();
-    $raidIsSuccessful = in_array($raidResolution, [FLAG, HIT_TRIANGLE_CIRCLE, B_AND_T]);
+    $flow['children'][] = [
+      'action' => RAID_RESOLUTION,
+      'playerId' => $playerId,
+      'unitId' => $unitId,
+      'spaceId' => $path[count($path) - 1],
+      'startSpaceId' => $path[0],
+    ];
 
-    Notifications::raidResolution($player, $raidResolution, $raidIsSuccessful);
-
-    // Move unit back to start
-    if (!$raidIsSuccessful || ($raidIsSuccessful && !$unit->isIndian())) {
-      $this->returnUnitToStartingSpace($player, $unit, $path, null);
-      // TODO: place spent marker
-    } else if ($raidIsSuccessful && $unit->isIndian()) {
-      // Place in friendly losses box
-      $unit->placeInLosses($player);
-    }
-
-    if ($raidIsSuccessful) {
-      $raidPoints = $space->getHomeSpace() !== null ? $space->getValue() : 1;
-
-      // Place raided marker
-      $space->setRaided($playerFaction);
-      Notifications::raidPoints($player, $space, $raidPoints);
-
-      if ($playerFaction === FRENCH && Cards::getTopOf(Locations::cardInPlay(FRENCH))->getId() === 'Card36' && Globals::getUsedEventCount(FRENCH) === 0) {
-        Notifications::message(
-          clienttranslate('${player_name} gains ${tkn_boldText_raidPoints} bonus Raid Points with ${tkn_boldText_eventName}'),
-          [
-            'player' => $player,
-            'tkn_boldText_raidPoints' => '2',
-            'tkn_boldText_eventName' => clienttranslate('Frontiers Ablaze'),
-            'i18n' => ['tkn_boldText_eventName']
-          ]
-        );
-        $raidPoints += 2;
-        Globals::setUsedEventCount(FRENCH, 1);
-      }
-
-      GameMap::awardRaidPoints($player, $playerFaction, $raidPoints);
-    }
+    $this->ctx->insertAsBrother(Engine::buildTree($flow));
 
     $this->resolveAction($args, true);
   }
@@ -278,15 +211,6 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
-
-  private function returnUnitToStartingSpace($player, $unit, $path, $currentSpace = null)
-  {
-    $currentSpace = $currentSpace === null ? Spaces::get($path[count($path) - 1]) : $currentSpace;
-    $unitId = $unit->getId();
-    $unit->setSpent(1);
-    Units::move($unitId, $path[0]);
-    Notifications::moveUnit($player, $unit, $currentSpace, Spaces::get($path[0]));
-  }
 
   private function getMaxDistance($actionPointId)
   {
