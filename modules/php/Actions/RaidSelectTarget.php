@@ -20,12 +20,12 @@ use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
-class Raid extends \BayonetsAndTomahawks\Actions\StackAction
+class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
 {
-  // public function getState()
-  // {
-  //   return ST_RAID;
-  // }
+  public function getState()
+  {
+    return ST_RAID_SELECT_TARGET;
+  }
 
   // ..######..########....###....########.########
   // .##....##....##......##.##......##....##......
@@ -43,7 +43,7 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stRaid()
+  public function stRaidSelectTarget()
   {
   }
 
@@ -55,7 +55,7 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreRaid()
+  public function stPreRaidSelectTargetd()
   {
   }
 
@@ -68,7 +68,7 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsRaid()
+  public function argsRaidSelectTarget()
   {
     $info = $this->ctx->getInfo();
     $parentInfo = $this->ctx->getParent()->getInfo();
@@ -122,21 +122,21 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassRaid()
+  public function actPassRaidSelectTarget()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  public function actRaid($args)
+  public function actRaidSelectTarget($args)
   {
-    self::checkAction('actRaid');
+    self::checkAction('actRaidSelectTarget');
     $path = $args['path'];
     $spaceId = $args['spaceId'];
     $unitId = $args['unitId'];
 
-    $stateArgs = $this->argsRaid();
+    $stateArgs = $this->argsRaidSelectTarget();
 
 
     /**
@@ -191,7 +191,7 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
     $otherPlayer = Players::getOther();
     $otherPlayerFaction = $otherPlayer->getFaction();
 
-
+    
 
     // Move unit along path and check roll for interception
     foreach ($path as $index => $spaceId) {

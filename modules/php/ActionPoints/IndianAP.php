@@ -11,7 +11,7 @@ class IndianAP extends \BayonetsAndTomahawks\Models\ActionPoint
     $this->name = clienttranslate("Indian AP");
     $this->actionsAllowed = [
       MOVEMENT,
-      RAID
+      RAID_SELECT_TARGET
     ];
   }
 }

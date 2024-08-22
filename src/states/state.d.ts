@@ -244,7 +244,7 @@ interface OnEnteringSailMovementStateArgs extends CommonArgs {
   faction: BRITISH_FACTION | FRENCH_FACTION;
 }
 
-interface OnEnteringRaidStateArgs extends CommonArgs {
+interface OnEnteringRaidSelectTargetStateArgs extends CommonArgs {
   raidTargets: Record<
     string,
     {

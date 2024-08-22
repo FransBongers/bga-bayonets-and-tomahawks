@@ -2382,7 +2382,7 @@ var BayonetsAndTomahawks = (function () {
             fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
             marshalTroops: new MarshalTroopsState(this),
             movement: new MovementState(this),
-            raid: new RaidState(this),
+            raidSelectTarget: new RaidSelectTargetState(this),
             sailMovement: new SailMovementState(this),
             selectReserveCard: new SelectReserveCardState(this),
         };
@@ -8647,20 +8647,20 @@ var MovementState = (function () {
     };
     return MovementState;
 }());
-var RaidState = (function () {
-    function RaidState(game) {
+var RaidSelectTargetState = (function () {
+    function RaidSelectTargetState(game) {
         this.game = game;
     }
-    RaidState.prototype.onEnteringState = function (args) {
-        debug('Entering RaidState');
+    RaidSelectTargetState.prototype.onEnteringState = function (args) {
+        debug('Entering RaidSelectTargetState');
         this.args = args;
         this.updateInterfaceInitialStep();
     };
-    RaidState.prototype.onLeavingState = function () {
-        debug('Leaving RaidState');
+    RaidSelectTargetState.prototype.onLeavingState = function () {
+        debug('Leaving RaidSelectTargetState');
     };
-    RaidState.prototype.setDescription = function (activePlayerId) { };
-    RaidState.prototype.updateInterfaceInitialStep = function () {
+    RaidSelectTargetState.prototype.setDescription = function (activePlayerId) { };
+    RaidSelectTargetState.prototype.updateInterfaceInitialStep = function () {
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
             text: _('${you} must select a target Space to raid'),
@@ -8674,7 +8674,7 @@ var RaidState = (function () {
         });
         this.game.addUndoButtons(this.args);
     };
-    RaidState.prototype.updateInterfaceSelectPath = function (_a) {
+    RaidSelectTargetState.prototype.updateInterfaceSelectPath = function (_a) {
         var _this = this;
         var space = _a.space, paths = _a.paths;
         if (paths.length === 1) {
@@ -8721,7 +8721,7 @@ var RaidState = (function () {
             },
         });
     };
-    RaidState.prototype.updateInterfaceSelectUnit = function (_a) {
+    RaidSelectTargetState.prototype.updateInterfaceSelectUnit = function (_a) {
         var _this = this;
         var space = _a.space, path = _a.path;
         if (this.args.units.length === 1) {
@@ -8749,7 +8749,7 @@ var RaidState = (function () {
         });
         this.game.addCancelButton();
     };
-    RaidState.prototype.updateInterfaceConfirm = function (_a) {
+    RaidSelectTargetState.prototype.updateInterfaceConfirm = function (_a) {
         var _this = this;
         var space = _a.space, path = _a.path, unit = _a.unit;
         this.game.clearPossible();
@@ -8768,7 +8768,7 @@ var RaidState = (function () {
             callback: function () {
                 _this.game.clearPossible();
                 _this.game.takeAction({
-                    action: 'actRaid',
+                    action: 'actRaidSelectTarget',
                     args: {
                         path: path,
                         spaceId: space.id,
@@ -8779,7 +8779,7 @@ var RaidState = (function () {
         });
         this.game.addCancelButton();
     };
-    RaidState.prototype.setTargetsSelectable = function () {
+    RaidSelectTargetState.prototype.setTargetsSelectable = function () {
         var _this = this;
         Object.values(this.args.raidTargets).forEach(function (target) {
             _this.game.setLocationSelectable({
@@ -8790,7 +8790,7 @@ var RaidState = (function () {
             });
         });
     };
-    return RaidState;
+    return RaidSelectTargetState;
 }());
 var SailMovementState = (function () {
     function SailMovementState(game) {

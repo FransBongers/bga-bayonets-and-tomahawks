@@ -93,7 +93,7 @@
     "src/states/VagariesOfWarPickUnits.ts",
     "src/states/MarshalTroops.ts",
     "src/states/Movement.ts",
-    "src/states/RaidState.ts",
+    "src/states/RaidSelectTargetState.ts",
     "src/states/SailMovement.ts",
     "src/states/SelectReserveCard.ts",
     "src/states/state.d.ts",

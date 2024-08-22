@@ -12,7 +12,7 @@ class LightAP_2X extends \BayonetsAndTomahawks\Models\ActionPoint
     $this->name = clienttranslate("Light AP 2x");
     $this->actionsAllowed = [
       MOVEMENT,
-      RAID
+      RAID_SELECT_TARGET
     ];
   }
 }

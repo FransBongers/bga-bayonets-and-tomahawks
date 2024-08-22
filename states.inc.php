@@ -387,14 +387,30 @@ $machinestates = array(
         'possibleactions' => ['actActionActivateStack', 'actPassOptionalAction', 'actRestart'],
     ],
 
-    ST_RAID => [
-        'name' => 'raid',
-        'description' => clienttranslate('${actplayer} may move units'),
+    ST_RAID_SELECT_TARGET => [
+        'name' => 'raidSelectTarget',
+        'description' => clienttranslate('${actplayer} must select a Space to RaidSelectTarget'),
         'descriptionmyturn' => clienttranslate('${you}'),
         'type' => 'activeplayer',
         'args' => 'argsAtomicAction',
         'action' => 'stAtomicAction',
-        'possibleactions' => ['actRaid', 'actPassOptionalAction', 'actRestart'],
+        'possibleactions' => ['actRaidSelectTarget', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_RAID_MOVE => [
+        'name' => 'raidMove',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_RAID_RESOLUTION => [
+        'name' => 'raidResolution',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
     ],
 
     ST_MOVEMENT => [

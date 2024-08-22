@@ -11,7 +11,7 @@ class LightAP extends \BayonetsAndTomahawks\Models\ActionPoint
     $this->name = clienttranslate("Light AP");
     $this->actionsAllowed = [
       MOVEMENT,
-      RAID
+      RAID_SELECT_TARGET
     ];
   }
 }

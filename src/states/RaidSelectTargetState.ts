@@ -1,21 +1,21 @@
-class RaidState implements State {
+class RaidSelectTargetState implements State {
   private game: BayonetsAndTomahawksGame;
-  private args: OnEnteringRaidStateArgs;
+  private args: OnEnteringRaidSelectTargetStateArgs;
   // private selectedUnit: BTUnit | null = null;
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
   }
 
-  onEnteringState(args: OnEnteringRaidStateArgs) {
-    debug('Entering RaidState');
+  onEnteringState(args: OnEnteringRaidSelectTargetStateArgs) {
+    debug('Entering RaidSelectTargetState');
     this.args = args;
     // this.selectedUnit = null;
     this.updateInterfaceInitialStep();
   }
 
   onLeavingState() {
-    debug('Leaving RaidState');
+    debug('Leaving RaidSelectTargetState');
   }
 
   setDescription(activePlayerId: number) {}
@@ -188,7 +188,7 @@ class RaidState implements State {
       callback: () => {
         this.game.clearPossible();
         this.game.takeAction({
-          action: 'actRaid',
+          action: 'actRaidSelectTarget',
           args: {
             path,
             spaceId: space.id,
