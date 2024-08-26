@@ -174,6 +174,13 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
           'toSpaceId' => $spaceId,
           'startSpaceId' => $path[0],
         ];
+        $flow['children'][] = [
+          'action' => RAID_INTERCEPTION,
+          'playerId' => $playerId,
+          'unitId' => $unitId,
+          'spaceId' => $spaceId,
+          'startSpaceId' => $path[0],
+        ];
       }
     }
 

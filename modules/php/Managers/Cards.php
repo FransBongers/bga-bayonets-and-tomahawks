@@ -51,6 +51,16 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
   //////////////////////////////////
   //////////////////////////////////
 
+  public static function isCardInPlay($faction, $cardId)
+  {
+    $card = self::getTopOf(Locations::cardInPlay($faction));
+    if ($card === null) {
+      return false;
+    } else {
+      return $card->getId() === $cardId;
+    }
+  }
+
   public static function getCardsInPlay()
   {
     $cards = self::getSelectQuery()

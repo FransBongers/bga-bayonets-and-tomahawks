@@ -70,6 +70,8 @@ class AtomicActions
     PLACE_MARKER_ON_STACK => 'PlaceMarkerOnStack',
     RAID_SELECT_TARGET => 'RaidSelectTarget',
     RAID_MOVE => 'RaidMove',
+    RAID_INTERCEPTION => 'RaidInterception',
+    RAID_REROLL => 'RaidReroll',
     RAID_RESOLUTION => 'RaidResolution',
     SAIL_MOVEMENT => 'SailMovement',
     SELECT_RESERVE_CARD => 'SelectReserveCard',

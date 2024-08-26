@@ -94,6 +94,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     fleetsArriveUnitPlacement: FleetsArriveUnitPlacementState;
     marshalTroops: MarshalTroopsState;
     movement: MovementState;
+    raidReroll: RaidRerollState;
     raidSelectTarget: RaidSelectTargetState;
     sailMovement: SailMovementState;
     selectReserveCard: SelectReserveCardState;
@@ -164,6 +165,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
       marshalTroops: new MarshalTroopsState(this),
       movement: new MovementState(this),
+      raidReroll: new RaidRerollState(this),
       raidSelectTarget: new RaidSelectTargetState(this),
       sailMovement: new SailMovementState(this),
       selectReserveCard: new SelectReserveCardState(this),

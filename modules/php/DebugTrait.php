@@ -136,7 +136,7 @@ trait DebugTrait
     // Cards::get('Card14')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card36')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card09')->insertOnTop(Locations::campaignDeck(BRITISH));
-    Cards::get(STAGED_LACROSSE_GAME_CARD_ID)->insertOnTop(Locations::campaignDeck(INDIAN));
+    Cards::get(PURSUIT_OF_ELEVATED_STATUS_CARD_ID)->insertOnTop(Locations::campaignDeck(INDIAN));
 
 
     // Units::get('unit_51')->setLocation(Locations::lossesBox(FRENCH));

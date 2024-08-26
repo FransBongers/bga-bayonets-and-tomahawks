@@ -248,6 +248,11 @@ interface OnEnteringSailMovementStateArgs extends CommonArgs {
   faction: BRITISH_FACTION | FRENCH_FACTION;
 }
 
+interface OnEnteringRaidRerollStateArgs extends CommonArgs {
+  rollType: string;
+  source: string;
+}
+
 interface OnEnteringRaidSelectTargetStateArgs extends CommonArgs {
   raidTargets: Record<
     string,

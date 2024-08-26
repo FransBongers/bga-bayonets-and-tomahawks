@@ -397,12 +397,30 @@ $machinestates = array(
         'possibleactions' => ['actRaidSelectTarget', 'actPassOptionalAction', 'actRestart'],
     ],
 
+    ST_RAID_INTERCEPTION => [
+        'name' => 'raidInterception',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
     ST_RAID_MOVE => [
         'name' => 'raidMove',
         'description' => '',
         'type' => 'game',
         'action' => 'stAtomicAction',
         'transitions' => [],
+    ],
+
+    ST_RAID_REROLL => [
+        'name' => 'raidReroll',
+        'description' => clienttranslate('${actplayer} may reroll'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actRaidReroll', 'actPassOptionalAction', 'actRestart'],
     ],
 
     ST_RAID_RESOLUTION => [

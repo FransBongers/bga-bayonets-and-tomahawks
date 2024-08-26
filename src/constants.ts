@@ -272,6 +272,12 @@ const ROAD_UNDER_CONTRUCTION = 1;
 const HAS_ROAD = 2;
 
 /**
+ * Raid
+ */
+const RAID_INTERCEPTION = 'RAID_INTERCEPTION';
+const RAID_RESOLUTION = 'RAID_RESOLUTION';
+
+/**
  * Construction options
  */
 const PLACE_FORT_CONSTRUCTION_MARKER = 'placeFortConstructionMarker';

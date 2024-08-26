@@ -2253,6 +2253,8 @@ var ACTION_ROUND_INDIAN_ACTIONS = 'ACTION_ROUND_INDIAN_ACTIONS';
 var NO_ROAD = 0;
 var ROAD_UNDER_CONTRUCTION = 1;
 var HAS_ROAD = 2;
+var RAID_INTERCEPTION = 'RAID_INTERCEPTION';
+var RAID_RESOLUTION = 'RAID_RESOLUTION';
 var PLACE_FORT_CONSTRUCTION_MARKER = 'placeFortConstructionMarker';
 var REPLACE_FORT_CONSTRUCTION_MARKER = 'replaceFortConstructionMarker';
 var REPAIR_FORT = 'repairFort';
@@ -2383,6 +2385,7 @@ var BayonetsAndTomahawks = (function () {
             fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
             marshalTroops: new MarshalTroopsState(this),
             movement: new MovementState(this),
+            raidReroll: new RaidRerollState(this),
             raidSelectTarget: new RaidSelectTargetState(this),
             sailMovement: new SailMovementState(this),
             selectReserveCard: new SelectReserveCardState(this),
@@ -8690,6 +8693,60 @@ var MovementState = (function () {
         return selectedFleets > 0 && otherUnits / selectedFleets <= 4;
     };
     return MovementState;
+}());
+var RaidRerollState = (function () {
+    function RaidRerollState(game) {
+        this.game = game;
+    }
+    RaidRerollState.prototype.onEnteringState = function (args) {
+        debug('Entering RaidRerollState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    RaidRerollState.prototype.onLeavingState = function () {
+        debug('Leaving RaidRerollState');
+    };
+    RaidRerollState.prototype.setDescription = function (activePlayerId) { };
+    RaidRerollState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clearPossible();
+        this.setPageTitle();
+        this.game.addPrimaryActionButton({
+            id: 'reroll_btn',
+            text: _('Reroll'),
+            callback: function () {
+                _this.game.clearPossible();
+                _this.game.takeAction({
+                    action: 'actRaidReroll',
+                    args: {
+                        reroll: true,
+                    },
+                });
+            },
+        });
+        this.game.addPassButton({
+            text: _('Do not reroll'),
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    RaidRerollState.prototype.setPageTitle = function () {
+        var text = '${you}';
+        if (this.args.rollType === RAID_INTERCEPTION && this.args.source === PURSUIT_OF_ELEVATED_STATUS) {
+            text = _('${you} may reroll the Interception roll with Pursuit of Elevated Status');
+        }
+        else if (this.args.rollType === RAID_RESOLUTION && this.args.source === PURSUIT_OF_ELEVATED_STATUS) {
+            text = _('${you} may reroll the Raid roll with Pursuit of Elevated Status');
+        }
+        this.game.clientUpdatePageTitle({
+            text: text,
+            args: {
+                you: '${you}',
+            },
+        });
+    };
+    return RaidRerollState;
 }());
 var RaidSelectTargetState = (function () {
     function RaidSelectTargetState(game) {
