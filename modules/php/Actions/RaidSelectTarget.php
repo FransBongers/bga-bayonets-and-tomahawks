@@ -294,20 +294,15 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
     }
 
     usort($data, function ($a, $b) {
-      return $a['accruedWeight'] - $b['accruedWeight'];
-    });
-
-    $bestProbability = $data[0]['accruedWeight'];
-
-    $data = Utils::filter($data, function ($pathWithWeight) use ($bestProbability) {
-      return $pathWithWeight['accruedWeight'] === $bestProbability;
-    });
-
-    if (count($data) > 0) {
-      usort($data, function ($a, $b) {
+      $weightDifference = $b['accruedWeight'] - $a['accruedWeight'];
+      if ($weightDifference < 0) {
+        return -1;
+      } else if ($weightDifference > 0) {
+        return 1;
+      } else {
         return count($a['path']) - count($b['path']);
-      });
-    }
+      }
+    });
 
     return $data[0]['path'];
   }

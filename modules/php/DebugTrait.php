@@ -110,6 +110,7 @@ trait DebugTrait
 
   function debug_test()
   {
+    AtomicActions::get(RAID_SELECT_TARGET)->getAllRaidPaths(TACONNET,6,FRENCH);
 
     // Notifications::log('oos', GameMap::getMarkersOnMap(ROUT_MARKER, BRITISH));
     // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), OUT_OF_SUPPLY_MARKER, Spaces::get(HALIFAX), BRITISH);
