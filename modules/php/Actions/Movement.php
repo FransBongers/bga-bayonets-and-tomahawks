@@ -79,10 +79,17 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
     $player = self::getPlayer();
     $playerFaction = $player->getFaction();
 
+    $isArmyMovement = in_array($source, [ARMY_AP, ARMY_AP_2X, SAIL_ARMY_AP, SAIL_ARMY_AP_2X, FRENCH_LIGHT_ARMY_AP]);
+    $britishForcedMarch = $playerFaction === BRITISH && $isArmyMovement && Cards::isCardInPlay(BRITISH, BRITISH_FORCED_MARCH_CARD_ID) && Globals::getUsedEventCount(BRITISH) === 0;
+    $frenchForcedMarch = $playerFaction === FRENCH && $isArmyMovement && Cards::isCardInPlay(FRENCH, FRENCH_FORCED_MARCH_CARD_ID) && Globals::getUsedEventCount(FRENCH) === 0;
+    $forcedMarchAvailable = $britishForcedMarch || $frenchForcedMarch;
+
     $unitsOnSpace = $space->getUnits($playerFaction);
-    $units = $this->getUnitsThatCanMove($space, $playerFaction, $unitsOnSpace, $source);
+    $units = $this->getUnitsThatCanMove($space, $playerFaction, $unitsOnSpace, $source, $forcedMarchAvailable);
 
     $adjacent = $space->getAdjacentConnectionsAndSpaces();
+
+
 
     return [
       'source' => $source,
@@ -95,6 +102,7 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
       'destination' => isset($info['destinationId']) && $info['destinationId'] !== null ? Spaces::get($info['destinationId']) : null,
       'requiredUnitIds' => isset($info['requiredUnitIds']) ? $info['requiredUnitIds'] : [],
       'count' => count($this->ctx->getParent()->getResolvedActions([MOVEMENT])),
+      'forcedMarchAvailable' => $forcedMarchAvailable,
     ];
   }
 
@@ -161,8 +169,16 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
     }, $units);
 
     $connection = $adjacent['connection'];
-
     $playerId = $player->getId();
+
+    if ($this->usesForcedMarch($stateArgs)) {
+      Notifications::message(clienttranslate('${player_name} uses ${tkn_boldText_eventName}'), [
+        'player' => $player,
+        'tkn_boldText_eventName' => clienttranslate('Forced March'),
+        'i18n' => ['tkn_boldText_eventName']
+      ]);
+      Globals::setUsedEventCount($stateArgs['faction'], 1);
+    }
 
     $this->ctx->insertAsBrother(Engine::buildTree([
       'children' => [
@@ -183,6 +199,7 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
           'source' => $info['source'],
           'destinationId' => $info['destinationId'],
           'requiredUnitIds' => $info['requiredUnitIds'],
+          'forcedMarchAvailable' => $stateArgs['forcedMarchAvailable'],
         ]
       ]
     ]));
@@ -194,6 +211,7 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
       'toSpaceId' => $destinationId,
       'unitIds' => $unitIds,
       'connectionId' => $connection->getId(),
+      'forcedMarchAvailable' => $stateArgs['forcedMarchAvailable'],
     ]));
 
     $this->resolveAction($args);
@@ -207,7 +225,28 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  public function getUnitsThatCanMove($space, $faction, $units, $source, $ignoreAlreadyMovedCheck = false)
+  private function usesForcedMarch($stateArgs)
+  {
+    if (!$stateArgs['forcedMarchAvailable']) {
+      return false;
+    }
+
+    if (!Utils::array_some($stateArgs['units'], function ($unit) {
+      return !$unit->isLight();
+    })) {
+      return false;
+    }
+
+    $regularArmyMovementLimit = $stateArgs['count'] === 2 &&
+      in_array($stateArgs['source'], [ARMY_AP, SAIL_ARMY_AP, FRENCH_LIGHT_ARMY_AP]);
+
+    $doubleArmyMovementLimit = $stateArgs['count'] === 4 &&
+      in_array($stateArgs['source'], [ARMY_AP_2X, SAIL_ARMY_AP_2X, FRENCH_LIGHT_ARMY_AP]);
+
+    return $regularArmyMovementLimit || $doubleArmyMovementLimit;
+  }
+
+  public function getUnitsThatCanMove($space, $faction, $units, $source, $forcedMarchAvailable, $ignoreAlreadyMovedCheck = false)
   {
     $currentNumberOfMoves = 0;
     $mpMultiplier = 1;
@@ -226,11 +265,15 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
     }
 
     // TODO: filter units that are locked in battle?
-    $unitsThatCanMove = Utils::filter($units, function ($unit) use ($ignoreAlreadyMovedCheck, $currentNumberOfMoves, $mpMultiplier, $source) {
+    $unitsThatCanMove = Utils::filter($units, function ($unit) use ($ignoreAlreadyMovedCheck, $currentNumberOfMoves, $mpMultiplier, $source, $forcedMarchAvailable) {
       if ($unit->isFort() || $unit->isBastion()) {
         return false;
       }
-      if (!$ignoreAlreadyMovedCheck && $source !== CONSTRUCTION && $currentNumberOfMoves >= $unit->getMpLimit() * $mpMultiplier) {
+      $movementPoints = $unit->getMpLimit() * $mpMultiplier;
+      if ($forcedMarchAvailable && !$unit->isLight()) {
+        $movementPoints += 1;
+      }
+      if (!$ignoreAlreadyMovedCheck && $source !== CONSTRUCTION && $currentNumberOfMoves >= $movementPoints) {
         return false;
       }
       return !$unit->isSpent();
@@ -259,7 +302,7 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
 
   public function canBePerformedBy($units, $space, $actionPoint, $playerFaction)
   {
-    return count($this->getUnitsThatCanMove($space, $playerFaction, $units, $actionPoint->getId(), true)) > 0;
+    return count($this->getUnitsThatCanMove($space, $playerFaction, $units, $actionPoint->getId(), false, true)) > 0;
   }
 
   public function getFlow($source, $playerId, $originId, $destinationId = null, $requiredUnitIds = [])

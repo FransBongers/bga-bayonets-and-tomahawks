@@ -77,30 +77,26 @@ class MovementState implements State {
       this.setDestinationsSelectable();
     }
 
+    const usesForcedMarch = this.usesForcedMarch();
+
     this.game.addPrimaryActionButton({
       id: 'move_btn',
-      text: _('Move'),
-      callback: () => this.updateInterfaceConfirm(),
+      text: usesForcedMarch ? _('Move with Forced March') : _('Move'),
+      callback: () => {
+        this.game.clearPossible();
+        this.game.takeAction({
+          action: 'actMovement',
+          args: {
+            destinationId: this.destination.id,
+            selectedUnitIds: this.selectedUnits.map(({ id }) => id),
+          },
+        });
+      },
       extraClasses:
         this.selectedUnits.length > 0 && this.destination !== null
           ? ''
           : DISABLED,
     });
-
-    // if (
-    //   [SAIL_ARMY_AP, SAIL_ARMY_AP_2X].includes(this.args.source) &&
-    //   this.args.units.some(
-    //     (unit) =>
-    //       this.game.gamedatas.staticData.units[unit.counterId].type === FLEET
-    //   )
-    // ) {
-    //   this.game.addPrimaryActionButton({
-    //     id: 'sail_move_btn',
-    //     text: _('Sail Move'),
-    //     callback: () => this.updateInterfaceConfirm(true),
-    //     extraClasses: this.isSailMovePossible() ? '' : DISABLED,
-    //   });
-    // }
 
     this.game.addSecondaryActionButton({
       id: 'select_all_btn',
@@ -123,47 +119,6 @@ class MovementState implements State {
     // this.checkConfirmDisabled();
   }
 
-  private updateInterfaceConfirm(sailMove = false) {
-    this.game.clearPossible();
-
-    this.game.clientUpdatePageTitle({
-      text: sailMove
-        ? _('Move selected units to the Sail Box?')
-        : _('Move selected units to ${spaceName}?'),
-      args: {
-        spaceName: _(this.destination?.name),
-      },
-    });
-
-    this.game.setLocationSelected({ id: this.destination.id });
-    this.setUnitsSelected();
-
-    const callback = () => {
-      this.game.clearPossible();
-      this.game.takeAction({
-        action: 'actMovement',
-        args: {
-          destinationId: this.destination.id,
-          selectedUnitIds: this.selectedUnits.map(({ id }) => id),
-        },
-      });
-    };
-
-    // if (
-    //   this.game.settings.get({
-    //     id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
-    //   }) === PREF_ENABLED
-    // ) {
-    callback();
-    // } else {
-    //   this.game.addConfirmButton({
-    //     callback,
-    //   });
-    // }
-
-    this.game.addCancelButton();
-  }
-
   //  .##.....##.########.####.##.......####.########.##....##
   //  .##.....##....##.....##..##........##.....##.....##..##.
   //  .##.....##....##.....##..##........##.....##......####..
@@ -171,6 +126,32 @@ class MovementState implements State {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  private usesForcedMarch(): boolean {
+    if (!this.args.forcedMarchAvailable) {
+      return false;
+    }
+
+    if (
+      !this.selectedUnits.some(
+        (unit) => this.game.getUnitStaticData(unit).type !== LIGHT
+      )
+    ) {
+      return false;
+    }
+
+    const regularArmyAPLimit =
+      this.args.count === 2 &&
+      [ARMY_AP, SAIL_ARMY_AP, FRENCH_LIGHT_ARMY_AP].includes(this.args.source);
+
+    const doubleArmyAPLimit =
+      this.args.count === 4 &&
+      [ARMY_AP_2X, SAIL_ARMY_AP_2X, FRENCH_LIGHT_ARMY_AP].includes(
+        this.args.source
+      );
+
+    return regularArmyAPLimit || doubleArmyAPLimit;
+  }
 
   private setUnitsSelectable() {
     this.args.units.forEach((unit) => {
@@ -223,27 +204,35 @@ class MovementState implements State {
       (unit) => this.game.getUnitStaticData(unit).type === FLEET
     );
 
-    const validDestinations = this.args.adjacent.filter(({ connection, space }) => {
-      if (requiresHighway && connection.type !== HIGHWAY) {
-        return false;
-      }
-      if (requiresCoastal && !this.game.getConnectionStaticData(connection).coastal) {
-        return false;
-      }
-      if (!canUsePath && connection.type === PATH) {
-        return false;
-      }
-      if (
-        numberOfUnitsForConnectionLimit > this.getRemainingLimit(connection)
-      ) {
-        return false;
-      }
-      if (this.args.faction === FRENCH && this.game.getSpaceStaticData(space).britishBase) {
-        return false;
-      }
+    const validDestinations = this.args.adjacent.filter(
+      ({ connection, space }) => {
+        if (requiresHighway && connection.type !== HIGHWAY) {
+          return false;
+        }
+        if (
+          requiresCoastal &&
+          !this.game.getConnectionStaticData(connection).coastal
+        ) {
+          return false;
+        }
+        if (!canUsePath && connection.type === PATH) {
+          return false;
+        }
+        if (
+          numberOfUnitsForConnectionLimit > this.getRemainingLimit(connection)
+        ) {
+          return false;
+        }
+        if (
+          this.args.faction === FRENCH &&
+          this.game.getSpaceStaticData(space).britishBase
+        ) {
+          return false;
+        }
 
-      return true;
-    });
+        return true;
+      }
+    );
 
     validDestinations.forEach(({ space }) => {
       this.game.setLocationSelectable({

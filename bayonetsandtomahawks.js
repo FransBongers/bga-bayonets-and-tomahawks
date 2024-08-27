@@ -8594,10 +8594,23 @@ var MovementState = (function () {
         if (this.selectedUnits.length > 0 && this.destination === null) {
             this.setDestinationsSelectable();
         }
+        var usesForcedMarch = this.usesForcedMarch();
         this.game.addPrimaryActionButton({
             id: 'move_btn',
-            text: _('Move'),
-            callback: function () { return _this.updateInterfaceConfirm(); },
+            text: usesForcedMarch ? _('Move with Forced March') : _('Move'),
+            callback: function () {
+                _this.game.clearPossible();
+                _this.game.takeAction({
+                    action: 'actMovement',
+                    args: {
+                        destinationId: _this.destination.id,
+                        selectedUnitIds: _this.selectedUnits.map(function (_a) {
+                            var id = _a.id;
+                            return id;
+                        }),
+                    },
+                });
+            },
             extraClasses: this.selectedUnits.length > 0 && this.destination !== null
                 ? ''
                 : DISABLED,
@@ -8620,36 +8633,19 @@ var MovementState = (function () {
             this.game.addCancelButton();
         }
     };
-    MovementState.prototype.updateInterfaceConfirm = function (sailMove) {
+    MovementState.prototype.usesForcedMarch = function () {
         var _this = this;
-        var _a;
-        if (sailMove === void 0) { sailMove = false; }
-        this.game.clearPossible();
-        this.game.clientUpdatePageTitle({
-            text: sailMove
-                ? _('Move selected units to the Sail Box?')
-                : _('Move selected units to ${spaceName}?'),
-            args: {
-                spaceName: _((_a = this.destination) === null || _a === void 0 ? void 0 : _a.name),
-            },
-        });
-        this.game.setLocationSelected({ id: this.destination.id });
-        this.setUnitsSelected();
-        var callback = function () {
-            _this.game.clearPossible();
-            _this.game.takeAction({
-                action: 'actMovement',
-                args: {
-                    destinationId: _this.destination.id,
-                    selectedUnitIds: _this.selectedUnits.map(function (_a) {
-                        var id = _a.id;
-                        return id;
-                    }),
-                },
-            });
-        };
-        callback();
-        this.game.addCancelButton();
+        if (!this.args.forcedMarchAvailable) {
+            return false;
+        }
+        if (!this.selectedUnits.some(function (unit) { return _this.game.getUnitStaticData(unit).type !== LIGHT; })) {
+            return false;
+        }
+        var regularArmyAPLimit = this.args.count === 2 &&
+            [ARMY_AP, SAIL_ARMY_AP, FRENCH_LIGHT_ARMY_AP].includes(this.args.source);
+        var doubleArmyAPLimit = this.args.count === 4 &&
+            [ARMY_AP_2X, SAIL_ARMY_AP_2X, FRENCH_LIGHT_ARMY_AP].includes(this.args.source);
+        return regularArmyAPLimit || doubleArmyAPLimit;
     };
     MovementState.prototype.setUnitsSelectable = function () {
         var _this = this;
@@ -8692,7 +8688,8 @@ var MovementState = (function () {
             if (requiresHighway && connection.type !== HIGHWAY) {
                 return false;
             }
-            if (requiresCoastal && !_this.game.getConnectionStaticData(connection).coastal) {
+            if (requiresCoastal &&
+                !_this.game.getConnectionStaticData(connection).coastal) {
                 return false;
             }
             if (!canUsePath && connection.type === PATH) {
@@ -8701,7 +8698,8 @@ var MovementState = (function () {
             if (numberOfUnitsForConnectionLimit > _this.getRemainingLimit(connection)) {
                 return false;
             }
-            if (_this.args.faction === FRENCH && _this.game.getSpaceStaticData(space).britishBase) {
+            if (_this.args.faction === FRENCH &&
+                _this.game.getSpaceStaticData(space).britishBase) {
                 return false;
             }
             return true;

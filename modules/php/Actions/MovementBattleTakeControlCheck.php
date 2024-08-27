@@ -117,11 +117,19 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
   {
     $currentNumberOfMoves = count($this->ctx->getParent()->getParent()->getResolvedActions([MOVEMENT]));
 
+    $info = $this->ctx->getInfo();
+    $forcedMarchAvailable = isset($info['forcedMarchAvailable']) && $info['forcedMarchAvailable'];
+
     $units = $space->getUnits();
     $mpMultiplier = in_array($this->ctx->getInfo()['source'], [ARMY_AP_2X, LIGHT_AP_2X, INDIAN_AP_2X, SAIL_ARMY_AP_2X]) ? 2 : 1;
 
-    return Utils::array_some($units, function ($unit) use ($mpMultiplier, $currentNumberOfMoves) {
-      return $unit->getMpLimit() * $mpMultiplier > $currentNumberOfMoves && !$unit->isSpent();
+    return Utils::array_some($units, function ($unit) use ($mpMultiplier, $currentNumberOfMoves, $forcedMarchAvailable) {
+      $movementPoints = $unit->getMpLimit() * $mpMultiplier;
+      if ($forcedMarchAvailable && !$unit->isLight()) {
+        $movementPoints += 1;
+      }
+
+      return $movementPoints > $currentNumberOfMoves && !$unit->isSpent();
     });
   }
 }

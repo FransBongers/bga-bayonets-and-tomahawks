@@ -150,6 +150,8 @@ interface OnEnteringMovementStateArgs extends CommonArgs {
   destination: BTSpace;
   requiredUnitIds: string[];
   source: string;
+  forcedMarchAvailable: boolean;
+  count: number;
 }
 
 interface BTConstructionOptions {

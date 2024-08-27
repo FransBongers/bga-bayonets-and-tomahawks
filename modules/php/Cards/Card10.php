@@ -7,7 +7,7 @@ class Card10 extends \BayonetsAndTomahawks\Models\Card
   public function __construct($row)
   {
     parent::__construct($row);
-    $this->id = 'Card10';
+    $this->id = BRITISH_FORCED_MARCH_CARD_ID;
     $this->actionPoints = [
       [
         'id' => LIGHT_AP
