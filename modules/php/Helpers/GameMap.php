@@ -147,4 +147,33 @@ class GameMap extends \APP_DbObject
       'enemyHasFort' => $enemyHasFort,
     ];
   }
+
+  public static function getStacks($spaces = null, $units = null) {
+    $spaces = $spaces === null ? Spaces::getAll() : $spaces;
+    $units = $units === null ? Units::getAll() : $units;
+
+    $stacks = [
+      BRITISH => [],
+      FRENCH => [],
+    ];
+
+    foreach ($units as $unit) {
+      $location = $unit->getLocation();
+      if (!(in_array($location, SPACES) && !in_array($location, BASTIONS))) {
+        continue;
+      }
+      $faction = $unit->getFaction();
+      // location is a Space
+      if (isset($stacks[$faction][$location])) {
+        $stacks[$faction][$location]['units'][] = $unit;
+      } else {
+        $stacks[$faction][$location] = [
+          'units' => [$unit],
+          'space' => $spaces[$location]
+        ];
+      }
+    }
+
+    return $stacks;
+  }
 }

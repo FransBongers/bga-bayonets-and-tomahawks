@@ -233,27 +233,7 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
 
   private function getStacksAndSupplySources($spaces, $units)
   {
-    $stacks = [
-      BRITISH => [],
-      FRENCH => [],
-    ];
-
-    foreach ($units as $unit) {
-      $location = $unit->getLocation();
-      if (!(in_array($location, SPACES) && !in_array($location, BASTIONS))) {
-        continue;
-      }
-      $faction = $unit->getFaction();
-      // location is a Space
-      if (isset($stacks[$faction][$location])) {
-        $stacks[$faction][$location]['units'][] = $unit;
-      } else {
-        $stacks[$faction][$location] = [
-          'units' => [$unit],
-          'space' => $spaces[$location]
-        ];
-      }
-    }
+    $stacks = GameMap::getStacks($spaces, $units);
 
     $supplySources = [
       BRITISH => [],

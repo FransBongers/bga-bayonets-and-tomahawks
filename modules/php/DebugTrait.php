@@ -110,9 +110,12 @@ trait DebugTrait
 
   function debug_test()
   {
-    AtomicActions::get(RAID_SELECT_TARGET)->getAllRaidPaths(TACONNET,6,FRENCH);
+    // $space = Spaces::get(ALBANY);
+    // $player = Players::getPlayerForFaction(BRITISH);
+    // $faction = $player->getFaction();
+    // Notifications::log('canBePerformed', AtomicActions::get(CONSTRUCTION)->canBePerformedBy($space->getUnits($faction), $space, ARMY_AP, $faction));
 
-    // Notifications::log('oos', GameMap::getMarkersOnMap(ROUT_MARKER, BRITISH));
+    Notifications::log('markers', Globals::getPlacedConstructionMarkers());
     // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), OUT_OF_SUPPLY_MARKER, Spaces::get(HALIFAX), BRITISH);
 
     // Notifications::log('globals', Globals::getUsedEventCount(BRITISH));
@@ -133,10 +136,10 @@ trait DebugTrait
 
 
     // Cards::get('Card27')->insertOnTop(Locations::buildUpDeck(FRENCH));
-    // Cards::get('Card14')->insertOnTop(Locations::buildUpDeck(BRITISH));
+    // Cards::get('Card07')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card36')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card09')->insertOnTop(Locations::campaignDeck(BRITISH));
-    Cards::get(PURSUIT_OF_ELEVATED_STATUS_CARD_ID)->insertOnTop(Locations::campaignDeck(INDIAN));
+    // Cards::get(PURSUIT_OF_ELEVATED_STATUS_CARD_ID)->insertOnTop(Locations::campaignDeck(INDIAN));
 
 
     // Units::get('unit_51')->setLocation(Locations::lossesBox(FRENCH));

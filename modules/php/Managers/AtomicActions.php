@@ -48,6 +48,7 @@ class AtomicActions
     DRAW_REINFORCEMENTS => 'DrawReinforcements',
     EVENT_ARMED_BATTOEMEN => 'EventArmedBattoemen',
     EVENT_BRITISH_ENCROACHMENT => 'EventBritishEncroachment',
+    EVENT_CONSTRUCTION_FRENZY => 'EventConstructionFrenzy',
     EVENT_DELAYED_SUPPLIES_FROM_FRANCE => 'EventDelayedSuppliesFromFrance',
     EVENT_DISEASE_IN_BRITISH_CAMP => 'EventDiseaseInBritishCamp',
     EVENT_DISEASE_IN_FRENCH_CAMP => 'EventDiseaseInFrenchCamp',

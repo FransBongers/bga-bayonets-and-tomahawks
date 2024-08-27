@@ -3,6 +3,7 @@ class ConstructionState implements State {
   private args: OnEnteringConstructionStateArgs;
   // private marshalledUnits: Record<string, string[]> = {};
   private activated: BTUnit = null;
+  private option: BTConstructionOptions = null;
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
@@ -11,10 +12,7 @@ class ConstructionState implements State {
   onEnteringState(args: OnEnteringConstructionStateArgs) {
     debug('Entering ConstructionState');
     this.args = args;
-    // this.marshalledUnits = {};
-    // Object.keys(this.args.marshal).forEach((spaceId) => {
-    //   this.marshalledUnits[spaceId] = [];
-    // });
+    this.option = null;
 
     this.activated = null;
     this.updateInterfaceInitialStep();
@@ -52,19 +50,23 @@ class ConstructionState implements State {
       },
     });
 
-    const stack: UnitStack =
-      this.game.gameMap.stacks[this.args.space.id][this.args.faction];
-    stack.open();
+    Object.entries(this.args.options).forEach(([spaceId, option]) => {
+      const stack: UnitStack =
+        this.game.gameMap.stacks[option.space.id][this.args.faction];
+      stack.open();
 
-    this.args.activate.forEach((unit) =>
-      this.game.setUnitSelectable({
-        id: unit.id,
-        callback: () => {
-          this.activated = unit;
-          this.updateInterfaceConstructionOptions();
-        },
-      })
-    );
+      option.activate.forEach((unit) =>
+        this.game.setUnitSelectable({
+          id: unit.id,
+          callback: () => {
+            this.activated = unit;
+            this.option = option;
+            this.updateInterfaceConstructionOptions();
+          },
+        })
+      );
+    });
+
 
     this.game.addPassButton({
       optionalAction: this.args.optionalAction,
@@ -79,13 +81,13 @@ class ConstructionState implements State {
       text: _('${you} must select a Connection or Construction option'),
       args: {
         you: '${you}',
-        spaceName: _(this.args.space.name),
+        spaceName: _(this.option.space.name),
       },
     });
 
-    this.game.setLocationSelected({ id: this.args.space.id });
+    this.game.setLocationSelected({ id: this.option.space.id });
 
-    this.args.fortOptions.forEach((option) => {
+    this.option.fortOptions.forEach((option) => {
       this.game.addSecondaryActionButton({
         id: `${option}_btn`,
         text: this.getFortConstructionButtonText(option),
@@ -93,7 +95,7 @@ class ConstructionState implements State {
       });
     });
 
-    Object.entries(this.args.roadOptions).forEach(([connectionId, data]) => {
+    Object.entries(this.option.roadOptions).forEach(([connectionId, data]) => {
       this.game.setLocationSelectable({
         id: `${connectionId}_road`,
         callback: () => this.updateInterfaceConfirm({ connectionId }),
@@ -122,12 +124,13 @@ class ConstructionState implements State {
           activatedUnitId: this.activated.id,
           connectionId: connectionId || null,
           fortOption: fortOption || null,
+          spaceId: this.option.space.id,
         },
       });
     };
 
     if (fortOption) {
-      this.game.setLocationSelected({ id: this.args.space.id });
+      this.game.setLocationSelected({ id: this.option.space.id });
     } else if (connectionId) {
       this.game.setLocationSelected({ id: `${connectionId}_road` });
     }
@@ -171,55 +174,55 @@ class ConstructionState implements State {
           text = _('Place ${tkn_marker} on ${spaceName}?');
           args = {
             tkn_marker: FORT_CONSTRUCTION_MARKER,
-            spaceName: this.args.space.name,
+            spaceName: this.option.space.name,
           };
           break;
         case REPLACE_FORT_CONSTRUCTION_MARKER:
           text = _('Replace ${tkn_marker} on ${spaceName} with Fort?');
           args = {
             tkn_marker: FORT_CONSTRUCTION_MARKER,
-            spaceName: this.args.space.name,
+            spaceName: this.option.space.name,
           };
           break;
         case REPAIR_FORT:
           text = _('Repair ${tkn_unit} on ${spaceName}?');
           args = {
-            tkn_unit: `${this.args.fort?.counterId}:${
-              this.args.fort.reduced ? 'reduced' : 'full'
+            tkn_unit: `${this.option.fort?.counterId}:${
+              this.option.fort.reduced ? 'reduced' : 'full'
             }`,
-            spaceName: this.args.space.name,
+            spaceName: this.option.space.name,
           };
           break;
         case REMOVE_FORT:
           text = _('Remove ${tkn_unit} from ${spaceName}?');
           args = {
-            tkn_unit: `${this.args.fort?.counterId}:${
-              this.args.fort.reduced ? 'reduced' : 'full'
+            tkn_unit: `${this.option.fort?.counterId}:${
+              this.option.fort.reduced ? 'reduced' : 'full'
             }`,
-            spaceName: this.args.space.name,
+            spaceName: this.option.space.name,
           };
           break;
         case REMOVE_FORT_CONSTRUCTION_MARKER:
           text = _('Remove ${tkn_marker} from ${spaceName}?');
           args = {
             tkn_marker: FORT_CONSTRUCTION_MARKER,
-            spaceName: this.args.space.name,
+            spaceName: this.option.space.name,
           };
           break;
         default:
           return '';
       }
     } else if (connectionId) {
-      switch (this.args.roadOptions[connectionId].roadOption) {
+      switch (this.option.roadOptions[connectionId].roadOption) {
         case PLACE_ROAD_CONSTRUCTION_MARKER:
           text = _(
             'Place ${tkn_marker} on Path between ${spaceNameOrigin} and ${spaceNameDestination}?'
           );
           args = {
             tkn_marker: ROAD_CONSTRUCTION_MARKER,
-            spaceNameOrigin: _(this.args.space.name),
+            spaceNameOrigin: _(this.option.space.name),
             spaceNameDestination: _(
-              this.args.roadOptions[connectionId].space.name
+              this.option.roadOptions[connectionId].space.name
             ),
           };
           break;
@@ -230,9 +233,9 @@ class ConstructionState implements State {
           args = {
             tkn_marker_construction: ROAD_CONSTRUCTION_MARKER,
             tkn_marker_road: ROAD_MARKER,
-            spaceNameOrigin: _(this.args.space.name),
+            spaceNameOrigin: _(this.option.space.name),
             spaceNameDestination: _(
-              this.args.roadOptions[connectionId].space.name
+              this.option.roadOptions[connectionId].space.name
             ),
           };
           break;
@@ -265,16 +268,16 @@ class ConstructionState implements State {
       case REPAIR_FORT:
         text = _('Repair ${tkn_unit}');
         args = {
-          tkn_unit: `${this.args.fort?.counterId}:${
-            this.args.fort.reduced ? 'reduced' : 'full'
+          tkn_unit: `${this.option.fort?.counterId}:${
+            this.option.fort.reduced ? 'reduced' : 'full'
           }`,
         };
         break;
       case REMOVE_FORT:
         text = _('Remove ${tkn_unit}');
         args = {
-          tkn_unit: `${this.args.fort?.counterId}:${
-            this.args.fort.reduced ? 'reduced' : 'full'
+          tkn_unit: `${this.option.fort?.counterId}:${
+            this.option.fort.reduced ? 'reduced' : 'full'
           }`,
         };
         break;

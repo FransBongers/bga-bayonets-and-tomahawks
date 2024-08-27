@@ -152,21 +152,32 @@ interface OnEnteringMovementStateArgs extends CommonArgs {
   source: string;
 }
 
-interface OnEnteringConstructionStateArgs extends CommonArgs {
+interface BTConstructionOptions {
   activate: BTUnit[];
-  faction: BRITISH_FACTION | FRENCH_FACTION;
   fort: BTUnit | null;
   fortOptions: string[];
-  roadOptions: Record<string, {
-    connection: BTConnection;
-    roadOption: string;
-    space: BTSpace;
-  }>
+  roadOptions: Record<
+    string,
+    {
+      connection: BTConnection;
+      roadOption: string;
+      space: BTSpace;
+    }
+  >;
   space: BTSpace;
+}
+
+interface OnEnteringConstructionStateArgs extends CommonArgs {
+  options: Record<string, BTConstructionOptions>;
+  faction: BRITISH_FACTION | FRENCH_FACTION;
 }
 
 interface EventArmedBattoemenStateArgs extends CommonArgs {
   markers: BTMarker[];
+}
+
+interface EventConstructionFrenzyStateArgs extends CommonArgs {
+  
 }
 
 interface EventDelayedSuppliesFromFranceStateArgs extends CommonArgs {
@@ -210,9 +221,7 @@ interface EventSmallpoxInfectedBlanketsStateArgs extends CommonArgs {
   units: BTUnit[];
 }
 
-interface EventStagedLacrosseGameStateArgs extends CommonArgs {
-  
-}
+interface EventStagedLacrosseGameStateArgs extends CommonArgs {}
 
 interface OnEnteringFleetsArriveUnitPlacementStateArgs extends CommonArgs {
   fleets: BTUnit[];

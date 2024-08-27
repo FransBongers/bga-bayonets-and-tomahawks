@@ -6019,7 +6019,10 @@ var ActionRoundChooseReactionState = (function () {
             },
         });
         this.addActionPointButtons();
-        this.game.addPassButton({ optionalAction: this.args.optionalAction, text: _('Do not hold AP for Reaction') });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+            text: _('Do not hold AP for Reaction'),
+        });
         this.game.addUndoButtons(this.args);
     };
     ActionRoundChooseReactionState.prototype.updateInterfaceConfirm = function (_a) {
@@ -6034,7 +6037,8 @@ var ActionRoundChooseReactionState = (function () {
         });
         this.game.addConfirmButton({
             callback: function () {
-                return _this.game.takeAction({
+                _this.game.clearPossible();
+                _this.game.takeAction({
                     action: 'actActionRoundChooseReaction',
                     args: {
                         actionPointId: actionPoint.id,
@@ -6887,11 +6891,13 @@ var ConfirmTurnState = (function () {
 var ConstructionState = (function () {
     function ConstructionState(game) {
         this.activated = null;
+        this.option = null;
         this.game = game;
     }
     ConstructionState.prototype.onEnteringState = function (args) {
         debug('Entering ConstructionState');
         this.args = args;
+        this.option = null;
         this.activated = null;
         this.updateInterfaceInitialStep();
     };
@@ -6908,15 +6914,19 @@ var ConstructionState = (function () {
                 you: '${you}',
             },
         });
-        var stack = this.game.gameMap.stacks[this.args.space.id][this.args.faction];
-        stack.open();
-        this.args.activate.forEach(function (unit) {
-            return _this.game.setUnitSelectable({
-                id: unit.id,
-                callback: function () {
-                    _this.activated = unit;
-                    _this.updateInterfaceConstructionOptions();
-                },
+        Object.entries(this.args.options).forEach(function (_a) {
+            var spaceId = _a[0], option = _a[1];
+            var stack = _this.game.gameMap.stacks[option.space.id][_this.args.faction];
+            stack.open();
+            option.activate.forEach(function (unit) {
+                return _this.game.setUnitSelectable({
+                    id: unit.id,
+                    callback: function () {
+                        _this.activated = unit;
+                        _this.option = option;
+                        _this.updateInterfaceConstructionOptions();
+                    },
+                });
             });
         });
         this.game.addPassButton({
@@ -6931,18 +6941,18 @@ var ConstructionState = (function () {
             text: _('${you} must select a Connection or Construction option'),
             args: {
                 you: '${you}',
-                spaceName: _(this.args.space.name),
+                spaceName: _(this.option.space.name),
             },
         });
-        this.game.setLocationSelected({ id: this.args.space.id });
-        this.args.fortOptions.forEach(function (option) {
+        this.game.setLocationSelected({ id: this.option.space.id });
+        this.option.fortOptions.forEach(function (option) {
             _this.game.addSecondaryActionButton({
                 id: "".concat(option, "_btn"),
                 text: _this.getFortConstructionButtonText(option),
                 callback: function () { return _this.updateInterfaceConfirm({ fortOption: option }); },
             });
         });
-        Object.entries(this.args.roadOptions).forEach(function (_a) {
+        Object.entries(this.option.roadOptions).forEach(function (_a) {
             var connectionId = _a[0], data = _a[1];
             _this.game.setLocationSelectable({
                 id: "".concat(connectionId, "_road"),
@@ -6964,11 +6974,12 @@ var ConstructionState = (function () {
                     activatedUnitId: _this.activated.id,
                     connectionId: connectionId || null,
                     fortOption: fortOption || null,
+                    spaceId: _this.option.space.id,
                 },
             });
         };
         if (fortOption) {
-            this.game.setLocationSelected({ id: this.args.space.id });
+            this.game.setLocationSelected({ id: this.option.space.id });
         }
         else if (connectionId) {
             this.game.setLocationSelected({ id: "".concat(connectionId, "_road") });
@@ -6996,35 +7007,35 @@ var ConstructionState = (function () {
                     text = _('Place ${tkn_marker} on ${spaceName}?');
                     args = {
                         tkn_marker: FORT_CONSTRUCTION_MARKER,
-                        spaceName: this.args.space.name,
+                        spaceName: this.option.space.name,
                     };
                     break;
                 case REPLACE_FORT_CONSTRUCTION_MARKER:
                     text = _('Replace ${tkn_marker} on ${spaceName} with Fort?');
                     args = {
                         tkn_marker: FORT_CONSTRUCTION_MARKER,
-                        spaceName: this.args.space.name,
+                        spaceName: this.option.space.name,
                     };
                     break;
                 case REPAIR_FORT:
                     text = _('Repair ${tkn_unit} on ${spaceName}?');
                     args = {
-                        tkn_unit: "".concat((_b = this.args.fort) === null || _b === void 0 ? void 0 : _b.counterId, ":").concat(this.args.fort.reduced ? 'reduced' : 'full'),
-                        spaceName: this.args.space.name,
+                        tkn_unit: "".concat((_b = this.option.fort) === null || _b === void 0 ? void 0 : _b.counterId, ":").concat(this.option.fort.reduced ? 'reduced' : 'full'),
+                        spaceName: this.option.space.name,
                     };
                     break;
                 case REMOVE_FORT:
                     text = _('Remove ${tkn_unit} from ${spaceName}?');
                     args = {
-                        tkn_unit: "".concat((_c = this.args.fort) === null || _c === void 0 ? void 0 : _c.counterId, ":").concat(this.args.fort.reduced ? 'reduced' : 'full'),
-                        spaceName: this.args.space.name,
+                        tkn_unit: "".concat((_c = this.option.fort) === null || _c === void 0 ? void 0 : _c.counterId, ":").concat(this.option.fort.reduced ? 'reduced' : 'full'),
+                        spaceName: this.option.space.name,
                     };
                     break;
                 case REMOVE_FORT_CONSTRUCTION_MARKER:
                     text = _('Remove ${tkn_marker} from ${spaceName}?');
                     args = {
                         tkn_marker: FORT_CONSTRUCTION_MARKER,
-                        spaceName: this.args.space.name,
+                        spaceName: this.option.space.name,
                     };
                     break;
                 default:
@@ -7032,13 +7043,13 @@ var ConstructionState = (function () {
             }
         }
         else if (connectionId) {
-            switch (this.args.roadOptions[connectionId].roadOption) {
+            switch (this.option.roadOptions[connectionId].roadOption) {
                 case PLACE_ROAD_CONSTRUCTION_MARKER:
                     text = _('Place ${tkn_marker} on Path between ${spaceNameOrigin} and ${spaceNameDestination}?');
                     args = {
                         tkn_marker: ROAD_CONSTRUCTION_MARKER,
-                        spaceNameOrigin: _(this.args.space.name),
-                        spaceNameDestination: _(this.args.roadOptions[connectionId].space.name),
+                        spaceNameOrigin: _(this.option.space.name),
+                        spaceNameDestination: _(this.option.roadOptions[connectionId].space.name),
                     };
                     break;
                 case FLIP_ROAD_CONSTRUCTION_MARKER:
@@ -7046,8 +7057,8 @@ var ConstructionState = (function () {
                     args = {
                         tkn_marker_construction: ROAD_CONSTRUCTION_MARKER,
                         tkn_marker_road: ROAD_MARKER,
-                        spaceNameOrigin: _(this.args.space.name),
-                        spaceNameDestination: _(this.args.roadOptions[connectionId].space.name),
+                        spaceNameOrigin: _(this.option.space.name),
+                        spaceNameDestination: _(this.option.roadOptions[connectionId].space.name),
                     };
                     break;
             }
@@ -7077,13 +7088,13 @@ var ConstructionState = (function () {
             case REPAIR_FORT:
                 text = _('Repair ${tkn_unit}');
                 args = {
-                    tkn_unit: "".concat((_a = this.args.fort) === null || _a === void 0 ? void 0 : _a.counterId, ":").concat(this.args.fort.reduced ? 'reduced' : 'full'),
+                    tkn_unit: "".concat((_a = this.option.fort) === null || _a === void 0 ? void 0 : _a.counterId, ":").concat(this.option.fort.reduced ? 'reduced' : 'full'),
                 };
                 break;
             case REMOVE_FORT:
                 text = _('Remove ${tkn_unit}');
                 args = {
-                    tkn_unit: "".concat((_b = this.args.fort) === null || _b === void 0 ? void 0 : _b.counterId, ":").concat(this.args.fort.reduced ? 'reduced' : 'full'),
+                    tkn_unit: "".concat((_b = this.option.fort) === null || _b === void 0 ? void 0 : _b.counterId, ":").concat(this.option.fort.reduced ? 'reduced' : 'full'),
                 };
                 break;
             case REMOVE_FORT_CONSTRUCTION_MARKER:
@@ -7943,7 +7954,7 @@ var EventStagedLacrosseGameState = (function () {
             },
         });
         this.game.addPrimaryActionButton({
-            id: 'declate_btn',
+            id: 'declare_btn',
             text: _('Use Staged Lacrosse Game'),
             callback: function () {
                 _this.game.clearPossible();

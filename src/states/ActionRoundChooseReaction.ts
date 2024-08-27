@@ -45,7 +45,10 @@ class ActionRoundChooseReactionState implements State {
 
     this.addActionPointButtons();
 
-    this.game.addPassButton({ optionalAction: this.args.optionalAction, text: _('Do not hold AP for Reaction') });
+    this.game.addPassButton({
+      optionalAction: this.args.optionalAction,
+      text: _('Do not hold AP for Reaction'),
+    });
     this.game.addUndoButtons(this.args);
   }
 
@@ -63,13 +66,15 @@ class ActionRoundChooseReactionState implements State {
     });
 
     this.game.addConfirmButton({
-      callback: () =>
+      callback: () => {
+        this.game.clearPossible();
         this.game.takeAction({
           action: 'actActionRoundChooseReaction',
           args: {
             actionPointId: actionPoint.id,
           },
-        }),
+        });
+      },
     });
     this.game.addCancelButton();
   }

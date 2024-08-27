@@ -45,7 +45,7 @@ class EventStagedLacrosseGameState implements State {
     });
 
     this.game.addPrimaryActionButton({
-      id: 'declate_btn',
+      id: 'declare_btn',
       text: _('Use Staged Lacrosse Game'),
       callback: () => {
         this.game.clearPossible();
