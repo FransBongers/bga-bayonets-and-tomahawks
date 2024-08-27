@@ -223,6 +223,10 @@ interface EventSmallpoxInfectedBlanketsStateArgs extends CommonArgs {
 
 interface EventStagedLacrosseGameStateArgs extends CommonArgs {}
 
+interface EventWildernessAmbushStateArgs extends CommonArgs {
+  positions: number;
+}
+
 interface OnEnteringFleetsArriveUnitPlacementStateArgs extends CommonArgs {
   fleets: BTUnit[];
   units: BTUnit[];

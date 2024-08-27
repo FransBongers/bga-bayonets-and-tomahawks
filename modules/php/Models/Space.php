@@ -173,6 +173,11 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     return $this->outpost;
   }
 
+  public function isWildernessSpace()
+  {
+    return $this->value === 0 && $this->indianVillage === null;
+  }
+
   public function isVictorySpace()
   {
     return $this->victorySpace;

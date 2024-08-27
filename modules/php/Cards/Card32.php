@@ -7,7 +7,7 @@ class Card32 extends \BayonetsAndTomahawks\Models\Card
   public function __construct($row)
   {
     parent::__construct($row);
-    $this->id = 'Card32';
+    $this->id = WILDERNESS_AMBUSH_CARD_ID;
     $this->actionPoints = [
       [
         'id' => LIGHT_AP

@@ -12,6 +12,7 @@ use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\AtomicActions;
+use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
@@ -75,12 +76,16 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     // Add militia markers
     $this->placeMilitia($space, $playersPerFaction);
 
+
+
     // Check combining reduced units
     foreach ([$defendingFaction, $attackingFaction] as $faction) {
       $this->checkIfReducedUnitsCanBeCombined($space, $faction, $playersPerFaction[$faction]);
     }
 
-    // $this->selectCommanders($units, [$attackingPlayer, $defendingPlayer], $space);
+    $this->checkWildernessAmbush($space);
+
+
 
     $this->resolveAction(['automatic' => true]);
   }
@@ -153,6 +158,34 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  private function checkWildernessAmbush($space)
+  {
+    $wildernessWarInPlay = Cards::isCardInPlay(FRENCH, WILDERNESS_AMBUSH_CARD_ID);
+    if (!$wildernessWarInPlay || ($wildernessWarInPlay && Globals::getUsedEventCount(FRENCH) === 1)) {
+      return;
+    }
+
+    if (!($space->isOutpost() || $space->isWildernessSpace())) {
+      return;
+    }
+
+    $lightUnits = Utils::array_some($space->getUnits(FRENCH), function ($unit) {
+      return $unit->isLight();
+    });
+
+    if (!$lightUnits) {
+      return;
+    }
+
+    $this->ctx->insertAsBrother(
+      Engine::buildTree([
+        'playerId' => Players::getPlayerForFaction(FRENCH)->getId(),
+        'action' => EVENT_WILDERNESS_AMBUSH,
+        'spaceId' => $space->getId(),
+        'optional' => true,
+      ])
+    );
+  }
 
 
   private function placeMarkers($space, $attackingFaction, $defendingFaction)

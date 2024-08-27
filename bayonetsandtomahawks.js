@@ -2381,6 +2381,7 @@ var BayonetsAndTomahawks = (function () {
             eventRoundUpMenAndEquipment: new EventRoundUpMenAndEquipmentState(this),
             eventSmallpoxInfectedBlankets: new EventSmallpoxInfectedBlanketsState(this),
             eventStagedLacrosseGame: new EventStagedLacrosseGameState(this),
+            eventWildernessAmbush: new EventWildernessAmbushState(this),
             vagariesOfWarPickUnits: new VagariesOfWarPickUnitsState(this),
             fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
             marshalTroops: new MarshalTroopsState(this),
@@ -7973,6 +7974,51 @@ var EventStagedLacrosseGameState = (function () {
         this.game.addUndoButtons(this.args);
     };
     return EventStagedLacrosseGameState;
+}());
+var EventWildernessAmbushState = (function () {
+    function EventWildernessAmbushState(game) {
+        this.game = game;
+    }
+    EventWildernessAmbushState.prototype.onEnteringState = function (args) {
+        debug('Entering EventWildernessAmbushState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    EventWildernessAmbushState.prototype.onLeavingState = function () {
+        debug('Leaving EventWildernessAmbushState');
+    };
+    EventWildernessAmbushState.prototype.setDescription = function (activePlayerId) { };
+    EventWildernessAmbushState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: this.args.positions === 1
+                ? _('${you} may use Wilderness Ambush to move your Battle Victory marker 1 position')
+                : _('${you} may use Wilderness Ambush to move your Battle Victory marker 2 positions'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.game.addPrimaryActionButton({
+            id: 'declare_btn',
+            text: _('Use Wilderness Ambush'),
+            callback: function () {
+                _this.game.clearPossible();
+                _this.game.takeAction({
+                    action: 'actEventWildernessAmbush',
+                    args: {
+                        useWildernessAmbush: true,
+                    },
+                });
+            },
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+            text: _('Do not use'),
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    return EventWildernessAmbushState;
 }());
 var FleetsArriveUnitPlacementState = (function () {
     function FleetsArriveUnitPlacementState(game) {

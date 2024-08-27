@@ -115,7 +115,7 @@ trait DebugTrait
     // $faction = $player->getFaction();
     // Notifications::log('canBePerformed', AtomicActions::get(CONSTRUCTION)->canBePerformedBy($space->getUnits($faction), $space, ARMY_AP, $faction));
 
-    Notifications::log('markers', Globals::getPlacedConstructionMarkers());
+    // Notifications::log('markers', Globals::getPlacedConstructionMarkers());
     // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), OUT_OF_SUPPLY_MARKER, Spaces::get(HALIFAX), BRITISH);
 
     // Notifications::log('globals', Globals::getUsedEventCount(BRITISH));
@@ -135,7 +135,7 @@ trait DebugTrait
 
 
 
-    // Cards::get('Card27')->insertOnTop(Locations::buildUpDeck(FRENCH));
+    Cards::get(WILDERNESS_AMBUSH_CARD_ID)->insertOnTop(Locations::buildUpDeck(FRENCH));
     // Cards::get('Card07')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card36')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card09')->insertOnTop(Locations::campaignDeck(BRITISH));
