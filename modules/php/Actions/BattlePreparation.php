@@ -61,6 +61,7 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     Globals::setActiveBattleAttackerFaction($attackingFaction);
     Globals::setActiveBattleDefenderFaction($defendingFaction);
     Globals::setActiveBattleHighlandBrigadeHit(false);
+    Globals::setActiveBattleCoupDeMain(false);
 
     $this->ctx->getParent()->updateInfo('attacker', $attackingFaction);
     $this->ctx->getParent()->updateInfo('defender', $defendingFaction);
@@ -84,6 +85,7 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     }
 
     $this->checkWildernessAmbush($space);
+    $this->checkCoupDeMain($space);
 
 
 
@@ -157,6 +159,34 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  private function checkCoupDeMain($space)
+  {
+    $coupDeMainInPlay = Cards::isCardInPlay(FRENCH, COUP_DE_MAIN_CARD_ID);
+    Notifications::log('coupDeMainInPlay', $coupDeMainInPlay);
+    if (!$coupDeMainInPlay || ($coupDeMainInPlay && Globals::getUsedEventCount(FRENCH) === 1)) {   
+      return;
+    }
+
+
+    $hasBritishFort = Utils::array_some($space->getUnits(BRITISH), function ($unit) {
+      return $unit->isFort();
+    });
+    Notifications::log('hasBritishFort', $hasBritishFort);
+    if (!$hasBritishFort) {
+      return;
+    }
+
+    $this->ctx->insertAsBrother(
+      Engine::buildTree([
+        'playerId' => Players::getPlayerForFaction(FRENCH)->getId(),
+        'action' => USE_EVENT,
+        'spaceId' => $space->getId(),
+        'cardId' => COUP_DE_MAIN_CARD_ID,
+        'optional' => true,
+      ])
+    );
+  }
 
   private function checkWildernessAmbush($space)
   {

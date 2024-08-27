@@ -776,6 +776,16 @@ $machinestates = array(
         'possibleactions' => ['actEventWildernessAmbush', 'actPassOptionalAction', 'actRestart'],
     ],
 
+    ST_USE_EVENT => [
+        'name' => 'useEvent',
+        'description' => clienttranslate('${actplayer} may use Event'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actUseEvent', 'actPassOptionalAction', 'actRestart'],
+    ],
+
     ST_PLACE_MARKER_ON_STACK => [
         'name' => 'placeMarkerOnStack',
         'description' => '',

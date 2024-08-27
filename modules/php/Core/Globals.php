@@ -33,6 +33,7 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'activeBattleAttackerFaction' => 'str',
     'activeBattleDefenderFaction' => 'str',
     'activeBattleHighlandBrigadeHit' => 'bool',
+    'activeBattleCoupDeMain' => 'bool',
     'lostAPBritish' => 'obj',
     'lostAPFrench' => 'obj',
     'lostAPIndian' => 'obj',

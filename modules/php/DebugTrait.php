@@ -135,9 +135,9 @@ trait DebugTrait
 
 
 
-    Cards::get(WILDERNESS_AMBUSH_CARD_ID)->insertOnTop(Locations::buildUpDeck(FRENCH));
+    Cards::get(COUP_DE_MAIN_CARD_ID)->insertOnTop(Locations::buildUpDeck(FRENCH));
     // Cards::get('Card07')->insertOnTop(Locations::buildUpDeck(BRITISH));
-    // Cards::get('Card36')->insertOnTop(Locations::campaignDeck(FRENCH));
+    // Cards::get(COUP_DE_MAIN_CARD_ID)->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card09')->insertOnTop(Locations::campaignDeck(BRITISH));
     // Cards::get(PURSUIT_OF_ELEVATED_STATUS_CARD_ID)->insertOnTop(Locations::campaignDeck(INDIAN));
 

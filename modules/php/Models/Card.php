@@ -124,6 +124,17 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
 
   }
 
+  public function getUseEventArgs()
+  {
+    return [];
+  }
+
+  public function useEvent($player, $spaceId = null)
+  {
+
+  }
+
+
   // public function getBuildUpDeck()
   // {
   //   return $this->buildUpDeck;

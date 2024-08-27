@@ -99,6 +99,7 @@
     "src/states/RaidSelectTargetState.ts",
     "src/states/SailMovement.ts",
     "src/states/SelectReserveCard.ts",
+    "src/states/UseEvent.ts",
     "src/states/state.d.ts",
     "src/token-manager/index.ts",
     "src/tooltip-manager/templates.ts",

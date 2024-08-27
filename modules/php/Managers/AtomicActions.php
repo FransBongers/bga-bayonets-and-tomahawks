@@ -80,6 +80,7 @@ class AtomicActions
     VAGARIES_OF_WAR_PUT_BACK_IN_POOL => 'VagariesOfWarPutBackInPool',
     WINTER_QUARTERS_GAME_END_CHECK => 'WinterQuartersGameEndCheck',
     WINTER_QUARTERS_ROUND_END => 'WinterQuartersRoundEnd',
+    USE_EVENT => 'UseEvent',
   ];
 
   public static function get($actionId, $ctx = null)

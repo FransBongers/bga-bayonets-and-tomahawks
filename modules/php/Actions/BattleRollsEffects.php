@@ -211,6 +211,8 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
 
   private function applyBAndTResults($space, $diceResults, $battleRollsSequenceStep, $player, $faction)
   {
+    Notifications::log('applyBAndTResults',$battleRollsSequenceStep);
+    Notifications::log('diceResults',$diceResults);
 
     $unprocessedDice = $diceResults;
     $processedDice = [];
@@ -246,7 +248,16 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
         $militia->remove($enemyPlayer);
       }
 
-      if (!in_array($battleRollsSequenceStep, [HIGHLAND_BRIGADES, METROPOLITAN_BRIGADES, ARTILLERY, FORT, BASTION])) {
+      if (!in_array($battleRollsSequenceStep, [HIGHLAND_BRIGADES, METROPOLITAN_BRIGADES, ARTILLERY, BASTIONS_OR_FORT])) {
+        continue;
+      }
+      if (in_array($battleRollsSequenceStep, [BASTIONS_OR_FORT]) && Globals::getActiveBattleCoupDeMain()) {
+        Notifications::message(clienttranslate('${tkn_dieResult_bt} is treated as a ${tkn_dieResult_miss} due to ${tkn_boldText_eventTitle}'), [
+          'tkn_dieResult_bt' => B_AND_T,
+          'tkn_dieResult_miss' => MISS,
+          'tkn_boldText_eventTitle' => clienttranslate('Coup de Main'),
+          'i18n' => ['tkn_boldText_eventTitle'],
+        ]);
         continue;
       }
       if (count($enemyBrigades) === 0) {

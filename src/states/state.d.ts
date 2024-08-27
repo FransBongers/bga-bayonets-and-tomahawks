@@ -237,6 +237,12 @@ interface OnEnteringFleetsArriveUnitPlacementStateArgs extends CommonArgs {
   commandersPerUnit: Record<string, string>;
 }
 
+interface UseEventStateArgs extends CommonArgs {
+  eventTitle: string;
+  title: string;
+  titleOther: string;
+}
+
 interface OnEnteringVagariesOfWarPickUnitsStateArgs extends CommonArgs {
   options: Record<string, BTUnit[]>;
 }

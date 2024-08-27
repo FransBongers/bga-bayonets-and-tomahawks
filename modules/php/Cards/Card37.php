@@ -2,12 +2,16 @@
 
 namespace BayonetsAndTomahawks\Cards;
 
+use BayonetsAndTomahawks\Core\Globals;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
+use BayonetsAndTomahawks\Helpers\GameMap;
+
 class Card37 extends \BayonetsAndTomahawks\Models\Card
 {
   public function __construct($row)
   {
     parent::__construct($row);
-    $this->id = 'Card37';
+    $this->id = COUP_DE_MAIN_CARD_ID;
     $this->actionPoints = [
       [
         'id' => LIGHT_AP
@@ -24,5 +28,23 @@ class Card37 extends \BayonetsAndTomahawks\Models\Card
     $this->faction = FRENCH;
     $this->initiativeValue = 2;
     $this->years = [1755, 1756];
+  }
+
+  public function getUseEventArgs()
+  {
+    return [
+      'eventTitle' => $this->event['title'],
+      'title' => clienttranslate('${you} may use Coup de Main'),
+      'titleOther' => clienttranslate('${actplayer} may use Coup de Main'),
+    ];
+  }
+
+  public function useEvent($player, $space = null)
+  {
+    Globals::setUsedEventCount(FRENCH, 1);
+
+    Globals::setActiveBattleCoupDeMain(true);
+
+    BTHelpers::moveBattleVictoryMarker($player, FRENCH, 1);
   }
 }

@@ -2390,6 +2390,7 @@ var BayonetsAndTomahawks = (function () {
             raidSelectTarget: new RaidSelectTargetState(this),
             sailMovement: new SailMovementState(this),
             selectReserveCard: new SelectReserveCardState(this),
+            useEvent: new UseEventState(this),
         };
         this.infoPanel = new InfoPanel(this);
         this.settings = new Settings(this);
@@ -9084,6 +9085,61 @@ var SelectReserveCardState = (function () {
         this.game.addCancelButton();
     };
     return SelectReserveCardState;
+}());
+var UseEventState = (function () {
+    function UseEventState(game) {
+        this.game = game;
+    }
+    UseEventState.prototype.onEnteringState = function (args) {
+        debug('Entering UseEventState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    UseEventState.prototype.onLeavingState = function () {
+        debug('Leaving UseEventState');
+    };
+    UseEventState.prototype.setDescription = function (activePlayerId, args) {
+        this.args = args;
+        this.game.clientUpdatePageTitle({
+            text: _(this.args.titleOther),
+            args: {
+                you: '${you}',
+                actplayer: '${actplayer}'
+            },
+            nonActivePlayers: true,
+        });
+    };
+    UseEventState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _(this.args.title),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.game.addPrimaryActionButton({
+            id: 'use_event_btn',
+            text: this.game.format_string_recursive(_('Use ${eventTitle}'), {
+                eventTitle: _(this.args.eventTitle),
+            }),
+            callback: function () {
+                _this.game.clearPossible();
+                _this.game.takeAction({
+                    action: 'actUseEvent',
+                    args: {
+                        useEvent: true,
+                    },
+                });
+            },
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+            text: _('Do not use'),
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    return UseEventState;
 }());
 var TokenManager = (function (_super) {
     __extends(TokenManager, _super);

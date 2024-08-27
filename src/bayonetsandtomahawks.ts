@@ -99,6 +99,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     raidSelectTarget: RaidSelectTargetState;
     sailMovement: SailMovementState;
     selectReserveCard: SelectReserveCardState;
+    useEvent: UseEventState;
   };
 
   constructor() {
@@ -171,6 +172,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       raidSelectTarget: new RaidSelectTargetState(this),
       sailMovement: new SailMovementState(this),
       selectReserveCard: new SelectReserveCardState(this),
+      useEvent: new UseEventState(this),
     };
 
     this.infoPanel = new InfoPanel(this);
