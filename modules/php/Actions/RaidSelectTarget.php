@@ -93,6 +93,9 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
       if (($actionPointId === INDIAN_AP || $actionPointId === INDIAN_AP_2X) && !$unit->isIndian()) {
         return false;
       }
+      if ($unit->isIndian() && Globals::getNoIndianUnitMayBeActivated()) {
+        return false;
+      }
       return $playerFaction === $unitFaction;
     });
 

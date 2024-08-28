@@ -37,12 +37,14 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'lostAPBritish' => 'obj',
     'lostAPFrench' => 'obj',
     'lostAPIndian' => 'obj',
+    'addedAPFrench' => 'obj',
     'controlCherokee' => 'str',
     'controlIroquois' => 'str',
     'placedConstructionMarkers' => 'obj',
     'usedEventBritish' => 'int',
     'usedEventFrench' => 'int', 
-    'usedEventIndian' => 'int', 
+    'usedEventIndian' => 'int',
+    'noIndianUnitMayBeActivated' => 'bool',
   ];
 
   protected static $table = 'global_variables';
@@ -167,6 +169,7 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
   public static function setupNewGame($players, $options)
   {
     // Game options
+    self::setAddedAPFrench([]);
     self::setLostAPBritish([]);
     self::setLostAPFrench([]);
     self::setLostAPIndian([]);
@@ -176,6 +179,7 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     self::setUsedEventBritish(0);
     self::setUsedEventFrench(0);
     self::setUsedEventIndian(0);
+    self::setNoIndianUnitMayBeActivated(false);
   }
 
   public static function getUsedEventCount($faction) {

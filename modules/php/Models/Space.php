@@ -144,6 +144,25 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   public function getUnits($faction = null)
   {
     $units = Units::getInLocation($this->id)->toArray();
+    if ($this->id === LOUISBOURG) {
+      $bastion1 = Units::getTopOf(LOUISBOURG_BASTION_1);
+      $bastion2 = Units::getTopOf(LOUISBOURG_BASTION_2);
+      foreach([$bastion1, $bastion2] as $unit) {
+        if ($unit !== null) {
+          $units[] = $unit;
+        }
+      }
+    }
+    if ($this->id === QUEBEC) {
+      $bastion1 = Units::getTopOf(QUEBEC_BASTION_1);
+      $bastion2 = Units::getTopOf(QUEBEC_BASTION_2);
+      foreach([$bastion1, $bastion2] as $unit) {
+        if ($unit !== null) {
+          $units[] = $unit;
+        }
+      }
+    }
+
     if ($faction === null) {
       return $units;
     }

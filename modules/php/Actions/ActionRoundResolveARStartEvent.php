@@ -48,12 +48,19 @@ class ActionRoundResolveARStartEvent extends \BayonetsAndTomahawks\Models\Atomic
 
     // We can get INDIAN here as faction for the indian cards
     $player = Players::getPlayerForFaction($faction === BRITISH ? BRITISH : FRENCH);
+    $event = $card->getEvent();
 
-    Notifications::message(clienttranslate('${player_name} resolves ${tkn_boldText_eventTitle} Event'), [
-      'player' => $player,
-      'tkn_boldText_eventTitle' => $card->getEvent()['title'],
-      'i18n' => ['tkn_boldText_eventTitle'],
-    ]);
+    // Use skipMessage to set up data for events that are not necessarily AR start events
+    // Like Indian Let's See How The French Fight
+    $skipMessage = isset($event[AR_START_SKIP_MESSAGE]) && $event[AR_START_SKIP_MESSAGE];
+    
+    if (!$skipMessage) {
+      Notifications::message(clienttranslate('${player_name} resolves ${tkn_boldText_eventTitle} Event'), [
+        'player' => $player,
+        'tkn_boldText_eventTitle' => $event['title'],
+        'i18n' => ['tkn_boldText_eventTitle'],
+      ]);
+    }
 
     $card->resolveARStart($this->ctx);
 

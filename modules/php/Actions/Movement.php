@@ -269,6 +269,9 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
       if ($unit->isFort() || $unit->isBastion()) {
         return false;
       }
+      if ($unit->isIndian() && Globals::getNoIndianUnitMayBeActivated()) {
+        return false;
+      }
       $movementPoints = $unit->getMpLimit() * $mpMultiplier;
       if ($forcedMarchAvailable && !$unit->isLight()) {
         $movementPoints += 1;

@@ -53,7 +53,8 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
     $cardInPlay = Cards::getTopOf(Locations::cardInPlay($faction));
 
     $lostActionPoints = $faction === BRITISH ? Globals::getLostAPBritish() : Globals::getLostAPFrench();
-    $actionPoints = BTHelpers::getAvailableActionPoints($lostActionPoints, $cardInPlay);
+    $addedActionPoints = $faction === FRENCH ? Globals::getAddedAPFrench() : [];
+    $actionPoints = BTHelpers::getAvailableActionPoints($lostActionPoints, $cardInPlay, $addedActionPoints);
 
     return [
       'actionPoints' => $actionPoints,

@@ -73,7 +73,7 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
           'id' => $this->ctx->getInfo()['actionPointId']
         ]
       ] :
-      BTHelpers::getAvailableActionPoints($unavailableActionPoints, $card);
+      BTHelpers::getAvailableActionPoints($unavailableActionPoints, $card, self::getPlayer()->getFaction() === FRENCH ? Globals::getAddedAPFrench() : []);
 
     return [
       // 'action' => $action,
@@ -126,7 +126,7 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
       throw new \feException("ERROR 006");
     }
 
-    Notifications::message(clienttranslate('${player_name} uses ${actionPoint}'),[
+    Notifications::message(clienttranslate('${player_name} uses ${actionPoint}'), [
       'player' => $player,
       'actionPoint' => $actionPointId,
     ]);

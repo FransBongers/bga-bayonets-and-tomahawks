@@ -1020,6 +1020,7 @@ const BATTLE_ROLL_SEQUENCE = [
  * Events
  */
 const AR_START = 'arStart';
+const AR_START_SKIP_MESSAGE = 'arStartSkipMessage';
 const ARMED_BATTOEMEN = 'armedBattoemen';
 const A_RIGHT_TO_PLUNDER_AND_CAPTIVES = 'aRightToPlunderCaptives';
 const A_RIGHT_TO_PLUNDER_AND_CAPTIVES_CARD_ID = 'Card50';

@@ -2,7 +2,7 @@
 
 namespace BayonetsAndTomahawks\Models;
 
-use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\AtomicActions;
 
@@ -47,11 +47,14 @@ class ActionPoint implements \JsonSerializable
       if (($this->id === INDIAN_AP || $this->id === INDIAN_AP_2X) && !$unit->isIndian()) {
         return false;
       }
+      if ($unit->isIndian() && Globals::getNoIndianUnitMayBeActivated()) {
+        return false;
+      }
+
       return $playerFaction === $unitFaction;
     });
 
-    // Notifications::log('units', $units);
-    // Notifications::log('actionsAllowed', ['allowed' => $this->actionsAllowed, 'spaceId' => $space->getId()]);
+
 
 
     foreach ($this->actionsAllowed as $actionId) {

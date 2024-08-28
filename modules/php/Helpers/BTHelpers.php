@@ -14,9 +14,9 @@ class BTHelpers extends \APP_DbObject
     return $year;
   }
 
-  public static function getAvailableActionPoints($usedActionPoints, $card)
+  public static function getAvailableActionPoints($usedActionPoints, $card, $addedActionPoints)
   {
-    $cardActionPoints = $card->getActionPoints();
+    $cardActionPoints = array_merge($card->getActionPoints(), $addedActionPoints);
 
     $result = [];
     foreach ($cardActionPoints as $cIndex => $actionPoint) {

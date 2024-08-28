@@ -110,6 +110,8 @@ trait DebugTrait
 
   function debug_test()
   {
+    Notifications::log('message', Globals::getAddedAPFrench());
+
     // $space = Spaces::get(ALBANY);
     // $player = Players::getPlayerForFaction(BRITISH);
     // $faction = $player->getFaction();
@@ -135,11 +137,11 @@ trait DebugTrait
 
 
 
-    Cards::get(COUP_DE_MAIN_CARD_ID)->insertOnTop(Locations::buildUpDeck(FRENCH));
+    // Cards::get(COUP_DE_MAIN_CARD_ID)->insertOnTop(Locations::buildUpDeck(FRENCH));
     // Cards::get('Card07')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get(COUP_DE_MAIN_CARD_ID)->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card09')->insertOnTop(Locations::campaignDeck(BRITISH));
-    // Cards::get(PURSUIT_OF_ELEVATED_STATUS_CARD_ID)->insertOnTop(Locations::campaignDeck(INDIAN));
+    // Cards::get('Card54')->insertOnTop(Locations::campaignDeck(INDIAN));
 
 
     // Units::get('unit_51')->setLocation(Locations::lossesBox(FRENCH));
