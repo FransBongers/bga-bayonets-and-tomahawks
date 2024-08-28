@@ -287,11 +287,16 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
     $this->pools = [
       POOL_NEUTRAL_INDIANS => [
         'units' => [
-          IROQUOIS,
-          IROQUOIS,
-          IROQUOIS,
-          CHEROKEE,
-          CHEROKEE,
+          BRITISH_IROQUOIS,
+          BRITISH_IROQUOIS,
+          BRITISH_IROQUOIS,
+          BRITISH_CHEROKEE,
+          BRITISH_CHEROKEE,
+          FRENCH_IROQUOIS,
+          FRENCH_IROQUOIS,
+          FRENCH_IROQUOIS,
+          FRENCH_CHEROKEE,
+          FRENCH_CHEROKEE,
         ]
       ],
       POOL_FLEETS => [

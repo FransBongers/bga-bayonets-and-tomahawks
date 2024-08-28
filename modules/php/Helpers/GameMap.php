@@ -47,9 +47,19 @@ class GameMap extends \APP_DbObject
     $player = Players::getPlayerForFaction($faction);
     Notifications::indianNationControl($player, $indianNation, $faction);
 
+    $counterIdMap = [
+      BRITISH => [
+        CHEROKEE => BRITISH_CHEROKEE,
+        IROQUOIS => BRITISH_IROQUOIS,
+      ],
+      FRENCH => [
+        CHEROKEE => FRENCH_CHEROKEE,
+        IROQUOIS => FRENCH_IROQUOIS,
+      ],
+    ];
 
-    $units = Utils::filter(Units::getInLocation(POOL_NEUTRAL_INDIANS)->toArray(), function ($unit) use ($indianNation) {
-      return $unit->getCounterId() === $indianNation;
+    $units = Utils::filter(Units::getInLocation(POOL_NEUTRAL_INDIANS)->toArray(), function ($unit) use ($indianNation, $faction, $counterIdMap) {
+      return $unit->getCounterId() === $counterIdMap[$faction][$indianNation];
     });
     $indianNationVillages = $units[0]->getVillages();
 
@@ -57,9 +67,6 @@ class GameMap extends \APP_DbObject
       $space = Spaces::get($indianNationVillages[$index]);
       $space->setControlStartOfTurn($faction);
       $unit->setLocation($space->getId());
-      if ($faction === BRITISH) {
-        $unit->setReduced(1); // Set to reduced to show the back (British side) of the Indian token
-      }
       Notifications::placeUnits($player, [$unit], $space, $faction);
     }
   }

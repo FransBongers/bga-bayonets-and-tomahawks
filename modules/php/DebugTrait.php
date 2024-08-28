@@ -110,8 +110,9 @@ trait DebugTrait
 
   function debug_test()
   {
-    Notifications::log('message', Globals::getAddedAPFrench());
-
+    // Notifications::log('message', Globals::getAddedAPFrench());
+    GameMap::performIndianNationControlProcedure(IROQUOIS, FRENCH);
+    GameMap::performIndianNationControlProcedure(CHEROKEE, FRENCH);
     // $space = Spaces::get(ALBANY);
     // $player = Players::getPlayerForFaction(BRITISH);
     // $faction = $player->getFaction();
