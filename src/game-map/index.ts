@@ -167,13 +167,17 @@ class GameMap {
         [BRITISH]: new UnitStack(
           this.game.tokenManager,
           document.getElementById(`${space.id}_british_stack`),
-          {},
+          {
+            sort: sortFunction('stackOrder'),
+          },
           BRITISH
         ),
         [FRENCH]: new UnitStack(
           this.game.tokenManager,
           document.getElementById(`${space.id}_french_stack`),
-          {},
+          {
+            sort: sortFunction('stackOrder'),
+          },
           FRENCH
         ),
       };
@@ -184,13 +188,17 @@ class GameMap {
       [BRITISH]: new UnitStack(
         this.game.tokenManager,
         document.getElementById(`${SAIL_BOX}_british_stack`),
-        {},
+        {
+          sort: sortFunction('stackOrder'),
+        },
         BRITISH
       ),
       [FRENCH]: new UnitStack(
         this.game.tokenManager,
         document.getElementById(`${SAIL_BOX}_french_stack`),
-        {},
+        {
+          sort: sortFunction('stackOrder'),
+        },
         FRENCH
       ),
     };

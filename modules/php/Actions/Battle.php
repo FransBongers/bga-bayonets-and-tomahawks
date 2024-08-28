@@ -78,7 +78,7 @@ class Battle extends \BayonetsAndTomahawks\Models\AtomicAction
 
     $value += $positions;
     if ($value > 10) {
-      $marker->setState(floor($value / 10));
+      $marker->setSide(floor($value / 10));
     }
     $isAttacker = explode('_', $marker->getLocation())[2] === 'attacker';
 

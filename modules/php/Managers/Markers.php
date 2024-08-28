@@ -18,6 +18,7 @@ class Markers extends \BayonetsAndTomahawks\Helpers\Pieces
   protected static $table = 'markers';
   protected static $prefix = 'marker_';
   protected static $customFields = [
+    'side',
     // 'extra_data'
   ];
   protected static $autoremovePrefix = false;

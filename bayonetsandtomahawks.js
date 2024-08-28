@@ -3676,13 +3676,21 @@ var GameMap = (function () {
         gamedatas.spaces.forEach(function (space) {
             var _a;
             _this.stacks[space.id] = (_a = {},
-                _a[BRITISH] = new UnitStack(_this.game.tokenManager, document.getElementById("".concat(space.id, "_british_stack")), {}, BRITISH),
-                _a[FRENCH] = new UnitStack(_this.game.tokenManager, document.getElementById("".concat(space.id, "_french_stack")), {}, FRENCH),
+                _a[BRITISH] = new UnitStack(_this.game.tokenManager, document.getElementById("".concat(space.id, "_british_stack")), {
+                    sort: sortFunction('stackOrder'),
+                }, BRITISH),
+                _a[FRENCH] = new UnitStack(_this.game.tokenManager, document.getElementById("".concat(space.id, "_french_stack")), {
+                    sort: sortFunction('stackOrder'),
+                }, FRENCH),
                 _a);
         });
         this.stacks[SAIL_BOX] = (_c = {},
-            _c[BRITISH] = new UnitStack(this.game.tokenManager, document.getElementById("".concat(SAIL_BOX, "_british_stack")), {}, BRITISH),
-            _c[FRENCH] = new UnitStack(this.game.tokenManager, document.getElementById("".concat(SAIL_BOX, "_french_stack")), {}, FRENCH),
+            _c[BRITISH] = new UnitStack(this.game.tokenManager, document.getElementById("".concat(SAIL_BOX, "_british_stack")), {
+                sort: sortFunction('stackOrder'),
+            }, BRITISH),
+            _c[FRENCH] = new UnitStack(this.game.tokenManager, document.getElementById("".concat(SAIL_BOX, "_french_stack")), {
+                sort: sortFunction('stackOrder'),
+            }, FRENCH),
             _c);
         this.updateUnitsAndSpaces(gamedatas);
     };
@@ -5287,7 +5295,7 @@ var Pools = (function () {
         var _this = this;
         var gamedatas = _a.gamedatas;
         POOLS.forEach(function (poolId) {
-            _this.stocks[poolId] = new LineStock(_this.game.tokenManager, document.getElementById(poolId), { center: false, gap: '2px' });
+            _this.stocks[poolId] = new LineStock(_this.game.tokenManager, document.getElementById(poolId), { center: false, gap: '2px', sort: sortFunction('stackOrder') });
         });
         this.updatePools(gamedatas);
     };

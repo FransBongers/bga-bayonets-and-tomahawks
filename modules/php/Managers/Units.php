@@ -207,7 +207,6 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
         continue;
       }
       foreach ($pool['units'] as &$unit) {
-        // $info = self::getInstance($unit);
         $id = 'unit_' . $unitIdIndex;
         $data = [
           'id' => $id,

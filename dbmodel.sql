@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS `spaces` (
 CREATE TABLE IF NOT EXISTS `markers` (
   `marker_id` varchar(100) NOT NULL,
   `marker_location` varchar(64) NOT NULL,
+  `side` int(10) DEFAULT 0,
   `marker_state` int(10) DEFAULT 0,
   `extra_data` JSON NULL,
   PRIMARY KEY (`marker_id`)

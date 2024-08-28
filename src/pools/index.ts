@@ -18,7 +18,7 @@ class Pools {
     this.setupPools({ gamedatas });
   }
 
-    // .##.....##.##....##.########...#######.
+  // .##.....##.##....##.########...#######.
   // .##.....##.###...##.##.....##.##.....##
   // .##.....##.####..##.##.....##.##.....##
   // .##.....##.##.##.##.##.....##.##.....##
@@ -51,7 +51,7 @@ class Pools {
       this.stocks[poolId] = new LineStock<BTToken>(
         this.game.tokenManager,
         document.getElementById(poolId),
-        {center: false, gap: '2px'}
+        { center: false, gap: '2px', sort: sortFunction('stackOrder') }
       );
     });
 

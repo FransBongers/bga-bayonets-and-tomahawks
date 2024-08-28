@@ -24,8 +24,10 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   ];
 
   protected $id = null;
+  protected $colonial = false;
   protected $colony = null;
   protected $counterId;
+  protected $stackOrder = 0;
   protected $spent = 0;
   protected $reduced = 0;
   protected $faction = null;
@@ -43,7 +45,21 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   /*
    * STATIC DATA
    */
-  protected $staticAttributes = ['colony', 'counterId', 'counterText', 'faction', 'type', 'mpLimit', 'highland', 'metropolitan', 'connectionTypeAllowed'];
+  protected $staticAttributes = [
+    'colony',
+    'colonial',
+    'counterId',
+    'counterText',
+    'faction',
+    'indian',
+    'type',
+    'mpLimit',
+    'highland',
+    'metropolitan',
+    'connectionTypeAllowed',
+    'stackOrder',
+    'villages',
+  ];
   protected $type = null;
   protected $counterText = null;
 
@@ -80,6 +96,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
       'spent' => $this->spent,
       'manager' => UNITS,
       'reduced' => $this->reduced === 1,
+      'stackOrder' => $this->stackOrder,
     ];
   }
 

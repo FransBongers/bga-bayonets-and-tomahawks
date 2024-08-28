@@ -9,6 +9,7 @@ class Fort extends AbstractUnit
   {
     $this->type = FORT;
     parent::__construct($row);
+    $this->stackOrder = 0;
   }
 
   public function eliminate($player)

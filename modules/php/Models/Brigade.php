@@ -8,7 +8,6 @@ use BayonetsAndTomahawks\Managers\WarInEuropeChits;
 
 class Brigade extends AbstractUnit
 {
-  protected $staticAttributes = ['counterId', 'colony', 'counterText', 'faction', 'highland', 'metropolitan', 'type'];
   protected $highland = false;
   protected $metropolitan = false;
   protected $officerGorget = false;
@@ -17,6 +16,7 @@ class Brigade extends AbstractUnit
   {
     $this->type = BRIGADE;
     parent::__construct($row);
+    $this->stackOrder = 2;
     $this->mpLimit = 2;
     $this->connectionTypeAllowed = [ROAD, HIGHWAY];
   }

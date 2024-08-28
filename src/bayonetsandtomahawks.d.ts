@@ -132,6 +132,7 @@ interface BTMarker {
   state: number;
   side: 'front' | 'back';
   type: string;
+  stackOrder: number;
 }
 
 interface BTSpace {
@@ -162,6 +163,7 @@ interface BTUnit {
   location: string;
   spent: number;
   reduced: boolean;
+  stackOrder: number;
 }
 
 interface BTUnitStaticData {

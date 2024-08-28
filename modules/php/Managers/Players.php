@@ -286,9 +286,9 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
 
     $vpMarker->setLocation($vpMarkerLocation);
     if ($scores[$newLeadFaction] > 10) {
-      $vpMarker->setState(1);
+      $vpMarker->setSide(1);
     } else if ($scores[$newLeadFaction] <= 10) {
-      $vpMarker->setState(0);
+      $vpMarker->setSide(0);
     }
 
     $player = $playersPerFaction[$playerFaction];

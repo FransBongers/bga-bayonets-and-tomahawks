@@ -16,6 +16,7 @@ class Marker extends \BayonetsAndTomahawks\Helpers\DB_Model implements \JsonSeri
   protected $attributes = [
     'id' => ['marker_id', 'str'],
     'location' => ['marker_location', 'str'],
+    'side' => ['side', 'int'],
     'state' => ['marker_state', 'int'],
     // 'extraData' => ['extra_data', 'obj'],
   ];
@@ -23,6 +24,8 @@ class Marker extends \BayonetsAndTomahawks\Helpers\DB_Model implements \JsonSeri
   protected $id = null;
   protected $location = null;
   protected $state = null;
+  protected $side = null;
+  protected $stackOrder = 6;
 
   public function jsonSerialize()
   {
@@ -30,8 +33,9 @@ class Marker extends \BayonetsAndTomahawks\Helpers\DB_Model implements \JsonSeri
       'id' => $this->id,
       'location' => $this->location,
       'type' => $this->getType(),
-      'side' => $this->state === 0 ? 'front' : 'back',
+      'side' => $this->side === 0 ? 'front' : 'back',
       'manager' => MARKERS,
+      'stackOrder' => $this->stackOrder,
     ];
   }
 

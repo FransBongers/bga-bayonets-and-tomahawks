@@ -11,6 +11,7 @@ class VagariesOfWar extends AbstractUnit
   {
     $this->type = VAGARIES_OF_WAR;
     parent::__construct($row);
+    $this->stackOrder = 6;
   }
 
   public function getPutTokenBackInPool()
