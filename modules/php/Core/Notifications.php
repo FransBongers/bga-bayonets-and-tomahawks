@@ -378,12 +378,13 @@ class Notifications
     ]);
   }
 
-  public static function battleCleanup($space, $attackerMarker, $defenderMarker)
+  public static function battleCleanup($space, $attackerMarker, $defenderMarker, $battleContinues)
   {
     self::notifyAll('battleCleanup', '', [
       'space' => $space,
       'attackerMarker' => $attackerMarker->jsonSerialize(),
       'defenderMarker' => $defenderMarker->jsonSerialize(),
+      'battleContinues' => $battleContinues,
     ]);
   }
 
@@ -773,6 +774,19 @@ class Notifications
       'tkn_boldText_spaceName' => Spaces::get($unit->getLocation())->getName(),
       'tkn_unit' => $unit->getCounterId() . ':' . ($unit->getReduced() === 0 ? 'reduced' : 'full'), // reversed because we show the 'before' side in the log
       'i18n' => ['tkn_boldText_spaceName']
+    ]);
+  }
+
+  public static function flipMarker($player, $marker)
+  {
+    $sideAfter = $marker->getSide() === 0 ? 'front' : 'back';
+    $sideBefore = $sideAfter === 'front' ? 'back' : 'front';
+
+    self::notifyAll("flipMarker", clienttranslate('${player_name} flips ${tkn_marker_before} to ${tkn_marker_after}'), [
+      'player' => $player,
+      'tkn_marker_before' => $marker->getType() . ':' . $sideBefore,
+      'tkn_marker_after' => $marker->getType() . ':' . $sideAfter,
+      'marker' => $marker->jsonSerialize(),
     ]);
   }
 

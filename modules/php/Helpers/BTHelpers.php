@@ -53,8 +53,8 @@ class BTHelpers extends \APP_DbObject
     if ($split[3] === 'minus') {
       $value = $value * -1;
     }
-    if ($marker->getState() > 0) {
-      $value += 10 * $marker->getState();
+    if ($marker->getSide() > 0) {
+      $value += 10 * $marker->getSide();
     }
     return $value;
   }

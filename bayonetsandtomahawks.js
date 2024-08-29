@@ -4234,7 +4234,8 @@ var getTokenDiv = function (_a) {
         case LOG_TOKEN_CARD:
             return tplLogTokenCard(value);
         case LOG_TOKEN_MARKER:
-            return tplLogTokenMarker(value);
+            var _c = value.split(':'), tokenType = _c[0], tokenSide = _c[1];
+            return tplLogTokenMarker(tokenType, tokenSide);
         case LOG_TOKEN_NEW_LINE:
             return '<br>';
         case LOG_TOKEN_DIE_RESULT:
@@ -4263,8 +4264,8 @@ var tplLogTokenPlayerName = function (_a) {
 var tplLogTokenCard = function (id) {
     return "<div class=\"bt_log_card bt_card\" data-card-id=\"".concat(id, "\"></div>");
 };
-var tplLogTokenMarker = function (type) {
-    return "<div class=\"bt_log_token bt_marker_side\" data-type=\"".concat(type, "\"></div>");
+var tplLogTokenMarker = function (type, side) {
+    return "<div class=\"bt_log_token bt_marker_side\" data-type=\"".concat(type, "\"").concat(side ? " data-side=\"".concat(side, "\"") : '', "></div>");
 };
 var tplLogTokenRoad = function (state) {
     return "<div class=\"bt_log_token bt_road\" data-road=\"".concat(state, "\"></div>");
@@ -4317,6 +4318,8 @@ var NotificationManager = (function () {
             'drawCardPrivate',
             'drawnReinforcements',
             'eliminateUnit',
+            'flipMarker',
+            'flipUnit',
             'indianNationControl',
             'loseControl',
             'moveRaidPointsMarker',
@@ -4328,7 +4331,6 @@ var NotificationManager = (function () {
             'placeUnitInLosses',
             'placeUnits',
             'raidPoints',
-            'flipUnit',
             'placeWieChit',
             'placeWieChitPrivate',
             'removeMarkerFromStack',
@@ -4484,21 +4486,23 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_battleCleanup = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, attackerMarker, defenderMarker, space;
+            var _a, attackerMarker, defenderMarker, space, battleContinues;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = notif.args, attackerMarker = _a.attackerMarker, defenderMarker = _a.defenderMarker, space = _a.space;
+                        _a = notif.args, attackerMarker = _a.attackerMarker, defenderMarker = _a.defenderMarker, space = _a.space, battleContinues = _a.battleContinues;
                         return [4, Promise.all([
                                 this.game.gameMap.battleTrack[attackerMarker.location].addCard(attackerMarker),
                                 this.game.gameMap.battleTrack[defenderMarker.location].addCard(defenderMarker),
                             ])];
                     case 1:
                         _b.sent();
-                        this.game.gameMap.removeMarkerFromSpace({
-                            spaceId: space.id,
-                            type: 'battle_marker',
-                        });
+                        if (!battleContinues) {
+                            this.game.gameMap.removeMarkerFromSpace({
+                                spaceId: space.id,
+                                type: 'battle_marker',
+                            });
+                        }
                         return [2];
                 }
             });
@@ -4953,6 +4957,16 @@ var NotificationManager = (function () {
                     return [2];
                 }
                 element.insertAdjacentHTML('beforeend', tplMarkerOfType({ type: "".concat(faction, "_raided_marker") }));
+                return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_flipMarker = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var marker;
+            return __generator(this, function (_a) {
+                marker = notif.args.marker;
+                this.game.tokenManager.updateCardInformations(marker);
                 return [2];
             });
         });

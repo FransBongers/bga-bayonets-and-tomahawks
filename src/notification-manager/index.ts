@@ -64,6 +64,8 @@ class NotificationManager {
       'drawCardPrivate',
       'drawnReinforcements',
       'eliminateUnit',
+      'flipMarker',
+      'flipUnit',
       'indianNationControl',
       'loseControl',
       // 'marshalTroops',
@@ -76,7 +78,6 @@ class NotificationManager {
       'placeUnitInLosses',
       'placeUnits',
       'raidPoints',
-      'flipUnit',
       'placeWieChit',
       'placeWieChitPrivate',
       'removeMarkerFromStack',
@@ -260,7 +261,8 @@ class NotificationManager {
   }
 
   async notif_battleCleanup(notif: Notif<NotifBattleCleanupArgs>) {
-    const { attackerMarker, defenderMarker, space } = notif.args;
+    const { attackerMarker, defenderMarker, space, battleContinues } =
+      notif.args;
 
     await Promise.all([
       this.game.gameMap.battleTrack[attackerMarker.location].addCard(
@@ -271,10 +273,12 @@ class NotificationManager {
       ),
     ]);
 
-    this.game.gameMap.removeMarkerFromSpace({
-      spaceId: space.id,
-      type: 'battle_marker',
-    });
+    if (!battleContinues) {
+      this.game.gameMap.removeMarkerFromSpace({
+        spaceId: space.id,
+        type: 'battle_marker',
+      });
+    }
   }
 
   async notif_battleRemoveMarker(notif: Notif<NotifBattleRemoveMarkerArgs>) {
@@ -551,6 +555,11 @@ class NotificationManager {
       'beforeend',
       tplMarkerOfType({ type: `${faction}_raided_marker` })
     );
+  }
+
+  async notif_flipMarker(notif: Notif<NotifFlipMarkerArgs>) {
+    const { marker } = notif.args;
+    this.game.tokenManager.updateCardInformations(marker);
   }
 
   async notif_flipUnit(notif: Notif<NotifReduceUnitArgs>) {

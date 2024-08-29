@@ -17,8 +17,8 @@ const tplLogTokenCard = (id: string) => {
   return `<div class="bt_log_card bt_card" data-card-id="${id}"></div>`;
 };
 
-const tplLogTokenMarker = (type: string) => {
-  return `<div class="bt_log_token bt_marker_side" data-type="${type}"></div>`;
+const tplLogTokenMarker = (type: string, side?: string,) => {
+  return `<div class="bt_log_token bt_marker_side" data-type="${type}"${side ? ` data-side="${side}"` : ''}></div>`;
 };
 
 const tplLogTokenRoad = (state: string) => {

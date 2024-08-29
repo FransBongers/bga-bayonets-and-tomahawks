@@ -45,11 +45,12 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
   {
     $info = $this->ctx->getInfo();
     $faction = $info['faction'];
-    $space = Spaces::get($info['spaceId']);
+    $spaceId = $info['spaceId'];
+    $space = Spaces::get($spaceId);
     $units = Utils::filter($space->getUnits($faction), function ($unit) {
       return !$unit->isFort();
     });
-    if (count($units) === 0) {
+    if (count($units) === 0 || ($faction === FRENCH && $space->hasBastion())) {
       // No units to retreat
       $this->resolveAction(['automatic' => true]);
       return;

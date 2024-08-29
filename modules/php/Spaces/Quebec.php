@@ -33,6 +33,6 @@ class Quebec extends \BayonetsAndTomahawks\Models\Space
 
   public function hasBastion()
   {
-    return count(Units::getAll(QUEBEC_BASTION_1)) + count(Units::getAll(QUEBEC_BASTION_2)) > 0;
+    return count(Units::getInLocation(QUEBEC_BASTION_1)) + count(Units::getInLocation(QUEBEC_BASTION_2)) > 0;
   }
 }

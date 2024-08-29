@@ -28,7 +28,8 @@ const getTokenDiv = ({
     case LOG_TOKEN_CARD:
       return tplLogTokenCard(value);
     case LOG_TOKEN_MARKER:
-      return tplLogTokenMarker(value);
+      const [tokenType, tokenSide] = value.split(':');
+      return tplLogTokenMarker(tokenType, tokenSide);
     case LOG_TOKEN_NEW_LINE:
       return '<br>';
     case LOG_TOKEN_DIE_RESULT:

@@ -56,9 +56,18 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
     $attackerMarker->setLocation(BATTLE_MARKERS_POOL);
     $defenderMarker->setLocation(BATTLE_MARKERS_POOL);
 
+    $unitsOnSpace = $space->getUnits();
+    $battleContinues = Utils::array_some($unitsOnSpace, function ($unit) {
+      return $unit->getFaction() === BRITISH;
+    }) && Utils::array_some($unitsOnSpace, function ($unit) {
+      return $unit->getFaction() === FRENCH;
+    });
+
     // Do not remove battle marker if defeated defender on Fortress
-    $space->setBattle(0);
-    $space->setDefender(null);
+    if (!$battleContinues) {
+      $space->setBattle(0);
+      $space->setDefender(null);
+    }
 
     // Flip Open Seas marker if applicable
 
@@ -68,11 +77,11 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
 
     $this->removeMarkers($space, $playersPerFaction);
 
-    $this->updateControl($space, $winningFaction, $playersPerFaction);
+    $this->updateControl($space, $winningFaction, $playersPerFaction, $battleContinues);
 
     $this->updateLuckyCannonballAndPerfectVolleysEventAbilities();
 
-    Notifications::battleCleanup($space, $attackerMarker, $defenderMarker);
+    Notifications::battleCleanup($space, $attackerMarker, $defenderMarker, $battleContinues);
 
     $this->resolveAction(['automatic' => true]);
   }
@@ -175,11 +184,24 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
     }
   }
 
-  private function updateControl($space, $winningFaction, $playersPerFaction)
+  private function updateControl($space, $winningFaction, $playersPerFaction, $battleContinues)
   {
-    if ($space->getControl() === $winningFaction) {
+    if ($space->getControl() === $winningFaction || $battleContinues) {
       return;
     }
     GameMap::updateControl($playersPerFaction[$winningFaction], $space);
+
+    if (!($winningFaction === BRITISH && $space->getId() === LOUISBOURG)) {
+      return;
+    }
+
+    // Flip SZ
+    $marker = Markers::get(OPEN_SEAS_MARKER);
+    if ($marker->getSide() === 1) {
+      // Marker already flipped
+      return;
+    }
+    $marker->setSide(1);
+    Notifications::flipMarker($playersPerFaction[BRITISH], $marker);
   }
 }

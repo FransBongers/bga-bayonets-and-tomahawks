@@ -47,6 +47,7 @@ interface NotifBattleCleanupArgs {
   space: BTSpace;
   attackerMarker: BTMarker;
   defenderMarker: BTMarker;
+  battleContinues: boolean;
 }
 
 interface NotifBattleStartArgs {
@@ -109,6 +110,10 @@ interface NotifDiscardCardsInPlayArgs {
 
 interface NotifEliminateUnitArgs extends NotifWithPlayerArgs {
   unit: BTUnit;
+}
+
+interface NotifFlipMarkerArgs extends NotifWithPlayerArgs {
+  marker: BTMarker;
 }
 
 interface NotifIndianNationControlArgs extends NotifWithPlayerArgs {

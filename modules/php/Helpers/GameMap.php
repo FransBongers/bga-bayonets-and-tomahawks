@@ -29,7 +29,7 @@ class GameMap extends \APP_DbObject
       return [ATLANTIC_OCEAN, GULF_OF_SAINT_LAWRENCE];
     }
     $openSeasMarker = Markers::get(OPEN_SEAS_MARKER);
-    if ($openSeasMarker->getState() === 0) {
+    if ($openSeasMarker->getSide() === 0) {
       return [ATLANTIC_OCEAN];
     } else {
       return [ATLANTIC_OCEAN, GULF_OF_SAINT_LAWRENCE];

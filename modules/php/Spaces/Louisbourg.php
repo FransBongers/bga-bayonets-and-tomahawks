@@ -30,6 +30,6 @@ class Louisbourg extends \BayonetsAndTomahawks\Models\Space
 
   public function hasBastion() 
   {
-    return count(Units::getAll(LOUISBOURG_BASTION_1)) + count(Units::getAll(LOUISBOURG_BASTION_2)) > 0;
+    return count(Units::getInLocation(LOUISBOURG_BASTION_1)) + count(Units::getInLocation(LOUISBOURG_BASTION_2)) > 0;
   }
 }
