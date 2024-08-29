@@ -99,6 +99,7 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
         'destinationId' => $info['destinationId'],
         'requiredUnitIds' => $info['requiredUnitIds'],
         'optional' => true,
+        'indianNation' => isset($info['indianNation']) ? $info['indianNation'] : null,
       ]));
     }
 

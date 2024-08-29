@@ -85,7 +85,8 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
     $forcedMarchAvailable = $britishForcedMarch || $frenchForcedMarch;
 
     $unitsOnSpace = $space->getUnits($playerFaction);
-    $units = $this->getUnitsThatCanMove($space, $playerFaction, $unitsOnSpace, $source, $forcedMarchAvailable);
+    $indianNation = isset($info['indianNation']) ? $info['indianNation'] : null;
+    $units = $this->getUnitsThatCanMove($space, $playerFaction, $unitsOnSpace, $source, $forcedMarchAvailable, $indianNation);
 
     $adjacent = $space->getAdjacentConnectionsAndSpaces();
 
@@ -180,6 +181,12 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
       Globals::setUsedEventCount($stateArgs['faction'], 1);
     }
 
+    $indianNation = isset($info['indianNation']) ? $info['indianNation'] : null;
+    if (in_array($info['source'], [INDIAN_AP, INDIAN_AP_2X]) && $indianNation === null) {
+      $indianNation = $units[0]->getCounterId();
+    }
+    
+
     $this->ctx->insertAsBrother(Engine::buildTree([
       'children' => [
         [
@@ -200,6 +207,7 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
           'destinationId' => $info['destinationId'],
           'requiredUnitIds' => $info['requiredUnitIds'],
           'forcedMarchAvailable' => $stateArgs['forcedMarchAvailable'],
+          'indianNation' => $indianNation,
         ]
       ]
     ]));
@@ -246,7 +254,7 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
     return $regularArmyMovementLimit || $doubleArmyMovementLimit;
   }
 
-  public function getUnitsThatCanMove($space, $faction, $units, $source, $forcedMarchAvailable, $ignoreAlreadyMovedCheck = false)
+  public function getUnitsThatCanMove($space, $faction, $units, $source, $forcedMarchAvailable, $indianNation = null, $ignoreAlreadyMovedCheck = false)
   {
     $currentNumberOfMoves = 0;
     $mpMultiplier = 1;
@@ -283,8 +291,11 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
     });
 
     if (in_array($source, [INDIAN_AP, INDIAN_AP_2X])) {
-      return Utils::filter($unitsThatCanMove, function ($unit) {
-        return $unit->isIndian();
+      return Utils::filter($unitsThatCanMove, function ($unit) use ($indianNation) {
+        if (!$unit->isIndian()) {
+          return false;
+        }
+        return $indianNation !== null ? $unit->getCounterId() === $indianNation : true;
       });
     }
     if (in_array($source, [LIGHT_AP, LIGHT_AP_2X])) {
@@ -305,7 +316,7 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
 
   public function canBePerformedBy($units, $space, $actionPoint, $playerFaction)
   {
-    return count($this->getUnitsThatCanMove($space, $playerFaction, $units, $actionPoint->getId(), false, true)) > 0;
+    return count($this->getUnitsThatCanMove($space, $playerFaction, $units, $actionPoint->getId(), false, null, true)) > 0;
   }
 
   public function getFlow($source, $playerId, $originId, $destinationId = null, $requiredUnitIds = [])
