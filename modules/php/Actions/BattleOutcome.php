@@ -176,8 +176,24 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
       return $unit->getFaction() === $attackerFaction;
     });
 
+    $militiaCounterMap = [
+      BRITISH => BRITISH_MILITIA_MARKER,
+      FRENCH => FRENCH_MILITIA_MARKER
+    ];
+
+    $spaceId = $this->ctx->getParent()->getInfo()['spaceId'];
+    // To check: can attacking side have militia in the battle?
+    $attackerMilitia = count(Markers::getOfTypeInLocation($militiaCounterMap[$attackerFaction], Locations::stackMarker($spaceId, $attackerFaction)));
+    $defenderMilitia = count(Markers::getOfTypeInLocation($militiaCounterMap[$defenderFaction], Locations::stackMarker($spaceId, $defenderFaction)));
+    
+    Notifications::log('attackerMilitia', $attackerMilitia);
+    Notifications::log('defenderMilitia', $defenderMilitia);
+
+    $attackerUnitCount = count($attackersUnits) + $attackerMilitia;
+    $defenderUnitCount = count($defendersUnits) + $defenderMilitia;
+
     // Check if battle is decided by one stack not having any units left
-    if (count($attackersUnits) === 0) {
+    if ($attackerUnitCount === 0) {
       // defender wins, no need to check of number of defenders units left
       Notifications::battleNoUnitsLeft($attackerPlayer);
       Notifications::battleWinner($defenderPlayer, $space);
@@ -194,9 +210,9 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
           'isRouted' => false,
         ],
       ];
-    } else if (count($defendersUnits) === 0 && count($attackersUnits) > 0) {
+    } else if ($defenderUnitCount === 0 && $attackerUnitCount > 0) {
       // attacker wins
-      Notifications::battleNoUnitsLeft($attackerPlayer);
+      Notifications::battleNoUnitsLeft($defenderPlayer);
       Notifications::battleWinner($attackerPlayer, $space);
       return [
         'loser' => [

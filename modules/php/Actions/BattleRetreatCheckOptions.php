@@ -43,6 +43,18 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
 
   public function stBattleRetreatCheckOptions()
   {
+    $info = $this->ctx->getInfo();
+    $faction = $info['faction'];
+    $space = Spaces::get($info['spaceId']);
+    $units = Utils::filter($space->getUnits($faction), function ($unit) {
+      return !$unit->isFort();
+    });
+    if (count($units) === 0) {
+      // No units to retreat
+      $this->resolveAction(['automatic' => true]);
+      return;
+    }
+
     $retreatOptions = $this->getRetreatOptions();
 
     if (count($retreatOptions) > 0) {
@@ -52,14 +64,7 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     }
 
     // delete all non light units
-    $info = $this->ctx->getInfo();
-    $faction = $info['faction'];
-    $space = Spaces::get($info['spaceId']);
-    $units = Utils::filter($space->getUnits($faction), function ($unit) {
-      return !$unit->isFort();
-    });
     $player = self::getPlayer();
-
     $nonLightUnits = Utils::filter($units, function ($unit) {
       return !$unit->isLight();
     });

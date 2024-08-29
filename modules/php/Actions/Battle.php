@@ -37,6 +37,7 @@ class Battle extends \BayonetsAndTomahawks\Models\AtomicAction
 
   protected function getBattleSpaceId()
   {
+    // TODO: check where this is used. In some places it's only parent level, not 2x parent
     $parentInfo = $this->ctx->getParent()->getParent()->getInfo();
     return $parentInfo['spaceId'];
   }
