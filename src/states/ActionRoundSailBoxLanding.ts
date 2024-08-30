@@ -16,7 +16,16 @@ class ActionRoundSailBoxLandingState implements State {
     debug('Leaving ActionRoundSailBoxLandingState');
   }
 
-  setDescription(activePlayerId: number) {}
+  setDescription(activePlayerId: number, args: OnEnteringActionRoundSailBoxLandingStateArgs) {
+    this.args = args;
+    this.game.clientUpdatePageTitle({
+      text: this.args.optionalAction ? _('${actplayer} may perform Landing') : _('${actplayer} must perform Landing'),
+      args: {
+        actplayer: '${actplayer}'
+      },
+      nonActivePlayers: true,
+    });
+  }
 
   //  .####.##....##.########.########.########..########....###.....######..########
   //  ..##..###...##....##....##.......##.....##.##.........##.##...##....##.##......
@@ -37,7 +46,7 @@ class ActionRoundSailBoxLandingState implements State {
   private updateInterfaceInitialStep() {
     this.game.clearPossible();
     this.game.clientUpdatePageTitle({
-      text: _('${you} must select a Coastal Space'),
+      text: this.args.optionalAction ? _('${you} may select a Coastal Space for Landing') : _('${you} must select a Coastal Space for Landing'),
       args: {
         you: '${you}',
       },

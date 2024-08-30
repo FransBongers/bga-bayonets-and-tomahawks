@@ -281,7 +281,7 @@ $machinestates = array(
 
     ST_ACTION_ROUND_SAIL_BOX_LANDING => [
         'name' => 'actionRoundSailBoxLanding',
-        'description' => clienttranslate('${actplayer} must perform landings'),
+        'description' => clienttranslate('${actplayer} must perform Landing'),
         'descriptionmyturn' => clienttranslate('${you}'),
         'type' => 'activeplayer',
         'args' => 'argsAtomicAction',

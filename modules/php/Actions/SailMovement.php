@@ -104,7 +104,7 @@ class SailMovement extends \BayonetsAndTomahawks\Models\AtomicAction
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
 
-    Engine::resolve(PASS);
+    $this->resolveAction(PASS);
   }
 
   public function actSailMovement($args)
@@ -140,7 +140,7 @@ class SailMovement extends \BayonetsAndTomahawks\Models\AtomicAction
     $info = $this->ctx->getInfo();
     $spaceId = $info['spaceId'];
 
-    $this->ctx->insertAsBrother(Engine::buildTree([
+    $flow = [
       'children' => [
         [
           'action' => MOVE_STACK,
@@ -155,7 +155,18 @@ class SailMovement extends \BayonetsAndTomahawks\Models\AtomicAction
           'spaceId' => $spaceId,
         ],
       ]
-    ]));
+    ];
+
+    if ($info['source'] === SAIL_ARMY_AP_2X) {
+      $flow['children'][] =     [
+        'action' => ACTION_ROUND_SAIL_BOX_LANDING,
+        'playerId' => $playerId,
+        'optional' => true,
+        'source' => $info['source'],
+      ];
+    }
+
+    $this->ctx->insertAsBrother(Engine::buildTree($flow));
 
     $this->resolveAction($args);
   }

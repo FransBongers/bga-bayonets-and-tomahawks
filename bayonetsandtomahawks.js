@@ -6096,12 +6096,21 @@ var ActionRoundSailBoxLandingState = (function () {
     ActionRoundSailBoxLandingState.prototype.onLeavingState = function () {
         debug('Leaving ActionRoundSailBoxLandingState');
     };
-    ActionRoundSailBoxLandingState.prototype.setDescription = function (activePlayerId) { };
+    ActionRoundSailBoxLandingState.prototype.setDescription = function (activePlayerId, args) {
+        this.args = args;
+        this.game.clientUpdatePageTitle({
+            text: this.args.optionalAction ? _('${actplayer} may perform Landing') : _('${actplayer} must perform Landing'),
+            args: {
+                actplayer: '${actplayer}'
+            },
+            nonActivePlayers: true,
+        });
+    };
     ActionRoundSailBoxLandingState.prototype.updateInterfaceInitialStep = function () {
         var _this = this;
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _('${you} must select a Coastal Space'),
+            text: this.args.optionalAction ? _('${you} may select a Coastal Space for Landing') : _('${you} must select a Coastal Space for Landing'),
             args: {
                 you: '${you}',
             },
