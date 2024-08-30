@@ -5915,9 +5915,9 @@ var ActionRoundChooseCardState = (function () {
         debug('Leaving ActionRoundChooseCardState');
     };
     ActionRoundChooseCardState.prototype.setDescription = function (activePlayerId, args) {
+        var _a;
         this.args = args;
-        this.game.hand.open();
-        if (this.args._private.selectedCard) {
+        if ((_a = this.args._private) === null || _a === void 0 ? void 0 : _a.selectedCard) {
             this.game.setCardSelected({ id: this.args._private.selectedCard.id });
         }
     };

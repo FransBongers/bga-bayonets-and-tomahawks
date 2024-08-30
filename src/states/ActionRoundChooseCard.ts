@@ -21,8 +21,8 @@ class ActionRoundChooseCardState implements State {
     args: OnEnteringActionRoundChooseCardStateArgs
   ) {
     this.args = args;
-    this.game.hand.open();
-    if (this.args._private.selectedCard) {
+    // this.game.hand.open();
+    if (this.args._private?.selectedCard) {
       this.game.setCardSelected({ id: this.args._private.selectedCard.id });
     }
   }
