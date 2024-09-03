@@ -93,7 +93,7 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     if (count($lightUnits) > 0) {
       Notifications::message('${player_name} cannot comply with any Retreat Priority. All Light units are eliminated', ['player' => $player]);
       foreach ($lightUnits as $unit) {
-        $unit->eliminate($lightUnits);
+        $unit->eliminate($player);
       }
     }
 

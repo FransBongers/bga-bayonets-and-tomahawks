@@ -531,6 +531,16 @@ trait DebugTrait
       $this->DbQuery($q);
     }
 
+    $firstPlayerId = Globals::getFirstPlayerId();
+    if ($firstPlayerId !== 0) {
+      Globals::setFirstPlayerId($map[$firstPlayerId]);
+    }
+    $secondPlayerId = Globals::getSecondPlayerId();
+    if ($secondPlayerId !== 0) {
+      Globals::setSecondPlayerId($map[$secondPlayerId]);
+    }
+
+
     // Engine
     $engine = Globals::getEngine();
     self::loadDebugUpdateEngine($engine, $map);
