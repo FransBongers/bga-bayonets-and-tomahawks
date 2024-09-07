@@ -233,6 +233,7 @@ $machinestates = array(
         'action' => 'stAtomicAction',
         'possibleactions' => ['actActionRoundChooseCard'],
         'transitions' => ['next' => ST_RESOLVE_STACK],
+        'updateGameProgression' => true,
     ],
 
     ST_ACTION_ROUND_CHOOSE_FIRST_PLAYER => [
@@ -305,6 +306,7 @@ $machinestates = array(
         'type' => 'game',
         'action' => 'stAtomicAction',
         'transitions' => [],
+        'updateGameProgression' => true,
     ],
 
     ST_VAGARIES_OF_WAR_PICK_UNITS => [
@@ -367,6 +369,7 @@ $machinestates = array(
         'type' => 'game',
         'action' => 'stAtomicAction',
         'transitions' => [],
+        'updateGameProgression' => true,
     ],
 
     ST_WINTER_QUARTERS_ROUND_END => [

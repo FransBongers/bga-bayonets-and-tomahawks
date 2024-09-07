@@ -128,7 +128,7 @@ class EventSmallpoxInfectedBlankets extends \BayonetsAndTomahawks\Models\AtomicA
   private function getOptions()
   {
     $units = Utils::filter(Units::getAll()->toArray(), function ($unit) {
-      return $unit->isIndian() && $unit->getFaction() === FRENCH && $unit->getLocation() !== Locations::lossesBox(FRENCH);
+      return $unit->isIndian() && $unit->getFaction() === FRENCH && in_array($unit->getLocation(), SPACES);
     });
     return $units;
   }

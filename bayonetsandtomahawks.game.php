@@ -37,9 +37,12 @@ require_once(APP_GAMEMODULE_PATH . 'module/table/table.game.php');
 // Generic
 use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Globals;
+use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Core\Preferences;
 use BayonetsAndTomahawks\Core\Stats;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\Log;
+use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Players;
 
 // Game specific
@@ -150,7 +153,7 @@ class bayonetsandtomahawks extends Table
             'markers' => Markers::getAll(),
             'spaces' => Spaces::getUiData(),
             'units' => Units::getUiData(),
-            
+
         ];
 
         return $data;
@@ -159,8 +162,37 @@ class bayonetsandtomahawks extends Table
     function getGameProgression()
     {
         // TODO: compute and return the game progression
+        $scenario = Scenarios::get();
+        Notifications::log('scenario', $scenario);
+        $duration = $scenario->getDuration();
+        $totalActionRounds = $duration * 12;
 
-        return 0;
+        $currentYear = BTHelpers::getYear();
+        $finishedYears = $currentYear - $scenario->getStartYear();
+
+        $actionRoundOrder = [
+            ACTION_ROUND_1,
+            ACTION_ROUND_2,
+            FLEETS_ARRIVE,
+            ACTION_ROUND_3,
+            COLONIALS_ENLIST,
+            ACTION_ROUND_4,
+            ACTION_ROUND_5,
+            ACTION_ROUND_6,
+            ACTION_ROUND_7,
+            ACTION_ROUND_8,
+            ACTION_ROUND_9,
+            WINTER_QUARTERS,
+        ];
+
+        $currentActionRound = Markers::get(ROUND_MARKER)->getLocation();
+        $actionRoundsFinishedCurrentYear = Utils::array_find_index($actionRoundOrder, function ($actionRound) use ($currentActionRound) {
+            return $actionRound === $currentActionRound;
+        }) + 1;
+
+        $progression = ($finishedYears * 12 + $actionRoundsFinishedCurrentYear) / $totalActionRounds;
+
+        return $progression * 100;
     }
 
 

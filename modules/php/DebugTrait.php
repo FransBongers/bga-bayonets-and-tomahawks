@@ -110,10 +110,10 @@ trait DebugTrait
 
   function debug_test()
   {
-
-    Units::get('unit_4')->setLocation(REMOVED_FROM_PLAY);
-    Units::get('unit_5')->setLocation(REMOVED_FROM_PLAY);
-    Units::get('unit_35')->setReduced(1);
+    Notifications::log('progression',$this->getGameProgression());
+    // Units::get('unit_4')->setLocation(REMOVED_FROM_PLAY);
+    // Units::get('unit_5')->setLocation(REMOVED_FROM_PLAY);
+    // Units::get('unit_35')->setReduced(1);
     
     // Notifications::log('message', Globals::getAddedAPFrench());
         // $space = Spaces::get(ALBANY);
