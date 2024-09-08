@@ -162,7 +162,7 @@ class EventRoundUpMenAndEquipment extends \BayonetsAndTomahawks\Models\AtomicAct
 
     if (count($unitsInLossesBox) > 0) {
       $possibleSpaces = Utils::filter(Spaces::getControlledBy(BRITISH), function ($space) {
-        return $space->getHomeSpace() !== null;
+        return $space->getHomeSpace() === BRITISH;
       });
       foreach ($unitsInLossesBox as $unit) {
         $unitColony = $unit->getColony();
@@ -220,7 +220,7 @@ class EventRoundUpMenAndEquipment extends \BayonetsAndTomahawks\Models\AtomicAct
 
     if (count($unitsInLossesBox) > 0) {
       $possibleSpaces = Utils::filter(Spaces::getControlledBy(FRENCH), function ($space) {
-        return $space->getHomeSpace() !== null;
+        return $space->getHomeSpace() === FRENCH && !in_array($space->getId(), [LOUISBOURG_BASTION_1, LOUISBOURG_BASTION_2, QUEBEC_BASTION_1, QUEBEC_BASTION_2]);
       });
       foreach ($unitsInLossesBox as $unit) {
         if ($unit->isIndian()) {

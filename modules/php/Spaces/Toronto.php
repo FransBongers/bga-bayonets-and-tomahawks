@@ -8,7 +8,7 @@ class Toronto extends \BayonetsAndTomahawks\Models\Space
     parent::__construct($row);
     $this->id = TORONTO;
     $this->battlePriority = 191;
-    $this->defaultControl = NEUTRAL;
+    $this->defaultControl = FRENCH;
     $this->homeSpace = FRENCH;
     $this->indianVillage = MISSISSAGUE;
     $this->name = clienttranslate('Toronto');

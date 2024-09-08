@@ -174,10 +174,9 @@ class WinterQuartersGameEndCheck extends \BayonetsAndTomahawks\Models\AtomicActi
     if ($values[BRITISH] === $values[FRENCH]) {
       Notifications::message(clienttranslate('No VPs scored for WIE Chits'),[]);
     } else {
-      $difference = abs($values[BRITISH] = $values[FRENCH]);
+      $difference = abs($values[BRITISH] - $values[FRENCH]);
       $winningFaction = $values[BRITISH] > $values[FRENCH] ? BRITISH : FRENCH;
       Players::scoreVictoryPoints($playersPerFaction[$winningFaction], $difference);
-      
     }
 
     // return chits

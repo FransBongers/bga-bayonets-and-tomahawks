@@ -73,7 +73,7 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
           'id' => $this->ctx->getInfo()['actionPointId']
         ]
       ] :
-      BTHelpers::getAvailableActionPoints($unavailableActionPoints, $card, self::getPlayer()->getFaction() === FRENCH ? Globals::getAddedAPFrench() : []);
+      BTHelpers::getAvailableActionPoints($unavailableActionPoints, $card, self::getPlayer()->getFaction() === FRENCH && !$isIndianActions ? Globals::getAddedAPFrench() : []);
 
     return [
       // 'action' => $action,
