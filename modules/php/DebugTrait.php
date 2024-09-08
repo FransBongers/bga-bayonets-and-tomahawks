@@ -110,13 +110,16 @@ trait DebugTrait
 
   function debug_test()
   {
+
+    Notifications::log('cards', Cards::getInLocation(Locations::cardInPlay(INDIAN)));
+    // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(FRENCH), OUT_OF_SUPPLY_MARKER, Spaces::get(TICONDEROGA), FRENCH);
     // Notifications::log('progression',$this->getGameProgression());
     // Units::get('unit_4')->setLocation(REMOVED_FROM_PLAY);
     // Units::get('unit_5')->setLocation(REMOVED_FROM_PLAY);
     // Units::get('unit_35')->setReduced(1);
-    
+
     // Notifications::log('message', Globals::getAddedAPFrench());
-        // $space = Spaces::get(ALBANY);
+    // $space = Spaces::get(ALBANY);
     // $player = Players::getPlayerForFaction(BRITISH);
     // $faction = $player->getFaction();
     // Notifications::log('canBePerformed', AtomicActions::get(CONSTRUCTION)->canBePerformedBy($space->getUnits($faction), $space, ARMY_AP, $faction));
@@ -145,7 +148,7 @@ trait DebugTrait
     // Cards::get('Card07')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get(COUP_DE_MAIN_CARD_ID)->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card09')->insertOnTop(Locations::campaignDeck(BRITISH));
-    Cards::get('Card54')->insertOnTop(Locations::campaignDeck(INDIAN));
+    // Cards::get('Card54')->insertOnTop(Locations::campaignDeck(INDIAN));
 
 
     // Units::get('unit_51')->setLocation(Locations::lossesBox(FRENCH));

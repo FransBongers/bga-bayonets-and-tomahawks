@@ -191,11 +191,12 @@ class BattlePenalties extends \BayonetsAndTomahawks\Actions\Battle
       $penalty = abs($penalties[$faction]);
       if ($penalty > 0) {
         $text = $penalty === 1 ? clienttranslate('${player_name} receives 1 Battle Penalty') : clienttranslate('${player_name} receives ${penaltyCount} Battle Penalties');
+        $player = $index === 0 ? $attackingPlayer : $defendingPlayer;
         Notifications::message($text, [
-          'player' => $index === 0 ? $attackingPlayer : $defendingPlayer,
+          'player' => $player,
           'penaltyCount' => $penalty,
         ]);
-        $this->moveBattleVictoryMarker($attackingPlayer, $attackingFaction, $penalties[$attackingFaction]);
+        $this->moveBattleVictoryMarker($player, $faction, $penalties[$faction]);
       }
     }
   }
