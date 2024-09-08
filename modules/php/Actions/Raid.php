@@ -27,7 +27,9 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
     $unitId = $unit->getId();
     $unit->setSpent(1);
     Units::move($unitId, $startSpaceId);
-    Notifications::moveUnit($player, $unit, $currentSpace, Spaces::get($startSpaceId));
+    if ($startSpaceId !== $currentSpace->getId()) {
+      Notifications::moveUnit($player, $unit, $currentSpace, Spaces::get($startSpaceId));
+    }
   }
 
   function spaceHasEnemyUnits($space, $playerFaction)

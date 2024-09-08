@@ -165,7 +165,15 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
     $playerId = $player->getId();
 
     $flow = [
-      'children' => []
+      'children' => [
+        [
+          'action' => RAID_INTERCEPTION,
+          'playerId' => $playerId,
+          'unitId' => $unitId,
+          'spaceId' => $path[0],
+          'startSpaceId' => $path[0],
+        ]
+      ]
     ];
 
     foreach ($path as $index => $spaceId) {
