@@ -104,10 +104,15 @@ class Scenario implements \JsonSerializable
    */
   public function jsonSerialize()
   {
-    $data = [];
-    foreach ($this->attributes as $attribute => $field) {
-      $data[$attribute] = $this->$attribute;
-    }
+    $data = [
+      'id' => $this->id,
+      'name' => $this->name,
+      'duration' => $this->duration,
+      'reinforcements' => $this->reinforcements,
+    ];
+    // foreach ($this->attributes as $attribute => $field) {
+    //   $data[$attribute] = $this->$attribute;
+    // }
 
     return $data;
   }

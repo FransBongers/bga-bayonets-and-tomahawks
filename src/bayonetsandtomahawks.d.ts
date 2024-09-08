@@ -183,6 +183,20 @@ interface BTWIEChit {
 
 type BTToken = BTMarker | BTUnit;
 
+interface BTScenarioReinforcements {
+  poolBritishColonialVoW: number;
+  poolBritishMetropolitanVoW: number;
+  poolFleets: number;
+  poolFrenchMetropolitanVoW: number;
+}
+
+interface BTScenario {
+  id: string;
+  duration: number;
+  name: string;
+  reinforcements: Record<string, BTScenarioReinforcements>;
+}
+
 interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   canceledNotifIds: string[];
   cardsInPlay: {
@@ -205,6 +219,7 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   } & Record<string, BTMarker>;
   playerOrder: number[];
   players: Record<number, BayonetsAndTomahawksPlayerData>;
+  scenario: BTScenario;
   staticData: {
     connections: Record<string, BTConnectionStaticData>;
     units: Record<string, BTUnitStaticData>;
@@ -220,5 +235,5 @@ interface BayonetsAndTomahawksPlayerData extends BgaPlayer {
   wieChit: {
     chit: BTWIEChit | null;
     hasChit: boolean;
-  }
+  };
 }

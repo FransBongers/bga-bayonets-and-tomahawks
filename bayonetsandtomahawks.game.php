@@ -151,6 +151,7 @@ class bayonetsandtomahawks extends Table
                 IROQUOIS => Globals::getControlIroquois(),
             ],
             'markers' => Markers::getAll(),
+            'scenario' => Scenarios::get(),
             'spaces' => Spaces::getUiData(),
             'units' => Units::getUiData(),
 

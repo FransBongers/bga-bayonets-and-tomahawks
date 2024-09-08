@@ -34,7 +34,7 @@ class InfoPanel {
     if (!node) {
       return;
     }
-    node.insertAdjacentHTML("afterbegin", tplInfoPanel());
+    node.insertAdjacentHTML("afterbegin", tplInfoPanel(gamedatas.scenario.name));
 
     
   }

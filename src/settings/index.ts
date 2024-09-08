@@ -52,7 +52,7 @@ class Settings {
   }: {
     gamedatas: BayonetsAndTomahawksGamedatas;
   }) {
-    const configPanel = document.getElementById('info_panel');
+    const configPanel = document.getElementById('info_panel_buttons');
     if (configPanel) {
       configPanel.insertAdjacentHTML('beforeend', tplSettingsButton());
     }

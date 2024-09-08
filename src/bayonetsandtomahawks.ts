@@ -61,6 +61,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public gameMap: GameMap;
   public hand: Hand;
   public pools: Pools;
+  public scenarioInfo: ScenarioInfo;
   public tokenManager: TokenManager;
   public wieChitManager: WieChitManager;
 
@@ -176,6 +177,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     };
 
     this.infoPanel = new InfoPanel(this);
+    this.scenarioInfo = new ScenarioInfo(this);
     this.settings = new Settings(this);
 
     this.animationManager = new AnimationManager(this, {

@@ -2393,6 +2393,7 @@ var BayonetsAndTomahawks = (function () {
             useEvent: new UseEventState(this),
         };
         this.infoPanel = new InfoPanel(this);
+        this.scenarioInfo = new ScenarioInfo(this);
         this.settings = new Settings(this);
         this.animationManager = new AnimationManager(this, {
             duration: this.settings.get({ id: PREF_SHOW_ANIMATIONS }) === DISABLED
@@ -4209,11 +4210,11 @@ var InfoPanel = (function () {
         if (!node) {
             return;
         }
-        node.insertAdjacentHTML("afterbegin", tplInfoPanel());
+        node.insertAdjacentHTML("afterbegin", tplInfoPanel(gamedatas.scenario.name));
     };
     return InfoPanel;
 }());
-var tplInfoPanel = function () { return "<div class='player-board' id=\"info_panel\"></div>"; };
+var tplInfoPanel = function (scenarioName) { return "\n<div class='player-board' id=\"info_panel\">\n  <div id=\"info_panel_scenario\">\n    <span>".concat(_(scenarioName), "</span>\n  </div>\n  <div id=\"info_panel_buttons\">\n\n  </div>\n</div>"); };
 var LOG_TOKEN_BOLD_TEXT = 'boldText';
 var LOG_TOKEN_NEW_LINE = 'newLine';
 var LOG_TOKEN_CARD = 'card';
@@ -5344,6 +5345,92 @@ var tplPool = function (_a) {
     var type = _a.type;
     return "<div id=\"bt_pool_".concat(type, "\" class=\"bt_unit_pool\">\n  </div>");
 };
+var VICTORY_TRACK_DISPLAY_CONFIG = {
+    british1: {
+        width: 176,
+        height: 34,
+        backgroundPositionX: -325,
+        backgroundPositionY: -16,
+        markerLeft: 105,
+    },
+    french1: {
+        width: 176,
+        height: 34,
+        backgroundPositionX: -325,
+        backgroundPositionY: -16,
+        markerLeft: 70,
+    },
+};
+var ScenarioInfo = (function () {
+    function ScenarioInfo(game) {
+        this.game = game;
+        var gamedatas = game.gamedatas;
+        this.setup({ gamedatas: gamedatas });
+    }
+    ScenarioInfo.prototype.clearInterface = function () { };
+    ScenarioInfo.prototype.updateInterface = function (_a) {
+        var gamedatas = _a.gamedatas;
+    };
+    ScenarioInfo.prototype.addButton = function (_a) {
+        var gamedatas = _a.gamedatas;
+        var configPanel = document.getElementById('info_panel_buttons');
+        if (configPanel) {
+            configPanel.insertAdjacentHTML('beforeend', tplScenarioInfoButton());
+        }
+    };
+    ScenarioInfo.prototype.setupModal = function (_a) {
+        var gamedatas = _a.gamedatas;
+        this.modal = new Modal("scenario_modal", {
+            class: 'scenario_modal',
+            closeIcon: 'fa-times',
+            titleTpl: '<h2 id="popin_${id}_title" class="${class}_title">${title}</h2>',
+            title: _(gamedatas.scenario.name),
+            contents: tplScenarioModalContent(this.game, gamedatas.scenario),
+            closeAction: 'hide',
+            verticalAlign: 'flex-start',
+            breakpoint: 740,
+        });
+    };
+    ScenarioInfo.prototype.setup = function (_a) {
+        var _this = this;
+        var gamedatas = _a.gamedatas;
+        this.addButton({ gamedatas: gamedatas });
+        this.setupModal({ gamedatas: gamedatas });
+        dojo.connect($("scenario_info"), 'onclick', function () { return _this.open(); });
+    };
+    ScenarioInfo.prototype.open = function () {
+        this.modal.show();
+    };
+    return ScenarioInfo;
+}());
+var tplScenarioInfoButton = function () {
+    return "<div id=\"scenario_info\">\n      <div id=\"clipboard_button\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 384 512\"><path d=\"M336 64h-53.88C268.9 26.8 233.7 0 192 0S115.1 26.8 101.9 64H48C21.5 64 0 85.48 0 112v352C0 490.5 21.5 512 48 512h288c26.5 0 48-21.48 48-48v-352C384 85.48 362.5 64 336 64zM192 64c17.67 0 32 14.33 32 32c0 17.67-14.33 32-32 32S160 113.7 160 96C160 78.33 174.3 64 192 64zM272 224h-160C103.2 224 96 216.8 96 208C96 199.2 103.2 192 112 192h160C280.8 192 288 199.2 288 208S280.8 224 272 224z\"></path></svg>\n      </div>\n    </div>";
+};
+var tplVictoryTrackDisplay = function (type) {
+    var _a = VICTORY_TRACK_DISPLAY_CONFIG[type], width = _a.width, height = _a.height, backgroundPositionX = _a.backgroundPositionX, backgroundPositionY = _a.backgroundPositionY, markerLeft = _a.markerLeft;
+    return "\n    <div class=\"bt_victory_track_display\" style=\"width: ".concat(width, "px; height: ").concat(height, "px; background-position: ").concat(backgroundPositionX, "px ").concat(backgroundPositionY, "px;\">\n    <div class=\"bt_marker_side bt_victory_track_display_marker\" data-side=\"front\" data-type=\"victory_marker\" style=\"left: ").concat(markerLeft, "px;\"></div>\n  </div>\n");
+};
+var tplScenarioInfoFactions = function (scenario) {
+    switch (scenario.id) {
+        case 'VaudreuilsPetiteGuerre1755':
+            return "\n      <div>\n        <span class=\"bt_section_title\">".concat(_('French'), "</span>\n        <div>\n          <span>").concat(_('Year End Bonus:'), "</span>\n          <div class=\"bt_year_end_bonus_container\">\n            <div class=\"bt_year_end_bonus\" data-type=\"french\"><span>+2</span></div>\n            <div class=\"bt_year_end_bonus_description\">\n              <span>").concat(_('Control 1 or more British Settled Spaces'), "</span>\n            </div>\n          </div>\n        </div>\n        <div>\n          <span>").concat(_('Year End Victory Threshold'), "</span>\n          ").concat(tplVictoryTrackDisplay('french1'), "\n        </div>\n      </div>\n      <div>\n        <span class=\"bt_section_title\">").concat(_('British'), "</span>\n        <div>\n          <span>").concat(_('Year End Bonus:'), "</span>\n          <div class=\"bt_year_end_bonus_container\">\n            <div class=\"bt_year_end_bonus\" data-type=\"british\"><span>+2</span></div>\n            <div class=\"bt_year_end_bonus_description\">\n              <span>").concat(_('Control 2 or more French Victory Spaces'), "</span>\n            </div>\n          </div>\n        </div>\n        <div>\n          <span>").concat(_('Year End Victory Threshold'), "</span>\n          ").concat(tplVictoryTrackDisplay('british1'), "\n        </div>\n      </div>\n    ");
+        case 'LoudounsGamble1757':
+            return "\n        <div>\n          <span class=\"bt_section_title\">".concat(_('French'), "</span>\n          <div>\n            <span>").concat(_('Year End Bonus:'), "</span>\n            <div class=\"bt_year_end_bonus_container\">\n              <div class=\"bt_year_end_bonus\" data-type=\"french\"><span>+2</span></div>\n              <div class=\"bt_year_end_bonus_description\">\n                <span>").concat(_('Control 3 or more British Victory Spaces'), "</span>\n              </div>\n            </div>\n          </div>\n          <div>\n            <span>").concat(_('Year End Victory Threshold'), "</span>\n            ").concat(tplVictoryTrackDisplay('french1'), "\n          </div>\n        </div>\n        <div>\n          <span class=\"bt_section_title\">").concat(_('British'), "</span>\n          <div>\n            <span>").concat(_('Year End Bonus:'), "</span>\n            <div class=\"bt_year_end_bonus_container\">\n              <div class=\"bt_year_end_bonus\" data-type=\"british\"><span>+2</span></div>\n              <div class=\"bt_year_end_bonus_description\">\n                <span>").concat(_('Control 1 or more French Settled Spaces'), "</span>\n              </div>\n            </div>\n          </div>\n          <div>\n            <span>").concat(_('Year End Victory Threshold'), "</span>\n            ").concat(tplVictoryTrackDisplay('british1'), "\n          </div>\n        </div>\n      ");
+        default:
+            return '';
+    }
+};
+var tplScenarioModalContent = function (game, scenario) {
+    var reinforcements = Object.values(scenario.reinforcements)[0];
+    return "\n<div id=\"scenario_modal_content\">\n  <div>\n    <div>\n      <span>".concat(scenario.duration === 1
+        ? game.format_string_recursive(_('${tkn_boldText_duration} 1 year'), {
+            tkn_boldText_duration: _('Duration:'),
+        })
+        : game.format_string_recursive(_('${tkn_boldText_duration} ${number} years'), {
+            tkn_boldText_duration: _('Duration:'),
+            number: scenario.duration,
+        }), "</span>\n    </div>\n    <div style=\"margin-top: 8px;\">\n      <span class=\"bt_section_title\">").concat(_('Reinforcements:'), "</span>\n      <div class=\"bt_scenario_info_reinforcements\">\n        <div class=\"bt_reinforcement_type\">\n          <span>").concat(_('Fleets'), "</span>\n        </div>\n        <div class=\"bt_reinforcement_year\" data-type=\"fleets\"><span>").concat(reinforcements.poolFleets, "</span></div>\n        <div class=\"bt_reinforcement_type\">\n          <span>").concat(_('French Metropolitan'), "</span>\n        </div>\n        <div class=\"bt_reinforcement_year\" data-type=\"french\"><span>").concat(reinforcements.poolFrenchMetropolitanVoW, "</span></div>\n        <div class=\"bt_reinforcement_type\">\n          <span>").concat(_('British Metropolitan'), "</span>\n        </div>\n        <div class=\"bt_reinforcement_year\" data-type=\"british\"><span>").concat(reinforcements.poolBritishMetropolitanVoW, "</span></div>\n        <div class=\"bt_reinforcement_type\">\n          <span>").concat(_('Colonial'), "</span>\n        </div>\n        <div class=\"bt_reinforcement_year\" data-type=\"colonial\"><span>").concat(reinforcements.poolBritishColonialVoW, "</span></div>\n      </div>\n    </div>\n  </div>\n  <div class=\"bt_scenario_info_faction\">\n      ").concat(tplScenarioInfoFactions(scenario), "\n  </div>\n</div>");
+};
 var getSettingsConfig = function () {
     var _a, _b;
     return ({
@@ -5507,7 +5594,7 @@ var Settings = (function () {
     };
     Settings.prototype.addButton = function (_a) {
         var gamedatas = _a.gamedatas;
-        var configPanel = document.getElementById('info_panel');
+        var configPanel = document.getElementById('info_panel_buttons');
         if (configPanel) {
             configPanel.insertAdjacentHTML('beforeend', tplSettingsButton());
         }

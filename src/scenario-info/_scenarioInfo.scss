@@ -1,0 +1,202 @@
+@use '../base';
+
+#scenario_info {
+  align-items: center;
+  display: flex;
+
+  #clipboard_button {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 6px;
+    width: 40px;
+
+    svg {
+      cursor: pointer;
+      width: 80%;
+    }
+
+    svg:hover {
+      fill: white;
+    }
+  }
+}
+
+#popin_scenario_modal_underlay {
+  background-color: #000 !important;
+}
+
+.scenario_modal {
+  //   // background-image: url("img/background_paper.webp");
+  background-color: white;
+  // background-size: cover;
+  border-radius: 8px;
+  box-shadow: rgb(0, 0, 0) 1px 1px 5px;
+  border: 1px solid black;
+  position: fixed;
+  top: 15vh;
+  min-width: 600px;
+
+  .scenario_modal_closeicon {
+    background-color: #a47a77;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -18px;
+    right: -18px;
+    font-size: 90%;
+    color: white !important;
+    border: 1px solid #dfbda8;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: none;
+      color: #ccc !important;
+      transform: scale(1.1);
+    }
+
+    i {
+      margin-top: -2px;
+    }
+  }
+
+  h2 {
+    text-align: center;
+    font-size: large;
+    font-weight: bold;
+    margin: 0px;
+    padding: 7px 0px;
+    border-bottom: 1px solid black;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: rgb(248, 248, 248, 0.5);
+  }
+
+  #scenario_modal_content {
+    min-height: 300px;
+    padding: 16px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .bt_victory_track_display {
+      // margin: 8px;
+      // background-color: yellow;
+      // width: 176px;
+      // height: 34px;
+      background-image: url('img/map.webp');
+      // background-position: -325px -16px;
+      background-size: calc(0.7 * 1500px) calc(0.7 * 2318px);
+      margin: 2px 0px;
+
+      .bt_victory_track_display_marker {
+        --btMarkerScale: 0.77;
+        border: 1px solid black;
+        box-shadow: 0px 0px 0px 2px base.$selectable-color !important;
+        position: relative;
+        // left: 70px
+      }
+    }
+
+    .bt_section_title {
+      font-weight: bold;
+    }
+
+    .bt_scenario_info_faction {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .bt_scenario_info_reinforcements {
+      display: grid;
+      grid-template-columns: max-content max-content;
+      grid-gap: 8px;
+
+      .bt_reinforcement_type {
+        display: flex;
+        align-items: center;
+      }
+
+    }
+
+    .bt_year_end_bonus_container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 4px;
+      margin: 4px 0px;
+    }
+
+    .bt_year_end_bonus,
+    .bt_reinforcement_year {
+      border: 1px solid black;
+      border-radius: 15%;
+      width: 40px;
+      height: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .bt_year_end_bonus[data-type='british'],
+    .bt_reinforcement_year[data-type='british'] {
+      background-color: rgb(158, 3, 19);
+      span {
+        color: white;
+      }
+    }
+
+    .bt_reinforcement_year[data-type='colonial'] {
+      background-color: rgb(177, 117, 63);
+      span {
+        color: white;
+      }
+    }
+
+    .bt_year_end_bonus[data-type='french'],
+    .bt_reinforcement_year[data-type='french'] {
+      background-color: rgb(9, 67, 114);
+      span {
+        color: white;
+      }
+    }
+
+    //     .player_preference_row {
+    //       display: flex;
+    //       flex-direction: row;
+    //       margin-bottom: 4px;
+    //       margin-top: 4px;
+
+    //       .player_preference_row_label {
+    //         flex-grow: 1;
+    //         text-align: center;
+    //         align-self: center;
+    //         font-weight: 400;
+
+    //       }
+
+    //       .player_preference_row_value {
+    //         box-sizing: border-box;
+    //         padding: 8px 20px;
+    //         width: 250px;
+
+    //         select {
+    //           width: 100%;
+    //         }
+    //       }
+    //     }
+  }
+
+  // .reserve {
+  //   padding: 8px;
+  //   display: flex;
+  //   flex-wrap: wrap;
+  // }
+}
