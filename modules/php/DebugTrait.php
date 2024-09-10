@@ -108,11 +108,15 @@ trait DebugTrait
   }
 
 
+
   function debug_test()
   {
+    // Units::get('unit_20')->eliminate(Players::get());
+    Units::get('unit_23')->eliminate(Players::get());
+    // Units::get('unit_17')->setLocation(MONTREAL);
+    // Units::get('unit_19')->setLocation(MONTREAL);
 
-    Notifications::log('cards', Cards::getInLocation(Locations::cardInPlay(INDIAN)));
-    // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(FRENCH), OUT_OF_SUPPLY_MARKER, Spaces::get(TICONDEROGA), FRENCH);
+    // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(FRENCH), ROUT_MARKER, Spaces::get(MONTREAL), FRENCH);
     // Notifications::log('progression',$this->getGameProgression());
     // Units::get('unit_4')->setLocation(REMOVED_FROM_PLAY);
     // Units::get('unit_5')->setLocation(REMOVED_FROM_PLAY);

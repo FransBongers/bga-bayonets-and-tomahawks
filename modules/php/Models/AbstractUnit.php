@@ -3,6 +3,7 @@
 namespace BayonetsAndTomahawks\Models;
 
 use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
@@ -264,6 +265,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     $this->setReduced(0);
     $this->setLocation(Locations::lossesBox($this->getFaction()));
     Notifications::eliminateUnit($player, $this, $previousLocation);
+    GameMap::lastEliminatedUnitCheck($player, $previousLocation, $this->getFaction());
   }
 
   public function removeFromPlay($player = null)

@@ -74,4 +74,8 @@ class BTHelpers extends \APP_DbObject
     Notifications::moveBattleVictoryMarker($player, $marker, $positions);
     return $value;
   }
+
+  public static function isSpace($spaceId) {
+    return in_array($spaceId, SPACES) && !in_array($spaceId, BASTIONS);
+  }
 }

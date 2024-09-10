@@ -111,16 +111,18 @@ class GameMap extends \APP_DbObject
     }
   }
 
-  public static function getMarkersOnMap($type, $faction) {
+  public static function getMarkersOnMap($type, $faction)
+  {
     $markers = Markers::getMarkersOfType($type);
     return Utils::filter($markers, function ($marker) use ($faction) {
       $location = $marker->getLocation();
-      return !Utils::startsWith($location,'supply') && explode('_', $location)[1] === $faction;
+      return !Utils::startsWith($location, 'supply') && explode('_', $location)[1] === $faction;
     });
   }
 
-  public static function factionOutnumbersEnemyInSpace($space, $faction) {
-    
+  public static function factionOutnumbersEnemyInSpace($space, $faction)
+  {
+
     $units = $space->getUnits();
 
     $enemyHasFort = false;
@@ -155,7 +157,8 @@ class GameMap extends \APP_DbObject
     ];
   }
 
-  public static function getStacks($spaces = null, $units = null) {
+  public static function getStacks($spaces = null, $units = null)
+  {
     $spaces = $spaces === null ? Spaces::getAll() : $spaces;
     $units = $units === null ? Units::getAll() : $units;
 
@@ -182,5 +185,34 @@ class GameMap extends \APP_DbObject
     }
 
     return $stacks;
+  }
+
+  public static function lastEliminatedUnitCheck($player, $spaceId, $faction)
+  {
+    if (!BTHelpers::isSpace($spaceId)) {
+      return;
+    }
+
+    $space = Spaces::get($spaceId);
+
+    $units = $space->getUnits($faction);
+
+    $hasNonCommanderUnit = Utils::array_some($units, function ($unit) {
+      return !$unit->isCommander();
+    });
+    if ($hasNonCommanderUnit) {
+      return;
+    }
+    $commanders = Utils::filter($units, function ($unit) {
+      return $unit->isCommander();
+    });
+    foreach ($commanders as $commander) {
+      $commander->eliminate($player);
+    }
+
+    $stackMarkers = Markers::getInLocation(Locations::stackMarker($spaceId, $faction));
+    foreach($stackMarkers as $marker) {
+      $marker->remove($player);
+    }
   }
 }
