@@ -5,32 +5,41 @@ namespace BayonetsAndTomahawks\Scenarios;
 use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Spaces;
+use BayonetsAndTomahawks\Units\NYorkNJ;
 
-class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
+class AmherstsJuggernaut1758_1759 extends \BayonetsAndTomahawks\Models\Scenario
 {
   public function __construct()
   {
     parent::__construct();
-    $this->id = LoudounsGamble1757;
-    $this->name = clienttranslate("Loudoun's Gamble 1757");
-    $this->number = 2;
-    $this->startYear = 1757;
-    $this->duration = 1;
+    $this->id = AmherstsJuggernaut1758_1759;
+    $this->name = clienttranslate("Amherst's Juggernaut 1758-1759");
+    $this->number = 3;
+    $this->startYear = 1758;
+    $this->duration = 2;
     $this->reinforcements = [
-      1757 => [
-        POOL_FLEETS => 7,
-        POOL_BRITISH_METROPOLITAN_VOW => 6,
-        POOL_BRITISH_COLONIAL_VOW => 8,
+      1758 => [
+        POOL_FLEETS => 9,
+        POOL_BRITISH_METROPOLITAN_VOW => 5,
+        POOL_BRITISH_COLONIAL_VOW => 12,
+        POOL_FRENCH_METROPOLITAN_VOW => 3,
+      ],
+      1759 => [
+        POOL_FLEETS => 9,
+        POOL_BRITISH_METROPOLITAN_VOW => 2,
+        POOL_BRITISH_COLONIAL_VOW => 3,
         POOL_FRENCH_METROPOLITAN_VOW => 3,
       ]
     ];
-    $this->victoryMarkerLocation = VICTORY_POINTS_FRENCH_1;
+    $this->victoryMarkerLocation = VICTORY_POINTS_FRENCH_5;
     $this->victoryThreshold = [
       BRITISH => [
-        1757 => 1
+        1758 => 3,
+        1759 => 3,
       ],
       FRENCH => [
-        1757 => 1
+        1758 => 5,
+        1759 => -2,
       ]
     ];
     $this->indianSetup = [
@@ -127,10 +136,12 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
         'id' => QUEBEC,
         'units' => [
           MONTCALM,
+          C_LEVIS,
           CANONNIERS_BOMBARDIERS,
           CANONNIERS_BOMBARDIERS,
           LERY,
-          LANGUEDOC_LA_REINE,
+          BERRY,
+          LA_SARRE_ROYAL_ROUSSILLON,
           CANADIENS,
           CANADIENS
         ]
@@ -161,9 +172,8 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
           RIGAUD,
           LACORNE,
           LANGIS,
-          VILLIERS,
           BEARN_GUYENNE,
-          LA_SARRE_ROYAL_ROUSSILLON,
+          LANGUEDOC_LA_REINE,
         ]
       ],
       NIAGARA => [
@@ -183,6 +193,7 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
         'id' => LES_ILLINOIS,
         'units' => [
           AUBRY,
+          MASSIAC,
         ]
       ],
       LE_DETROIT => [
@@ -196,6 +207,7 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
         'id' => CHIGNECTOU,
         'units' => [
           CUMBERLAND,
+          B_43RD_46TH,
         ],
         'markers' => [
           BRITISH_CONTROL_MARKER
@@ -205,9 +217,15 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
         'id' => HALIFAX,
         'units' => [
           GOREHAM,
+          ROYAL_SCOTS_17TH,
+          B_22ND_28TH,
           B_40TH_45TH_47TH,
+          B_35TH_NEW_YORK_COMPANIES,
+          B_2ND_ROYAL_AMERICAN,
           ROYAL_ARTILLERY,
-          ROYAL_ARTILLERY
+          ROYAL_ARTILLERY,
+          ROYAL_ARTILLERY,
+          ROYAL_ARTILLERY,
         ]
       ],
       ANNAPOLIS_ROYAL => [
@@ -220,27 +238,36 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
         'id' => BOSTON,
         'units' => [
           B_44TH_48TH,
-          ROYAL_ARTILLERY,
         ]
       ],
-      LAKE_GEORGE => [
-        'id' => LAKE_GEORGE,
+      NEW_LONDON => [
+        'id' => NEW_LONDON,
         'units' => [
-          WILLIAM_HENRY,
-          ROGERS,
+          BRADSTREET,
+          FRASER,
         ]
       ],
       ALBANY => [
         'id' => ALBANY,
         'units' => [
+          ROGERS,
           MOHAWK,
           ROYAL_HIGHLAND,
-          B_35TH_NEW_YORK_COMPANIES
         ]
       ],
       NEW_YORK => [
         'id' => NEW_YORK,
         'units' => [
+          C_HOWE,
+          B_27TH_55TH,
+          ROYAL_ARTILLERY,
+        ]
+      ],
+      PHILADELPHIA => [
+        'id' => PHILADELPHIA,
+        'units' => [
+          FORBES,
+          B_1ST_ROYAL_AMERICAN,
           ROYAL_ARTILLERY,
         ]
       ],
@@ -250,21 +277,11 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
           JOHNSON,
         ]
       ],
-      CARLISLE => [
-        'id' => CARLISLE,
-        'units' => [
-          BRADSTREET,
-          B_1ST_ROYAL_AMERICAN
-        ]
-      ],
       WINCHESTER => [
         'id' => WINCHESTER,
         'units' => [
-          WASHINGTON,
+          FREDERICK,
         ],
-        'markers' => [
-          FORT_CONSTRUCTION_MARKER
-        ]
       ],
       SHAMOKIN => [
         'id' => SHAMOKIN,
@@ -277,6 +294,7 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
     $this->connections = [
       MEKEKASINK_WILLS_CREEK => [
         'id' => MEKEKASINK_WILLS_CREEK,
+        'units' => [],
         'markers' => [
           ROAD_MARKER
         ]
@@ -299,20 +317,21 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
       ],
       POOL_FLEETS => [
         'units' => [
+          BOSCAWEN,
           COLVILL,
           DURELL,
           HARDY,
-          HOLBURNE,
+          HOLMES,
           ROYAL_NAVY,
+          SAUNDERS, 
           BEAUFFREMONT,
-          DE_LA_MOTTE,
+          DE_L_ISLE,
           MARINE_ROYALE,
           VOW_FRENCH_NAVY_LOSSES_PUT_BACK,
         ],
       ],
       POOL_BRITISH_COMMANDERS => [
         'units' => [
-          C_HOWE,
           WOLFE,
         ]
       ],
@@ -334,8 +353,6 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
         'units' => [
           ROYAL_ARTILLERY,
           ROYAL_ARTILLERY,
-          ROYAL_ARTILLERY,
-          ROYAL_ARTILLERY,
         ]
 
       ],
@@ -344,7 +361,6 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
           BEDFORD,
           CROWN_POINT,
           EDWARD,
-          FREDERICK,
           HERKIMER,
           LIGONIER,
           ONTARIO,
@@ -356,14 +372,12 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
       ],
       POOL_BRITISH_METROPOLITAN_VOW => [
         'units' => [
-          B_27TH_55TH,
-          B_22ND_28TH,
-          B_43RD_46TH,
-          B_2ND_ROYAL_AMERICAN,
+          B_15TH_58TH,
+          B_61ST_63RD,
+          B_94TH_95TH,
+          HOWARDS_BUFFS_KINGS_OWN,
           CAMPBELL,
-          FRASER,
           MONTGOMERY,
-          VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH,
           VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH,
           VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH,
           VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH,
@@ -380,24 +394,27 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
           NEW_ENGLAND,
           NYORK_NJ,
           NYORK_NJ,
+          PENN_DEL,
+          PENN_DEL,
           VIRGINIA_S,
           VIRGINIA_S,
-          VOW_PENNSYLVANIA_MUSTERS,
           VOW_PICK_ONE_COLONIAL_LIGHT,
           VOW_PICK_ONE_COLONIAL_LIGHT_PUT_BACK,
           VOW_FEWER_TROOPS_COLONIAL,
           VOW_FEWER_TROOPS_PUT_BACK_COLONIAL,
+          VOW_PITT_SUBSIDIES,
         ],
       ],
       POOL_BRITISH_COLONIAL_VOW_BONUS => [
         'units' => [
-          PENN_DEL, // VoW bonus
-          PENN_DEL, // VoW bonus
+          NEW_ENGLAND,
+          NEW_ENGLAND,
+          NYORK_NJ,
+          VIRGINIA_S,
         ]
       ],
       POOL_FRENCH_COMMANDERS => [
         'units' => [
-          C_LEVIS
         ]
       ],
       POOL_FRENCH_FORTS => [
@@ -406,7 +423,6 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
           FRONTENAC,
           JACQUES_CARTIER,
           F_LEVIS,
-          MASSIAC,
           SAINT_FREDERIC,
         ]
       ],
@@ -418,10 +434,12 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
       ],
       POOL_FRENCH_METROPOLITAN_VOW => [
         'units' => [
-          BERRY,
           ANGOUMOIS_BEAUVOISIS,
+          BOULONNOIS_ROYAL_BARROIS,
           DE_LA_MARINE,
+          FOIX_QUERCY,
           VOLONT_ETRANGERS_CAMBIS,
+          VOW_PICK_ONE_ARTILLERY_FRENCH,
           VOW_FEWER_TROOPS_FRENCH,
           VOW_FEWER_TROOPS_PUT_BACK_FRENCH,
         ],
@@ -433,33 +451,60 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
   {
     $spaces = Spaces::getAll()->toArray();
     if ($faction === BRITISH) {
-      return $this->getYearEndBonusBritish($spaces);
+      return $this->getYearEndBonusBritish($spaces, $year);
     } else {
-      return $this->getYearEndBonusFrench($spaces);
+      return $this->getYearEndBonusFrench($spaces, $year);
     }
   }
 
-  private function getYearEndBonusBritish($spaces)
+  private function getYearEndBonusBritish($spaces, $year)
   {
-    $countingSpaces = Utils::filter($spaces, function ($space) {
-      return $space->isSettledSpace(FRENCH) && $space->isControlledBy(BRITISH);
-    });
-
-    if (count($countingSpaces) >= 1) {
-      return 2;
+    if ($year === 1758) {
+      $countingSpaces = Utils::filter($spaces, function ($space) {
+        return $space->isSettledSpace(FRENCH) && $space->isControlledBy(BRITISH);
+      });
+  
+      if (count($countingSpaces) >= 1) {
+        return 2;
+      }
+    } else if ($year === 1759) {
+      $britishControlled = Spaces::getControlledBy(BRITISH);
+      $bonus = 0;
+      foreach(FRENCH_COLONIES as $colonyId) {
+        $numberOfBritishControlledInColony = count(Utils::filter($britishControlled, function ($space) use ($colonyId) {
+          return $space->getColony() === $colonyId;
+        }));
+        if ($numberOfBritishControlledInColony >= 2) {
+          $bonus += 2;
+        }
+      }
+      return $bonus;
     }
+
 
     return 0;
   }
 
-  private function getYearEndBonusFrench($spaces)
+  private function getYearEndBonusFrench($spaces, $year)
   {
-    $countingSpaces = Utils::filter($spaces, function ($space) {
-      return $space->isHomeSpace(BRITISH) && $space->isVictorySpace() && $space->isControlledBy(FRENCH);
-    });
-
-    if (count($countingSpaces) >= 3) {
-      return 2;
+    if ($year === 1758) {
+      $frenchControlledSpaces = Spaces::getControlledBy(BRITISH);
+      $countingSpaces = Utils::filter($frenchControlledSpaces, function ($space) {
+        return $space->getHomeSpace() === BRITISH;
+      });
+  
+      if (count($countingSpaces) >= 3) {
+        return 2;
+      }
+    } else if ($year === 1759) {
+      $bonus = 0;
+      $spaces = Spaces::get([LOUISBOURG, MONTREAL, QUEBEC]);
+      foreach($spaces as $spaceId => $space) {
+        if ($space->getControl() !== BRITISH) {
+          $bonus += 2;
+        }
+      }
+      return $bonus;
     }
 
     return 0;

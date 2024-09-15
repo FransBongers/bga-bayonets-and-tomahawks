@@ -2382,6 +2382,7 @@ var BayonetsAndTomahawks = (function () {
             eventSmallpoxInfectedBlankets: new EventSmallpoxInfectedBlanketsState(this),
             eventStagedLacrosseGame: new EventStagedLacrosseGameState(this),
             eventWildernessAmbush: new EventWildernessAmbushState(this),
+            eventWinteringRearAdmiral: new EventWinteringRearAdmiralState(this),
             vagariesOfWarPickUnits: new VagariesOfWarPickUnitsState(this),
             fleetsArriveUnitPlacement: new FleetsArriveUnitPlacementState(this),
             marshalTroops: new MarshalTroopsState(this),
@@ -6599,6 +6600,7 @@ var BattleRollsRerollsState = (function () {
         });
         this.game.addPassButton({
             optionalAction: this.args.optionalAction,
+            text: _('Do not reroll')
         });
         this.game.addUndoButtons(this.args);
     };
@@ -6635,6 +6637,7 @@ var BattleRollsRerollsState = (function () {
         if (this.singleDie) {
             this.game.addPassButton({
                 optionalAction: this.args.optionalAction,
+                text: _('Do not reroll'),
             });
             this.game.addUndoButtons(this.args);
         }
@@ -6663,12 +6666,15 @@ var BattleRollsRerollsState = (function () {
                 },
             });
         };
-        this.game.addConfirmButton({
+        this.game.addPrimaryActionButton({
+            id: 'confirm_reroll_btn',
+            text: _('Reroll'),
             callback: callback,
         });
         if (this.singleDie && this.singleSource) {
             this.game.addPassButton({
                 optionalAction: this.args.optionalAction,
+                text: _('Do not reroll')
             });
             this.game.addUndoButtons(this.args);
         }
@@ -8138,6 +8144,97 @@ var EventWildernessAmbushState = (function () {
         this.game.addUndoButtons(this.args);
     };
     return EventWildernessAmbushState;
+}());
+var EventWinteringRearAdmiralState = (function () {
+    function EventWinteringRearAdmiralState(game) {
+        this.game = game;
+    }
+    EventWinteringRearAdmiralState.prototype.onEnteringState = function (args) {
+        debug('Entering EventWinteringRearAdmiralState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    EventWinteringRearAdmiralState.prototype.onLeavingState = function () {
+        debug('Leaving EventWinteringRearAdmiralState');
+    };
+    EventWinteringRearAdmiralState.prototype.setDescription = function (activePlayerId) { };
+    EventWinteringRearAdmiralState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a Fleet to place'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.args.fleets.forEach(function (unit) {
+            return _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () { return _this.updateInterfaceSelectSpace({ fleet: unit }); },
+            });
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+            text: _('Do not use'),
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    EventWinteringRearAdmiralState.prototype.updateInterfaceSelectSpace = function (_a) {
+        var _this = this;
+        var fleet = _a.fleet;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a space to place ${tkn_unit} on'),
+            args: {
+                you: '${you}',
+                tkn_unit: fleet.counterId,
+            },
+        });
+        this.game.setUnitSelected({ id: fleet.id });
+        this.args.spaces.forEach(function (space) {
+            return _this.game.setLocationSelectable({
+                id: space.id,
+                callback: function () { return _this.updateInterfaceConfirm({ space: space, fleet: fleet }); },
+            });
+        });
+        this.game.addCancelButton();
+    };
+    EventWinteringRearAdmiralState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var fleet = _a.fleet, space = _a.space;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Place ${tkn_unit} on ${spaceName}?'),
+            args: {
+                tkn_unit: fleet.counterId,
+                spaceName: _(space.name),
+            },
+        });
+        this.game.setLocationSelected({ id: space.id });
+        this.game.setUnitSelected({ id: fleet.id });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actEventWinteringRearAdmiral',
+                args: {
+                    unitId: fleet.id,
+                    spaceId: space.id,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    return EventWinteringRearAdmiralState;
 }());
 var FleetsArriveUnitPlacementState = (function () {
     function FleetsArriveUnitPlacementState(game) {

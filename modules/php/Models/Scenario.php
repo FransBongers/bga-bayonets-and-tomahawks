@@ -13,15 +13,14 @@ class Scenario implements \JsonSerializable
   protected $startYear;
   protected $duration;
   protected $indianSetup;
+  protected $connections;
   protected $locations;
   protected $reinforcements;
   protected $pools;
   protected $victoryMarkerLocation;
   protected $victoryThreshold = [];
 
-  public function __construct()
-  {
-  }
+  public function __construct() {}
 
   protected $attributes = [
     'id' => ['id', 'str'],
@@ -30,6 +29,7 @@ class Scenario implements \JsonSerializable
     'startYear' => ['startYear', 'int'],
     'duration' => ['duration', 'int'],
     'indianSetup' => ['indianSetup', 'obj'],
+    'connections' => ['connections', 'obj'],
     'locations' => ['locations', 'obj'],
     'pools' => ['pools', 'obj'],
     'reinforcements' => ['reinforcements', 'obj'],
@@ -39,6 +39,11 @@ class Scenario implements \JsonSerializable
   public function getId()
   {
     return $this->id;
+  }
+
+  public function getConnections()
+  {
+    return $this->connections;
   }
 
   public function getDuration()
@@ -88,12 +93,19 @@ class Scenario implements \JsonSerializable
 
   public function hasAchievedVictoryThreshold($faction, $year)
   {
-
+    return false;
     $vpMarker = Markers::get(VICTORY_MARKER);
     // 'victory_points_' . $faction . '_' . $score;
     $splitLocation = explode('_', $vpMarker->getLocation());
-    // TODO: 'negative vp threshold'
-    if ($faction === $splitLocation[2] && intval($splitLocation[3]) >= $this->victoryThreshold[$faction][$year]) {
+
+    $threshold = $this->victoryThreshold[$faction][$year];
+    $sideOfTrackMarkerIsOn = $splitLocation[2];
+    $markerPosition = intval($splitLocation[3]) + 10 * $vpMarker->getSide();
+    if ($threshold > 0 && $sideOfTrackMarkerIsOn === $faction && $markerPosition >= $threshold) {
+      return true;
+    } else if ($threshold < 0 && ($sideOfTrackMarkerIsOn === $faction || $markerPosition <= abs($threshold))) {
+      // When threshold < 0, the faction wins if the marker is either on their side of the track or on the opponents track
+      // on a position smaller than the threshold.
       return true;
     }
     return false;

@@ -70,6 +70,7 @@ class BattleRollsRerollsState implements State {
 
     this.game.addPassButton({
       optionalAction: this.args.optionalAction,
+      text: _('Do not reroll')
     });
     this.game.addUndoButtons(this.args);
   }
@@ -111,6 +112,7 @@ class BattleRollsRerollsState implements State {
     if (this.singleDie) {
       this.game.addPassButton({
         optionalAction: this.args.optionalAction,
+        text: _('Do not reroll'),
       });
       this.game.addUndoButtons(this.args);
     } else {
@@ -153,7 +155,9 @@ class BattleRollsRerollsState implements State {
     // ) {
     //   callback();
     // } else {
-    this.game.addConfirmButton({
+    this.game.addPrimaryActionButton({
+      id: 'confirm_reroll_btn',
+      text: _('Reroll'),
       callback,
     });
     // }
@@ -161,6 +165,7 @@ class BattleRollsRerollsState implements State {
     if (this.singleDie && this.singleSource) {
       this.game.addPassButton({
         optionalAction: this.args.optionalAction,
+        text: _('Do not reroll')
       });
       this.game.addUndoButtons(this.args);
     } else {

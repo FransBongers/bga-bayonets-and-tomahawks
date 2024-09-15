@@ -789,6 +789,16 @@ $machinestates = array(
         'possibleactions' => ['actUseEvent', 'actPassOptionalAction', 'actRestart'],
     ],
 
+    ST_EVENT_WINTERING_REAR_ADMIRAL => [
+        'name' => 'eventWinteringRearAdmiral',
+        'description' => clienttranslate('${actplayer} must place a Fleet'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actEventWinteringRearAdmiral', 'actPassOptionalAction', 'actRestart'],
+    ],
+
     ST_PLACE_MARKER_ON_STACK => [
         'name' => 'placeMarkerOnStack',
         'description' => '',

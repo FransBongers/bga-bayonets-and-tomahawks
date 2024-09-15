@@ -53,7 +53,9 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
     $attackerMarker = Markers::get($this->factionBattleMarkerMap[$attacker]);
     $defenderMarker = Markers::get($this->factionBattleMarkerMap[$defender]);
 
+    $attackerMarker->setSide(0);
     $attackerMarker->setLocation(BATTLE_MARKERS_POOL);
+    $defenderMarker->setSide(0);
     $defenderMarker->setLocation(BATTLE_MARKERS_POOL);
 
     $unitsOnSpace = $space->getUnits();

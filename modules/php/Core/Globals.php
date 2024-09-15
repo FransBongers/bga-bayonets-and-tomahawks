@@ -45,6 +45,7 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'usedEventFrench' => 'int', 
     'usedEventIndian' => 'int',
     'noIndianUnitMayBeActivated' => 'bool',
+    'winteringRearAdmiralPlayed' => 'bool',
   ];
 
   protected static $table = 'global_variables';
@@ -180,6 +181,7 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     self::setUsedEventFrench(0);
     self::setUsedEventIndian(0);
     self::setNoIndianUnitMayBeActivated(false);
+    self::setWinteringRearAdmiralPlayed(false);
   }
 
   public static function getUsedEventCount($faction) {

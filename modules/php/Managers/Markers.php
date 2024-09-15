@@ -185,5 +185,28 @@ class Markers extends \BayonetsAndTomahawks\Helpers\Pieces
 
 
     self::create($tokens, null);
+    self::loadScenario($scenario);
+  }
+
+  /**
+   * Load a scenario
+   */
+  public static function loadScenario($scenario)
+  {
+    $locations = $scenario->getLocations();
+    foreach ($locations as $spaceId => &$location) {
+      $space = Spaces::get($spaceId);
+      if (!isset($location['markers'])) {
+        continue;
+      }
+
+      foreach ($location['markers'] as $markerType) {
+        if ($markerType === BRITISH_CONTROL_MARKER) {
+          $space->setControl(BRITISH);
+        } else if ($markerType === FORT_CONSTRUCTION_MARKER) {
+          $space->setFortConstruction(1);
+        }
+      }
+    }
   }
 }

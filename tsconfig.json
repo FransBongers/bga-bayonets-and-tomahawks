@@ -95,6 +95,7 @@
     "src/states/EventSmallpoxInfectedBlankets.ts",
     "src/states/EventStagedLacrosseGame.ts",
     "src/states/EventWildernessAmbush.ts",
+    "src/states/EventWinteringRearAdmiral.ts",
     "src/states/FleetsArriveUnitPlacement.ts",
     "src/states/VagariesOfWarPickUnits.ts",
     "src/states/MarshalTroops.ts",

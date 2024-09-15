@@ -8,22 +8,29 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
-use BayonetsAndTomahawks\Managers\Cards;
-use BayonetsAndTomahawks\Managers\Markers;
-use BayonetsAndTomahawks\Managers\Players;
-use BayonetsAndTomahawks\Managers\Scenarios;
-use BayonetsAndTomahawks\Models\Marker;
+use BayonetsAndTomahawks\Managers\Spaces;
+use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
-use BayonetsAndTomahawks\Scenario;
 
-class WinterQuartersRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
+class EventWinteringRearAdmiral extends \BayonetsAndTomahawks\Actions\Battle
 {
   public function getState()
   {
-    return ST_WINTER_QUARTERS_ROUND_END;
+    return ST_EVENT_WINTERING_REAR_ADMIRAL;
   }
+
+  // .########..########..########.......###.....######..########.####..#######..##....##
+  // .##.....##.##.....##.##............##.##...##....##....##.....##..##.....##.###...##
+  // .##.....##.##.....##.##...........##...##..##..........##.....##..##.....##.####..##
+  // .########..########..######......##.....##.##..........##.....##..##.....##.##.##.##
+  // .##........##...##...##..........#########.##..........##.....##..##.....##.##..####
+  // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
+  // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
+
+  public function stPreEventWinteringRearAdmiral() {}
 
   // ..######..########....###....########.########
   // .##....##....##......##.##......##....##......
@@ -41,43 +48,7 @@ class WinterQuartersRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stWinterQuartersRoundEnd()
-  {
-    $yearMarker = Markers::get(YEAR_MARKER);
-    $currentYear = intval(explode('_', $yearMarker->getLocation())[2]);
-    $nextYear = $currentYear + 1;
-
-    Notifications::discardReserveCards();
-    $players = Players::getAll();
-    foreach($players as $player) {
-      $player->discardReserveCard();
-    }
-
-    // Move tokens
-    Globals::setYear($nextYear);
-    Globals::setActionRound(ACTION_ROUND_1);
-    Globals::setWinteringRearAdmiralPlayed(false);
-
-    $yearMarkerLocation = Locations::yearTrack($nextYear);
-    Markers::move(YEAR_MARKER, $yearMarkerLocation);
-    Markers::move(ROUND_MARKER, ACTION_ROUND_1);
-    Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), ACTION_ROUND_1);
-    Notifications::moveYearMarker(Markers::get(YEAR_MARKER), $yearMarkerLocation);
-
-    $this->resolveAction(['automatic' => true]);
-  }
-
-  // .########..########..########.......###.....######..########.####..#######..##....##
-  // .##.....##.##.....##.##............##.##...##....##....##.....##..##.....##.###...##
-  // .##.....##.##.....##.##...........##...##..##..........##.....##..##.....##.####..##
-  // .########..########..######......##.....##.##..........##.....##..##.....##.##.##.##
-  // .##........##...##...##..........#########.##..........##.....##..##.....##.##..####
-  // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
-  // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
-
-  public function stPreWinterQuartersRoundEnd()
-  {
-  }
+  public function stEventWinteringRearAdmiral() {}
 
 
   // ....###....########...######....######.
@@ -88,11 +59,23 @@ class WinterQuartersRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsWinterQuartersRoundEnd()
+  public function argsEventWinteringRearAdmiral()
   {
 
+    $friendlySeaZones = GameMap::getFriendlySeaZones(BRITISH);
 
-    return [];
+    $possibleSpaces = Utils::filter(Spaces::getControlledBy(BRITISH), function ($space) use ($friendlySeaZones) {
+      return $space->isCoastal() && Utils::array_some($space->getAdjacentSeaZones(), function ($seaZone) use ($friendlySeaZones) {
+        return in_array($seaZone, $friendlySeaZones);
+      });
+    });
+
+    return [
+      'fleets' => Utils::filter(Units::getInLocation(POOL_FLEETS)->toArray(), function ($unit) {
+        return $unit->getFaction() === BRITISH;
+      }),
+      'spaces' => $possibleSpaces,
+    ];
   }
 
   //  .########..##..........###....##....##.########.########.
@@ -111,20 +94,44 @@ class WinterQuartersRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassWinterQuartersRoundEnd()
+  public function actPassEventWinteringRearAdmiral()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
-    Engine::resolve(PASS);
+
+    $this->resolveAction(PASS);
   }
 
-  public function actWinterQuartersRoundEnd($args)
+  public function actEventWinteringRearAdmiral($args)
   {
-    self::checkAction('actWinterQuartersRoundEnd');
+    self::checkAction('actEventWinteringRearAdmiral');
+    $spaceId = $args['spaceId'];
+    $unitId = $args['unitId'];
 
+    $stateArgs = $this->argsEventWinteringRearAdmiral();
 
+    $unit = Utils::array_find($stateArgs['fleets'], function ($unit) use ($unitId) {
+      return $unitId === $unit->getId();
+    });
 
-    $this->resolveAction($args, true);
+    if ($unit === null) {
+      throw new \feException("ERROR 072");
+    }
+
+    $space = Utils::array_find($stateArgs['spaces'], function ($space) use ($spaceId) {
+      return $spaceId === $space->getId();
+    });
+
+    if ($space === null) {
+      throw new \feException("ERROR 073");
+    }
+
+    $unit->setLocation($space->getId());
+    Globals::setWinteringRearAdmiralPlayed(true);
+    
+    Notifications::placeUnits(self::getPlayer(), [$unit], $space, BRITISH);
+
+    $this->resolveAction($args);
   }
 
   //  .##.....##.########.####.##.......####.########.##....##
@@ -134,6 +141,5 @@ class WinterQuartersRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
-
 
 }

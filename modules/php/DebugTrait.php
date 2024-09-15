@@ -111,8 +111,11 @@ trait DebugTrait
 
   function debug_test()
   {
+    // Markers::get(VICTORY_MARKER)->setLocation(Locations::victoryPointsTrack(FRENCH,5));
+    Notifications::log('british', Scenarios::get()->getYearEndBonus(BRITISH, 1759));
+    Notifications::log('french', Scenarios::get()->getYearEndBonus(FRENCH, 1759));
     // Units::get('unit_20')->eliminate(Players::get());
-    Units::get('unit_23')->eliminate(Players::get());
+    // Units::get('unit_23')->eliminate(Players::get());
     // Units::get('unit_17')->setLocation(MONTREAL);
     // Units::get('unit_19')->setLocation(MONTREAL);
 
@@ -149,10 +152,10 @@ trait DebugTrait
 
 
     // Cards::get(COUP_DE_MAIN_CARD_ID)->insertOnTop(Locations::buildUpDeck(FRENCH));
-    // Cards::get('Card07')->insertOnTop(Locations::buildUpDeck(BRITISH));
-    // Cards::get(COUP_DE_MAIN_CARD_ID)->insertOnTop(Locations::campaignDeck(FRENCH));
-    // Cards::get('Card09')->insertOnTop(Locations::campaignDeck(BRITISH));
-    // Cards::get('Card54')->insertOnTop(Locations::campaignDeck(INDIAN));
+    // Cards::get('Card18')->insertOnTop(Locations::buildUpDeck(BRITISH));
+    // Cards::get('Card41')->insertOnTop(Locations::campaignDeck(FRENCH));
+    // Cards::get('Card19')->insertOnTop(Locations::campaignDeck(BRITISH));
+    // Cards::get('Card51')->insertOnTop(Locations::campaignDeck(INDIAN));
 
 
     // Units::get('unit_51')->setLocation(Locations::lossesBox(FRENCH));

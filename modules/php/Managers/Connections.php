@@ -92,6 +92,35 @@ class Connections extends \BayonetsAndTomahawks\Helpers\Pieces
     self::setupLoadConnections();
   }
 
+  /**
+   * Load a scenario
+   */
+  public static function loadScenario($scenario)
+  {
+    $connections = $scenario->getConnections();
+    foreach ($connections as $connectionId => &$connectionData) {
+      $connection = self::get($connectionId);
+
+      if (!isset($connectionData['markers'])) {
+        continue;
+      }
+
+      foreach ($connectionData['markers'] as $markerType) {
+        if ($markerType === ROAD_MARKER) {
+          $connection->setRoad(HAS_ROAD);
+        }
+      }
+    }
+  }
+
+  // ..######...########.########.########.########.########...######.
+  // .##....##..##..........##.......##....##.......##.....##.##....##
+  // .##........##..........##.......##....##.......##.....##.##......
+  // .##...####.######......##.......##....######...########...######.
+  // .##....##..##..........##.......##....##.......##...##.........##
+  // .##....##..##..........##.......##....##.......##....##..##....##
+  // ..######...########....##.......##....########.##.....##..######.
+
   public static function getUiData()
   {
     // return self::getMany([YORK_ZAWAKWTEGOK, ALBANY_KINGSTON])->map(function ($connection) {

@@ -39,6 +39,10 @@ $game_options = [
       OPTION_SCENARIO_2 => [
         'name' => totranslate("Loudoun's Gamble 1757"),
         'tmdisplay' => totranslate("Loudoun's Gamble 1757"),
+      ],
+      OPTION_SCENARIO_3 => [
+        'name' => totranslate("Amherst's Juggernaut 1758-1759"),
+        'tmdisplay' => totranslate("Amherst's Juggernaut 1758-1759"),
       ]
     ],
   ]

@@ -15,6 +15,7 @@ use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Scenarios;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
+use BayonetsAndTomahawks\Scenarios\AmherstsJuggernaut1758_1759;
 
 class DrawReinforcements extends \BayonetsAndTomahawks\Actions\LogisticsRounds
 {
@@ -42,7 +43,8 @@ class DrawReinforcements extends \BayonetsAndTomahawks\Actions\LogisticsRounds
 
   public function stDrawReinforcements()
   {
-    $reinforcements = Scenarios::get()->getReinforcements()[Globals::getYear()];
+    $scenario = Scenarios::get();
+    $reinforcements = $scenario->getReinforcements()[Globals::getYear()];
 
     $info = $this->ctx->getInfo();
 
@@ -51,7 +53,17 @@ class DrawReinforcements extends \BayonetsAndTomahawks\Actions\LogisticsRounds
     $units = Units::getInLocation($pool)->toArray();
     shuffle($units);
 
-    $picked = array_slice($units, 0, $reinforcements[$pool]);
+    $numberToPick = $reinforcements[$pool];
+
+    if (
+      $pool === POOL_FLEETS &&
+      $scenario->getId() === AmherstsJuggernaut1758_1759 &&
+      Globals::getWinteringRearAdmiralPlayed()
+    ) {
+      $numberToPick--;
+    }
+
+    $picked = array_slice($units, 0, $numberToPick);
 
     $player = self::getPlayer();
 
@@ -113,7 +125,7 @@ class DrawReinforcements extends \BayonetsAndTomahawks\Actions\LogisticsRounds
         $pickedBonusUnits = array_slice($newEnglandUnits, 0, 2);
         foreach ([NYORK_NJ, VIRGINIA_S] as $counterId) {
           $bonusUnit = Utils::array_find($bonusUnits, function ($unit) use ($counterId) {
-            return $unit->getCouterId() === $counterId;
+            return $unit->getCounterId() === $counterId;
           });
           if ($bonusUnit !== null) {
             $pickedBonusUnits[] = $bonusUnit;
@@ -139,9 +151,7 @@ class DrawReinforcements extends \BayonetsAndTomahawks\Actions\LogisticsRounds
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreDrawReinforcements()
-  {
-  }
+  public function stPreDrawReinforcements() {}
 
 
   // ....###....########...######....######.

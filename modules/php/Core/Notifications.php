@@ -505,6 +505,7 @@ class Notifications
       'player' => $player,
       'card' => $card,
       'cardId' => $card->getId(),
+      'preserve' => ['playerId'],
     ]);
   }
 
@@ -766,12 +767,14 @@ class Notifications
 
   public static function flipUnit($player, $unit)
   {
-    $text = $unit->getReduced() === 1 ? clienttranslate('${player_name} flips ${tkn_unit} in ${tkn_boldText_spaceName} to Reduced') : clienttranslate('${player_name} flips ${tkn_unit} in ${tkn_boldText_spaceName} to Full');
+    $text = $unit->getReduced() === 1 ? clienttranslate('${player_name} flips ${tkn_unit} on ${tkn_boldText_spaceName} to Reduced') : clienttranslate('${player_name} flips ${tkn_unit} in ${tkn_boldText_spaceName} to Full');
+
+    $location = $unit->getLocation();
 
     self::notifyAll("flipUnit", $text, [
       'player' => $player,
       'unit' => $unit->jsonSerialize(),
-      'tkn_boldText_spaceName' => Spaces::get($unit->getLocation())->getName(),
+      'tkn_boldText_spaceName' => $location === SAIL_BOX ? clienttranslate('Sail Box') : Spaces::get($unit->getLocation())->getName(),
       'tkn_unit' => $unit->getCounterId() . ':' . ($unit->getReduced() === 0 ? 'reduced' : 'full'), // reversed because we show the 'before' side in the log
       'i18n' => ['tkn_boldText_spaceName']
     ]);
@@ -806,7 +809,7 @@ class Notifications
   {
     $locationId = explode('_', $previousLocation)[0];
 
-    self::notifyAll("removeMarkerFromStack", clienttranslate('${player_name} removes ${tkn_marker} from their stack in ${tkn_boldText_spaceName}'), [
+    self::notifyAll("removeMarkerFromStack", clienttranslate('${player_name} removes ${tkn_marker} from their stack on ${tkn_boldText_spaceName}'), [
       'player' => $player,
       'marker' => $marker->jsonSerialize(),
       'from' => $previousLocation,

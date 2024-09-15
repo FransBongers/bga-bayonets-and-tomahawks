@@ -4,6 +4,7 @@ namespace BayonetsAndTomahawks\Managers;
 
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Scenarios\AmherstsJuggernaut1758_1759;
 
 class Scenarios
 {
@@ -11,6 +12,7 @@ class Scenarios
   static $scenarios = [
     VaudreuilsPetiteGuerre1755 => 'VaudreuilsPetiteGuerre1755',
     LoudounsGamble1757 => 'LoudounsGamble1757',
+    AmherstsJuggernaut1758_1759 => 'AmherstsJuggernaut1758_1759'
   ];
 
   public static function get($scenarioId = null)
@@ -30,6 +32,7 @@ class Scenarios
     $scenarioIdMap = [
       1 => VaudreuilsPetiteGuerre1755,
       2 => LoudounsGamble1757,
+      3 => AmherstsJuggernaut1758_1759,
     ];
 
     $scenarioId = $scenarioIdMap[intval($scenarioOption)];
@@ -38,8 +41,10 @@ class Scenarios
     Globals::setActionRound(ACTION_ROUND_1);
     Globals::setScenarioId($scenarioId);
 
-    // // Create Units
+    // Create Units
     Units::loadScenario($scenario);
+    // Add markers to connections
+    Connections::loadScenario($scenario);
   }
 
   // public static function getAll()

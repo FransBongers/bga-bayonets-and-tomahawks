@@ -58,6 +58,7 @@ class AtomicActions
     EVENT_SMALLPOX_INFECTED_BLANKETS => 'EventSmallpoxInfectedBlankets',
     EVENT_STAGED_LACROSSE_GAME => 'EventStagedLacrosseGame',
     EVENT_WILDERNESS_AMBUSH => 'EventWildernessAmbush',
+    EVENT_WINTERING_REAR_ADMIRAL => 'EventWinteringRearAdmiral',
     FLEETS_ARRIVE_COMMANDER_DRAW => 'FleetsArriveCommanderDraw',
     FLEETS_ARRIVE_UNIT_PLACEMENT => 'FleetsArriveUnitPlacement',
     LOGISTICS_ROUND_END => 'LogisticsRoundEnd',

@@ -288,6 +288,15 @@ trait TurnTrait
         [
           'action' => WINTER_QUARTERS_GAME_END_CHECK,
         ],
+        // Remove markers fomr the map
+        // Move stacks on the sail box
+        // Place Indian Units on their villages
+        // Move Colonal Brigades to Disbanded Colonial Brigades
+        // Return to Colonies
+        // Return all Fleets on the map to the fleets pool
+        // Place units from Losses Box
+        // Reset cards
+        // Advance Year Marker
         [
           'action' => WINTER_QUARTERS_ROUND_END,
         ]
