@@ -81,7 +81,7 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
 
     // Check combining reduced units
     foreach ([$defendingFaction, $attackingFaction] as $faction) {
-      $this->checkIfReducedUnitsCanBeCombined($space, $faction, $playersPerFaction[$faction]);
+      $this->checkIfReducedUnitsCanBeCombined($space->getId(), $faction, $playersPerFaction[$faction]);
     }
 
     $this->checkWildernessAmbush($space);

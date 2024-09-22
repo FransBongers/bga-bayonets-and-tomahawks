@@ -86,6 +86,7 @@ class AtomicActions
     WINTER_QUARTERS_REMAINING_COLONIAL_BRIGADES => 'WinterQuartersRemainingColonialBrigades',
     WINTER_QUARTERS_REMOVE_MARKERS => 'WinterQuartersRemoveMarkers',
     WINTER_QUARTERS_PLACE_INDIAN_UNITS => 'WinterQuartersPlaceIndianUnits',
+    WINTER_QUARTERS_RETURN_FLEETS => 'WinterQuartersReturnFleets',
     WINTER_QUARTERS_RETURN_TO_COLONIES_COMBINE_REDUCED_UNITS => 'WinterQuartersReturnToColoniesCombineReducedUnits',
     WINTER_QUARTERS_RETURN_TO_COLONIES_SELECT_STACK => 'WinterQuartersReturnToColoniesSelectStack',
     WINTER_QUARTERS_RETURN_TO_COLONIES_LEAVE_UNITS => 'WinterQuartersReturnToColoniesLeaveUnits',

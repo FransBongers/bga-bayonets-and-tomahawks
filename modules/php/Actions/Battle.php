@@ -183,12 +183,12 @@ class Battle extends \BayonetsAndTomahawks\Models\AtomicAction
     }
   }
 
-  protected function checkIfReducedUnitsCanBeCombined($space, $faction, $player)
+  protected function checkIfReducedUnitsCanBeCombined($spaceId, $faction, $player)
   {
     $action = AtomicActions::get(BATTLE_COMBINE_REDUCED_UNITS);
 
 
-    $options = $action->getOptions($space, $faction);
+    $options = $action->getOptions($spaceId, $faction);
     $canCombineReduced = Utils::array_some(array_values($options), function ($reducedUnitsForType) {
       return count($reducedUnitsForType) >= 2;
     });
@@ -197,10 +197,12 @@ class Battle extends \BayonetsAndTomahawks\Models\AtomicAction
         Engine::buildTree([
           'playerId' => $player->getId(),
           'action' => BATTLE_COMBINE_REDUCED_UNITS,
-          'spaceId' => $space->getId(),
+          'spaceId' => $spaceId,
           'faction' => $faction,
         ])
       );
+      return true;
     }
+    return false;
   }
 }

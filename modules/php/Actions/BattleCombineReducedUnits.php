@@ -38,9 +38,7 @@ class BattleCombineReducedUnits extends \BayonetsAndTomahawks\Actions\Battle
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stBattleCombineReducedUnits()
-  {
-  }
+  public function stBattleCombineReducedUnits() {}
 
   // .########..########..########.......###.....######..########.####..#######..##....##
   // .##.....##.##.....##.##............##.##...##....##....##.....##..##.....##.###...##
@@ -50,9 +48,7 @@ class BattleCombineReducedUnits extends \BayonetsAndTomahawks\Actions\Battle
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreBattleCombineReducedUnits()
-  {
-  }
+  public function stPreBattleCombineReducedUnits() {}
 
 
   // ....###....########...######....######.
@@ -70,7 +66,7 @@ class BattleCombineReducedUnits extends \BayonetsAndTomahawks\Actions\Battle
     $faction = $info['faction'];
 
     return [
-      'options' => $this->getOptions(Spaces::get($spaceId), $faction),
+      'options' => $this->getOptions($spaceId, $faction),
       'spaceId' => $spaceId,
       'faction' => $faction,
     ];
@@ -139,7 +135,18 @@ class BattleCombineReducedUnits extends \BayonetsAndTomahawks\Actions\Battle
     $unitToEliminate->eliminate($player);
     $unitToFlip->flipToFull($player);
 
-    $this->checkIfReducedUnitsCanBeCombined(Spaces::get($stateArgs['spaceId']), $stateArgs['faction'], $player);
+    $canCombine = $this->checkIfReducedUnitsCanBeCombined($stateArgs['spaceId'], $stateArgs['faction'], $player);
+
+    // Check edge case situation where 1 Reduced unit is left on Disbanded Colonial Brigades
+    if (!$canCombine && $stateArgs['spaceId'] === DISBANDED_COLONIAL_BRIGADES) {
+      $remainingUnits = Utils::filter($units, function ($unit) use ($unitToFlip, $unitToEliminate) {
+        $unitId = $unit->getId();
+        return $unitId !== $unitToFlip->getId() && $unitId !== $unitToEliminate->getId();
+      });
+      if (count($remainingUnits) === 1) {
+        $remainingUnits[0]->flipToFull($player);
+      }
+    }
 
     $this->resolveAction($args);
   }
@@ -152,10 +159,12 @@ class BattleCombineReducedUnits extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  public function getOptions($space, $faction)
+  public function getOptions($spaceId, $faction)
   {
-    $units = Utils::filter($space->getUnits($faction), function ($unit) {
-      return $unit->isReduced() && !$unit->isIndian();
+
+
+    $units = Utils::filter(Units::getInLocation($spaceId)->toArray(), function ($unit) use ($faction) {
+      return $unit->getFaction() === $faction && $unit->isReduced() && !$unit->isIndian();
     });
 
     $data = [

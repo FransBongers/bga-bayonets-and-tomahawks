@@ -94,6 +94,7 @@ class NotificationManager {
       'vagariesOfWarPickUnits',
       'winterQuartersDisbandColonialBrigades',
       'winterQuartersPlaceIndianUnits',
+      'winterQuartersReturnFleets',
       'winterQuartersReturnToColoniesMove',
     ];
 
@@ -715,9 +716,12 @@ class NotificationManager {
     await this.game.pools.stocks[location].addCards(units);
   }
 
-  async notif_winterQuartersDisbandColonialBrigades(notif: Notif<NotifWinterQuartersPlaceIndianUnitsArgs>)
-  {
-    await this.game.gameMap.losses.disbandedColonialBrigades.addCards(notif.args.units);
+  async notif_winterQuartersDisbandColonialBrigades(
+    notif: Notif<NotifWinterQuartersPlaceIndianUnitsArgs>
+  ) {
+    await this.game.gameMap.losses.disbandedColonialBrigades.addCards(
+      notif.args.units
+    );
   }
 
   async notif_winterQuartersPlaceIndianUnits(
@@ -738,8 +742,17 @@ class NotificationManager {
     );
   }
 
-  async notif_winterQuartersReturnToColoniesMove(notif: Notif<NotifWinterQuartersReturnToColoniesMoveArgs>) {
-    const {units, toSpaceId, faction} = notif.args;
+  async notif_winterQuartersReturnFleets(
+    notif: Notif<NotifWinterQuartersReturnFleetsArgs>
+  ) {
+    const { fleets } = notif.args;
+    this.game.pools.stocks[POOL_FLEETS].addCards(fleets);
+  }
+
+  async notif_winterQuartersReturnToColoniesMove(
+    notif: Notif<NotifWinterQuartersReturnToColoniesMoveArgs>
+  ) {
+    const { units, toSpaceId, faction } = notif.args;
 
     await this.game.gameMap.stacks[toSpaceId][faction].addUnits(units);
   }

@@ -104,7 +104,9 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     useEvent: UseEventState;
     winterQuartersMoveStackOnSailBox: WinterQuartersMoveStackOnSailBoxState;
     winterQuartersRemainingColonialBrigades: WinterQuartersRemainingColonialBrigadesState;
+    winterQuartersReturnToColoniesCombineReducedUnits: WinterQuartersReturnToColoniesCombineReducedUnitsState;
     winterQuartersReturnToColoniesLeaveUnits: WinterQuartersReturnToColoniesLeaveUnitsState;
+    winterQuartersReturnToColoniesRedeployCommanders: WinterQuartersReturnToColoniesRedeployCommandersState;
     winterQuartersReturnToColoniesSelectStack: WinterQuartersReturnToColoniesSelectStackState;
     winterQuartersReturnToColoniesStep2SelectStack: WinterQuartersReturnToColoniesStep2SelectStackState;
   };
@@ -185,8 +187,12 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
         new WinterQuartersMoveStackOnSailBoxState(this),
       winterQuartersRemainingColonialBrigades:
         new WinterQuartersRemainingColonialBrigadesState(this),
+      winterQuartersReturnToColoniesCombineReducedUnits:
+        new WinterQuartersReturnToColoniesCombineReducedUnitsState(this),
       winterQuartersReturnToColoniesLeaveUnits:
         new WinterQuartersReturnToColoniesLeaveUnitsState(this),
+      winterQuartersReturnToColoniesRedeployCommanders:
+        new WinterQuartersReturnToColoniesRedeployCommandersState(this),
       winterQuartersReturnToColoniesSelectStack:
         new WinterQuartersReturnToColoniesSelectStackState(this),
       winterQuartersReturnToColoniesStep2SelectStack:
@@ -720,15 +726,16 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     node.classList.add(BT_SELECTED);
   }
 
-  // TODO: implementation
   setStackSelectable({
-    id,
+    spaceId,
+    faction,
     callback,
   }: {
-    id: string;
+    spaceId: string;
+    faction: string;
     callback: (event: PointerEvent) => void;
   }) {
-    const node = $(id);
+    const node = $(`${spaceId}_${faction}_stack`);
 
     if (node === null) {
       return;

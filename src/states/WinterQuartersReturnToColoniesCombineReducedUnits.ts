@@ -1,19 +1,24 @@
-class BattleCombineReducedUnitsState implements State {
+class WinterQuartersReturnToColoniesCombineReducedUnitsState implements State {
   private game: BayonetsAndTomahawksGame;
-  private args: OnEnteringBattleCombineReducedUnitsStateArgs;
+  private args: OnEnteringWinterQuartersReturnToColoniesCombineReducedUnitsStateArgs;
+  private selectedUnits: BTUnit[] = [];
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
   }
 
-  onEnteringState(args: OnEnteringBattleCombineReducedUnitsStateArgs) {
-    debug('Entering BattleCombineReducedUnitsState');
+  onEnteringState(
+    args: OnEnteringWinterQuartersReturnToColoniesCombineReducedUnitsStateArgs
+  ) {
+    debug('Entering WinterQuartersReturnToColoniesCombineReducedUnitsState');
     this.args = args;
+    this.selectedUnits = [];
+    // this.selectedOption = null;
     this.updateInterfaceInitialStep();
   }
 
   onLeavingState() {
-    debug('Leaving BattleCombineReducedUnitsState');
+    debug('Leaving WinterQuartersReturnToColoniesCombineReducedUnitsState');
   }
 
   setDescription(activePlayerId: number) {}
@@ -38,31 +43,18 @@ class BattleCombineReducedUnitsState implements State {
     this.game.clearPossible();
 
     this.game.clientUpdatePageTitle({
-      text: _('${you} must select a unit to flip to Full'),
+      text: _(
+        '${you} must select a stack to Combine Reduced units (${number} remaining)'
+      ),
       args: {
         you: '${you}',
+        number: Object.keys(this.args.options).filter(
+          (spaceId) => spaceId !== DISBANDED_COLONIAL_BRIGADES
+        ).length,
       },
     });
 
-    if (this.args.spaceId !== DISBANDED_COLONIAL_BRIGADES) {
-      const stack: UnitStack =
-        this.game.gameMap.stacks[this.args.spaceId][this.args.faction];
-      stack.open();
-    }
-
-    // this.setUnitsSelectable();
-    Object.entries(this.args.options).forEach(([unitType, units]) => {
-      if (units.length < 2) {
-        return;
-      }
-      units.forEach((unit) =>
-        this.game.setUnitSelectable({
-          id: unit.id,
-          callback: () =>
-            this.updateInterfaceSelectUnitToFlip({ flip: unit, unitType }),
-        })
-      );
-    });
+    this.setStacksSelectable();
 
     this.game.addPassButton({
       optionalAction: this.args.optionalAction,
@@ -70,96 +62,45 @@ class BattleCombineReducedUnitsState implements State {
     this.game.addUndoButtons(this.args);
   }
 
-  private updateInterfaceSelectUnitToFlip({
-    flip,
-    unitType,
-  }: {
-    flip: BTUnit;
-    unitType: string;
-  }) {
-    const unitsToEliminate = this.args.options[unitType].filter(
-      (unit) => unit.id !== flip.id
-    );
-    if (unitsToEliminate.length === 1) {
-      this.updateInterfaceConfirm({
-        flip,
-        unitType,
-        eliminate: unitsToEliminate[0],
-      });
-      return;
-    }
+  private updateInterfaceConfirm(spaceId: string) {
     this.game.clearPossible();
 
-    this.game.clientUpdatePageTitle({
-      text: _('${you} must select a unit to eliminate'),
-      args: {
-        you: '${you}',
-      },
-    });
-    this.game.setUnitSelected({ id: flip.id });
-
-    unitsToEliminate.forEach((unit) =>
-      this.game.setUnitSelectable({
-        id: unit.id,
-        callback: () =>
-          this.updateInterfaceConfirm({ flip, unitType, eliminate: unit }),
-      })
-    );
-
-    this.game.addCancelButton();
-  }
-
-  private updateInterfaceConfirm({
-    flip,
-    eliminate,
-    unitType,
-  }: {
-    flip: BTUnit;
-    eliminate: BTUnit;
-    unitType: string;
-  }) {
-    this.game.clearPossible();
-
-    this.game.setUnitSelected({ id: flip.id });
-    this.game.setUnitSelected({ id: eliminate.id });
-
-    this.game.clientUpdatePageTitle({
-      text: _(
-        'Eliminate ${tkn_unit_eliminate} and flip ${tkn_unit_flip} to Full ?'
-      ),
-      args: {
-        tkn_unit_eliminate: `${eliminate.counterId}:reduced`,
-        tkn_unit_flip: `${flip.counterId}:reduced`,
-      },
-    });
+    // this.game.clientUpdatePageTitle({
+    //   text: _('Move stack from ${originSpaceName} to ${destinationSpaceName}?'),
+    //   args: {
+    //     originSpaceName: _(origin.name),
+    //     destinationSpaceName: _(destination.space.name),
+    //   },
+    // });
+    // destination.path.forEach((spaceId) =>
+    //   this.game.setLocationSelected({ id: spaceId })
+    // );
 
     const callback = () => {
       this.game.clearPossible();
       this.game.takeAction({
-        action: 'actBattleCombineReducedUnits',
+        action: 'actWinterQuartersReturnToColoniesCombineReducedUnits',
         args: {
-          flipUnitId: flip.id,
-          eliminateUnitId: eliminate.id,
-          unitType,
+          spaceId,
+          // destinationId: destination.space.id,
+          // path: destination.path,
         },
       });
     };
 
-    if (
-      this.game.settings.get({
-        id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
-      }) === PREF_ENABLED
-    ) {
-      callback();
-    } else {
-      this.game.addConfirmButton({
-        callback,
-      });
-    }
-
-    this.game.addCancelButton();
+    // if (
+    //   this.game.settings.get({
+    //     id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+    //   }) === PREF_ENABLED
+    // ) {
+    callback();
+    // } else {
+    //   this.game.addConfirmButton({
+    //     callback,
+    //   });
+    // }
+    // this.game.addCancelButton();
   }
-
   //  .##.....##.########.####.##.......####.########.##....##
   //  .##.....##....##.....##..##........##.....##.....##..##.
   //  .##.....##....##.....##..##........##.....##......####..
@@ -167,6 +108,17 @@ class BattleCombineReducedUnitsState implements State {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  private setStacksSelectable() {
+    Object.entries(this.args.options)
+      .filter(([spaceId, option]) => spaceId !== DISBANDED_COLONIAL_BRIGADES)
+      .forEach(([spaceId, option]) => {
+        this.game.setLocationSelectable({
+          id: `${spaceId}_${this.args.faction}_stack`,
+          callback: () => this.updateInterfaceConfirm(spaceId),
+        });
+      });
+  }
 
   //  ..######..##.......####..######..##....##
   //  .##....##.##........##..##....##.##...##.

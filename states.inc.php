@@ -416,6 +416,14 @@ $machinestates = array(
         'possibleactions' => ['actWinterQuartersRemainingColonialBrigades', 'actPassOptionalAction', 'actRestart'],
     ],
 
+    ST_WINTER_QUARTERS_RETURN_FLEETS => [
+        'name' => 'winterQuartersReturnFleets',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
     ST_WINTER_QUARTERS_RETURN_TO_COLONIES_SELECT_STACK => [
         'name' => 'winterQuartersReturnToColoniesSelectStack',
         'description' => clienttranslate('${actplayer} must return their stacks to Colonies or Fleets'),

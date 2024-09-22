@@ -127,13 +127,13 @@ trait DebugTrait
     // Notifications::log('french', Scenarios::get()->getYearEndBonus(FRENCH, 1759));
     // Units::get('unit_20')->eliminate(Players::get());
     // Units::get('unit_23')->eliminate(Players::get());
-    Units::get('unit_121')->setLocation(COTE_DU_SUD);
-    Units::get('unit_122')->setLocation(COTE_DU_SUD);
-    Units::get('unit_127')->setLocation(COTE_DU_SUD);
-    Units::get('unit_138')->setLocation(COTE_DE_BEAUPRE);
-    Spaces::get(COTE_DU_SUD)->setControl(BRITISH);
-    Spaces::get(COTE_DE_BEAUPRE)->setControl(BRITISH);
-  
+    // Units::get('unit_121')->setLocation(COTE_DU_SUD);
+    // Units::get('unit_122')->setLocation(COTE_DU_SUD);
+    // Units::get('unit_127')->setLocation(COTE_DU_SUD);
+    // Units::get('unit_138')->setLocation(COTE_DE_BEAUPRE);
+    // Spaces::get(COTE_DU_SUD)->setControl(BRITISH);
+    // Spaces::get(COTE_DE_BEAUPRE)->setControl(BRITISH);
+
 
     // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(FRENCH), ROUT_MARKER, Spaces::get(MONTREAL), FRENCH);
     // Notifications::log('progression',$this->getGameProgression());
@@ -159,14 +159,6 @@ trait DebugTrait
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(NEW_YORK), BRITISH);
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(ALBANY), BRITISH);
 
-    // Units::get('unit_36')->setLocation(ALBANY);
-    // Units::get('unit_35')->setLocation(ALBANY);
-
-
-
-
-
-
     // Cards::get(COUP_DE_MAIN_CARD_ID)->insertOnTop(Locations::buildUpDeck(FRENCH));
     // Cards::get('Card18')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card41')->insertOnTop(Locations::campaignDeck(FRENCH));
@@ -181,11 +173,12 @@ trait DebugTrait
     // Units::get('unit_108')->setLocation(Locations::lossesBox(BRITISH));
     // Units::get('unit_94')->setLocation(Locations::lossesBox(BRITISH));
 
-    // $player = Players::get();
-    // Units::get('unit_43')->reduce($player);
-    // Units::get('unit_47')->reduce($player);
-    // Units::get('unit_52')->reduce($player);
-    // Units::get('unit_42')->reduce($player);
+    Units::get('unit_35')->setReduced(1);
+    Units::get('unit_131')->setReduced(1);
+    Units::get('unit_137')->setReduced(1);
+    Units::get('unit_138')->setReduced(1);
+    Units::get('unit_41')->setReduced(1);
+
 
     // British encroachment
 

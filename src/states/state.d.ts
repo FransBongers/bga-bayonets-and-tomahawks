@@ -310,7 +310,16 @@ interface OnEnteringWinterQuartersRemainingColonialBrigadesStateArgs
   options: Record<string, WinterQuartersRemainingColonialBrigadesOption>;
 }
 
-interface OnEnteringWinterQuartersReturnToColoniesLeaveUnitsStateArgs extends CommonArgs {
+interface OnEnteringWinterQuartersReturnToColoniesCombineReducedUnitsStateArgs extends CommonArgs {
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+  options: Record<string, {
+    units: BTUnit[];
+    space: BTSpace | null;
+  }>;
+}
+
+interface OnEnteringWinterQuartersReturnToColoniesLeaveUnitsStateArgs
+  extends CommonArgs {
   faction: BRITISH_FACTION | FRENCH_FACTION;
   units: BTUnit[];
   space: BTSpace;
@@ -323,13 +332,30 @@ interface WinterQuartersReturnToColoniesSelectStackDestination {
   space: BTSpace;
 }
 
+interface OnEnteringWinterQuartersReturnToColoniesRedeployCommandersStateArgs
+  extends CommonArgs {
+  commanders: BTUnit[];
+  stacks: Record<
+    string,
+    {
+      units: BTUnit;
+      space: BTSpace;
+    }
+  >;
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+}
+
 interface WinterQuartersReturnToColoniesSelectStackOption {
   space: BTSpace;
-  destinations: Record<string, WinterQuartersReturnToColoniesSelectStackDestination>;
+  destinations: Record<
+    string,
+    WinterQuartersReturnToColoniesSelectStackDestination
+  >;
   units: BTUnit[];
 }
 
-interface OnEnteringWinterQuartersReturnToColoniesSelectStackStateArgs extends CommonArgs {
+interface OnEnteringWinterQuartersReturnToColoniesSelectStackStateArgs
+  extends CommonArgs {
   options: Record<string, WinterQuartersReturnToColoniesSelectStackOption>;
   faction: BRITISH_FACTION | FRENCH_FACTION;
 }
@@ -340,10 +366,11 @@ interface WinterQuartersReturnToColoniesStep2SelectStackOption {
   mayRemain: {
     maxBrigades: number;
     maxTotal: number | null; // null if there is no max
-  }
+  };
 }
 
-interface OnEnteringWinterQuartersReturnToColoniesStep2SelectStackStateArgs extends CommonArgs {
+interface OnEnteringWinterQuartersReturnToColoniesStep2SelectStackStateArgs
+  extends CommonArgs {
   destinationIds: string[];
   options: Record<string, WinterQuartersReturnToColoniesStep2SelectStackOption>;
   faction: BRITISH_FACTION | FRENCH_FACTION;

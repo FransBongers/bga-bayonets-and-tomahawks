@@ -256,6 +256,10 @@ interface NotifWinterQuartersPlaceIndianUnitsArgs {
   units: BTUnit[];
 }
 
+interface NotifWinterQuartersReturnFleetsArgs {
+  fleets: BTUnit[];
+}
+
 interface NotifWinterQuartersReturnToColoniesMoveArgs {
   units: BTUnit[];
   toSpaceId: string;

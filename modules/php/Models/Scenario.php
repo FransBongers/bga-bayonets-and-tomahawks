@@ -93,7 +93,6 @@ class Scenario implements \JsonSerializable
 
   public function hasAchievedVictoryThreshold($faction, $year)
   {
-    return false; // TODO: remove this
     $vpMarker = Markers::get(VICTORY_MARKER);
     // 'victory_points_' . $faction . '_' . $score;
     $splitLocation = explode('_', $vpMarker->getLocation());

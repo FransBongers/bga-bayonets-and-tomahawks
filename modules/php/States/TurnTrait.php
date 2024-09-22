@@ -308,91 +308,187 @@ trait TurnTrait
         ];
       }
     }
+
+    $node['children'] = array_merge(
+      $node['children'],
+      [
+        // Place Indian Units on their villages
+        [
+          'action' => WINTER_QUARTERS_PLACE_INDIAN_UNITS,
+        ],
+        // Move Colonal Brigades to Disbanded Colonial Brigades
+        [
+          'children' => [
+            [
+              'action' => WINTER_QUARTERS_DISBAND_COLONIAL_BRIGADES,
+              'playerId' => $playerIds[BRITISH],
+            ]
+          ]
+        ],
+        // Return to Colonies
+        [
+          'children' => [
+            [
+              'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_SELECT_STACK,
+              'faction' => BRITISH,
+              'playerId' => $playerIds[BRITISH],
+            ]
+          ]
+        ],
+        [
+          'children' => [
+            [
+              'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_STEP2_SELECT_STACK,
+              'faction' => BRITISH,
+              'playerId' => $playerIds[BRITISH],
+            ]
+          ]
+        ],
+        [
+          'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_REDEPLOY_COMMANDERS,
+          'faction' => BRITISH,
+          'playerId' => $playerIds[BRITISH],
+          'optional' => true,
+        ],
+        [
+          'children' => [
+            [
+              'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_COMBINE_REDUCED_UNITS,
+              'faction' => BRITISH,
+              'playerId' => $playerIds[BRITISH],
+            ]
+          ]
+        ],
+        [
+          'children' => [
+            [
+              'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_SELECT_STACK,
+              'faction' => FRENCH,
+              'playerId' => $playerIds[FRENCH],
+            ]
+          ]
+        ],
+        [
+          'children' => [
+            [
+              'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_STEP2_SELECT_STACK,
+              'faction' => FRENCH,
+              'playerId' => $playerIds[FRENCH],
+            ]
+          ]
+        ],
+        [
+          'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_REDEPLOY_COMMANDERS,
+          'faction' => FRENCH,
+          'playerId' => $playerIds[FRENCH],
+          'optional' => true,
+        ],
+        [
+          'children' => [
+            [
+              'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_COMBINE_REDUCED_UNITS,
+              'faction' => FRENCH,
+              'playerId' => $playerIds[FRENCH],
+            ]
+          ]
+        ],
+        // Return all Fleets on the map to the fleets pool
+        [
+          'action' => WINTER_QUARTERS_RETURN_FLEETS,
+        ],
+        // Place units from Losses Box
+        // Reset cards
+        // Advance Year Marker
+        [
+          'action' => WINTER_QUARTERS_ROUND_END,
+        ]
+      ]
+    );
+
     // Place Indian Units on their villages
-    $node['children'][] = [
-      'action' => WINTER_QUARTERS_PLACE_INDIAN_UNITS,
-    ];
+    // $node['children'][] = [
+    //   'action' => WINTER_QUARTERS_PLACE_INDIAN_UNITS,
+    // ];
     // Move Colonal Brigades to Disbanded Colonial Brigades
-    $node['children'][] = [
-      'children' => [
-        [
-          'action' => WINTER_QUARTERS_DISBAND_COLONIAL_BRIGADES,
-          'playerId' => $playerIds[BRITISH],
-        ]
-      ]
-    ];
+    // $node['children'][] = [
+    //   'children' => [
+    //     [
+    //       'action' => WINTER_QUARTERS_DISBAND_COLONIAL_BRIGADES,
+    //       'playerId' => $playerIds[BRITISH],
+    //     ]
+    //   ]
+    // ];
     // Return to Colonies
-    $node['children'][] = [
-      'children' => [
-        [
-          'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_SELECT_STACK,
-          'faction' => BRITISH,
-          'playerId' => $playerIds[BRITISH],
-        ]
-      ]
-    ];
-    $node['children'][] = [
-      'children' => [
-        [
-          'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_STEP2_SELECT_STACK,
-          'faction' => BRITISH,
-          'playerId' => $playerIds[BRITISH],
-        ]
-      ]
-    ];
-    $node['children'][] = [
-      'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_REDEPLOY_COMMANDERS,
-      'faction' => BRITISH,
-      'playerId' => $playerIds[BRITISH],
-    ];
-    $node['children'][] = [
-      'children' => [
-        [
-          'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_COMBINE_REDUCED_UNITS,
-          'faction' => BRITISH,
-          'playerId' => $playerIds[BRITISH],
-        ]
-      ]
-    ];
-    $node['children'][] = [
-      'children' => [
-        [
-          'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_SELECT_STACK,
-          'faction' => FRENCH,
-          'playerId' => $playerIds[FRENCH],
-        ]
-      ]
-    ];
-    $node['children'][] = [
-      'children' => [
-        [
-          'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_STEP2_SELECT_STACK,
-          'faction' => FRENCH,
-          'playerId' => $playerIds[FRENCH],
-        ]
-      ]
-    ];
-    $node['children'][] = [
-      'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_REDEPLOY_COMMANDERS,
-      'faction' => FRENCH,
-      'playerId' => $playerIds[FRENCH],
-    ];
-    $node['children'][] = [
-      'children' => [
-        [
-          'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_COMBINE_REDUCED_UNITS,
-          'faction' => FRENCH,
-          'playerId' => $playerIds[FRENCH],
-        ]
-      ]
-    ];
-    // Return all Fleets on the map to the fleets pool
-    // Place units from Losses Box
-    // Reset cards
-    // Advance Year Marker
-    $node['children'][] = [
-      'action' => WINTER_QUARTERS_ROUND_END,
-    ];
+    // $node['children'][] = [
+    //   'children' => [
+    //     [
+    //       'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_SELECT_STACK,
+    //       'faction' => BRITISH,
+    //       'playerId' => $playerIds[BRITISH],
+    //     ]
+    //   ]
+    // ];
+    // $node['children'][] = [
+    //   'children' => [
+    //     [
+    //       'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_STEP2_SELECT_STACK,
+    //       'faction' => BRITISH,
+    //       'playerId' => $playerIds[BRITISH],
+    //     ]
+    //   ]
+    // ];
+    // $node['children'][] = [
+    //   'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_REDEPLOY_COMMANDERS,
+    //   'faction' => BRITISH,
+    //   'playerId' => $playerIds[BRITISH],
+    //   'optional' => true,
+    // ];
+    // $node['children'][] = [
+    //   'children' => [
+    //     [
+    //       'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_COMBINE_REDUCED_UNITS,
+    //       'faction' => BRITISH,
+    //       'playerId' => $playerIds[BRITISH],
+    //     ]
+    //   ]
+    // ];
+    // $node['children'][] = [
+    //   'children' => [
+    //     [
+    //       'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_SELECT_STACK,
+    //       'faction' => FRENCH,
+    //       'playerId' => $playerIds[FRENCH],
+    //     ]
+    //   ]
+    // ];
+    // $node['children'][] = [
+    //   'children' => [
+    //     [
+    //       'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_STEP2_SELECT_STACK,
+    //       'faction' => FRENCH,
+    //       'playerId' => $playerIds[FRENCH],
+    //     ]
+    //   ]
+    // ];
+    // $node['children'][] = [
+    //   'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_REDEPLOY_COMMANDERS,
+    //   'faction' => FRENCH,
+    //   'playerId' => $playerIds[FRENCH],
+    //   'optional' => true,
+    // ];
+    // $node['children'][] = [
+    //   'children' => [
+    //     [
+    //       'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_COMBINE_REDUCED_UNITS,
+    //       'faction' => FRENCH,
+    //       'playerId' => $playerIds[FRENCH],
+    //     ]
+    //   ]
+    // ];
+
+    // $node['children'][] = [
+    //   'action' => WINTER_QUARTERS_ROUND_END,
+    // ];
 
     return $node;
   }

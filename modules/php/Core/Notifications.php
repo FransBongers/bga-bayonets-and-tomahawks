@@ -600,6 +600,8 @@ class Notifications
       $spaceName = clienttranslate('French Losses Box');
     } else if ($previousLocation === SAIL_BOX) {
       $spaceName = clienttranslate('Sail Box');
+    } else if ($previousLocation === DISBANDED_COLONIAL_BRIGADES) {
+      $spaceName = clienttranslate('Disbanded Colonial Brigades');
     } else {
       $spaceName = Spaces::get($previousLocation)->getName();
     }
@@ -764,6 +766,20 @@ class Notifications
     ]);
   }
 
+  public static function redeployUnit($player, $unit, $origin, $destination)
+  {
+    self::notifyAll("moveUnit", clienttranslate('${player_name} redeploys ${tkn_unit} from ${tkn_boldText_1} to ${tkn_boldText_2}'), [
+      'player' => $player,
+      'tkn_boldText_1' => $origin->getName(),
+      'destination' => $destination,
+      'tkn_boldText_2' => $destination->getName(),
+      'faction' => $player->getFaction(),
+      'unit' => $unit->jsonSerialize(),
+      'tkn_unit' => $unit->getCounterId(),
+      'i18n' => ['tkn_boldText_1', 'tkn_boldText_2'],
+    ]);
+  }
+
   public static function noFrenchFleetInPool()
   {
     self::message(clienttranslate('No French Fleet in the fleet pool to remove'), []);
@@ -786,10 +802,19 @@ class Notifications
 
     $location = $unit->getLocation();
 
+    $spaceName = '';
+    if ($location === SAIL_BOX) {
+      $spaceName = clienttranslate('Sail Box');
+    } else if ($location === DISBANDED_COLONIAL_BRIGADES) {
+      $spaceName = clienttranslate('Disbanded Colonial Brigades');
+    } else {
+      $spaceName = Spaces::get($unit->getLocation())->getName();
+    }
+
     self::notifyAll("flipUnit", $text, [
       'player' => $player,
       'unit' => $unit->jsonSerialize(),
-      'tkn_boldText_spaceName' => $location === SAIL_BOX ? clienttranslate('Sail Box') : Spaces::get($unit->getLocation())->getName(),
+      'tkn_boldText_spaceName' => $spaceName,
       'tkn_unit' => $unit->getCounterId() . ':' . ($unit->getReduced() === 0 ? 'reduced' : 'full'), // reversed because we show the 'before' side in the log
       'i18n' => ['tkn_boldText_spaceName']
     ]);
@@ -1046,7 +1071,7 @@ class Notifications
     }
 
     // $text = count() 
-    self::notifyAll("winterQuartersDisbandColonialBrigades", $text , [
+    self::notifyAll("winterQuartersDisbandColonialBrigades", $text, [
       'player' => $player,
       'tkn_boldText_spaceName' => $space->getName(),
       'units' => $unitsToDisband,
@@ -1055,9 +1080,16 @@ class Notifications
     ]);
   }
 
+  public static function winterQuartersReturnFleets($fleets)
+  {
+    self::notifyAll("winterQuartersReturnFleets", clienttranslate('All Fleets on the map return to the Fleets pool'), [
+      'fleets' => $fleets,
+    ]);
+  }
+
   public static function winterQuartersReturnToColoniesLeaveUnits($player, $units, $space)
   {
-    self::message( clienttranslate('${player_name} leaves ${unitsLog} on ${tkn_boldText_spaceName}') , [
+    self::message(clienttranslate('${player_name} leaves ${unitsLog} on ${tkn_boldText_spaceName}'), [
       'player' => $player,
       'unitsLog' => self::getUnitsLog($units),
       'tkn_boldText_spaceName' => $space->getName(),
@@ -1088,7 +1120,7 @@ class Notifications
     $text = count($movedSpaces) > 2 ? clienttranslate('${player_name} moves stack from ${tkn_boldText_spaceName} via ${spaceNamesLog}') : clienttranslate('${player_name} moves stack from ${tkn_boldText_spaceName} to ${spaceNamesLog}');
 
     // $text = count() 
-    self::notifyAll("winterQuartersReturnToColoniesMove", $text , [
+    self::notifyAll("winterQuartersReturnToColoniesMove", $text, [
       'player' => $player,
       'units' => $units,
       'tkn_boldText_spaceName' => $movedSpaces[0]->getName(),

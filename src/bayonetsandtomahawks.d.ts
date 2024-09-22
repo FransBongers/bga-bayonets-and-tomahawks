@@ -60,6 +60,7 @@ interface BayonetsAndTomahawksGame extends Game {
   }) => void;
   setLocationSelected: (props: { id: string }) => void;
   setStackSelected: (props: { spaceId: string; faction: string }) => void;
+  setStackSelectable: (props: { spaceId: string; faction: string; callback: (event: PointerEvent) => void; }) => void;
   setUnitSelectable: (props: {
     id: string;
     callback: (event: PointerEvent) => void;

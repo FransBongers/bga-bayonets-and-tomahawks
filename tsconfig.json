@@ -108,6 +108,8 @@
     "src/states/WinterQuartersMoveStackOnSailBox.ts",
     "src/states/WinterQuartersRemainingColonialBrigades.ts",
     "src/states/WinterQuartersReturnToColoniesLeaveUnits.ts",
+    "src/states/WinterQuartersReturnToColoniesRedeployCommanders.ts",
+    "src/states/WinterQuartersReturnToColoniesCombineReducedUnits.ts",
     "src/states/WinterQuartersReturnToColoniesSelectStack.ts",
     "src/states/WinterQuartersReturnToColoniesStep2SelectStack.ts",
     "src/states/state.d.ts",
