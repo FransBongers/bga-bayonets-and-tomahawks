@@ -106,6 +106,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     winterQuartersRemainingColonialBrigades: WinterQuartersRemainingColonialBrigadesState;
     winterQuartersReturnToColoniesLeaveUnits: WinterQuartersReturnToColoniesLeaveUnitsState;
     winterQuartersReturnToColoniesSelectStack: WinterQuartersReturnToColoniesSelectStackState;
+    winterQuartersReturnToColoniesStep2SelectStack: WinterQuartersReturnToColoniesStep2SelectStackState;
   };
 
   constructor() {
@@ -188,6 +189,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
         new WinterQuartersReturnToColoniesLeaveUnitsState(this),
       winterQuartersReturnToColoniesSelectStack:
         new WinterQuartersReturnToColoniesSelectStackState(this),
+      winterQuartersReturnToColoniesStep2SelectStack:
+        new WinterQuartersReturnToColoniesStep2SelectStackState(this),
     };
 
     this.infoPanel = new InfoPanel(this);

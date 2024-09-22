@@ -333,3 +333,18 @@ interface OnEnteringWinterQuartersReturnToColoniesSelectStackStateArgs extends C
   options: Record<string, WinterQuartersReturnToColoniesSelectStackOption>;
   faction: BRITISH_FACTION | FRENCH_FACTION;
 }
+
+interface WinterQuartersReturnToColoniesStep2SelectStackOption {
+  space: BTSpace;
+  units: BTUnit[];
+  mayRemain: {
+    maxBrigades: number;
+    maxTotal: number | null; // null if there is no max
+  }
+}
+
+interface OnEnteringWinterQuartersReturnToColoniesStep2SelectStackStateArgs extends CommonArgs {
+  destinationIds: string[];
+  options: Record<string, WinterQuartersReturnToColoniesStep2SelectStackOption>;
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+}

@@ -87,7 +87,7 @@ class WinterQuartersReturnToColoniesLeaveUnits extends \BayonetsAndTomahawks\Act
     });
 
 
-    $data = $this->getUnitsThatCanRemainOnSpace($space, $units, $stackUnits, $stackUnitIds, $faction);
+    $data = $this->getUnitsThatCanRemainOnSpace($space, $units, $stackUnits, $faction);
 
     return [
       'faction' => $faction,

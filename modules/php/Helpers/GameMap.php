@@ -212,8 +212,27 @@ class GameMap extends \APP_DbObject
     }
 
     $stackMarkers = Markers::getInLocation(Locations::stackMarker($spaceId, $faction));
-    foreach($stackMarkers as $marker) {
+    foreach ($stackMarkers as $marker) {
       $marker->remove($player);
+    }
+  }
+
+  public static function loseControlCheck($player, $space)
+  {
+    $playerFaction = $player->getFaction();
+    $otherFaction = BTHelpers::getOtherFaction($playerFaction);
+
+    $playerLosesControl = $space->getControl() === $playerFaction && $space->isSettledSpace($otherFaction) &&
+
+      count($space->getUnits($playerFaction)) === 0;
+
+    if ($playerLosesControl) {
+      $space->setControl($otherFaction);
+      Notifications::loseControl($player, $space);
+
+      if ($space->getVictorySpace()) {
+        Players::scoreVictoryPoints($player, -1 * $space->getValue());
+      }
     }
   }
 }

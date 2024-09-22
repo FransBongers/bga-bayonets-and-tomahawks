@@ -109,6 +109,7 @@
     "src/states/WinterQuartersRemainingColonialBrigades.ts",
     "src/states/WinterQuartersReturnToColoniesLeaveUnits.ts",
     "src/states/WinterQuartersReturnToColoniesSelectStack.ts",
+    "src/states/WinterQuartersReturnToColoniesStep2SelectStack.ts",
     "src/states/state.d.ts",
     "src/token-manager/index.ts",
     "src/tooltip-manager/templates.ts",

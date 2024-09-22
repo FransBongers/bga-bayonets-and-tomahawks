@@ -334,7 +334,53 @@ trait TurnTrait
     $node['children'][] = [
       'children' => [
         [
+          'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_STEP2_SELECT_STACK,
+          'faction' => BRITISH,
+          'playerId' => $playerIds[BRITISH],
+        ]
+      ]
+    ];
+    $node['children'][] = [
+      'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_REDEPLOY_COMMANDERS,
+      'faction' => BRITISH,
+      'playerId' => $playerIds[BRITISH],
+    ];
+    $node['children'][] = [
+      'children' => [
+        [
+          'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_COMBINE_REDUCED_UNITS,
+          'faction' => BRITISH,
+          'playerId' => $playerIds[BRITISH],
+        ]
+      ]
+    ];
+    $node['children'][] = [
+      'children' => [
+        [
           'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_SELECT_STACK,
+          'faction' => FRENCH,
+          'playerId' => $playerIds[FRENCH],
+        ]
+      ]
+    ];
+    $node['children'][] = [
+      'children' => [
+        [
+          'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_STEP2_SELECT_STACK,
+          'faction' => FRENCH,
+          'playerId' => $playerIds[FRENCH],
+        ]
+      ]
+    ];
+    $node['children'][] = [
+      'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_REDEPLOY_COMMANDERS,
+      'faction' => FRENCH,
+      'playerId' => $playerIds[FRENCH],
+    ];
+    $node['children'][] = [
+      'children' => [
+        [
+          'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_COMBINE_REDUCED_UNITS,
           'faction' => FRENCH,
           'playerId' => $playerIds[FRENCH],
         ]

@@ -88,6 +88,13 @@ class BTHelpers extends \APP_DbObject
     }, $spaces);
   }
 
+  public static function returnIds($itemsWithId)
+  {
+    return array_map(function ($item) {
+      return $item->getId();
+    }, $itemsWithId);
+  }
+
   public static function getSpacesBasedOnFleetRetreatPriorities($faction)
   {
     $spaces = Spaces::getAll()->toArray();

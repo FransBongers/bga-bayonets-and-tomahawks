@@ -434,6 +434,16 @@ $machinestates = array(
         'transitions' => [],
     ],
 
+    ST_WINTER_QUARTERS_RETURN_TO_COLONIES_COMBINE_REDUCED_UNITS => [
+        'name' => 'winterQuartersReturnToColoniesCombineReducedUnits',
+        'description' => clienttranslate('${actplayer} must return their stacks to Colonies'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actWinterQuartersReturnToColoniesCombineReducedUnits', 'actPassOptionalAction', 'actRestart'],
+    ],
+
     ST_WINTER_QUARTERS_RETURN_TO_COLONIES_LEAVE_UNITS => [
         'name' => 'winterQuartersReturnToColoniesLeaveUnits',
         'description' => clienttranslate('${actplayer} must return their stacks to Colonies'),
@@ -442,6 +452,26 @@ $machinestates = array(
         'args' => 'argsAtomicAction',
         'action' => 'stAtomicAction',
         'possibleactions' => ['actWinterQuartersReturnToColoniesLeaveUnits', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_WINTER_QUARTERS_RETURN_TO_COLONIES_REDEPLOY_COMMANDERS => [
+        'name' => 'winterQuartersReturnToColoniesRedeployCommanders',
+        'description' => clienttranslate('${actplayer} may redeploy their Commanders'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actWinterQuartersReturnToColoniesRedeployCommanders', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_WINTER_QUARTERS_RETURN_TO_COLONIES_STEP2_SELECT_STACK => [
+        'name' => 'winterQuartersReturnToColoniesStep2SelectStack',
+        'description' => clienttranslate('${actplayer} must return their stacks to friendly Coastal Home Spaces'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actWinterQuartersReturnToColoniesStep2SelectStack', 'actPassOptionalAction', 'actRestart'],
     ],
 
     ST_WINTER_QUARTERS_PLACE_INDIAN_UNITS => [
@@ -690,7 +720,7 @@ $machinestates = array(
         'transitions' => [],
     ],
 
-    
+
     ST_BATTLE_ROUT => [
         'name' => 'battleRout',
         'description' => '',

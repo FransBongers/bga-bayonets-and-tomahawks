@@ -33,13 +33,15 @@ class WinterQuartersReturnToColonies extends \BayonetsAndTomahawks\Models\Atomic
 
   protected function canUnitsRemainOnSpace($space, $units, $stackUnits, $stackUnitIds, $faction)
   {
-    $data = $this->getUnitsThatCanRemainOnSpace($space, $units, $stackUnits, $stackUnitIds, $faction);
+    $data = $this->getUnitsThatCanRemainOnSpace($space, $units, $stackUnits, $faction);
 
     return $data['maxTotal'] === null || $data['maxTotal'] > 0;
   }
 
-  protected function getUnitsThatCanRemainOnSpace($space, $units, $stackUnits, $stackUnitIds, $faction)
+  protected function getUnitsThatCanRemainOnSpace($space, $units, $stackUnits, $faction)
   {
+    $stackUnitIds = BTHelpers::returnIds($stackUnits);
+
     $cannotRemain = [
       'maxBrigades' => 0,
       'maxTotal' => 0,
