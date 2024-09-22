@@ -94,17 +94,72 @@ const tplScenarioInfoFactions = (scenario: BTScenario) => {
           </div>
         </div>
       `;
+    case 'AmherstsJuggernaut1758_1759':
+      return `
+          <div>
+            <span class="bt_section_title">${_('French')}</span>
+            <div class="bt_container">
+              <span>${_('Year End Bonus:')}</span>
+              <span class="bt_section_title">${_('1758')}</span>
+              <div class="bt_year_end_bonus_container">
+                <div class="bt_year_end_bonus" data-type="french"><span>+2</span></div>
+                <div class="bt_year_end_bonus_description">
+                  <span>${_('Control 3 or more British Home Spaces')}</span>
+                </div>
+              </div>
+              <span class="bt_section_title">${_('1759')}</span>
+              <div class="bt_year_end_bonus_container">
+                <div class="bt_year_end_bonus" data-type="french"><span>+2</span></div>
+                <div class="bt_year_end_bonus_description">
+                  <span>${_('For each 3-VP French space not controlled by the British')}</span>
+                </div>
+              </div>
+            </div>
+            <div class="bt_container">
+              <span>${_('Year End Victory Threshold')}</span>
+              <span class="bt_section_title">${_('1758')}</span>
+              ${tplVictoryTrackDisplay('french5')}
+              <span class="bt_section_title">${_('1759')}</span>
+              ${tplVictoryTrackDisplay('british2')}
+            </div>
+          </div>
+          <div>
+            <span class="bt_section_title">${_('British')}</span>
+            <div class="bt_container">
+              <span>${_('Year End Bonus:')}</span>
+              <span class="bt_section_title">${_('1758')}</span>
+              <div class="bt_year_end_bonus_container">
+                <div class="bt_year_end_bonus" data-type="british"><span>+2</span></div>
+                <div class="bt_year_end_bonus_description">
+                  <span>${_('Control 2 or more French Settled Spaces')}</span>
+                </div>
+              </div>
+              <span class="bt_section_title">${_('1759')}</span>
+              <div class="bt_year_end_bonus_container">
+                <div class="bt_year_end_bonus" data-type="british"><span>+2</span></div>
+                <div class="bt_year_end_bonus_description">
+                  <span>${_('For each French Colony with at least two British-controlled spaces')}</span>
+                </div>
+              </div>
+            </div>
+            <div class="bt_container">
+              <span>${_('Year End Victory Threshold')}</span>
+              <span class="bt_section_title">${_('1758')}</span>
+              ${tplVictoryTrackDisplay('british3')}
+              <span class="bt_section_title">${_('1759')}</span>
+              ${tplVictoryTrackDisplay('british3')}
+            </div>
+          </div>
+        `;
     default:
       return '';
   }
-}
+};
 
 const tplScenarioModalContent = (
   game: BayonetsAndTomahawksGame,
   scenario: BTScenario
 ) => {
-  const reinforcements = Object.values(scenario.reinforcements)[0];
-
   return `
 <div id="scenario_modal_content">
   <div>
@@ -125,23 +180,47 @@ const tplScenarioModalContent = (
     </div>
     <div style="margin-top: 8px;">
       <span class="bt_section_title">${_('Reinforcements:')}</span>
-      <div class="bt_scenario_info_reinforcements">
+      <div class="bt_scenario_info_reinforcements" data-duration="${
+        scenario.duration
+      }">
         <div class="bt_reinforcement_type">
           <span>${_('Fleets')}</span>
         </div>
-        <div class="bt_reinforcement_year" data-type="fleets"><span>${reinforcements.poolFleets}</span></div>
+        ${Object.entries(scenario.reinforcements)
+          .map(
+            ([_year, reinforcements]) => `
+          <div class="bt_reinforcement_year" data-type="fleets"><span>${reinforcements.poolFleets}</span></div>  
+          `
+          )
+          .join('')}
         <div class="bt_reinforcement_type">
           <span>${_('French Metropolitan')}</span>
         </div>
-        <div class="bt_reinforcement_year" data-type="french"><span>${reinforcements.poolFrenchMetropolitanVoW}</span></div>
+        ${Object.entries(scenario.reinforcements)
+          .map(
+            ([_year, reinforcements]) => `
+          <div class="bt_reinforcement_year" data-type="french"><span>${reinforcements.poolFrenchMetropolitanVoW}</span></div>`
+          )
+          .join('')}
         <div class="bt_reinforcement_type">
           <span>${_('British Metropolitan')}</span>
         </div>
-        <div class="bt_reinforcement_year" data-type="british"><span>${reinforcements.poolBritishMetropolitanVoW}</span></div>
+        ${Object.entries(scenario.reinforcements)
+          .map(
+            ([_year, reinforcements]) => `
+          <div class="bt_reinforcement_year" data-type="british"><span>${reinforcements.poolBritishMetropolitanVoW}</span></div>`
+          )
+          .join('')}
+        
         <div class="bt_reinforcement_type">
           <span>${_('Colonial')}</span>
         </div>
-        <div class="bt_reinforcement_year" data-type="colonial"><span>${reinforcements.poolBritishColonialVoW}</span></div>
+        ${Object.entries(scenario.reinforcements)
+          .map(
+            ([_year, reinforcements]) => `
+          <div class="bt_reinforcement_year" data-type="colonial"><span>${reinforcements.poolBritishColonialVoW}</span></div>`
+          )
+          .join('')}
       </div>
     </div>
   </div>

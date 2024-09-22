@@ -5471,12 +5471,33 @@ var VICTORY_TRACK_DISPLAY_CONFIG = {
         backgroundPositionY: -16,
         markerLeft: 105,
     },
+    british2: {
+        width: 193,
+        height: 34,
+        backgroundPositionX: -332,
+        backgroundPositionY: -16,
+        markerLeft: 130,
+    },
+    british3: {
+        width: 226,
+        height: 34,
+        backgroundPositionX: -364,
+        backgroundPositionY: -16,
+        markerLeft: 128,
+    },
     french1: {
         width: 176,
         height: 34,
         backgroundPositionX: -325,
         backgroundPositionY: -16,
         markerLeft: 70,
+    },
+    french5: {
+        width: 193,
+        height: 34,
+        backgroundPositionX: -237,
+        backgroundPositionY: -16,
+        markerLeft: 32,
     },
 };
 var ScenarioInfo = (function () {
@@ -5534,12 +5555,13 @@ var tplScenarioInfoFactions = function (scenario) {
             return "\n      <div>\n        <span class=\"bt_section_title\">".concat(_('French'), "</span>\n        <div>\n          <span>").concat(_('Year End Bonus:'), "</span>\n          <div class=\"bt_year_end_bonus_container\">\n            <div class=\"bt_year_end_bonus\" data-type=\"french\"><span>+2</span></div>\n            <div class=\"bt_year_end_bonus_description\">\n              <span>").concat(_('Control 1 or more British Settled Spaces'), "</span>\n            </div>\n          </div>\n        </div>\n        <div>\n          <span>").concat(_('Year End Victory Threshold'), "</span>\n          ").concat(tplVictoryTrackDisplay('french1'), "\n        </div>\n      </div>\n      <div>\n        <span class=\"bt_section_title\">").concat(_('British'), "</span>\n        <div>\n          <span>").concat(_('Year End Bonus:'), "</span>\n          <div class=\"bt_year_end_bonus_container\">\n            <div class=\"bt_year_end_bonus\" data-type=\"british\"><span>+2</span></div>\n            <div class=\"bt_year_end_bonus_description\">\n              <span>").concat(_('Control 2 or more French Victory Spaces'), "</span>\n            </div>\n          </div>\n        </div>\n        <div>\n          <span>").concat(_('Year End Victory Threshold'), "</span>\n          ").concat(tplVictoryTrackDisplay('british1'), "\n        </div>\n      </div>\n    ");
         case 'LoudounsGamble1757':
             return "\n        <div>\n          <span class=\"bt_section_title\">".concat(_('French'), "</span>\n          <div>\n            <span>").concat(_('Year End Bonus:'), "</span>\n            <div class=\"bt_year_end_bonus_container\">\n              <div class=\"bt_year_end_bonus\" data-type=\"french\"><span>+2</span></div>\n              <div class=\"bt_year_end_bonus_description\">\n                <span>").concat(_('Control 3 or more British Victory Spaces'), "</span>\n              </div>\n            </div>\n          </div>\n          <div>\n            <span>").concat(_('Year End Victory Threshold'), "</span>\n            ").concat(tplVictoryTrackDisplay('french1'), "\n          </div>\n        </div>\n        <div>\n          <span class=\"bt_section_title\">").concat(_('British'), "</span>\n          <div>\n            <span>").concat(_('Year End Bonus:'), "</span>\n            <div class=\"bt_year_end_bonus_container\">\n              <div class=\"bt_year_end_bonus\" data-type=\"british\"><span>+2</span></div>\n              <div class=\"bt_year_end_bonus_description\">\n                <span>").concat(_('Control 1 or more French Settled Spaces'), "</span>\n              </div>\n            </div>\n          </div>\n          <div>\n            <span>").concat(_('Year End Victory Threshold'), "</span>\n            ").concat(tplVictoryTrackDisplay('british1'), "\n          </div>\n        </div>\n      ");
+        case 'AmherstsJuggernaut1758_1759':
+            return "\n          <div>\n            <span class=\"bt_section_title\">".concat(_('French'), "</span>\n            <div class=\"bt_container\">\n              <span>").concat(_('Year End Bonus:'), "</span>\n              <span class=\"bt_section_title\">").concat(_('1758'), "</span>\n              <div class=\"bt_year_end_bonus_container\">\n                <div class=\"bt_year_end_bonus\" data-type=\"french\"><span>+2</span></div>\n                <div class=\"bt_year_end_bonus_description\">\n                  <span>").concat(_('Control 3 or more British Home Spaces'), "</span>\n                </div>\n              </div>\n              <span class=\"bt_section_title\">").concat(_('1759'), "</span>\n              <div class=\"bt_year_end_bonus_container\">\n                <div class=\"bt_year_end_bonus\" data-type=\"french\"><span>+2</span></div>\n                <div class=\"bt_year_end_bonus_description\">\n                  <span>").concat(_('For each 3-VP French space not controlled by the British'), "</span>\n                </div>\n              </div>\n            </div>\n            <div class=\"bt_container\">\n              <span>").concat(_('Year End Victory Threshold'), "</span>\n              <span class=\"bt_section_title\">").concat(_('1758'), "</span>\n              ").concat(tplVictoryTrackDisplay('french5'), "\n              <span class=\"bt_section_title\">").concat(_('1759'), "</span>\n              ").concat(tplVictoryTrackDisplay('british2'), "\n            </div>\n          </div>\n          <div>\n            <span class=\"bt_section_title\">").concat(_('British'), "</span>\n            <div class=\"bt_container\">\n              <span>").concat(_('Year End Bonus:'), "</span>\n              <span class=\"bt_section_title\">").concat(_('1758'), "</span>\n              <div class=\"bt_year_end_bonus_container\">\n                <div class=\"bt_year_end_bonus\" data-type=\"british\"><span>+2</span></div>\n                <div class=\"bt_year_end_bonus_description\">\n                  <span>").concat(_('Control 2 or more French Settled Spaces'), "</span>\n                </div>\n              </div>\n              <span class=\"bt_section_title\">").concat(_('1759'), "</span>\n              <div class=\"bt_year_end_bonus_container\">\n                <div class=\"bt_year_end_bonus\" data-type=\"british\"><span>+2</span></div>\n                <div class=\"bt_year_end_bonus_description\">\n                  <span>").concat(_('For each French Colony with at least two British-controlled spaces'), "</span>\n                </div>\n              </div>\n            </div>\n            <div class=\"bt_container\">\n              <span>").concat(_('Year End Victory Threshold'), "</span>\n              <span class=\"bt_section_title\">").concat(_('1758'), "</span>\n              ").concat(tplVictoryTrackDisplay('british3'), "\n              <span class=\"bt_section_title\">").concat(_('1759'), "</span>\n              ").concat(tplVictoryTrackDisplay('british3'), "\n            </div>\n          </div>\n        ");
         default:
             return '';
     }
 };
 var tplScenarioModalContent = function (game, scenario) {
-    var reinforcements = Object.values(scenario.reinforcements)[0];
     return "\n<div id=\"scenario_modal_content\">\n  <div>\n    <div>\n      <span>".concat(scenario.duration === 1
         ? game.format_string_recursive(_('${tkn_boldText_duration} 1 year'), {
             tkn_boldText_duration: _('Duration:'),
@@ -5547,7 +5569,27 @@ var tplScenarioModalContent = function (game, scenario) {
         : game.format_string_recursive(_('${tkn_boldText_duration} ${number} years'), {
             tkn_boldText_duration: _('Duration:'),
             number: scenario.duration,
-        }), "</span>\n    </div>\n    <div style=\"margin-top: 8px;\">\n      <span class=\"bt_section_title\">").concat(_('Reinforcements:'), "</span>\n      <div class=\"bt_scenario_info_reinforcements\">\n        <div class=\"bt_reinforcement_type\">\n          <span>").concat(_('Fleets'), "</span>\n        </div>\n        <div class=\"bt_reinforcement_year\" data-type=\"fleets\"><span>").concat(reinforcements.poolFleets, "</span></div>\n        <div class=\"bt_reinforcement_type\">\n          <span>").concat(_('French Metropolitan'), "</span>\n        </div>\n        <div class=\"bt_reinforcement_year\" data-type=\"french\"><span>").concat(reinforcements.poolFrenchMetropolitanVoW, "</span></div>\n        <div class=\"bt_reinforcement_type\">\n          <span>").concat(_('British Metropolitan'), "</span>\n        </div>\n        <div class=\"bt_reinforcement_year\" data-type=\"british\"><span>").concat(reinforcements.poolBritishMetropolitanVoW, "</span></div>\n        <div class=\"bt_reinforcement_type\">\n          <span>").concat(_('Colonial'), "</span>\n        </div>\n        <div class=\"bt_reinforcement_year\" data-type=\"colonial\"><span>").concat(reinforcements.poolBritishColonialVoW, "</span></div>\n      </div>\n    </div>\n  </div>\n  <div class=\"bt_scenario_info_faction\">\n      ").concat(tplScenarioInfoFactions(scenario), "\n  </div>\n</div>");
+        }), "</span>\n    </div>\n    <div style=\"margin-top: 8px;\">\n      <span class=\"bt_section_title\">").concat(_('Reinforcements:'), "</span>\n      <div class=\"bt_scenario_info_reinforcements\" data-duration=\"").concat(scenario.duration, "\">\n        <div class=\"bt_reinforcement_type\">\n          <span>").concat(_('Fleets'), "</span>\n        </div>\n        ").concat(Object.entries(scenario.reinforcements)
+        .map(function (_a) {
+        var _year = _a[0], reinforcements = _a[1];
+        return "\n          <div class=\"bt_reinforcement_year\" data-type=\"fleets\"><span>".concat(reinforcements.poolFleets, "</span></div>  \n          ");
+    })
+        .join(''), "\n        <div class=\"bt_reinforcement_type\">\n          <span>").concat(_('French Metropolitan'), "</span>\n        </div>\n        ").concat(Object.entries(scenario.reinforcements)
+        .map(function (_a) {
+        var _year = _a[0], reinforcements = _a[1];
+        return "\n          <div class=\"bt_reinforcement_year\" data-type=\"french\"><span>".concat(reinforcements.poolFrenchMetropolitanVoW, "</span></div>");
+    })
+        .join(''), "\n        <div class=\"bt_reinforcement_type\">\n          <span>").concat(_('British Metropolitan'), "</span>\n        </div>\n        ").concat(Object.entries(scenario.reinforcements)
+        .map(function (_a) {
+        var _year = _a[0], reinforcements = _a[1];
+        return "\n          <div class=\"bt_reinforcement_year\" data-type=\"british\"><span>".concat(reinforcements.poolBritishMetropolitanVoW, "</span></div>");
+    })
+        .join(''), "\n        \n        <div class=\"bt_reinforcement_type\">\n          <span>").concat(_('Colonial'), "</span>\n        </div>\n        ").concat(Object.entries(scenario.reinforcements)
+        .map(function (_a) {
+        var _year = _a[0], reinforcements = _a[1];
+        return "\n          <div class=\"bt_reinforcement_year\" data-type=\"colonial\"><span>".concat(reinforcements.poolBritishColonialVoW, "</span></div>");
+    })
+        .join(''), "\n      </div>\n    </div>\n  </div>\n  <div class=\"bt_scenario_info_faction\">\n      ").concat(tplScenarioInfoFactions(scenario), "\n  </div>\n</div>");
 };
 var getSettingsConfig = function () {
     var _a, _b;

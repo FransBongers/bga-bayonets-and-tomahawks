@@ -3099,6 +3099,14 @@ body > .card {
   flex-direction: column;
   gap: 16px;
 }
+.scenario_modal #scenario_modal_content .bt_scenario_info_faction .bt_container {
+  display: flex;
+  flex-direction: column;
+}
+.scenario_modal #scenario_modal_content .bt_scenario_info_faction .bt_container .bt_section_title {
+  font-weight: bold;
+  font-size: small;
+}
 .scenario_modal #scenario_modal_content .bt_scenario_info_reinforcements {
   display: grid;
   grid-template-columns: max-content max-content;
@@ -3107,6 +3115,12 @@ body > .card {
 .scenario_modal #scenario_modal_content .bt_scenario_info_reinforcements .bt_reinforcement_type {
   display: flex;
   align-items: center;
+}
+.scenario_modal #scenario_modal_content .bt_scenario_info_reinforcements[data-duration="2"] {
+  grid-template-columns: max-content max-content max-content;
+}
+.scenario_modal #scenario_modal_content .bt_scenario_info_reinforcements[data-duration="4"] {
+  grid-template-columns: max-content max-content max-content max-content max-content;
 }
 .scenario_modal #scenario_modal_content .bt_year_end_bonus_container {
   display: flex;
