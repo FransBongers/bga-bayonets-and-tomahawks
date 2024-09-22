@@ -1,6 +1,8 @@
 <?php
 namespace BayonetsAndTomahawks\Spaces;
 
+use BayonetsAndTomahawks\Core\Globals;
+
 class Chote extends \BayonetsAndTomahawks\Models\Space
 {
   public function __construct($row)
@@ -19,5 +21,15 @@ class Chote extends \BayonetsAndTomahawks\Models\Space
       KENINSHEKA => CHOTE_KENINSHEKA,
       KEOWEE => CHOTE_KEOWEE,
     ];
+  }
+
+  public function getDefaultControl()
+  {
+    $control = Globals::getControlCherokee();
+    if ($control === NEUTRAL) {
+      return INDIAN;
+    } else {
+      return $control;
+    }
   }
 }

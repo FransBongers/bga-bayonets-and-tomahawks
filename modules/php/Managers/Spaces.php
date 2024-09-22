@@ -69,6 +69,20 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
     self::DB()->update(['control_start_of_turn' => NEUTRAL])->where('control', '=', NEUTRAL)->run();
   }
 
+  public static function removeAllRaidedMarkers()
+  {
+    self::DB()->update(['raided' => null])->whereNotNull('raided')->run();
+  }
+
+  public static function getAllRaidedSpaces()
+  {
+    $spaces = self::getSelectQuery()
+      ->whereNotNull('raided')
+      ->get()
+      ->toArray();
+    return $spaces;
+  }
+
   // ..######..########.########.##.....##.########.
   // .##....##.##..........##....##.....##.##.....##
   // .##.......##..........##....##.....##.##.....##

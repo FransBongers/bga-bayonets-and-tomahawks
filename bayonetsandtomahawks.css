@@ -819,6 +819,12 @@ body > .card {
   left: calc(var(--btMapScale) * 1338px);
 }
 
+#disbandedColonialBrigades {
+  top: calc(var(--btMapScale) * 1649px);
+  left: calc(var(--btMapScale) * 1339px);
+  height: calc(var(--btMapScale) * 182px);
+}
+
 #floating_hand_wrapper {
   position: fixed;
   bottom: 0;
@@ -2859,12 +2865,12 @@ body > .card {
   background-position-y: 60%;
 }
 
-.bt_marker_side[data-type=british_raided_marker][data-side=front] {
+.bt_marker_side[data-type=british_raided_marker] {
   background-position-x: 14.2857142857%;
   background-position-y: 100%;
 }
 
-.bt_marker_side[data-type=french_raided_marker][data-side=front] {
+.bt_marker_side[data-type=french_raided_marker] {
   background-position-x: 28.5714285714%;
   background-position-y: 100%;
 }

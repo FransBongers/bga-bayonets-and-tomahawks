@@ -18,7 +18,9 @@ class GameMap {
   public losses: {
     lossesBox_british: LineStock<BTToken>;
     lossesBox_french: LineStock<BTToken>;
+    disbandedColonialBrigades: LineStock<BTToken>;
   };
+
 
   public connections: Record<string, Connection> = {};
   public yearTrack: Record<string, LineStock<BTToken>> = {};
@@ -159,6 +161,13 @@ class GameMap {
           center: false,
         }
       ),
+      [DISBANDED_COLONIAL_BRIGADES]: new LineStock<BTToken>(
+        this.game.tokenManager,
+        document.getElementById(DISBANDED_COLONIAL_BRIGADES),
+        {
+          center: false,
+        }
+      ),
     };
 
     gamedatas.spaces.forEach((space) => {
@@ -219,7 +228,7 @@ class GameMap {
   }
 
   updateUnitsAndSpaces(gamedatas: BayonetsAndTomahawksGamedatas) {
-    [LOSSES_BOX_BRITISH, LOSSES_BOX_FRENCH].forEach((box) => {
+    [LOSSES_BOX_BRITISH, LOSSES_BOX_FRENCH, DISBANDED_COLONIAL_BRIGADES].forEach((box) => {
       const units = gamedatas.units.filter((unit) => unit.location === box);
       this.losses[box].addCards(units);
     });
@@ -236,7 +245,7 @@ class GameMap {
         );
       }
       if (
-        space.control !== space.homeSpace &&
+        space.control !== space.defaultControl &&
         (space.control === BRITISH || space.control === FRENCH)
       ) {
         this.addMarkerToSpace({

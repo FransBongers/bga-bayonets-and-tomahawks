@@ -48,6 +48,12 @@ interface BayonetsAndTomahawksGame extends Game {
     callback: (event: PointerEvent) => void;
   }) => void;
   setCardSelected: (props: { id: string }) => void;
+  setElementsSelected: (
+    elmenents: {
+      id: string;
+      [key: string]: any;
+    }[]
+  ) => void;
   setLocationSelectable: (props: {
     id: string;
     callback: (event: PointerEvent) => void;

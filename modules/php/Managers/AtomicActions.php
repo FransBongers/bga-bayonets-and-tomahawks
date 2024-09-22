@@ -79,8 +79,16 @@ class AtomicActions
     SELECT_RESERVE_CARD => 'SelectReserveCard',
     VAGARIES_OF_WAR_PICK_UNITS => 'VagariesOfWarPickUnits',
     VAGARIES_OF_WAR_PUT_BACK_IN_POOL => 'VagariesOfWarPutBackInPool',
+    WINTER_QUARTERS_DISBAND_COLONIAL_BRIGADES => 'WinterQuartersDisbandColonialBrigades',
     WINTER_QUARTERS_GAME_END_CHECK => 'WinterQuartersGameEndCheck',
+    WINTER_QUARTERS_MOVE_STACK_ON_SAIL_BOX => 'WinterQuartersMoveStackOnSailBox',
     WINTER_QUARTERS_ROUND_END => 'WinterQuartersRoundEnd',
+    WINTER_QUARTERS_REMAINING_COLONIAL_BRIGADES => 'WinterQuartersRemainingColonialBrigades',
+    WINTER_QUARTERS_REMOVE_MARKERS => 'WinterQuartersRemoveMarkers',
+    WINTER_QUARTERS_PLACE_INDIAN_UNITS => 'WinterQuartersPlaceIndianUnits',
+    WINTER_QUARTERS_RETURN_TO_COLONIES_SELECT_STACK => 'WinterQuartersReturnToColoniesSelectStack',
+    WINTER_QUARTERS_RETURN_TO_COLONIES_LEAVE_UNITS => 'WinterQuartersReturnToColoniesLeaveUnits',
+    WINTER_QUARTERS_RETURN_TO_COLONIES_MOVE_STACK => 'WinterQuartersReturnToColoniesMoveStack',
     USE_EVENT => 'UseEvent',
   ];
 

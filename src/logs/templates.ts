@@ -37,7 +37,6 @@ const tplLogDieResult = (dieResult: string) => {
 
 const tplLogTokenWieChit = (input: string) => {
   const split = input.split(':');
-  console.log('split', split);
   const side = split[1] === 'back' ? 'back' : 'front';
   const value = split[1] === 'back' ? '0' : split[1];
   return `<div class="bt_log_token bt_marker_side" data-type="wieChit" data-faction="${split[0]}" data-side="${side}" data-value="${value}"></div>`;

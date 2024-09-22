@@ -2232,6 +2232,7 @@ var CHEROKEE = 'Cherokee';
 var IROQUOIS = 'Iroquois';
 var LOSSES_BOX_BRITISH = 'lossesBox_british';
 var LOSSES_BOX_FRENCH = 'lossesBox_french';
+var DISBANDED_COLONIAL_BRIGADES = 'disbandedColonialBrigades';
 var SAIL_BOX = 'sailBox';
 var MARKERS = 'markers';
 var UNITS = 'units';
@@ -2392,6 +2393,10 @@ var BayonetsAndTomahawks = (function () {
             sailMovement: new SailMovementState(this),
             selectReserveCard: new SelectReserveCardState(this),
             useEvent: new UseEventState(this),
+            winterQuartersMoveStackOnSailBox: new WinterQuartersMoveStackOnSailBoxState(this),
+            winterQuartersRemainingColonialBrigades: new WinterQuartersRemainingColonialBrigadesState(this),
+            winterQuartersReturnToColoniesLeaveUnits: new WinterQuartersReturnToColoniesLeaveUnitsState(this),
+            winterQuartersReturnToColoniesSelectStack: new WinterQuartersReturnToColoniesSelectStackState(this),
         };
         this.infoPanel = new InfoPanel(this);
         this.scenarioInfo = new ScenarioInfo(this);
@@ -2656,6 +2661,16 @@ var BayonetsAndTomahawks = (function () {
             return;
         }
         node.classList.add(BT_SELECTED);
+    };
+    BayonetsAndTomahawks.prototype.setElementsSelected = function (elmenents) {
+        elmenents.forEach(function (_a) {
+            var id = _a.id;
+            var node = $(id);
+            if (node === null) {
+                return;
+            }
+            node.classList.add(BT_SELECTED);
+        });
     };
     BayonetsAndTomahawks.prototype.setLocationSelectable = function (_a) {
         var id = _a.id, callback = _a.callback;
@@ -3674,6 +3689,9 @@ var GameMap = (function () {
             _b[LOSSES_BOX_FRENCH] = new LineStock(this.game.tokenManager, document.getElementById(LOSSES_BOX_FRENCH), {
                 center: false,
             }),
+            _b[DISBANDED_COLONIAL_BRIGADES] = new LineStock(this.game.tokenManager, document.getElementById(DISBANDED_COLONIAL_BRIGADES), {
+                center: false,
+            }),
             _b);
         gamedatas.spaces.forEach(function (space) {
             var _a;
@@ -3698,7 +3716,7 @@ var GameMap = (function () {
     };
     GameMap.prototype.updateUnitsAndSpaces = function (gamedatas) {
         var _this = this;
-        [LOSSES_BOX_BRITISH, LOSSES_BOX_FRENCH].forEach(function (box) {
+        [LOSSES_BOX_BRITISH, LOSSES_BOX_FRENCH, DISBANDED_COLONIAL_BRIGADES].forEach(function (box) {
             var units = gamedatas.units.filter(function (unit) { return unit.location === box; });
             _this.losses[box].addCards(units);
         });
@@ -3710,7 +3728,7 @@ var GameMap = (function () {
                 }
                 element.insertAdjacentHTML('beforeend', tplMarkerOfType({ type: "".concat(space.raided, "_raided_marker") }));
             }
-            if (space.control !== space.homeSpace &&
+            if (space.control !== space.defaultControl &&
                 (space.control === BRITISH || space.control === FRENCH)) {
                 _this.addMarkerToSpace({
                     spaceId: space.id,
@@ -4046,7 +4064,7 @@ var tplMarkerSpace = function (_a) {
     return "<div id=\"".concat(id, "\" class=\"bt_marker_space").concat(extraClasses ? " ".concat(extraClasses) : '', "\" style=\"top: calc(var(--btMapScale) * ").concat(top, "px); left: calc(var(--btMapScale) * ").concat(left, "px);\"></div>");
 };
 var tplLossesBox = function () {
-    return "\n    <div id=\"lossesBox_french\" class=\"bt_losses_box\"></div>\n    <div id=\"lossesBox_british\" class=\"bt_losses_box\"></div>\n  ";
+    return "\n    <div id=\"lossesBox_french\" class=\"bt_losses_box\"></div>\n    <div id=\"lossesBox_british\" class=\"bt_losses_box\"></div>\n    <div id=\"disbandedColonialBrigades\" class=\"bt_losses_box\"></div>\n  ";
 };
 var tplActionRoundTrack = function () {
     return ACTION_ROUND_TRACK_CONFIG.map(function (markerSpace) {
@@ -4280,7 +4298,6 @@ var tplLogDieResult = function (dieResult) {
 };
 var tplLogTokenWieChit = function (input) {
     var split = input.split(':');
-    console.log('split', split);
     var side = split[1] === 'back' ? 'back' : 'front';
     var value = split[1] === 'back' ? '0' : split[1];
     return "<div class=\"bt_log_token bt_marker_side\" data-type=\"wieChit\" data-faction=\"".concat(split[0], "\" data-side=\"").concat(side, "\" data-value=\"").concat(value, "\"></div>");
@@ -4335,6 +4352,8 @@ var NotificationManager = (function () {
             'raidPoints',
             'placeWieChit',
             'placeWieChitPrivate',
+            'removeAllRaidedMarkers',
+            'removeAllRoutAndOOSMarkers',
             'removeMarkerFromStack',
             'removeMarkersEndOfActionRound',
             'returnToPool',
@@ -4345,6 +4364,9 @@ var NotificationManager = (function () {
             'selectReserveCardPrivate',
             'takeControl',
             'vagariesOfWarPickUnits',
+            'winterQuartersDisbandColonialBrigades',
+            'winterQuartersPlaceIndianUnits',
+            'winterQuartersReturnToColoniesMove',
         ];
         notifs.forEach(function (notifName) {
             _this.subscriptions.push(dojo.subscribe(notifName, _this, function (notifDetails) {
@@ -4831,7 +4853,7 @@ var NotificationManager = (function () {
                     case 0:
                         _a = notif.args, stack = _a.stack, destinationId = _a.destinationId, faction = _a.faction, markers = _a.markers, connection = _a.connection;
                         unitStack = this.game.gameMap.stacks[destinationId][faction];
-                        if (connection !== null) {
+                        if (connection) {
                             connectionUI = this.game.gameMap.connections[connection.id];
                             if (faction === 'british') {
                                 connectionUI.toLimitValue({
@@ -5022,6 +5044,37 @@ var NotificationManager = (function () {
             });
         });
     };
+    NotificationManager.prototype.notif_removeAllRaidedMarkers = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var spaceIds;
+            return __generator(this, function (_a) {
+                spaceIds = notif.args.spaceIds;
+                spaceIds.forEach(function (spaceId) {
+                    var markersContainer = document.getElementById("".concat(spaceId, "_markers"));
+                    if (!markersContainer) {
+                        return;
+                    }
+                    markersContainer.childNodes.forEach(function (element) {
+                        if (element.getAttribute('data-type').endsWith('raided_marker')) {
+                            element.remove();
+                        }
+                    });
+                });
+                return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_removeAllRoutAndOOSMarkers = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var markers;
+            var _this = this;
+            return __generator(this, function (_a) {
+                markers = notif.args.markers;
+                markers.forEach(function (marker) { return _this.game.tokenManager.removeCard(marker); });
+                return [2];
+            });
+        });
+    };
     NotificationManager.prototype.notif_removeMarkerFromStack = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, marker, from, _b, spaceId, faction;
@@ -5190,6 +5243,56 @@ var NotificationManager = (function () {
                     case 0:
                         _a = notif.args, units = _a.units, location = _a.location;
                         return [4, this.game.pools.stocks[location].addCards(units)];
+                    case 1:
+                        _b.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_winterQuartersDisbandColonialBrigades = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.game.gameMap.losses.disbandedColonialBrigades.addCards(notif.args.units)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_winterQuartersPlaceIndianUnits = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var units;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        units = notif.args.units;
+                        return [4, Promise.all(units.map(function (unit) {
+                                if (unit.location.startsWith('lossesBox_')) {
+                                    return _this.game.gameMap.losses[unit.location].addCard(unit);
+                                }
+                                else {
+                                    return _this.game.gameMap.stacks[unit.location][unit.faction].addUnit(unit);
+                                }
+                            }))];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_winterQuartersReturnToColoniesMove = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, units, toSpaceId, faction;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _a = notif.args, units = _a.units, toSpaceId = _a.toSpaceId, faction = _a.faction;
+                        return [4, this.game.gameMap.stacks[toSpaceId][faction].addUnits(units)];
                     case 1:
                         _b.sent();
                         return [2];
@@ -9355,6 +9458,432 @@ var UseEventState = (function () {
         this.game.addUndoButtons(this.args);
     };
     return UseEventState;
+}());
+var WinterQuartersMoveStackOnSailBoxState = (function () {
+    function WinterQuartersMoveStackOnSailBoxState(game) {
+        this.game = game;
+    }
+    WinterQuartersMoveStackOnSailBoxState.prototype.onEnteringState = function (args) {
+        debug('Entering WinterQuartersMoveStackOnSailBoxState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    WinterQuartersMoveStackOnSailBoxState.prototype.onLeavingState = function () {
+        debug('Leaving WinterQuartersMoveStackOnSailBoxState');
+    };
+    WinterQuartersMoveStackOnSailBoxState.prototype.setDescription = function (activePlayerId) { };
+    WinterQuartersMoveStackOnSailBoxState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a Space to move your stack to'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.args.spaceIds.forEach(function (id) { return _this.game.setLocationSelectable({ id: id, callback: function () { return _this.updateInterfaceConfirm({ spaceId: id }); } }); });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    WinterQuartersMoveStackOnSailBoxState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var spaceId = _a.spaceId;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Move stack on the Sail Box to ${spaceName}?'),
+            args: {
+                spaceName: _(this.game.getSpaceStaticData({ id: spaceId }).name)
+            },
+        });
+        this.game.setLocationSelected({ id: spaceId });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actWinterQuartersMoveStackOnSailBox',
+                args: {
+                    spaceId: spaceId,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    return WinterQuartersMoveStackOnSailBoxState;
+}());
+var WinterQuartersRemainingColonialBrigadesState = (function () {
+    function WinterQuartersRemainingColonialBrigadesState(game) {
+        this.selectedUnits = [];
+        this.game = game;
+    }
+    WinterQuartersRemainingColonialBrigadesState.prototype.onEnteringState = function (args) {
+        debug('Entering WinterQuartersRemainingColonialBrigadesState');
+        this.args = args;
+        this.selectedUnits = [];
+        this.selectedOption = null;
+        this.updateInterfaceInitialStep();
+    };
+    WinterQuartersRemainingColonialBrigadesState.prototype.onLeavingState = function () {
+        debug('Leaving WinterQuartersRemainingColonialBrigadesState');
+    };
+    WinterQuartersRemainingColonialBrigadesState.prototype.setDescription = function (activePlayerId) { };
+    WinterQuartersRemainingColonialBrigadesState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a Space'),
+            args: {
+                you: '${you}',
+            },
+        });
+        Object.entries(this.args.options).forEach(function (_a) {
+            var spaceId = _a[0], option = _a[1];
+            return _this.game.setLocationSelectable({
+                id: spaceId,
+                callback: function () {
+                    _this.selectedOption = option;
+                    _this.updateInterfaceSelectNumberToRemain();
+                },
+            });
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    WinterQuartersRemainingColonialBrigadesState.prototype.updateInterfaceSelectNumberToRemain = function () {
+        var _this = this;
+        if (this.selectedUnits.length === this.selectedOption.maxRemain) {
+            this.updateInterfaceConfirm();
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select Colonial Brigades to remain on ${spaceName} (max ${maxPossible})'),
+            args: {
+                you: '${you}',
+                maxPossible: this.selectedOption.maxRemain,
+                spaceName: _(this.selectedOption.space.name),
+            },
+        });
+        var stack = this.game.gameMap.stacks[this.selectedOption.space.id][BRITISH];
+        stack.open();
+        this.selectedOption.units.forEach(function (unit) {
+            _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () {
+                    if (_this.selectedUnits.some(function (selectedUnit) { return selectedUnit.id === unit.id; })) {
+                        _this.selectedUnits = _this.selectedUnits.filter(function (selectedUnit) { return selectedUnit.id !== unit.id; });
+                    }
+                    else {
+                        _this.selectedUnits.push(unit);
+                    }
+                    _this.updateInterfaceSelectNumberToRemain();
+                },
+            });
+        });
+        this.setUnitsSelected();
+        this.game.addPrimaryActionButton({
+            id: 'confirm_btn',
+            text: _('Confirm'),
+            callback: function () { return _this.performAction(); },
+        });
+        this.game.addCancelButton();
+    };
+    WinterQuartersRemainingColonialBrigadesState.prototype.updateInterfaceConfirm = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Leave ${unitsLog} on ${spaceName}?'),
+            args: {
+                spaceName: _(this.selectedOption.space.name),
+                unitsLog: createUnitsLog(this.selectedUnits),
+            },
+        });
+        this.setUnitsSelected();
+        var callback = function () { return _this.performAction(); };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    WinterQuartersRemainingColonialBrigadesState.prototype.setUnitsSelected = function () {
+        var _this = this;
+        this.selectedUnits.forEach(function (_a) {
+            var id = _a.id;
+            return _this.game.setUnitSelected({ id: id });
+        });
+    };
+    WinterQuartersRemainingColonialBrigadesState.prototype.performAction = function () {
+        this.game.clearPossible();
+        this.game.takeAction({
+            action: 'actWinterQuartersRemainingColonialBrigades',
+            args: {
+                spaceId: this.selectedOption.space.id,
+                selectedUnitIds: this.selectedUnits.map(function (_a) {
+                    var id = _a.id;
+                    return id;
+                }),
+            },
+        });
+    };
+    return WinterQuartersRemainingColonialBrigadesState;
+}());
+var WinterQuartersReturnToColoniesLeaveUnitsState = (function () {
+    function WinterQuartersReturnToColoniesLeaveUnitsState(game) {
+        this.selectedUnits = [];
+        this.game = game;
+    }
+    WinterQuartersReturnToColoniesLeaveUnitsState.prototype.onEnteringState = function (args) {
+        debug('Entering WinterQuartersReturnToColoniesLeaveUnitsState');
+        this.args = args;
+        this.selectedUnits = [];
+        this.updateInterfaceInitialStep();
+    };
+    WinterQuartersReturnToColoniesLeaveUnitsState.prototype.onLeavingState = function () {
+        debug('Leaving WinterQuartersReturnToColoniesLeaveUnitsState');
+    };
+    WinterQuartersReturnToColoniesLeaveUnitsState.prototype.setDescription = function (activePlayerId) { };
+    WinterQuartersReturnToColoniesLeaveUnitsState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        var unitsThatCanBeSelected = this.getUnitsThatCanBeSelected();
+        if (unitsThatCanBeSelected.length === 0 ||
+            (this.args.maxTotal !== null &&
+                this.selectedUnits.length === this.args.maxTotal)) {
+            this.updateInterfaceConfirm();
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: this.args.maxTotal === 1
+                ? _('${you} may select a unit to remain on ${spaceName}')
+                : _('${you} may select units to remain on ${spaceName}'),
+            args: {
+                you: '${you}',
+                spaceName: _(this.args.space.name),
+            },
+        });
+        var stack = this.game.gameMap.stacks[this.args.space.id][this.args.faction];
+        stack.open();
+        this.setUnitsSelectable(unitsThatCanBeSelected);
+        this.game.setElementsSelected(this.selectedUnits);
+        this.game.addPrimaryActionButton({
+            id: 'done_btn',
+            text: _('Done'),
+            callback: function () { return _this.updateInterfaceConfirm(); },
+            extraClasses: this.selectedUnits.length === 0 ? DISABLED : '',
+        });
+        if (this.selectedUnits.length === 0) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
+        }
+        else {
+            this.game.addCancelButton();
+        }
+    };
+    WinterQuartersReturnToColoniesLeaveUnitsState.prototype.updateInterfaceConfirm = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: this.selectedUnits.length === 1
+                ? _('Leave ${tkn_unit} on ${spaceName}?')
+                : _('Leave selected units on ${spaceName}?'),
+            args: {
+                tkn_unit: this.selectedUnits[0].counterId,
+                spaceName: _(this.args.space.name),
+            },
+        });
+        this.game.setElementsSelected(this.selectedUnits);
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actWinterQuartersReturnToColoniesLeaveUnits',
+                args: {
+                    selectedUnitIds: _this.selectedUnits.map(function (_a) {
+                        var id = _a.id;
+                        return id;
+                    }),
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    WinterQuartersReturnToColoniesLeaveUnitsState.prototype.getUnitsThatCanBeSelected = function () {
+        var _this = this;
+        var selectedBrigades = this.selectedUnits.filter(function (unit) { return _this.game.getUnitStaticData(unit).type === BRIGADE; }).length;
+        return this.args.units.filter(function (unit) {
+            if (_this.selectedUnits.some(function (selectedUnit) { return selectedUnit.id === unit.id; })) {
+                return false;
+            }
+            if (_this.game.getUnitStaticData(unit).type === BRIGADE &&
+                selectedBrigades === _this.args.maxBrigades) {
+                return false;
+            }
+            return true;
+        });
+    };
+    WinterQuartersReturnToColoniesLeaveUnitsState.prototype.setUnitsSelectable = function (selectableUnits) {
+        var _this = this;
+        selectableUnits.forEach(function (unit) {
+            _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () {
+                    if (_this.selectedUnits.some(function (selectedUnit) { return selectedUnit.id === unit.id; })) {
+                        _this.selectedUnits = _this.selectedUnits.filter(function (selectedUnit) { return selectedUnit.id !== unit.id; });
+                    }
+                    else {
+                        _this.selectedUnits.push(unit);
+                    }
+                    _this.updateInterfaceInitialStep();
+                },
+            });
+        });
+    };
+    return WinterQuartersReturnToColoniesLeaveUnitsState;
+}());
+var WinterQuartersReturnToColoniesSelectStackState = (function () {
+    function WinterQuartersReturnToColoniesSelectStackState(game) {
+        this.selectedUnits = [];
+        this.game = game;
+    }
+    WinterQuartersReturnToColoniesSelectStackState.prototype.onEnteringState = function (args) {
+        debug('Entering WinterQuartersReturnToColoniesSelectStackState');
+        this.args = args;
+        this.selectedUnits = [];
+        this.updateInterfaceInitialStep();
+    };
+    WinterQuartersReturnToColoniesSelectStackState.prototype.onLeavingState = function () {
+        debug('Leaving WinterQuartersReturnToColoniesSelectStackState');
+    };
+    WinterQuartersReturnToColoniesSelectStackState.prototype.setDescription = function (activePlayerId) { };
+    WinterQuartersReturnToColoniesSelectStackState.prototype.updateInterfaceInitialStep = function () {
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a stack to move (${number} remaining)'),
+            args: {
+                you: '${you}',
+                number: Object.keys(this.args.options).length
+            },
+        });
+        this.setStacksSelectable();
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    WinterQuartersReturnToColoniesSelectStackState.prototype.updateInterfaceSelectDestination = function (_a) {
+        var _this = this;
+        var option = _a.option;
+        var destinations = Object.entries(option.destinations);
+        if (destinations.length === 1) {
+            this.updateInterfaceConfirm({
+                origin: option.space,
+                destination: destinations[0][1],
+            });
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select Space to move your stack to'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.game.setStackSelected({
+            spaceId: option.space.id,
+            faction: this.args.faction,
+        });
+        destinations.forEach(function (_a) {
+            var destinationId = _a[0], destinationOption = _a[1];
+            _this.game.setLocationSelectable({
+                id: destinationId,
+                callback: function () {
+                    return _this.updateInterfaceConfirm({
+                        origin: option.space,
+                        destination: destinationOption,
+                    });
+                },
+            });
+        });
+        this.game.addCancelButton();
+    };
+    WinterQuartersReturnToColoniesSelectStackState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var origin = _a.origin, destination = _a.destination;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Move stack from ${originSpaceName} to ${destinationSpaceName}?'),
+            args: {
+                originSpaceName: _(origin.name),
+                destinationSpaceName: _(destination.space.name),
+            },
+        });
+        destination.path.forEach(function (spaceId) {
+            return _this.game.setLocationSelected({ id: spaceId });
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actWinterQuartersReturnToColoniesSelectStack',
+                args: {
+                    originId: origin.id,
+                    destinationId: destination.space.id,
+                    path: destination.path,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    WinterQuartersReturnToColoniesSelectStackState.prototype.setStacksSelectable = function () {
+        var _this = this;
+        Object.entries(this.args.options).forEach(function (_a) {
+            var spaceId = _a[0], option = _a[1];
+            _this.game.setLocationSelectable({
+                id: "".concat(spaceId, "_").concat(_this.args.faction, "_stack"),
+                callback: function () { return _this.updateInterfaceSelectDestination({ option: option }); },
+            });
+        });
+    };
+    return WinterQuartersReturnToColoniesSelectStackState;
 }());
 var TokenManager = (function (_super) {
     __extends(TokenManager, _super);

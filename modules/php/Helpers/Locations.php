@@ -35,6 +35,11 @@ abstract class Locations extends \APP_DbObject
     return implode('_', ['commander', 'rerolls', 'track', $side, $value]);
   }
 
+  public static function disbandedColonialBrigades()
+  {
+    return DISBANDED_COLONIAL_BRIGADES;
+  }
+
   public static function discard()
   {
     return 'discard';

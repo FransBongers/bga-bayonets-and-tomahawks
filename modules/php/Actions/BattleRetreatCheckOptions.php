@@ -223,12 +223,7 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     ]));
   }
 
-  private function returnSpaceIds($spaces)
-  {
-    return array_map(function ($space) {
-      return $space->getId();
-    }, $spaces);
-  }
+
 
   private function filterConnectionRestrictions($possibleRetreatOptions, $units)
   {
@@ -260,7 +255,7 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
 
     if ($hasFleets) {
       // Fleet retreat priorities
-      return $this->getSpacesBasedOnFleetRetreatPriorities($faction);
+      return BTHelpers::getSpacesBasedOnFleetRetreatPriorities($faction);
     }
 
     if ($isAttacker) {
@@ -289,56 +284,6 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     return $this->getSpacesBasedOnAdjacentSpaceRetreatPriorities($possibleRetreatOptions, $faction);
   }
 
-  private function getSpacesBasedOnFleetRetreatPriorities($faction)
-  {
-    $spaces = Spaces::getAll()->toArray();
-    $units = Units::getAll()->toArray();
-
-    $coastalSpacesFreeOfEnemyUnits = Utils::filter($spaces, function ($space) use ($units, $faction) {
-      if (!$space->isCoastal() || $space->getControl() === BTHelpers::getOtherFaction($faction)) {
-        return false;
-      }
-      $spaceId = $space->getId();
-      return !Utils::array_some($units, function ($unit) use ($spaceId, $faction) {
-        return $unit->getLocation() === $spaceId && $unit->getFaction() !== $faction;
-      });
-    });
-
-    // 1. Friendly Coastal Home Space
-    $friendlyCoastalHomeSpaces = Utils::filter($coastalSpacesFreeOfEnemyUnits, function ($space) use ($faction) {
-      return $space->getHomeSpace() !== null && $space->getControl() === $faction;
-    });
-    if (count($friendlyCoastalHomeSpaces) > 0) {
-      return $this->returnSpaceIds($friendlyCoastalHomeSpaces);
-    }
-
-    // Get coastal spaces of friendly sea zones
-    $friendlySeaZones = GameMap::getFriendlySeaZones($faction);
-    $coastalSpacesOfFriendlySZ = Utils::filter($coastalSpacesFreeOfEnemyUnits, function ($space) use ($friendlySeaZones) {
-      return Utils::array_some($friendlySeaZones, function ($friendlySZ) use ($space) {
-        return in_array($friendlySZ, $space->adjacentSeaZones());
-      });
-    });
-
-    // 2. Frienldy Coastal Space of a friendly SZ
-    $friendlyCoastalSpaceOfFriendlySZ = Utils::filter($coastalSpacesOfFriendlySZ, function ($space) use ($faction) {
-      return $space->getControl() === $faction;
-    });
-    if (count($friendlyCoastalSpaceOfFriendlySZ) > 0) {
-      return $this->returnSpaceIds($friendlyCoastalSpaceOfFriendlySZ);
-    }
-
-    // 3, Wilderness Coastal Space of friendly SZ
-    $wildernessCoastalSpaceOfFriendlySZ = Utils::filter($coastalSpacesOfFriendlySZ, function ($space) use ($faction) {
-      return $space->getControl() === NEUTRAL;
-    });
-    if (count($wildernessCoastalSpaceOfFriendlySZ) > 0) {
-      return $this->returnSpaceIds($wildernessCoastalSpaceOfFriendlySZ);
-    }
-
-    // Return to Sail Box
-    return [SAIL_BOX];
-  }
 
   private function getSpacesBasedOnAdjacentSpaceRetreatPriorities($adjacentConnectionsAndSpaces, $faction)
   {
@@ -357,7 +302,7 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     });
 
     if (count($homeSpaces) > 0) {
-      return $this->returnSpaceIds($homeSpaces);
+      return BTHelpers::returnSpaceIds($homeSpaces);
     }
 
     // 2. Friendly space without enemy units
@@ -366,7 +311,7 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     });
 
     if (count($friendlySpaces) > 0) {
-      return $this->returnSpaceIds($friendlySpaces);
+      return BTHelpers::returnSpaceIds($friendlySpaces);
     }
 
     // 3. A Wilderness Space or friednly Indian Nation Village
@@ -375,7 +320,7 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     });
 
     if (count($wildernessSpaces) > 0) {
-      return $this->returnSpaceIds($wildernessSpaces);
+      return BTHelpers::returnSpaceIds($wildernessSpaces);
     }
 
     // 4. An enemy-controlled space or enemy Indian Nation Village without enemy units or Militia
@@ -384,7 +329,7 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     });
 
     if (count($enemyControlledSpace) > 0) {
-      return $this->returnSpaceIds($enemyControlledSpace);
+      return BTHelpers::returnSpaceIds($enemyControlledSpace);
     }
 
     // 5. TODO:

@@ -12,6 +12,7 @@ use BayonetsAndTomahawks\Helpers\Log;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Players;
+use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Managers\AtomicActions;
 
 
@@ -40,7 +41,7 @@ trait TurnTrait
     foreach ($players as $player) {
       self::giveExtraTime($player->getId());
     }
-    
+
     Cards::setupDecksForYear(BTHelpers::getYear());
 
     $node = [
@@ -101,7 +102,7 @@ trait TurnTrait
       $node = $this->getColonialsEnlistFlow($britishPlayerId);
       $engineCallback = ['method' => 'stSetupActionRound'];
     } else if ($currentRoundStep === WINTER_QUARTERS) {
-      $node = $this->getWinterQuartersFlow();
+      $node = $this->getWinterQuartersFlow($britishPlayerId, $frenchPlayerId);
       $engineCallback = ['method' => 'stSetupYear'];
     }
 
@@ -262,10 +263,7 @@ trait TurnTrait
     // return;
   }
 
-  function stPreEndOfGame()
-  {
-
-  }
+  function stPreEndOfGame() {}
 
 
   //  .##.....##.########.####.##.......####.########.##....##
@@ -276,32 +274,80 @@ trait TurnTrait
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  public function getCurrentYear()
-  {
+  public function getCurrentYear() {}
 
-  }
-
-  public function getWinterQuartersFlow()
+  public function getWinterQuartersFlow($britishPlayerId, $frenchPlayerId)
   {
+    $playerIds = [
+      BRITISH => $britishPlayerId,
+      FRENCH => $frenchPlayerId,
+    ];
+
     $node = [
       'children' => [
         [
           'action' => WINTER_QUARTERS_GAME_END_CHECK,
         ],
-        // Remove markers fomr the map
-        // Move stacks on the sail box
-        // Place Indian Units on their villages
-        // Move Colonal Brigades to Disbanded Colonial Brigades
-        // Return to Colonies
-        // Return all Fleets on the map to the fleets pool
-        // Place units from Losses Box
-        // Reset cards
-        // Advance Year Marker
+        // 17.2.1 and 17.2.2
         [
-          'action' => WINTER_QUARTERS_ROUND_END,
-        ]
+          'action' => WINTER_QUARTERS_REMOVE_MARKERS,
+        ],
       ],
     ];
+
+    // Move stacks on the sail box
+    $unitsOnSailBox = Units::getInLocation(SAIL_BOX)->toArray();
+    foreach ([BRITISH, FRENCH] as $faction) {
+      if (Utils::array_some($unitsOnSailBox, function ($unit) use ($faction) {
+        return $unit->getFaction() === $faction;
+      })) {
+        $node['children'][] =         [
+          'action' => WINTER_QUARTERS_MOVE_STACK_ON_SAIL_BOX,
+          'playerId' => $playerIds[$faction],
+          'faction' => $faction,
+        ];
+      }
+    }
+    // Place Indian Units on their villages
+    $node['children'][] = [
+      'action' => WINTER_QUARTERS_PLACE_INDIAN_UNITS,
+    ];
+    // Move Colonal Brigades to Disbanded Colonial Brigades
+    $node['children'][] = [
+      'children' => [
+        [
+          'action' => WINTER_QUARTERS_DISBAND_COLONIAL_BRIGADES,
+          'playerId' => $playerIds[BRITISH],
+        ]
+      ]
+    ];
+    // Return to Colonies
+    $node['children'][] = [
+      'children' => [
+        [
+          'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_SELECT_STACK,
+          'faction' => BRITISH,
+          'playerId' => $playerIds[BRITISH],
+        ]
+      ]
+    ];
+    $node['children'][] = [
+      'children' => [
+        [
+          'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_SELECT_STACK,
+          'faction' => FRENCH,
+          'playerId' => $playerIds[FRENCH],
+        ]
+      ]
+    ];
+    // Return all Fleets on the map to the fleets pool
+    // Place units from Losses Box
+    // Reset cards
+    // Advance Year Marker
+    $node['children'][] = [
+      'action' => WINTER_QUARTERS_ROUND_END,
+    ];
+
     return $node;
   }
 

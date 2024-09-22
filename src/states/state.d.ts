@@ -178,9 +178,7 @@ interface EventArmedBattoemenStateArgs extends CommonArgs {
   markers: BTMarker[];
 }
 
-interface EventConstructionFrenzyStateArgs extends CommonArgs {
-  
-}
+interface EventConstructionFrenzyStateArgs extends CommonArgs {}
 
 interface EventDelayedSuppliesFromFranceStateArgs extends CommonArgs {
   indianAP: BTActionPoint[];
@@ -248,10 +246,6 @@ interface UseEventStateArgs extends CommonArgs {
   titleOther: string;
 }
 
-interface OnEnteringVagariesOfWarPickUnitsStateArgs extends CommonArgs {
-  options: Record<string, BTUnit[]>;
-}
-
 interface OnEnteringLightMovementDestinationStateArgs extends CommonArgs {
   // commanders: BTUnit[];
   // lightUnits: BTUnit[];
@@ -294,4 +288,48 @@ interface OnEnteringRaidSelectTargetStateArgs extends CommonArgs {
 
 interface OnEnteringSelectReserveCardStateArgs {
   _private: BTCard[];
+}
+
+interface OnEnteringVagariesOfWarPickUnitsStateArgs extends CommonArgs {
+  options: Record<string, BTUnit[]>;
+}
+
+interface OnEnteringWinterQuartersMoveStackOnSailBoxStateArgs
+  extends CommonArgs {
+  spaceIds: string[];
+}
+
+interface WinterQuartersRemainingColonialBrigadesOption {
+  space: BTSpace;
+  maxRemain: number;
+  units: BTUnit[];
+}
+
+interface OnEnteringWinterQuartersRemainingColonialBrigadesStateArgs
+  extends CommonArgs {
+  options: Record<string, WinterQuartersRemainingColonialBrigadesOption>;
+}
+
+interface OnEnteringWinterQuartersReturnToColoniesLeaveUnitsStateArgs extends CommonArgs {
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+  units: BTUnit[];
+  space: BTSpace;
+  maxBrigades: number;
+  maxTotal: number | null; // null if there is no max
+}
+
+interface WinterQuartersReturnToColoniesSelectStackDestination {
+  path: string[];
+  space: BTSpace;
+}
+
+interface WinterQuartersReturnToColoniesSelectStackOption {
+  space: BTSpace;
+  destinations: Record<string, WinterQuartersReturnToColoniesSelectStackDestination>;
+  units: BTUnit[];
+}
+
+interface OnEnteringWinterQuartersReturnToColoniesSelectStackStateArgs extends CommonArgs {
+  options: Record<string, WinterQuartersReturnToColoniesSelectStackOption>;
+  faction: BRITISH_FACTION | FRENCH_FACTION;
 }

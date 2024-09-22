@@ -66,6 +66,7 @@ class GameMap extends \APP_DbObject
     foreach ($units as $index => $unit) {
       $space = Spaces::get($indianNationVillages[$index]);
       $space->setControlStartOfTurn($faction);
+      $space->setControl($faction);
       $unit->setLocation($space->getId());
       Notifications::placeUnits($player, [$unit], $space, $faction);
     }

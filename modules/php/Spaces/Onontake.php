@@ -1,6 +1,8 @@
 <?php
 namespace BayonetsAndTomahawks\Spaces;
 
+use BayonetsAndTomahawks\Core\Globals;
+
 class Onontake extends \BayonetsAndTomahawks\Models\Space
 {
   public function __construct($row)
@@ -19,5 +21,15 @@ class Onontake extends \BayonetsAndTomahawks\Models\Space
       OQUAGA => ONONTAKE_OQUAGA, 
       OSWEGO => ONONTAKE_OSWEGO,
     ];
+  }
+
+  public function getDefaultControl()
+  {
+    $control = Globals::getControlIroquois();
+    if ($control === NEUTRAL) {
+      return INDIAN;
+    } else {
+      return $control;
+    }
   }
 }

@@ -29,6 +29,7 @@ use BayonetsAndTomahawks\Helpers\PathCalculator;
 use BayonetsAndTomahawks\Models\ActionPoint;
 use BayonetsAndTomahawks\Scenarios\LoudounsGamble1757;
 use FTP\Connection;
+use Locale;
 
 trait DebugTrait
 {
@@ -111,13 +112,28 @@ trait DebugTrait
 
   function debug_test()
   {
+
+
+    // AtomicActions::get(WINTER_QUARTERS_PRE_RETURN_TO_COLONIES)->removeColonialBrigadesToDisbanded();
+    // Notifications::log(CARLISLE, Spaces::get(CARLISLE)->isFriendlyColonyHomeSpace(BRITISH));
+    // AtomicActions::get(WINTER_QUARTERS_RETURN_TO_COLONIES)->getOptions();
+
+    // GameMap::placeMarkerOnStack(Players::get(), OUT_OF_SUPPLY_MARKER, Spaces::get(TICONDEROGA), BRITISH);
+    // GameMap::placeMarkerOnStack(Players::get(), OUT_OF_SUPPLY_MARKER, Spaces::get(NEW_YORK), FRENCH);
+    // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(QUEBEC), FRENCH);
+    // Notifications::log('spaces', Spaces::get(ONONTAKE)->getControl());
     // Markers::get(VICTORY_MARKER)->setLocation(Locations::victoryPointsTrack(FRENCH,5));
-    Notifications::log('british', Scenarios::get()->getYearEndBonus(BRITISH, 1759));
-    Notifications::log('french', Scenarios::get()->getYearEndBonus(FRENCH, 1759));
+    // Notifications::log('british', Scenarios::get()->getYearEndBonus(BRITISH, 1759));
+    // Notifications::log('french', Scenarios::get()->getYearEndBonus(FRENCH, 1759));
     // Units::get('unit_20')->eliminate(Players::get());
     // Units::get('unit_23')->eliminate(Players::get());
-    // Units::get('unit_17')->setLocation(MONTREAL);
-    // Units::get('unit_19')->setLocation(MONTREAL);
+    Units::get('unit_121')->setLocation(COTE_DU_SUD);
+    Units::get('unit_122')->setLocation(COTE_DU_SUD);
+    Units::get('unit_127')->setLocation(COTE_DU_SUD);
+    Units::get('unit_138')->setLocation(COTE_DE_BEAUPRE);
+    Spaces::get(COTE_DU_SUD)->setControl(BRITISH);
+    Spaces::get(COTE_DE_BEAUPRE)->setControl(BRITISH);
+  
 
     // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(FRENCH), ROUT_MARKER, Spaces::get(MONTREAL), FRENCH);
     // Notifications::log('progression',$this->getGameProgression());

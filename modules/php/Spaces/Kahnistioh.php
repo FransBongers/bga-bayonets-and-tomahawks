@@ -1,6 +1,8 @@
 <?php
 namespace BayonetsAndTomahawks\Spaces;
 
+use BayonetsAndTomahawks\Core\Globals;
+
 class Kahnistioh extends \BayonetsAndTomahawks\Models\Space
 {
   public function __construct($row)
@@ -19,5 +21,15 @@ class Kahnistioh extends \BayonetsAndTomahawks\Models\Space
       GENNISHEYO => GENNISHEYO_KAHNISTIOH,
       KITHANINK => KAHNISTIOH_KITHANINK,
     ];
+  }
+
+  public function getDefaultControl()
+  {
+    $control = Globals::getControlIroquois();
+    if ($control === NEUTRAL) {
+      return INDIAN;
+    } else {
+      return $control;
+    }
   }
 }

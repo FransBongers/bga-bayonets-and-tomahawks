@@ -232,6 +232,7 @@ const IROQUOIS = 'Iroquois';
 // Losses Boxes
 const LOSSES_BOX_BRITISH = 'lossesBox_british';
 const LOSSES_BOX_FRENCH = 'lossesBox_french';
+const DISBANDED_COLONIAL_BRIGADES = 'disbandedColonialBrigades';
 const SAIL_BOX = 'sailBox';
 
 const MARKERS = 'markers';

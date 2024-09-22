@@ -372,8 +372,80 @@ $machinestates = array(
         'updateGameProgression' => true,
     ],
 
+    ST_WINTER_QUARTERS_MOVE_STACK_ON_SAIL_BOX => [
+        'name' => 'winterQuartersMoveStackOnSailBox',
+        'description' => clienttranslate('${actplayer} must move their stack on the Sail Box'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actWinterQuartersMoveStackOnSailBox', 'actPassOptionalAction', 'actRestart'],
+    ],
+
     ST_WINTER_QUARTERS_ROUND_END => [
         'name' => 'winterQuartersRoundEnd',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_WINTER_QUARTERS_REMOVE_MARKERS => [
+        'name' => 'winterQuartersRemoveMarkers',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_WINTER_QUARTERS_DISBAND_COLONIAL_BRIGADES => [
+        'name' => 'winterQuartersDisbandColonialBrigades',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_WINTER_QUARTERS_REMAINING_COLONIAL_BRIGADES => [
+        'name' => 'winterQuartersRemainingColonialBrigades',
+        'description' => clienttranslate('${actplayer} may move Colonial Brigades to the Disbanded Colonial Brigades box'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actWinterQuartersRemainingColonialBrigades', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_WINTER_QUARTERS_RETURN_TO_COLONIES_SELECT_STACK => [
+        'name' => 'winterQuartersReturnToColoniesSelectStack',
+        'description' => clienttranslate('${actplayer} must return their stacks to Colonies or Fleets'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actWinterQuartersReturnToColoniesSelectStack', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_WINTER_QUARTERS_RETURN_TO_COLONIES_MOVE_STACK => [
+        'name' => 'winterQuartersReturnToColoniesMoveStack',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
+    ST_WINTER_QUARTERS_RETURN_TO_COLONIES_LEAVE_UNITS => [
+        'name' => 'winterQuartersReturnToColoniesLeaveUnits',
+        'description' => clienttranslate('${actplayer} must return their stacks to Colonies'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actWinterQuartersReturnToColoniesLeaveUnits', 'actPassOptionalAction', 'actRestart'],
+    ],
+
+    ST_WINTER_QUARTERS_PLACE_INDIAN_UNITS => [
+        'name' => 'winterQuartersPlaceIndianUnits',
         'description' => '',
         'type' => 'game',
         'action' => 'stAtomicAction',

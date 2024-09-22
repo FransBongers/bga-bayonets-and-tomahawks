@@ -141,7 +141,7 @@ interface NotifMoveRoundMarkerArgs {
 
 interface NotifMoveStackArgs {
   stack: BTUnit[];
-  connection: BTConnection | null;
+  connection?: BTConnection | null;
   destinationId: string;
   faction: Faction;
   markers: BTMarker[];
@@ -198,6 +198,14 @@ interface NotifReduceUnitArgs {
   unit: BTUnit;
 }
 
+interface NotifRemoveAllRaidedMarkersArgs {
+  spaceIds: string[];
+}
+
+interface NotifRemoveAllRoutAndOOSMarkersArgs {
+  markers: BTMarker[];
+}
+
 interface NotifRemoveMarkerFromStackArgs {
   marker: BTMarker;
   from: string;
@@ -238,4 +246,18 @@ interface NotifTakeControlArgs extends NotifWithPlayerArgs {
 interface NotifVagariesOfWarPickUnitsArgs extends NotifWithPlayerArgs {
   units: BTUnit[];
   location: string;
+}
+
+interface NotifWinterQuartersDisbandColonialBrigadesArgs {
+  units: BTUnit[];
+}
+
+interface NotifWinterQuartersPlaceIndianUnitsArgs {
+  units: BTUnit[];
+}
+
+interface NotifWinterQuartersReturnToColoniesMoveArgs {
+  units: BTUnit[];
+  toSpaceId: string;
+  faction: BRITISH_FACTION | FRENCH_FACTION;
 }

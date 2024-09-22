@@ -92,7 +92,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
       'colony' => $this->colony,
       'control' => $this->control,
       'controlStartOfTurn' => $this->controlStartOfTurn,
-      'defaultControl' => $this->defaultControl,
+      'defaultControl' => $this->getDefaultControl(),
       'fortConstruction' => $this->fortConstruction === 1,
       'homeSpace' => $this->homeSpace,
       'name' => $this->name,
@@ -207,9 +207,17 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     return $this->control === $faction;
   }
 
-  public function isSettledSpace($faction)
+  public function isSettledSpace($faction = null)
   {
+    if ($faction === null) {
+      return $this->value > 1;
+    }
     return $this->homeSpace === $faction && $this->value > 1;
+  }
+
+  public function isFriendlyColonyHomeSpace($faction)
+  {
+    return $this->getHomeSpace() === $faction && $this->getColony() !== null && $this->getControl() === $faction;
   }
 
   public function hasStackMarker($type, $faction)

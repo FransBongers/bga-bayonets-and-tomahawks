@@ -80,6 +80,8 @@ class NotificationManager {
       'raidPoints',
       'placeWieChit',
       'placeWieChitPrivate',
+      'removeAllRaidedMarkers',
+      'removeAllRoutAndOOSMarkers',
       'removeMarkerFromStack',
       'removeMarkersEndOfActionRound',
       'returnToPool',
@@ -90,6 +92,9 @@ class NotificationManager {
       'selectReserveCardPrivate',
       'takeControl',
       'vagariesOfWarPickUnits',
+      'winterQuartersDisbandColonialBrigades',
+      'winterQuartersPlaceIndianUnits',
+      'winterQuartersReturnToColoniesMove',
     ];
 
     // example: https://github.com/thoun/knarr/blob/main/src/knarr.ts
@@ -476,7 +481,7 @@ class NotificationManager {
     const { stack, destinationId, faction, markers, connection } = notif.args;
     const unitStack = this.game.gameMap.stacks[destinationId][faction];
 
-    if (connection !== null) {
+    if (connection) {
       const connectionUI = this.game.gameMap.connections[connection.id];
       if (faction === 'british') {
         connectionUI.toLimitValue({
@@ -584,6 +589,30 @@ class NotificationManager {
     await this.game.gameMap.wieChitPlaceholders[faction].addCard(chit);
   }
 
+  async notif_removeAllRaidedMarkers(
+    notif: Notif<NotifRemoveAllRaidedMarkersArgs>
+  ) {
+    const { spaceIds } = notif.args;
+    spaceIds.forEach((spaceId) => {
+      const markersContainer = document.getElementById(`${spaceId}_markers`);
+      if (!markersContainer) {
+        return;
+      }
+      markersContainer.childNodes.forEach((element: HTMLElement) => {
+        if (element.getAttribute('data-type').endsWith('raided_marker')) {
+          element.remove();
+        }
+      });
+    });
+  }
+
+  async notif_removeAllRoutAndOOSMarkers(
+    notif: Notif<NotifRemoveAllRoutAndOOSMarkersArgs>
+  ) {
+    const { markers } = notif.args;
+    markers.forEach((marker) => this.game.tokenManager.removeCard(marker));
+  }
+
   async notif_removeMarkerFromStack(
     notif: Notif<NotifRemoveMarkerFromStackArgs>
   ) {
@@ -684,5 +713,34 @@ class NotificationManager {
   ) {
     const { units, location } = notif.args;
     await this.game.pools.stocks[location].addCards(units);
+  }
+
+  async notif_winterQuartersDisbandColonialBrigades(notif: Notif<NotifWinterQuartersPlaceIndianUnitsArgs>)
+  {
+    await this.game.gameMap.losses.disbandedColonialBrigades.addCards(notif.args.units);
+  }
+
+  async notif_winterQuartersPlaceIndianUnits(
+    notif: Notif<NotifWinterQuartersPlaceIndianUnitsArgs>
+  ) {
+    const { units } = notif.args;
+
+    await Promise.all(
+      units.map((unit) => {
+        if (unit.location.startsWith('lossesBox_')) {
+          return this.game.gameMap.losses[unit.location].addCard(unit);
+        } else {
+          return this.game.gameMap.stacks[unit.location][unit.faction].addUnit(
+            unit
+          );
+        }
+      })
+    );
+  }
+
+  async notif_winterQuartersReturnToColoniesMove(notif: Notif<NotifWinterQuartersReturnToColoniesMoveArgs>) {
+    const {units, toSpaceId, faction} = notif.args;
+
+    await this.game.gameMap.stacks[toSpaceId][faction].addUnits(units);
   }
 }

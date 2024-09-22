@@ -735,6 +735,21 @@ class Notifications
     ]);
   }
 
+  public static function moveStackFromSailBox($player, $units, $markers, $destination, $faction)
+  {
+    $text = clienttranslate('${player_name} moves their stack from the Sail Box to ${tkn_boldText_to}');
+
+    self::notifyAll("moveStack", $text, [
+      'player' => $player,
+      'destinationId' => $destination->getId(),
+      'tkn_boldText_to' => $destination->getName(),
+      'faction' => $player->getFaction(),
+      'stack' => $units,
+      'markers' => $markers,
+      'i18n' => ['tkn_boldText_to'],
+    ]);
+  }
+
   public static function moveUnit($player, $unit, $origin, $destination)
   {
     self::notifyAll("moveUnit", clienttranslate('${player_name} moves ${tkn_unit} from ${tkn_boldText_1} to ${tkn_boldText_2}'), [
@@ -837,6 +852,26 @@ class Notifications
     ]);
   }
 
+  public static function removeAllRaidedMarkers($spaces)
+  {
+    self::notifyAll("removeAllRaidedMarkers", clienttranslate('All ${tkn_marker_french}${tkn_marker_british} markers are removed from the map'), [
+      'spaceIds' => array_map(function ($space) {
+        return $space->getId();
+      }, $spaces),
+      'tkn_marker_british' => BRITISH . '_raided_marker',
+      'tkn_marker_french' => FRENCH . '_raided_marker',
+    ]);
+  }
+
+  public static function removeAllRoutAndOOSMarkers($markers)
+  {
+    self::notifyAll("removeAllRoutAndOOSMarkers", clienttranslate('All ${tkn_marker_rout}${tkn_marker_oos} markers are removed from the map'), [
+      'markers' => $markers,
+      'tkn_marker_rout' => ROUT_MARKER,
+      'tkn_marker_oos' => OUT_OF_SUPPLY_MARKER,
+    ]);
+  }
+
   public static function scoreVictoryPoints($player, $otherPlayer, $marker, $points)
   {
     $message = '';
@@ -867,6 +902,13 @@ class Notifications
     self::notifyAll("moveYearMarker", '', [
       'location' => $location,
       'marker' => $marker,
+    ]);
+  }
+
+  public static function winterQuartersPlaceIndianUnits($indianUnits)
+  {
+    self::notifyAll("winterQuartersPlaceIndianUnits", clienttranslate('All Indian units are placed on their linked Village if possible, or placed in the Losses Box'), [
+      'units' => $indianUnits,
     ]);
   }
 
@@ -980,6 +1022,80 @@ class Notifications
       'tkn_unit_vowToken' => $counterId,
       'units' => $units,
       'location' => $location,
+    ]);
+  }
+
+  public static function winterQuartersDisbandColonialBrigades($player, $units)
+  {
+    self::notifyAll("winterQuartersDisbandColonialBrigades", clienttranslate('${player_name} moves Colonial Brigades to the ${tkn_boldText_disbanded}'), [
+      'player' => $player,
+      'tkn_boldText_disbanded' => clienttranslate('Disbanded Colonial Brigades box'),
+      'units' => $units,
+      'i18n' => ['tkn_boldText_disbanded'],
+    ]);
+  }
+
+  public static function winterQuartersRemainingColonialBrigades($player, $unitsToDisband, $unitsThatRemain, $space)
+  {
+    $text = clienttranslate('${player_name} leaves ${unitsLog} on ${tkn_boldText_spaceName}');
+
+    if (count($unitsThatRemain) === 0) {
+      $text = clienttranslate('${player_name} disbands all Colonial Brigades on ${tkn_boldText_spaceName}');
+    } else if (count($unitsToDisband) > 0) {
+      $text = clienttranslate('${player_name} leaves ${unitsLog} on ${tkn_boldText_spaceName} and disbands other Colonial Brigades');
+    }
+
+    // $text = count() 
+    self::notifyAll("winterQuartersDisbandColonialBrigades", $text , [
+      'player' => $player,
+      'tkn_boldText_spaceName' => $space->getName(),
+      'units' => $unitsToDisband,
+      'unitsLog' => self::getUnitsLog($unitsThatRemain),
+      'i18n' => ['tkn_boldText_spaceName'],
+    ]);
+  }
+
+  public static function winterQuartersReturnToColoniesLeaveUnits($player, $units, $space)
+  {
+    self::message( clienttranslate('${player_name} leaves ${unitsLog} on ${tkn_boldText_spaceName}') , [
+      'player' => $player,
+      'unitsLog' => self::getUnitsLog($units),
+      'tkn_boldText_spaceName' => $space->getName(),
+      'i18n' => ['tkn_boldText_spaceName'],
+    ]);
+  }
+
+  public static function winterQuartersReturnToColoniesMove($player, $units, $movedSpaces, $faction)
+  {
+    $spacesLog = '';
+    $spacesLogArgs = [];
+
+    foreach ($movedSpaces as $index => $space) {
+      if ($index === 0) {
+        continue;
+      }
+      $key = 'tkn_boldText_spaceName' . $index;
+      $spacesLog = $index > 1 ? $spacesLog . ', ${' . $key . '}' : $spacesLog . '${' . $key . '}';;
+      $spacesLogArgs[$key] = $space->getName();
+      $spacesLogArgs['i18n'][] = $key;
+    }
+
+    $spaceNamesLog = [
+      'log' => $spacesLog,
+      'args' => $spacesLogArgs,
+    ];
+
+    $text = count($movedSpaces) > 2 ? clienttranslate('${player_name} moves stack from ${tkn_boldText_spaceName} via ${spaceNamesLog}') : clienttranslate('${player_name} moves stack from ${tkn_boldText_spaceName} to ${spaceNamesLog}');
+
+    // $text = count() 
+    self::notifyAll("winterQuartersReturnToColoniesMove", $text , [
+      'player' => $player,
+      'units' => $units,
+      'tkn_boldText_spaceName' => $movedSpaces[0]->getName(),
+      'toSpaceId' => $movedSpaces[count($movedSpaces) - 1]->getId(),
+      'faction' => $faction,
+      'spaceNamesLog' => $spaceNamesLog,
+      'i18n' => ['tkn_boldText_spaceName'],
     ]);
   }
 }

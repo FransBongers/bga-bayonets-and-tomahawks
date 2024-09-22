@@ -89,6 +89,7 @@ const tplLossesBox = () => {
   return `
     <div id="lossesBox_french" class="bt_losses_box"></div>
     <div id="lossesBox_british" class="bt_losses_box"></div>
+    <div id="disbandedColonialBrigades" class="bt_losses_box"></div>
   `;
 };
 

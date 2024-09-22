@@ -310,3 +310,11 @@
   top: calc(var(--btMapScale) * 1312px);
   left: calc(var(--btMapScale) * 1338px);
 }
+
+#disbandedColonialBrigades {
+  top: calc(var(--btMapScale) * 1649px);
+  left: calc(var(--btMapScale) * 1339px);
+  height: calc(var(--btMapScale) * 182px);
+  // background-color: yellow;
+  // opacity: 0.5;
+}

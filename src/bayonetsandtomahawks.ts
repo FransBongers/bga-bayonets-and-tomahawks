@@ -102,6 +102,10 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     sailMovement: SailMovementState;
     selectReserveCard: SelectReserveCardState;
     useEvent: UseEventState;
+    winterQuartersMoveStackOnSailBox: WinterQuartersMoveStackOnSailBoxState;
+    winterQuartersRemainingColonialBrigades: WinterQuartersRemainingColonialBrigadesState;
+    winterQuartersReturnToColoniesLeaveUnits: WinterQuartersReturnToColoniesLeaveUnitsState;
+    winterQuartersReturnToColoniesSelectStack: WinterQuartersReturnToColoniesSelectStackState;
   };
 
   constructor() {
@@ -176,6 +180,14 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       sailMovement: new SailMovementState(this),
       selectReserveCard: new SelectReserveCardState(this),
       useEvent: new UseEventState(this),
+      winterQuartersMoveStackOnSailBox:
+        new WinterQuartersMoveStackOnSailBoxState(this),
+      winterQuartersRemainingColonialBrigades:
+        new WinterQuartersRemainingColonialBrigadesState(this),
+      winterQuartersReturnToColoniesLeaveUnits:
+        new WinterQuartersReturnToColoniesLeaveUnitsState(this),
+      winterQuartersReturnToColoniesSelectStack:
+        new WinterQuartersReturnToColoniesSelectStackState(this),
     };
 
     this.infoPanel = new InfoPanel(this);
@@ -631,6 +643,21 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       return;
     }
     node.classList.add(BT_SELECTED);
+  }
+
+  setElementsSelected(
+    elmenents: {
+      id: string;
+      [key: string]: any;
+    }[]
+  ) {
+    elmenents.forEach(({ id }) => {
+      const node = $(id);
+      if (node === null) {
+        return;
+      }
+      node.classList.add(BT_SELECTED);
+    });
   }
 
   setLocationSelectable({
