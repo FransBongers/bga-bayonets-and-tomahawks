@@ -237,7 +237,12 @@ class MarshalTroops extends \BayonetsAndTomahawks\Actions\UnitMovement
 
   public function getOptions($unitsInSpace, $space, $playerFaction)
   {
-    $unitsToActivate = Utils::filter($unitsInSpace, function ($unit) {
+    $roughSeasActive = Cards::isCardInPlay(FRENCH, ROUGH_SEAS_CARD_ID);
+
+    $unitsToActivate = Utils::filter($unitsInSpace, function ($unit) use ($roughSeasActive) {
+      if ($roughSeasActive && $unit->isFleet()) {
+        return false;
+      }
       return $unit->getType() !== LIGHT && !$unit->isSpent();
     });
 
@@ -251,7 +256,10 @@ class MarshalTroops extends \BayonetsAndTomahawks\Actions\UnitMovement
       }
       $connection = $data['connection'];
 
-      $adjacentUnits = Utils::filter($adjacentSpace->getUnits($playerFaction), function ($unit) use ($connection) {
+      $adjacentUnits = Utils::filter($adjacentSpace->getUnits($playerFaction), function ($unit) use ($connection, $roughSeasActive) {
+        if ($roughSeasActive && $unit->isFleet()) {
+          return false;
+        }
         if ($unit->isIndian() && Globals::getNoIndianUnitMayBeActivated()) {
           return false;
         }

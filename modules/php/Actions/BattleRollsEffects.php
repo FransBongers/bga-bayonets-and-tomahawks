@@ -12,9 +12,9 @@ use BayonetsAndTomahawks\Helpers\BTDice;
 use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Players;
-use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Models\Player;
 
 class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
@@ -117,7 +117,8 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
     }
     // Flag
     $diceWithFlagCount = count($this->getDiceWithFace($diceResults, FLAG));
-    if ($diceWithFlagCount > 0) {
+    $ignoreFlags = $battleRollsSequenceStep === FLEETS && Cards::isCardInPlay(FRENCH, ROUGH_SEAS_CARD_ID);
+    if ($diceWithFlagCount > 0 && !$ignoreFlags) {
       $this->moveBattleVictoryMarker($player, $faction, $diceWithFlagCount);
     }
     // Miss
@@ -134,9 +135,7 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreBattleRollsEffects()
-  {
-  }
+  public function stPreBattleRollsEffects() {}
 
 
   // ....###....########...######....######.
@@ -211,8 +210,8 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
 
   private function applyBAndTResults($space, $diceResults, $battleRollsSequenceStep, $player, $faction)
   {
-    Notifications::log('applyBAndTResults',$battleRollsSequenceStep);
-    Notifications::log('diceResults',$diceResults);
+    Notifications::log('applyBAndTResults', $battleRollsSequenceStep);
+    Notifications::log('diceResults', $diceResults);
 
     $unprocessedDice = $diceResults;
     $processedDice = [];

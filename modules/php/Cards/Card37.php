@@ -4,7 +4,6 @@ namespace BayonetsAndTomahawks\Cards;
 
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Helpers\BTHelpers;
-use BayonetsAndTomahawks\Helpers\GameMap;
 
 class Card37 extends \BayonetsAndTomahawks\Models\Card
 {

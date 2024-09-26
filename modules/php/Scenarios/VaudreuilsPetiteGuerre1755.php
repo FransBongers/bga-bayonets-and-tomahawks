@@ -244,6 +244,7 @@ class VaudreuilsPetiteGuerre1755 extends \BayonetsAndTomahawks\Models\Scenario
         ]
       ],
     ];
+    $this->connections = [];
     $this->pools = [
       POOL_NEUTRAL_INDIANS => [
         'units' => [

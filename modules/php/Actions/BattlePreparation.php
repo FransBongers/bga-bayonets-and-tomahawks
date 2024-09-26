@@ -86,7 +86,7 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
 
     $this->checkWildernessAmbush($space);
     $this->checkCoupDeMain($space);
-
+    $this->checkIndomitableAbbatis($space);
 
 
     $this->resolveAction(['automatic' => true]);
@@ -186,6 +186,26 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
         'optional' => true,
       ])
     );
+  }
+
+  private function checkIndomitableAbbatis($space)
+  {
+    $indomitableAbbatisInPlay = Cards::isCardInPlay(FRENCH, INDOMITABLE_ABBATIS_CARD_ID);
+    if (!$indomitableAbbatisInPlay || ($indomitableAbbatisInPlay && Globals::getUsedEventCount(FRENCH) === 1)) {   
+      return;
+    }
+
+    if ($space->getDefender() === FRENCH) {
+      $this->ctx->insertAsBrother(
+        Engine::buildTree([
+          'playerId' => Players::getPlayerForFaction(FRENCH)->getId(),
+          'action' => USE_EVENT,
+          'spaceId' => $space->getId(),
+          'cardId' => INDOMITABLE_ABBATIS_CARD_ID,
+          'optional' => true,
+        ])
+      );
+    }
   }
 
   private function checkWildernessAmbush($space)

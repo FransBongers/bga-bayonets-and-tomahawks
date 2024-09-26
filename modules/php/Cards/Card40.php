@@ -7,7 +7,7 @@ class Card40 extends \BayonetsAndTomahawks\Models\Card
   public function __construct($row)
   {
     parent::__construct($row);
-    $this->id = 'Card40';
+    $this->id = ROUGH_SEAS_CARD_ID;
     $this->actionPoints = [
       [
         'id' => LIGHT_AP
@@ -20,6 +20,7 @@ class Card40 extends \BayonetsAndTomahawks\Models\Card
       'id' => ROUGH_SEAS,
       'title' => clienttranslate('Rough Seas'),
       AR_START => true,
+      AR_START_SKIP_MESSAGE => true,
     ];
     $this->faction = FRENCH;
     $this->initiativeValue = 2;

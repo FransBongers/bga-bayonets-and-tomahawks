@@ -55,9 +55,7 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreMovement()
-  {
-  }
+  public function stPreMovement() {}
 
 
   // ....###....########...######....######.
@@ -89,8 +87,6 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
     $units = $this->getUnitsThatCanMove($space, $playerFaction, $unitsOnSpace, $source, $forcedMarchAvailable, $indianNation);
 
     $adjacent = $space->getAdjacentConnectionsAndSpaces();
-
-
 
     return [
       'source' => $source,
@@ -185,7 +181,7 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
     if (in_array($info['source'], [INDIAN_AP, INDIAN_AP_2X]) && $indianNation === null) {
       $indianNation = $units[0]->getCounterId();
     }
-    
+
 
     $this->ctx->insertAsBrother(Engine::buildTree([
       'children' => [
@@ -272,8 +268,13 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
       }
     }
 
+    $roughSeasActive = Cards::isCardInPlay(FRENCH, ROUGH_SEAS_CARD_ID);
+
     // TODO: filter units that are locked in battle?
-    $unitsThatCanMove = Utils::filter($units, function ($unit) use ($ignoreAlreadyMovedCheck, $currentNumberOfMoves, $mpMultiplier, $source, $forcedMarchAvailable) {
+    $unitsThatCanMove = Utils::filter($units, function ($unit) use ($ignoreAlreadyMovedCheck, $currentNumberOfMoves, $mpMultiplier, $source, $forcedMarchAvailable, $roughSeasActive) {
+      if ($roughSeasActive && $unit->isFleet()) {
+        return false;
+      }
       if ($unit->isFort() || $unit->isBastion()) {
         return false;
       }

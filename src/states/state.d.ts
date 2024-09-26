@@ -151,6 +151,7 @@ interface OnEnteringMovementStateArgs extends CommonArgs {
   requiredUnitIds: string[];
   source: string;
   forcedMarchAvailable: boolean;
+  roughSeasActive: boolean;
   count: number;
 }
 

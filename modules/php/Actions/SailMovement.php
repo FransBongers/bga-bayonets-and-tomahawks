@@ -219,6 +219,10 @@ class SailMovement extends \BayonetsAndTomahawks\Models\AtomicAction
 
   public function canBePerformedBy($units, $space, $actionPoint, $playerFaction)
   {
+    if (Cards::isCardInPlay(FRENCH, ROUGH_SEAS_CARD_ID)) {
+      return false;
+    }
+
     return count($this->getUnitsThatCanMove($space, $playerFaction, $units)) > 0;
   }
 

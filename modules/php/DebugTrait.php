@@ -112,8 +112,6 @@ trait DebugTrait
 
   function debug_test()
   {
-
-
     // AtomicActions::get(WINTER_QUARTERS_PRE_RETURN_TO_COLONIES)->removeColonialBrigadesToDisbanded();
     // Notifications::log(CARLISLE, Spaces::get(CARLISLE)->isFriendlyColonyHomeSpace(BRITISH));
     // AtomicActions::get(WINTER_QUARTERS_RETURN_TO_COLONIES)->getOptions();
@@ -159,8 +157,8 @@ trait DebugTrait
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(NEW_YORK), BRITISH);
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(ALBANY), BRITISH);
 
-    // Cards::get(COUP_DE_MAIN_CARD_ID)->insertOnTop(Locations::buildUpDeck(FRENCH));
-    // Cards::get('Card18')->insertOnTop(Locations::buildUpDeck(BRITISH));
+    Cards::get(ROUGH_SEAS_CARD_ID)->insertOnTop(Locations::buildUpDeck(FRENCH));
+    Cards::get('Card19')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card41')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card19')->insertOnTop(Locations::campaignDeck(BRITISH));
     // Cards::get('Card51')->insertOnTop(Locations::campaignDeck(INDIAN));
@@ -173,11 +171,11 @@ trait DebugTrait
     // Units::get('unit_108')->setLocation(Locations::lossesBox(BRITISH));
     // Units::get('unit_94')->setLocation(Locations::lossesBox(BRITISH));
 
-    Units::get('unit_35')->setReduced(1);
-    Units::get('unit_131')->setReduced(1);
-    Units::get('unit_137')->setReduced(1);
-    Units::get('unit_138')->setReduced(1);
-    Units::get('unit_41')->setReduced(1);
+    // Units::get('unit_35')->setReduced(1);
+    // Units::get('unit_131')->setReduced(1);
+    // Units::get('unit_137')->setReduced(1);
+    // Units::get('unit_138')->setReduced(1);
+    // Units::get('unit_41')->setReduced(1);
 
 
     // British encroachment
