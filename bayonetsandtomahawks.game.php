@@ -154,7 +154,7 @@ class bayonetsandtomahawks extends Table
             'scenario' => Scenarios::get(),
             'spaces' => Spaces::getUiData(),
             'units' => Units::getUiData(),
-
+            'highwayUnusableForBritish' => Globals::getHighwayUnusableForBritish(),
         ];
 
         return $data;

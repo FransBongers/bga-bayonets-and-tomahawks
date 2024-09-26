@@ -2875,12 +2875,12 @@ body > .card {
   background-position-y: 100%;
 }
 
-.bt_marker_side[data-type=british_control_marker][data-side=front] {
+.bt_marker_side[data-type=british_control_marker] {
   background-position-x: 0%;
   background-position-y: 60%;
 }
 
-.bt_marker_side[data-type=french_control_marker][data-side=front] {
+.bt_marker_side[data-type=french_control_marker] {
   background-position-x: 14.2857142857%;
   background-position-y: 60%;
 }

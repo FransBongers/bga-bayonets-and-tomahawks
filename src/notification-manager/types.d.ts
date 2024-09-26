@@ -116,6 +116,10 @@ interface NotifFlipMarkerArgs extends NotifWithPlayerArgs {
   marker: BTMarker;
 }
 
+interface NotifFrenchLakeWarshipsArgs extends NotifWithPlayerArgs {
+  connection: BTConnection;
+}
+
 interface NotifIndianNationControlArgs extends NotifWithPlayerArgs {
   faction: BRITISH_FACTION | FRENCH_FACTION;
   indianNation: string;
@@ -214,6 +218,7 @@ interface NotifRemoveMarkerFromStackArgs {
 interface NotifRemoveMarkersEndOfActionRoundArgs {
   spentUnits: BTUnit[];
   markers: BTMarker[];
+  frenchLakeWarshipsConnectionId: string;
 }
 
 interface NotifReturnToPoolArgs {

@@ -841,6 +841,16 @@ $machinestates = array(
         'possibleactions' => ['actEventDelayedSuppliesFromFrance', 'actPassOptionalAction', 'actRestart'],
     ],
 
+    ST_EVENT_FRENCH_LAKE_WARSHIPS => [
+        'name' => 'eventFrenchLakeWarships',
+        'description' => clienttranslate('${actplayer} must select a Highway'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actEventFrenchLakeWarships', 'actPassOptionalAction', 'actRestart'],
+    ],
+
     ST_EVENT_HESITANT_BRITISH_GENERAL => [
         'name' => 'eventHesitantBritishGeneral',
         'description' => clienttranslate('${actplayer} must select a British stack'),

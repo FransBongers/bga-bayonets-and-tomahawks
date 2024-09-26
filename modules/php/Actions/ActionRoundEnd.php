@@ -62,7 +62,7 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     }
 
     // 2. Remove Spent markers, as well as any remaning Landing and Marshall markers.
-    $this->removeSpentLandingMarshalMarkers();
+    $this->removeSpentLandingMarshalFLWMarkers();
 
     $spaces = Spaces::getAll();
     $units = Units::getAll()->toArray();
@@ -134,6 +134,7 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     Globals::setUsedEventFrench(0);
     Globals::setUsedEventIndian(0);
     Globals::setNoIndianUnitMayBeActivated(false);
+    Globals::setHighwayUnusableForBritish('');
 
     Markers::move(ROUND_MARKER, $nextActionRound);
     Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), $nextActionRound);
@@ -209,11 +210,16 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  private function removeSpentLandingMarshalMarkers()
+  /**
+   * Removes spent, landing, marshal and French Lake Warships markers
+   */
+  private function removeSpentLandingMarshalFLWMarkers()
   {
     $spentUnits = Units::getSpent();
     Units::removeAllSpentMarkers();
     Connections::resetConnectionLimits();
+
+    $frenchLakeWarshipsConnectionId = Globals::getHighwayUnusableForBritish();
 
     $landingMarkers = Utils::filter(Markers::getMarkersOfType(LANDING_MARKER), function ($marker) {
       return !Utils::startsWith($marker->getLocation(), 'supply');
@@ -229,7 +235,7 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
       return $marker->getId();
     }, $marshalTroopsMarkers), Locations::markerSupply(MARSHAL_TROOPS_MARKER));
 
-    Notifications::removeMarkersEndOfActionRound($spentUnits, array_merge($landingMarkers, $marshalTroopsMarkers));
+    Notifications::removeMarkersEndOfActionRound($spentUnits, array_merge($landingMarkers, $marshalTroopsMarkers), $frenchLakeWarshipsConnectionId);
   }
 
 

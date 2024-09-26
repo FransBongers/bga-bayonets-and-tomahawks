@@ -87,6 +87,13 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
     $units = $this->getUnitsThatCanMove($space, $playerFaction, $unitsOnSpace, $source, $forcedMarchAvailable, $indianNation);
 
     $adjacent = $space->getAdjacentConnectionsAndSpaces();
+    
+    $unusableByBritishConnectionId = Globals::getHighwayUnusableForBritish();
+    if ($playerFaction === BRITISH && $unusableByBritishConnectionId !== '') {
+      $adjacent = Utils::filter($adjacent, function ($data) use ($unusableByBritishConnectionId) {
+        return $data['connection']->getId() !== $unusableByBritishConnectionId;
+      });
+    }
 
     return [
       'source' => $source,

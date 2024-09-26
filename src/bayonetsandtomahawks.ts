@@ -86,6 +86,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     eventDelayedSuppliesFromFrance: EventDelayedSuppliesFromFranceState;
     eventDiseaseInBritishCamp: EventDiseaseInBritishCampState;
     eventDiseaseInFrenchCamp: EventDiseaseInFrenchCampState;
+    eventFrenchLakeWarships: EventFrenchLakeWarshipsState;
     eventHesitantBritishGeneral: EventHesitantBritishGeneralState;
     eventPennsylvaniasPeacePromises: EventPennsylvaniasPeacePromisesState;
     eventRoundUpMenAndEquipment: EventRoundUpMenAndEquipmentState;
@@ -163,6 +164,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       ),
       eventDiseaseInBritishCamp: new EventDiseaseInBritishCampState(this),
       eventDiseaseInFrenchCamp: new EventDiseaseInFrenchCampState(this),
+      eventFrenchLakeWarships: new EventFrenchLakeWarshipsState(this),
       eventHesitantBritishGeneral: new EventHesitantBritishGeneralState(this),
       eventPennsylvaniasPeacePromises: new EventPennsylvaniasPeacePromisesState(
         this

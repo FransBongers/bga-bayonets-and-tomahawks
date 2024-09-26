@@ -197,6 +197,10 @@ interface EventDiseaseInFrenchCampStateArgs extends CommonArgs {
   options: BTUnit[];
 }
 
+interface OnEnteringEventFrenchLakeWarshipsStateArgs extends CommonArgs {
+  options: BTConnection[];
+}
+
 interface EventHesitantBritishGeneralStateArgs extends CommonArgs {
   stacks: BTSpace[];
 }

@@ -71,12 +71,12 @@
   background-position-y: math.div(5, 5) * 100%;
 }
 
-.bt_marker_side[data-type='british_control_marker'][data-side='front'] {
+.bt_marker_side[data-type='british_control_marker'] {
   background-position-x: math.div(0, 7) * 100%;
   background-position-y: math.div(3, 5) * 100%;
 }
 
-.bt_marker_side[data-type='french_control_marker'][data-side='front'] {
+.bt_marker_side[data-type='french_control_marker'] {
   background-position-x: math.div(1, 7) * 100%;
   background-position-y: math.div(3, 5) * 100%;
 }

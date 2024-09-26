@@ -2,6 +2,11 @@
 
 namespace BayonetsAndTomahawks\Cards;
 
+use BayonetsAndTomahawks\Core\Engine\LeafNode;
+use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Managers\AtomicActions;
+use BayonetsAndTomahawks\Managers\Players;
+
 class Card39 extends \BayonetsAndTomahawks\Models\Card
 {
   public function __construct($row)
@@ -27,5 +32,14 @@ class Card39 extends \BayonetsAndTomahawks\Models\Card
     $this->faction = FRENCH;
     $this->initiativeValue = 1;
     $this->years = [1758,1759];
+  }
+
+  public function resolveARStart($ctx)
+  {
+    $ctx->insertAsBrother(new LeafNode([
+      'action' => EVENT_FRENCH_LAKE_WARSHIPS,
+      'cardId' => $this->getId(),
+      'playerId' => Players::getPlayerForFaction(FRENCH)->getId(),
+    ]));
   }
 }

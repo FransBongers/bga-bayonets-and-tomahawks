@@ -46,6 +46,7 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'usedEventIndian' => 'int',
     'noIndianUnitMayBeActivated' => 'bool',
     'winteringRearAdmiralPlayed' => 'bool',
+    'highwayUnusableForBritish' => 'str',
   ];
 
   protected static $table = 'global_variables';
@@ -182,6 +183,7 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     self::setUsedEventIndian(0);
     self::setNoIndianUnitMayBeActivated(false);
     self::setWinteringRearAdmiralPlayed(false);
+    self::setHighwayUnusableForBritish('');
   }
 
   public static function getUsedEventCount($faction) {

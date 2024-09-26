@@ -66,6 +66,7 @@ class NotificationManager {
       'eliminateUnit',
       'flipMarker',
       'flipUnit',
+      'frenchLakeWarships',
       'indianNationControl',
       'loseControl',
       // 'marshalTroops',
@@ -428,6 +429,15 @@ class NotificationManager {
     }
   }
 
+  async notif_frenchLakeWarships(notif: Notif<NotifFrenchLakeWarshipsArgs>) {
+    const { connection } = notif.args;
+    const node = document.getElementById(`${connection.id}_road`);
+    if (!node) {
+      return;
+    }
+    node.setAttribute('data-type', 'french_control_marker');
+  }
+
   async notif_indianNationControl(notif: Notif<NotifIndianNationControlArgs>) {
     const { indianNation, faction } = notif.args;
     this.game.gameMap.addMarkerToSpace({
@@ -626,7 +636,7 @@ class NotificationManager {
   async notif_removeMarkersEndOfActionRound(
     notif: Notif<NotifRemoveMarkersEndOfActionRoundArgs>
   ) {
-    const { spentUnits, markers } = notif.args;
+    const { spentUnits, markers, frenchLakeWarshipsConnectionId } = notif.args;
 
     spentUnits.forEach((unit) => {
       const element = document.getElementById(`spent_marker_${unit.id}`);
@@ -639,6 +649,16 @@ class NotificationManager {
     await Promise.all(
       markers.map((marker) => this.game.tokenManager.removeCard(marker))
     );
+
+    if (frenchLakeWarshipsConnectionId) {
+      const highway = document.getElementById(
+        `${frenchLakeWarshipsConnectionId}_road`
+      );
+      if (!highway) {
+        return;
+      }
+      highway.setAttribute('data-type', 'none');
+    }
   }
 
   async notif_returnToPool(notif: Notif<NotifReturnToPoolArgs>) {

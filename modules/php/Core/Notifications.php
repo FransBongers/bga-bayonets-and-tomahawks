@@ -642,6 +642,20 @@ class Notifications
     ]);
   }
 
+  public static function frenchLakeWarships($player, $connection)
+  {
+    $spaceIds = explode('_', $connection->getId());
+    $spaces = Spaces::getMany($spaceIds)->toArray();
+
+    self::notifyAll("frenchLakeWarships", clienttranslate('${player_name} selects the Highway between ${tkn_boldText_spaceName1} and ${tkn_boldText_spaceName2}'), [
+      'player' => $player,
+      'connection' => $connection,
+      'tkn_boldText_spaceName1' => $spaces[0]->getName(),
+      'tkn_boldText_spaceName2' => $spaces[1]->getName(),
+      'i18n' => ['tkn_boldText_spaceName1', 'tkn_boldText_spaceName2']
+    ]);
+  }
+
   public static function gainInitiative($faction)
   {
     self::message(clienttranslate('The ${factionName} gain initiative'), [
@@ -869,11 +883,12 @@ class Notifications
     ]);
   }
 
-  public static function removeMarkersEndOfActionRound($spentUnits, $markers)
+  public static function removeMarkersEndOfActionRound($spentUnits, $markers, $frenchLakeWarshipsConnectionId)
   {
     self::notifyAll("removeMarkersEndOfActionRound", clienttranslate('All Spent, Landing and Marshal markers are removed'), [
       'spentUnits' => $spentUnits,
       'markers' => $markers,
+      'frenchLakeWarshipsConnectionId' => $frenchLakeWarshipsConnectionId
     ]);
   }
 

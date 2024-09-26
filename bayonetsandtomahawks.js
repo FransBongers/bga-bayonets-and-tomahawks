@@ -2377,6 +2377,7 @@ var BayonetsAndTomahawks = (function () {
             eventDelayedSuppliesFromFrance: new EventDelayedSuppliesFromFranceState(this),
             eventDiseaseInBritishCamp: new EventDiseaseInBritishCampState(this),
             eventDiseaseInFrenchCamp: new EventDiseaseInFrenchCampState(this),
+            eventFrenchLakeWarships: new EventFrenchLakeWarshipsState(this),
             eventHesitantBritishGeneral: new EventHesitantBritishGeneralState(this),
             eventPennsylvaniasPeacePromises: new EventPennsylvaniasPeacePromisesState(this),
             eventRoundUpMenAndEquipment: new EventRoundUpMenAndEquipmentState(this),
@@ -3680,6 +3681,13 @@ var GameMap = (function () {
                 connection: connection,
             });
         });
+        if (gamedatas.highwayUnusableForBritish) {
+            var highway = document.getElementById("".concat(gamedatas.highwayUnusableForBritish, "_road"));
+            if (!highway) {
+                return;
+            }
+            highway.setAttribute('data-type', 'french_control_marker');
+        }
     };
     GameMap.prototype.setupUnitsAndSpaces = function (_a) {
         var _b, _c;
@@ -3719,7 +3727,11 @@ var GameMap = (function () {
     };
     GameMap.prototype.updateUnitsAndSpaces = function (gamedatas) {
         var _this = this;
-        [LOSSES_BOX_BRITISH, LOSSES_BOX_FRENCH, DISBANDED_COLONIAL_BRIGADES].forEach(function (box) {
+        [
+            LOSSES_BOX_BRITISH,
+            LOSSES_BOX_FRENCH,
+            DISBANDED_COLONIAL_BRIGADES,
+        ].forEach(function (box) {
             var units = gamedatas.units.filter(function (unit) { return unit.location === box; });
             _this.losses[box].addCards(units);
         });
@@ -3919,10 +3931,12 @@ var GameMap = (function () {
     GameMap.prototype.updateWieChits = function (gamedatas) {
         var _this = this;
         Object.values(gamedatas.players).forEach(function (player) {
-            if (player.wieChit.hasChit && _this.game.getPlayerId() !== Number(player.id)) {
+            if (player.wieChit.hasChit &&
+                _this.game.getPlayerId() !== Number(player.id)) {
                 _this.placeFakeWieChit(player.faction);
             }
-            else if (player.wieChit.chit && _this.game.getPlayerId() === Number(player.id)) {
+            else if (player.wieChit.chit &&
+                _this.game.getPlayerId() === Number(player.id)) {
                 var chit = player.wieChit.chit;
                 chit.revealed = true;
                 _this.wieChitPlaceholders[player.faction].addCard(chit);
@@ -4342,6 +4356,7 @@ var NotificationManager = (function () {
             'eliminateUnit',
             'flipMarker',
             'flipUnit',
+            'frenchLakeWarships',
             'indianNationControl',
             'loseControl',
             'moveRaidPointsMarker',
@@ -4798,6 +4813,20 @@ var NotificationManager = (function () {
             });
         });
     };
+    NotificationManager.prototype.notif_frenchLakeWarships = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var connection, node;
+            return __generator(this, function (_a) {
+                connection = notif.args.connection;
+                node = document.getElementById("".concat(connection.id, "_road"));
+                if (!node) {
+                    return [2];
+                }
+                node.setAttribute('data-type', 'french_control_marker');
+                return [2];
+            });
+        });
+    };
     NotificationManager.prototype.notif_indianNationControl = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, indianNation, faction;
@@ -5097,12 +5126,12 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_removeMarkersEndOfActionRound = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, spentUnits, markers;
+            var _a, spentUnits, markers, frenchLakeWarshipsConnectionId, highway;
             var _this = this;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = notif.args, spentUnits = _a.spentUnits, markers = _a.markers;
+                        _a = notif.args, spentUnits = _a.spentUnits, markers = _a.markers, frenchLakeWarshipsConnectionId = _a.frenchLakeWarshipsConnectionId;
                         spentUnits.forEach(function (unit) {
                             var element = document.getElementById("spent_marker_".concat(unit.id));
                             if (element) {
@@ -5113,6 +5142,13 @@ var NotificationManager = (function () {
                         return [4, Promise.all(markers.map(function (marker) { return _this.game.tokenManager.removeCard(marker); }))];
                     case 1:
                         _b.sent();
+                        if (frenchLakeWarshipsConnectionId) {
+                            highway = document.getElementById("".concat(frenchLakeWarshipsConnectionId, "_road"));
+                            if (!highway) {
+                                return [2];
+                            }
+                            highway.setAttribute('data-type', 'none');
+                        }
                         return [2];
                 }
             });
@@ -7759,6 +7795,75 @@ var EventDiseaseInFrenchCampState = (function () {
         this.game.addCancelButton();
     };
     return EventDiseaseInFrenchCampState;
+}());
+var EventFrenchLakeWarshipsState = (function () {
+    function EventFrenchLakeWarshipsState(game) {
+        this.game = game;
+    }
+    EventFrenchLakeWarshipsState.prototype.onEnteringState = function (args) {
+        debug('Entering EventFrenchLakeWarshipsState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    EventFrenchLakeWarshipsState.prototype.onLeavingState = function () {
+        debug('Leaving EventFrenchLakeWarshipsState');
+    };
+    EventFrenchLakeWarshipsState.prototype.setDescription = function (activePlayerId) { };
+    EventFrenchLakeWarshipsState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a Highway'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.args.options.forEach(function (connection) {
+            return _this.game.setLocationSelectable({
+                id: "".concat(connection.id, "_road"),
+                callback: function () { return _this.updateInterfaceConfirm({ connection: connection }); },
+            });
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    EventFrenchLakeWarshipsState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var connection = _a.connection;
+        this.game.clearPossible();
+        var _b = connection.id.split('_'), spaceId1 = _b[0], spaceId2 = _b[1];
+        this.game.clientUpdatePageTitle({
+            text: _('Select Highway between ${spaceName1} and ${spaceName2}?'),
+            args: {
+                spaceName1: _(this.game.getSpaceStaticData({ id: spaceId1 }).name),
+                spaceName2: _(this.game.getSpaceStaticData({ id: spaceId2 }).name),
+            },
+        });
+        this.game.setLocationSelected({ id: "".concat(connection.id, "_road") });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actEventFrenchLakeWarships',
+                args: {
+                    connectionId: connection.id,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    return EventFrenchLakeWarshipsState;
 }());
 var EventHesitantBritishGeneralState = (function () {
     function EventHesitantBritishGeneralState(game) {

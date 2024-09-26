@@ -51,6 +51,7 @@ class AtomicActions
     EVENT_DELAYED_SUPPLIES_FROM_FRANCE => 'EventDelayedSuppliesFromFrance',
     EVENT_DISEASE_IN_BRITISH_CAMP => 'EventDiseaseInBritishCamp',
     EVENT_DISEASE_IN_FRENCH_CAMP => 'EventDiseaseInFrenchCamp',
+    EVENT_FRENCH_LAKE_WARSHIPS => 'EventFrenchLakeWarships',
     EVENT_HESITANT_BRITISH_GENERAL => 'EventHesitantBritishGeneral',
     EVENT_PENNSYLVANIAS_PEACE_PROMISES => 'EventPennsylvaniasPeacePromises',
     EVENT_ROUND_UP_MEN_AND_EQUIPMENT => 'EventRoundUpMenAndEquipment',

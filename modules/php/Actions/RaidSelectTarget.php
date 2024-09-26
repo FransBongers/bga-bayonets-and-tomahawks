@@ -334,6 +334,7 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
       CHEROKEE => Globals::getControlCherokee(),
       IROQUOIS => Globals::getControlIroquois(),
     ];
+    $unusableByBritishConnectionId = Globals::getHighwayUnusableForBritish();
 
     $sourceWeight = $this->getSpaceWeight($units, $sourceSpaceId, $playerFaction);
 
@@ -370,9 +371,13 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
         if ($playerFaction === FRENCH && $allSpaces[$spaceId]->getBritishBase()) {
           continue;
         }
+        
         $connection = $connections[$connectionId];
         $indianPath = $connection->getIndianNationPath();
         if ($indianPath !== null && $indianNationControl[$indianPath] === NEUTRAL) {
+          continue;
+        }
+        if ($playerFaction === BRITISH && $connectionId === $unusableByBritishConnectionId) {
           continue;
         }
 

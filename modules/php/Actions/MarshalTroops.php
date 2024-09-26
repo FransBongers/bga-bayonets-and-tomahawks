@@ -40,9 +40,7 @@ class MarshalTroops extends \BayonetsAndTomahawks\Actions\UnitMovement
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stMarshalTroops()
-  {
-  }
+  public function stMarshalTroops() {}
 
   // .########..########..########.......###.....######..########.####..#######..##....##
   // .##.....##.##.....##.##............##.##...##....##....##.....##..##.....##.###...##
@@ -52,9 +50,7 @@ class MarshalTroops extends \BayonetsAndTomahawks\Actions\UnitMovement
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreMarshalTroops()
-  {
-  }
+  public function stPreMarshalTroops() {}
 
 
   // ....###....########...######....######.
@@ -249,12 +245,18 @@ class MarshalTroops extends \BayonetsAndTomahawks\Actions\UnitMovement
     $adjacent = $space->getAdjacentConnectionsAndSpaces();
     $marshall = [];
 
+    $unusableByBritishConnectionId = Globals::getHighwayUnusableForBritish();
+
     foreach ($adjacent as $data) {
       $adjacentSpace = $data['space'];
       if ($adjacentSpace->getBattle() === 1) {
         continue;
       }
       $connection = $data['connection'];
+
+      if ($playerFaction === BRITISH && $connection->getId() === $unusableByBritishConnectionId) {
+        continue;
+      }
 
       $adjacentUnits = Utils::filter($adjacentSpace->getUnits($playerFaction), function ($unit) use ($connection, $roughSeasActive) {
         if ($roughSeasActive && $unit->isFleet()) {

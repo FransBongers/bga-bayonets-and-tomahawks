@@ -21,7 +21,6 @@ class GameMap {
     disbandedColonialBrigades: LineStock<BTToken>;
   };
 
-
   public connections: Record<string, Connection> = {};
   public yearTrack: Record<string, LineStock<BTToken>> = {};
   public actionRoundTrack: Record<string, LineStock<BTToken>> = {};
@@ -139,6 +138,16 @@ class GameMap {
         connection,
       });
     });
+
+    if (gamedatas.highwayUnusableForBritish) {
+      const highway = document.getElementById(
+        `${gamedatas.highwayUnusableForBritish}_road`
+      );
+      if (!highway) {
+        return;
+      }
+      highway.setAttribute('data-type', 'french_control_marker');
+    }
   }
 
   setupUnitsAndSpaces({
@@ -228,7 +237,11 @@ class GameMap {
   }
 
   updateUnitsAndSpaces(gamedatas: BayonetsAndTomahawksGamedatas) {
-    [LOSSES_BOX_BRITISH, LOSSES_BOX_FRENCH, DISBANDED_COLONIAL_BRIGADES].forEach((box) => {
+    [
+      LOSSES_BOX_BRITISH,
+      LOSSES_BOX_FRENCH,
+      DISBANDED_COLONIAL_BRIGADES,
+    ].forEach((box) => {
       const units = gamedatas.units.filter((unit) => unit.location === box);
       this.losses[box].addCards(units);
     });
@@ -496,10 +509,16 @@ class GameMap {
 
   updateWieChits(gamedatas: BayonetsAndTomahawksGamedatas) {
     Object.values(gamedatas.players).forEach((player) => {
-      if (player.wieChit.hasChit && this.game.getPlayerId() !== Number(player.id)) {
+      if (
+        player.wieChit.hasChit &&
+        this.game.getPlayerId() !== Number(player.id)
+      ) {
         // chit is not visible, add fake one
         this.placeFakeWieChit(player.faction);
-      } else if (player.wieChit.chit && this.game.getPlayerId() === Number(player.id)) {
+      } else if (
+        player.wieChit.chit &&
+        this.game.getPlayerId() === Number(player.id)
+      ) {
         const chit = player.wieChit.chit;
         chit.revealed = true;
         this.wieChitPlaceholders[player.faction].addCard(chit);

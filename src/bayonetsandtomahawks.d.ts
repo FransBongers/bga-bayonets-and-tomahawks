@@ -234,6 +234,7 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   };
   spaces: BTSpace[];
   units: BTUnit[];
+  highwayUnusableForBritish: string;
 }
 
 interface BayonetsAndTomahawksPlayerData extends BgaPlayer {
