@@ -47,6 +47,13 @@ class WinterQuartersReturnFleets extends \BayonetsAndTomahawks\Models\AtomicActi
     $fleets = Utils::filter(Units::getAll()->toArray(), function ($unit) {
       return $unit->isFleet() && in_array($unit->getLocation(), SPACES);
     });
+    Notifications::log('stWinterQuartersReturnFleets fleets', $fleets);
+    foreach ($fleets as $fleet) {
+      Notifications::log('fleet', $fleet);
+      if ($fleet->isReduced()) {
+        $fleet->setReduced(0);
+      }
+    }
 
     Units::move(BTHelpers::returnIds($fleets), POOL_FLEETS);
     

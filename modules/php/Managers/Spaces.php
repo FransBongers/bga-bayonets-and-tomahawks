@@ -112,14 +112,58 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
 
       $spaces[$spaceId] = $data;
     }
+
+    foreach (BOXES as $spaceId) {
+      $space = self::getInstance($spaceId);
+
+      $data = [
+        'id' => $spaceId,
+        'battle' => 0,
+        'control' => NEUTRAL,
+        'control_start_of_turn' => NEUTRAL,
+        'defender' => null,
+        'fort_construction' => 0,
+        'location' => 'default',
+        'raided' => null,
+      ];
+
+      $spaces[$spaceId] = $data;
+    }
+
+    self::create($spaces, null);
+  }
+
+  public static function setupBoxes()
+  {
+    $spaces = [];
+
+    foreach (BOXES as $spaceId) {
+      $data = [
+        'id' => $spaceId,
+        'battle' => 0,
+        'control' => NEUTRAL,
+        'control_start_of_turn' => NEUTRAL,
+        'defender' => null,
+        'fort_construction' => 0,
+        'location' => 'default',
+        'raided' => null,
+      ];
+
+      $spaces[$spaceId] = $data;
+    }
+
     self::create($spaces, null);
   }
 
   public static function getUiData()
   {
-    return self::getAll()->map(function ($space) {
+    $spaces = Utils::filter(self::getAll()->toArray(), function ($space) {
+      return $space->isSpaceOnMap();
+    });
+
+    return array_map(function ($space) {
       return $space->jsonSerialize();
-    })->toArray();
+    }, $spaces);
   }
 
   /**

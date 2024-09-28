@@ -104,6 +104,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     selectReserveCard: SelectReserveCardState;
     useEvent: UseEventState;
     winterQuartersMoveStackOnSailBox: WinterQuartersMoveStackOnSailBoxState;
+    winterQuartersPlaceUnitsFromLossesBox: WinterQuartersPlaceUnitsFromLossesBoxState;
     winterQuartersRemainingColonialBrigades: WinterQuartersRemainingColonialBrigadesState;
     winterQuartersReturnToColoniesCombineReducedUnits: WinterQuartersReturnToColoniesCombineReducedUnitsState;
     winterQuartersReturnToColoniesLeaveUnits: WinterQuartersReturnToColoniesLeaveUnitsState;
@@ -187,6 +188,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       useEvent: new UseEventState(this),
       winterQuartersMoveStackOnSailBox:
         new WinterQuartersMoveStackOnSailBoxState(this),
+      winterQuartersPlaceUnitsFromLossesBox:
+        new WinterQuartersPlaceUnitsFromLossesBoxState(this),
       winterQuartersRemainingColonialBrigades:
         new WinterQuartersRemainingColonialBrigadesState(this),
       winterQuartersReturnToColoniesCombineReducedUnits:

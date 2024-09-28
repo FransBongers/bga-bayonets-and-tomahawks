@@ -2236,6 +2236,11 @@ var DISBANDED_COLONIAL_BRIGADES = 'disbandedColonialBrigades';
 var SAIL_BOX = 'sailBox';
 var MARKERS = 'markers';
 var UNITS = 'units';
+var BOXES = [
+    DISBANDED_COLONIAL_BRIGADES,
+    LOSSES_BOX_BRITISH,
+    LOSSES_BOX_FRENCH,
+];
 var VOW_FRENCH_NAVY_LOSSES_PUT_BACK = 'VOWFrenchNavyLossedPutBack';
 var VOW_FEWER_TROOPS_FRENCH = 'VOWFewerTroopsFrench';
 var VOW_FEWER_TROOPS_PUT_BACK_FRENCH = 'VOWFewerTroopsPutBackFrench';
@@ -2395,6 +2400,7 @@ var BayonetsAndTomahawks = (function () {
             selectReserveCard: new SelectReserveCardState(this),
             useEvent: new UseEventState(this),
             winterQuartersMoveStackOnSailBox: new WinterQuartersMoveStackOnSailBoxState(this),
+            winterQuartersPlaceUnitsFromLossesBox: new WinterQuartersPlaceUnitsFromLossesBoxState(this),
             winterQuartersRemainingColonialBrigades: new WinterQuartersRemainingColonialBrigadesState(this),
             winterQuartersReturnToColoniesCombineReducedUnits: new WinterQuartersReturnToColoniesCombineReducedUnitsState(this),
             winterQuartersReturnToColoniesLeaveUnits: new WinterQuartersReturnToColoniesLeaveUnitsState(this),
@@ -4961,14 +4967,21 @@ var NotificationManager = (function () {
                 switch (_b.label) {
                     case 0:
                         _a = notif.args, units = _a.units, spaceId = _a.spaceId, faction = _a.faction;
+                        if (!BOXES.includes(spaceId)) return [3, 2];
+                        return [4, this.game.gameMap.losses[spaceId].addCards(units)];
+                    case 1:
+                        _b.sent();
+                        return [3, 4];
+                    case 2:
                         unitStack = this.game.gameMap.stacks[spaceId][faction];
                         if (!unitStack) {
                             return [2];
                         }
                         return [4, unitStack.addUnits(units)];
-                    case 1:
+                    case 3:
                         _b.sent();
-                        return [2];
+                        _b.label = 4;
+                    case 4: return [2];
                 }
             });
         });
@@ -9683,6 +9696,204 @@ var WinterQuartersMoveStackOnSailBoxState = (function () {
         this.game.addCancelButton();
     };
     return WinterQuartersMoveStackOnSailBoxState;
+}());
+var WinterQuartersPlaceUnitsFromLossesBoxState = (function () {
+    function WinterQuartersPlaceUnitsFromLossesBoxState(game) {
+        this.placedUnits = null;
+        this.placedHighlandBrigade = false;
+        this.game = game;
+    }
+    WinterQuartersPlaceUnitsFromLossesBoxState.prototype.onEnteringState = function (args) {
+        var _this = this;
+        debug('Entering WinterQuartersPlaceUnitsFromLossesBoxState');
+        this.args = args;
+        this.placedUnits = {};
+        Object.keys(this.args.options).forEach(function (unitType) {
+            _this.placedUnits[unitType] = {};
+        });
+        this.placedHighlandBrigade = false;
+        this.updateInterfaceInitialStep();
+    };
+    WinterQuartersPlaceUnitsFromLossesBoxState.prototype.onLeavingState = function () {
+        debug('Leaving WinterQuartersPlaceUnitsFromLossesBoxState');
+    };
+    WinterQuartersPlaceUnitsFromLossesBoxState.prototype.setDescription = function (activePlayerId) { };
+    WinterQuartersPlaceUnitsFromLossesBoxState.prototype.updateInterfaceInitialStep = function () {
+        this.game.clearPossible();
+        var setUnitsSelectable = this.setUnitsSelectable();
+        if (!setUnitsSelectable) {
+            this.updateInterfaceConfirm();
+            return;
+        }
+        this.game.clientUpdatePageTitle({
+            text: _('${you} may select a unit from the Losses Box'),
+            args: {
+                you: '${you}',
+            },
+        });
+        if (true) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
+        }
+        else {
+            this.addCancelButton();
+        }
+    };
+    WinterQuartersPlaceUnitsFromLossesBoxState.prototype.updateInterfaceSelectSpace = function (_a) {
+        var _this = this;
+        var unit = _a.unit, spaceIds = _a.spaceIds, unitType = _a.unitType;
+        if (spaceIds.length === 1) {
+            this.placeUnit({ unit: unit, spaceId: spaceIds[0], unitType: unitType });
+            this.updateInterfaceInitialStep();
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a Space to place ${tkn_unit} on'),
+            args: {
+                you: '${you}',
+                tkn_unit: unit.counterId,
+            },
+        });
+        spaceIds.forEach(function (spaceId) {
+            return _this.game.setLocationSelectable({
+                id: spaceId,
+                callback: function () { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4, this.placeUnit({ unit: unit, spaceId: spaceId, unitType: unitType })];
+                            case 1:
+                                _a.sent();
+                                this.updateInterfaceInitialStep();
+                                return [2];
+                        }
+                    });
+                }); },
+            });
+        });
+        this.addCancelButton();
+    };
+    WinterQuartersPlaceUnitsFromLossesBoxState.prototype.updateInterfaceConfirm = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Confirm unit placement?'),
+            args: {},
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actWinterQuartersPlaceUnitsFromLossesBox',
+                args: {
+                    placedUnits: _this.placedUnits,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.addCancelButton();
+    };
+    WinterQuartersPlaceUnitsFromLossesBoxState.prototype.placeUnit = function (_a) {
+        var unit = _a.unit, spaceId = _a.spaceId, unitType = _a.unitType;
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        this.placedUnits[unitType][unit.id] = spaceId;
+                        if (this.game.getUnitStaticData(unit).highland) {
+                            this.placedHighlandBrigade = true;
+                        }
+                        if (!(spaceId === DISBANDED_COLONIAL_BRIGADES)) return [3, 2];
+                        return [4, this.game.gameMap.losses.disbandedColonialBrigades.addCard(unit)];
+                    case 1:
+                        _b.sent();
+                        return [3, 4];
+                    case 2: return [4, this.game.gameMap.stacks[spaceId][this.args.faction].addUnit(unit)];
+                    case 3:
+                        _b.sent();
+                        _b.label = 4;
+                    case 4: return [2];
+                }
+            });
+        });
+    };
+    WinterQuartersPlaceUnitsFromLossesBoxState.prototype.setUnitsSelectable = function () {
+        var _this = this;
+        var setUnitsSelectable = false;
+        Object.entries(this.args.options).forEach(function (_a) {
+            var unitType = _a[0], data = _a[1];
+            var placedUnitsOfType = Object.keys(_this.placedUnits[unitType]);
+            if (placedUnitsOfType.length === data.numberToPlace) {
+                return;
+            }
+            data.units.forEach(function (unit) {
+                if (placedUnitsOfType.includes(unit.id)) {
+                    return;
+                }
+                if (unitType === METROPOLITAN_BRIGADES &&
+                    _this.game.getUnitStaticData(unit).highland &&
+                    _this.placedHighlandBrigade) {
+                    return;
+                }
+                _this.game.setUnitSelectable({
+                    id: unit.id,
+                    callback: function () {
+                        return _this.updateInterfaceSelectSpace({ unit: unit, spaceIds: data.spaceIds, unitType: unitType });
+                    },
+                });
+                setUnitsSelectable = true;
+            });
+        });
+        return setUnitsSelectable;
+    };
+    WinterQuartersPlaceUnitsFromLossesBoxState.prototype.addCancelButton = function () {
+        var _this = this;
+        this.game.addDangerActionButton({
+            id: 'cancel_btn',
+            text: _('Cancel'),
+            callback: function () { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4, this.revertLocalMoves()];
+                        case 1:
+                            _a.sent();
+                            this.game.onCancel();
+                            return [2];
+                    }
+                });
+            }); },
+        });
+    };
+    WinterQuartersPlaceUnitsFromLossesBoxState.prototype.revertLocalMoves = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var units, stock;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        units = [];
+                        Object.values(this.args.options).forEach(function (data) {
+                            units = units.concat(data.units);
+                        });
+                        stock = this.game.gameMap.losses[this.args.faction === BRITISH ? LOSSES_BOX_BRITISH : LOSSES_BOX_FRENCH];
+                        return [4, stock.addCards(units)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    return WinterQuartersPlaceUnitsFromLossesBoxState;
 }());
 var WinterQuartersRemainingColonialBrigadesState = (function () {
     function WinterQuartersRemainingColonialBrigadesState(game) {

@@ -954,7 +954,7 @@ class Notifications
 
   public static function placeUnits($player, $units, $space, $faction)
   {
-    self::notifyAll("placeUnits", clienttranslate('${player_name} places ${unitsLog} in ${tkn_boldText_spaceName}'), [
+    self::notifyAll("placeUnits", clienttranslate('${player_name} places ${unitsLog} on ${tkn_boldText_spaceName}'), [
       'player' => $player,
       'unitsLog' => self::getUnitsLog($units),
       'units' => $units,

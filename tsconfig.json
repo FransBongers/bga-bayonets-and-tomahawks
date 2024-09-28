@@ -107,6 +107,7 @@
     "src/states/SelectReserveCard.ts",
     "src/states/UseEvent.ts",
     "src/states/WinterQuartersMoveStackOnSailBox.ts",
+    "src/states/WinterQuartersPlaceUnitsFromLossesBox.ts",
     "src/states/WinterQuartersRemainingColonialBrigades.ts",
     "src/states/WinterQuartersReturnToColoniesLeaveUnits.ts",
     "src/states/WinterQuartersReturnToColoniesRedeployCommanders.ts",

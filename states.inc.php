@@ -490,6 +490,16 @@ $machinestates = array(
         'transitions' => [],
     ],
 
+    ST_WINTER_QUARTERS_PLACE_UNITS_FROM_LOSSES_BOX => [
+        'name' => 'winterQuartersPlaceUnitsFromLossesBox',
+        'description' => clienttranslate('${actplayer} must place units from their Losses Box'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actWinterQuartersPlaceUnitsFromLossesBox', 'actPassOptionalAction', 'actRestart'],
+    ],
+
     ST_ACTION_ACTIVATE_STACK => [
         'name' => 'actionActivateStack',
         'description' => clienttranslate('${actplayer} may activate stack'),

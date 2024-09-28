@@ -304,6 +304,15 @@ interface OnEnteringWinterQuartersMoveStackOnSailBoxStateArgs
   spaceIds: string[];
 }
 
+interface OnEnteringWinterQuartersPlaceUnitsFromLossesBoxStateArgs extends CommonArgs {
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+  options: Record<string, {
+    numberToPlace: number;
+    spaceIds: string[];
+    units: BTUnit[];
+  }>
+}
+
 interface WinterQuartersRemainingColonialBrigadesOption {
   space: BTSpace;
   maxRemain: number;

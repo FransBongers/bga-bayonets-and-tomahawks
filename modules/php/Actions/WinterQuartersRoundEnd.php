@@ -53,6 +53,9 @@ class WinterQuartersRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
       $player->discardReserveCard();
     }
 
+    // Add units to pools
+    
+
     // Move tokens
     Globals::setYear($nextYear);
     Globals::setActionRound(ACTION_ROUND_1);

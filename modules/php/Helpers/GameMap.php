@@ -235,4 +235,29 @@ class GameMap extends \APP_DbObject
       }
     }
   }
+
+  /**
+   * $unitsPerSpace[$spaceId] = [
+   * 'space' => $space,
+   * 'units' => [$unit],
+   * ];
+   */
+  public static function placeUnits($unitsPerSpace, $player, $faction)
+  {
+    $unitsPerSpace = array_values($unitsPerSpace);
+
+    usort($unitsPerSpace, function ($a, $b) {
+      return $a['space']->getBattlePriority() - $b['space']->getBattlePriority();
+    });
+
+    foreach ($unitsPerSpace as $data) {
+      $space = $data['space'];
+      $units = $data['units'];
+      Units::move(array_map(function ($unit) {
+        return $unit->getId();
+      }, $units), $space->getId());
+
+      Notifications::placeUnits($player, $units, $space, $faction);
+    }
+  }
 }

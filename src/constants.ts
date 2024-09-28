@@ -238,6 +238,12 @@ const SAIL_BOX = 'sailBox';
 const MARKERS = 'markers';
 const UNITS = 'units';
 
+const BOXES = [
+  DISBANDED_COLONIAL_BRIGADES,
+  LOSSES_BOX_BRITISH,
+  LOSSES_BOX_FRENCH,
+];
+
 /**
  * Vagaries of War tokens
  */

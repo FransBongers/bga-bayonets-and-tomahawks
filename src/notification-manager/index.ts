@@ -539,11 +539,15 @@ class NotificationManager {
 
   async notif_placeUnits(notif: Notif<NotifPlaceUnitsArgs>) {
     const { units, spaceId, faction } = notif.args;
-    const unitStack = this.game.gameMap.stacks[spaceId][faction];
-    if (!unitStack) {
-      return;
+    if (BOXES.includes(spaceId)) {
+      await this.game.gameMap.losses[spaceId].addCards(units);
+    } else {
+      const unitStack = this.game.gameMap.stacks[spaceId][faction];
+      if (!unitStack) {
+        return;
+      }
+      await unitStack.addUnits(units);
     }
-    await unitStack.addUnits(units);
   }
 
   async notif_placeStackMarker(notif: Notif<NotifPlaceStackMarkerArgs>) {

@@ -177,6 +177,7 @@ interface BTUnitStaticData {
   faction: 'british' | 'french';
   colony?: string | null;
   counterText: string;
+  highland: boolean;
   metropolitan: boolean;
   type: string;
 }

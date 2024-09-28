@@ -23,7 +23,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   protected $controlStartOfTurn = null;
   protected $fortConstruction;
   protected $raided = null;
-
+  
   protected $attributes = [
     'id' => ['space_id', 'int'],
     'battle' => ['battle', 'int'],
@@ -47,6 +47,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     'colony',
     'homeSpace',
     'indianVillage',
+    'isSpaceOnMap',
     'militia',
     'name',
     'outpost',
@@ -67,6 +68,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   protected $faction = null;
   protected $homeSpace = null;
   protected $indianVillage = null;
+  protected $isSpaceOnMap = true;
   protected $outpost = false;
   protected $settledSpace = false;
   protected $militia = 0;
@@ -213,6 +215,10 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
       return $this->value > 1;
     }
     return $this->homeSpace === $faction && $this->value > 1;
+  }
+
+  public function isSpaceOnMap() {
+    return $this->isSpaceOnMap;
   }
 
   public function isFriendlyColonyHomeSpace($faction)

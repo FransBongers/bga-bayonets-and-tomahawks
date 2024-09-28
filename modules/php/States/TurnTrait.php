@@ -397,6 +397,16 @@ trait TurnTrait
           'action' => WINTER_QUARTERS_RETURN_FLEETS,
         ],
         // Place units from Losses Box
+        [
+          'action' => WINTER_QUARTERS_PLACE_UNITS_FROM_LOSSES_BOX,
+          'faction' => BRITISH,
+          'playerId' => $playerIds[BRITISH],
+        ],
+        [
+          'action' => WINTER_QUARTERS_PLACE_UNITS_FROM_LOSSES_BOX,
+          'faction' => FRENCH,
+          'playerId' => $playerIds[FRENCH],
+        ],
         // Reset cards
         // Advance Year Marker
         [

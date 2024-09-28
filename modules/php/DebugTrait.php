@@ -112,6 +112,10 @@ trait DebugTrait
 
   function debug_test()
   {
+    // Spaces::setupBoxes();
+
+    
+
     // AtomicActions::get(WINTER_QUARTERS_PRE_RETURN_TO_COLONIES)->removeColonialBrigadesToDisbanded();
     // Notifications::log(CARLISLE, Spaces::get(CARLISLE)->isFriendlyColonyHomeSpace(BRITISH));
     // AtomicActions::get(WINTER_QUARTERS_RETURN_TO_COLONIES)->getOptions();
@@ -125,8 +129,13 @@ trait DebugTrait
     // Notifications::log('french', Scenarios::get()->getYearEndBonus(FRENCH, 1759));
     // Units::get('unit_20')->eliminate(Players::get());
     // Units::get('unit_23')->eliminate(Players::get());
-    // Units::get('unit_121')->setLocation(COTE_DU_SUD);
-    // Units::get('unit_122')->setLocation(COTE_DU_SUD);
+    // Units::get('unit_121')->setLocation(LOSSES_BOX_BRITISH);
+    // Units::get('unit_122')->setLocation(LOSSES_BOX_BRITISH);
+    // Units::get('unit_46')->setLocation(LOSSES_BOX_BRITISH);
+    // Units::get('unit_35')->setLocation(LOSSES_BOX_BRITISH);
+    // Units::get('unit_36')->setLocation(LOSSES_BOX_BRITISH);
+    // Units::get('unit_38')->setLocation(LOSSES_BOX_BRITISH);
+    
     // Units::get('unit_127')->setLocation(COTE_DU_SUD);
     // Units::get('unit_138')->setLocation(COTE_DE_BEAUPRE);
     // Spaces::get(COTE_DU_SUD)->setControl(BRITISH);
@@ -159,7 +168,7 @@ trait DebugTrait
 
     // Cards::get('Card39')->insertOnTop(Locations::buildUpDeck(FRENCH));
     // Cards::get('Card39')->insertOnTop(Locations::buildUpDeck(BRITISH));
-    Cards::get('Card39')->insertOnTop(Locations::campaignDeck(FRENCH));
+    // Cards::get('Card39')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card19')->insertOnTop(Locations::campaignDeck(BRITISH));
     // Cards::get('Card51')->insertOnTop(Locations::campaignDeck(INDIAN));
 
