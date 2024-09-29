@@ -263,6 +263,12 @@ class Settings {
   //   this.game.victoryCardManager.updateCardTooltips();
   //   this.game.updateLogTooltips();
   // }
+  public onChangeCardInfoInTooltipSetting(value: string) {
+    if (this.game.hand) {
+      this.game.hand.updateCardTooltips();
+      this.game.cardsInPlay.updateCardTooltips();
+    }
+  }
 
   //  .##.....##.########.####.##.......####.########.##....##
   //  .##.....##....##.....##..##........##.....##.....##..##.

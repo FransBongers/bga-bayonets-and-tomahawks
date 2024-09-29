@@ -134,6 +134,10 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
 
   }
 
+  public function getName()
+  {
+    return clienttranslate('a card');
+  }
 
   // public function getBuildUpDeck()
   // {

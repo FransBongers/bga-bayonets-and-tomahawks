@@ -23,7 +23,17 @@ class TooltipManager {
     this.game = game;
   }
 
-  public addTextToolTip({nodeId, text}: {nodeId: string; text: string;}) {
+  public addCardTooltip({ nodeId, cardId }: { nodeId: string; cardId: string }) {
+    const html = tplCardTooltip({
+      card: {id: cardId} as BTCard,
+      game: this.game,
+      imageOnly:
+        this.game.settings.get({ id: PREF_CARD_INFO_IN_TOOLTIP }) === DISABLED,
+    });
+    this.game.framework().addTooltipHtml(nodeId, html, 500);
+  }
+
+  public addTextToolTip({ nodeId, text }: { nodeId: string; text: string }) {
     this.game.framework().addTooltip(nodeId, _(text), '', 500);
   }
 
@@ -31,7 +41,5 @@ class TooltipManager {
     this.game.framework().removeTooltip(nodeId);
   }
 
-  public setupTooltips() {
-  }
-
+  public setupTooltips() {}
 }

@@ -45,18 +45,18 @@ class CardsInPlay {
     this.cards = {
       [BRITISH]: new LineStock<BTCard>(
         this.game.cardManager,
-        document.getElementById("british_card_in_play"),
-        { direction: "column", center: false }
+        document.getElementById('british_card_in_play'),
+        { direction: 'column', center: false }
       ),
       [FRENCH]: new LineStock<BTCard>(
         this.game.cardManager,
-        document.getElementById("french_card_in_play"),
-        { direction: "column", center: false }
+        document.getElementById('french_card_in_play'),
+        { direction: 'column', center: false }
       ),
       [INDIAN]: new LineStock<BTCard>(
         this.game.cardManager,
-        document.getElementById("indian_card_in_play"),
-        { direction: "column", center: false }
+        document.getElementById('indian_card_in_play'),
+        { direction: 'column', center: false }
       ),
     };
 
@@ -89,5 +89,15 @@ class CardsInPlay {
 
   public getStock({ faction }: { faction: Faction }): LineStock<BTCard> {
     return this.cards[faction];
+  }
+
+  public updateCardTooltips() {
+    [BRITISH, FRENCH, INDIAN].forEach((faction) => {
+      const cards = this.cards[faction].getCards();
+      cards.forEach((card) => {
+        this.game.tooltipManager.removeTooltip(card.id);
+        this.game.tooltipManager.addCardTooltip({ nodeId: card.id, cardId: card.id });
+      });
+    });
   }
 }

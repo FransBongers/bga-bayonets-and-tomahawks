@@ -155,6 +155,16 @@ class Notifications
     }
   }
 
+  protected static function tknCardArg($card)
+  {
+    return $card->getId();
+  }
+
+  protected static function tknCardNameArg($card)
+  {
+    return $card->getId() . ':' . $card->getName();
+  }
+
   //  .##.....##.########.####.##.......####.########.##....##
   //  .##.....##....##.....##..##........##.....##.....##..##.
   //  .##.....##....##.....##..##........##.....##......####..
@@ -501,9 +511,11 @@ class Notifications
 
   public static function drawCard($player, $card)
   {
-    self::notify($player, 'drawCardPrivate', clienttranslate('Private: ${player_name} draws  ${cardId}'), [
+    self::notify($player, 'drawCardPrivate', clienttranslate('${player_name} draws ${tkn_cardName}${tkn_card}'), [
       'player' => $player,
       'card' => $card,
+      'tkn_card' => self::tknCardArg($card),
+      'tkn_cardName' => self::tknCardNameArg($card),
       'cardId' => $card->getId(),
       'preserve' => ['playerId'],
     ]);
@@ -555,18 +567,19 @@ class Notifications
   {
     $factionName = self::getFactionName($card->getFaction());
 
-    self::notify($player, 'discardCardFromHandPrivate', clienttranslate('Private: ${player_name} discards card ${tkn_card}'), [
+    self::notify($player, 'discardCardFromHandPrivate', clienttranslate('${player_name} discards card ${tkn_cardName}${tkn_card}'), [
       'player' => $player,
       'card' => $card,
-      'tkn_card' => $card->getId(),
+      'tkn_card' => self::tknCardArg($card),
+      'tkn_cardName' => self::tknCardNameArg($card),
     ]);
 
-    self::notifyAll("discardCardFromHand", clienttranslate('${player_name} discards a ${factionName} card'), [
+    self::notifyAll("discardCardFromHand", clienttranslate('${player_name} discards ${tkn_boldText}'), [
       'player' => $player,
       'faction' => $card->getFaction(),
-      'factionName' => $factionName,
+      'tkn_boldText' => clienttranslate('a card'),
       'preserve' => ['playerId'],
-      'i18n' => ['factionName']
+      'i18n' => ['tkn_boldText']
     ]);
   }
 

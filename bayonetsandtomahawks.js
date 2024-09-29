@@ -2062,6 +2062,7 @@ var CardManager = (function () {
 }());
 var MIN_PLAY_AREA_WIDTH = 1500;
 var MIN_NOTIFICATION_MS = 1200;
+var ENABLED = 'enabled';
 var DISABLED = 'disabled';
 var BT_SELECTABLE = 'bt_selectable';
 var BT_SELECTED = 'bt_selected';
@@ -2069,6 +2070,7 @@ var DISCARD = 'discard';
 var PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY = 'confirmEndOfTurnPlayerSwitchOnly';
 var PREF_SHOW_ANIMATIONS = 'showAnimations';
 var PREF_ANIMATION_SPEED = 'animationSpeed';
+var PREF_CARD_INFO_IN_TOOLTIP = 'cardInfoInTooltip';
 var PREF_CARD_SIZE_IN_LOG = 'cardSizeInLog';
 var PREF_DISABLED = 'disabled';
 var PREF_ENABLED = 'enabled';
@@ -2903,9 +2905,25 @@ var BayonetsAndTomahawks = (function () {
         if ($('dockedlog_' + notif.mobileLogId)) {
             dojo.addClass('dockedlog_' + notif.mobileLogId, 'notif_' + type);
         }
+        while (this.tooltipsToMap.length) {
+            var tooltipToMap = this.tooltipsToMap.pop();
+            if (!tooltipToMap || !tooltipToMap[1]) {
+                console.error('error tooltipToMap', tooltipToMap);
+            }
+            else {
+                this.addLogTooltip({
+                    tooltipId: tooltipToMap[0],
+                    cardId: tooltipToMap[1],
+                });
+            }
+        }
     };
     BayonetsAndTomahawks.prototype.addLogTooltip = function (_a) {
         var tooltipId = _a.tooltipId, cardId = _a.cardId;
+        this.tooltipManager.addCardTooltip({
+            nodeId: "bt_tooltip_".concat(tooltipId),
+            cardId: cardId,
+        });
     };
     BayonetsAndTomahawks.prototype.setLoader = function (value, max) {
         this.framework().inherited(arguments);
@@ -2990,25 +3008,28 @@ var BTCardManager = (function (_super) {
     }
     BTCardManager.prototype.clearInterface = function () { };
     BTCardManager.prototype.setupDiv = function (card, div) {
-        div.style.width = "calc(var(--btCardScale) * 250px)";
-        div.style.height = "calc(var(--btCardScale) * 179px)";
-        div.style.position = "relative";
+        div.style.width = 'calc(var(--btCardScale) * 250px)';
+        div.style.height = 'calc(var(--btCardScale) * 179px)';
+        div.style.position = 'relative';
         div.classList.add('bt_card_container');
     };
     BTCardManager.prototype.setupFrontDiv = function (card, div) {
-        div.classList.add("bt_card");
-        div.setAttribute("data-card-id", card.id);
-        div.style.width = "calc(var(--btCardScale) * 250px)";
-        div.style.height = "calc(var(--btCardScale) * 179px)";
+        div.classList.add('bt_card');
+        div.setAttribute('data-card-id', card.id);
+        div.style.width = 'calc(var(--btCardScale) * 250px)';
+        div.style.height = 'calc(var(--btCardScale) * 179px)';
+        this.game.tooltipManager.addCardTooltip({ nodeId: card.id, cardId: card.id });
     };
     BTCardManager.prototype.setupBackDiv = function (card, div) {
-        div.classList.add("bt_card");
-        div.setAttribute("data-card-id", "".concat(card.faction, "_back"));
-        div.style.width = "calc(var(--btCardScale) * 250px)";
-        div.style.height = "calc(var(--btCardScale) * 179px)";
+        div.classList.add('bt_card');
+        div.setAttribute('data-card-id', "".concat(card.faction, "_back"));
+        div.style.width = 'calc(var(--btCardScale) * 250px)';
+        div.style.height = 'calc(var(--btCardScale) * 179px)';
     };
     BTCardManager.prototype.isCardVisible = function (card) {
-        if (card.location.startsWith("hand_") || card.location.startsWith("cardInPlay_") || card.location.startsWith("selected_")) {
+        if (card.location.startsWith('hand_') ||
+            card.location.startsWith('cardInPlay_') ||
+            card.location.startsWith('selected_')) {
             return true;
         }
         return false;
@@ -3035,9 +3056,9 @@ var CardsInPlay = (function () {
         var _b;
         var gamedatas = _a.gamedatas;
         this.cards = (_b = {},
-            _b[BRITISH] = new LineStock(this.game.cardManager, document.getElementById("british_card_in_play"), { direction: "column", center: false }),
-            _b[FRENCH] = new LineStock(this.game.cardManager, document.getElementById("french_card_in_play"), { direction: "column", center: false }),
-            _b[INDIAN] = new LineStock(this.game.cardManager, document.getElementById("indian_card_in_play"), { direction: "column", center: false }),
+            _b[BRITISH] = new LineStock(this.game.cardManager, document.getElementById('british_card_in_play'), { direction: 'column', center: false }),
+            _b[FRENCH] = new LineStock(this.game.cardManager, document.getElementById('french_card_in_play'), { direction: 'column', center: false }),
+            _b[INDIAN] = new LineStock(this.game.cardManager, document.getElementById('indian_card_in_play'), { direction: 'column', center: false }),
             _b);
         this.updateCardsInPlay({ gamedatas: gamedatas });
     };
@@ -3074,6 +3095,16 @@ var CardsInPlay = (function () {
     CardsInPlay.prototype.getStock = function (_a) {
         var faction = _a.faction;
         return this.cards[faction];
+    };
+    CardsInPlay.prototype.updateCardTooltips = function () {
+        var _this = this;
+        [BRITISH, FRENCH, INDIAN].forEach(function (faction) {
+            var cards = _this.cards[faction].getCards();
+            cards.forEach(function (card) {
+                _this.game.tooltipManager.removeTooltip(card.id);
+                _this.game.tooltipManager.addCardTooltip({ nodeId: card.id, cardId: card.id });
+            });
+        });
     };
     return CardsInPlay;
 }());
@@ -4182,18 +4213,18 @@ var Hand = (function () {
     };
     Hand.prototype.updateHand = function () { };
     Hand.prototype.setupHand = function () {
-        var node = $("game_play_area");
-        node.insertAdjacentHTML("beforeend", tplHand());
-        var handWrapper = $("floating_hand_wrapper");
-        $("floating_hand_button").addEventListener("click", function () {
-            if (handWrapper.dataset.open && handWrapper.dataset.open == "hand") {
+        var node = $('game_play_area');
+        node.insertAdjacentHTML('beforeend', tplHand());
+        var handWrapper = $('floating_hand_wrapper');
+        $('floating_hand_button').addEventListener('click', function () {
+            if (handWrapper.dataset.open && handWrapper.dataset.open == 'hand') {
                 delete handWrapper.dataset.open;
             }
             else {
-                handWrapper.dataset.open = "hand";
+                handWrapper.dataset.open = 'hand';
             }
         });
-        this.hand = new LineStock(this.game.cardManager, document.getElementById("player_hand"), { wrap: "nowrap", gap: "12px", center: false });
+        this.hand = new LineStock(this.game.cardManager, document.getElementById('player_hand'), { wrap: 'nowrap', gap: '12px', center: false });
     };
     Hand.prototype.addCard = function (card) {
         return __awaiter(this, void 0, void 0, function () {
@@ -4226,10 +4257,18 @@ var Hand = (function () {
         return this.hand;
     };
     Hand.prototype.open = function () {
-        var handWrapper = $("floating_hand_wrapper");
+        var handWrapper = $('floating_hand_wrapper');
         if (handWrapper) {
-            handWrapper.dataset.open = "hand";
+            handWrapper.dataset.open = 'hand';
         }
+    };
+    Hand.prototype.updateCardTooltips = function () {
+        var _this = this;
+        var cards = this.hand.getCards();
+        cards.forEach(function (card) {
+            _this.game.tooltipManager.removeTooltip(card.id);
+            _this.game.tooltipManager.addCardTooltip({ nodeId: card.id, cardId: card.id });
+        });
     };
     return Hand;
 }());
@@ -4261,6 +4300,7 @@ var LOG_TOKEN_BOLD_TEXT = 'boldText';
 var LOG_TOKEN_BOLD_ITALIC_TEXT = 'boldItalicText';
 var LOG_TOKEN_NEW_LINE = 'newLine';
 var LOG_TOKEN_CARD = 'card';
+var LOG_TOKEN_CARD_NAME = 'cardName';
 var LOG_TOKEN_MARKER = 'marker';
 var LOG_TOKEN_WIE_CHIT = 'wieChit';
 var LOG_TOKEN_ROAD = 'road';
@@ -4282,6 +4322,18 @@ var getTokenDiv = function (_a) {
         case LOG_TOKEN_MARKER:
             var _c = value.split(':'), tokenType = _c[0], tokenSide = _c[1];
             return tplLogTokenMarker(tokenType, tokenSide);
+        case LOG_TOKEN_CARD_NAME:
+            var cardNameTooltipId = undefined;
+            var withTooltip = value.includes(':');
+            if (withTooltip) {
+                cardNameTooltipId = "bt_tooltip_".concat(game._last_tooltip_id);
+                game.tooltipsToMap.push([game._last_tooltip_id, value.split(':')[0]]);
+                game._last_tooltip_id++;
+            }
+            return tlpLogTokenBoldText({
+                text: withTooltip ? value.split(':')[1] : value,
+                tooltipId: cardNameTooltipId,
+            });
         case LOG_TOKEN_NEW_LINE:
             return '<br>';
         case LOG_TOKEN_DIE_RESULT:
@@ -5754,6 +5806,23 @@ var getSettingsConfig = function () {
                     },
                     type: "slider",
                 },
+                _a[PREF_CARD_INFO_IN_TOOLTIP] = {
+                    id: PREF_CARD_INFO_IN_TOOLTIP,
+                    onChangeInSetup: false,
+                    defaultValue: DISABLED,
+                    label: _('Show card info in tooltip'),
+                    type: 'select',
+                    options: [
+                        {
+                            label: _('Enabled'),
+                            value: ENABLED,
+                        },
+                        {
+                            label: _('Disabled (card image only)'),
+                            value: DISABLED,
+                        },
+                    ],
+                },
                 _a),
         },
         gameplay: {
@@ -5971,6 +6040,12 @@ var Settings = (function () {
             this.game.animationManager.getSettings().duration = 0;
         }
         this.checkAnmimationSpeedVisisble();
+    };
+    Settings.prototype.onChangeCardInfoInTooltipSetting = function (value) {
+        if (this.game.hand) {
+            this.game.hand.updateCardTooltips();
+            this.game.cardsInPlay.updateCardTooltips();
+        }
     };
     Settings.prototype.changeTab = function (_a) {
         var id = _a.id;
@@ -10788,11 +10863,31 @@ var tplCardTooltipContainer = function (_a) {
     var card = _a.card, content = _a.content;
     return "<div class=\"bt_card_tooltip\">\n  <div class=\"bt_card_tooltip_inner_container\">\n    ".concat(content, "\n  </div>\n  ").concat(card, "\n</div>");
 };
+var tplCardTooltip = function (_a) {
+    var card = _a.card, game = _a.game, _b = _a.imageOnly, imageOnly = _b === void 0 ? false : _b;
+    var cardHtml = "<div class=\"bt_card\" data-card-id=\"".concat(card.id, "\"></div>");
+    if (imageOnly) {
+        return "<div class=\"bt_card_only_tooltip\">".concat(cardHtml, "</div>");
+    }
+    return tplCardTooltipContainer({
+        card: cardHtml,
+        content: "\n      TODO\n    ",
+    });
+};
 var TooltipManager = (function () {
     function TooltipManager(game) {
         this.idRegex = /id="[a-z]*_[0-9]*_[0-9]*"/;
         this.game = game;
     }
+    TooltipManager.prototype.addCardTooltip = function (_a) {
+        var nodeId = _a.nodeId, cardId = _a.cardId;
+        var html = tplCardTooltip({
+            card: { id: cardId },
+            game: this.game,
+            imageOnly: this.game.settings.get({ id: PREF_CARD_INFO_IN_TOOLTIP }) === DISABLED,
+        });
+        this.game.framework().addTooltipHtml(nodeId, html, 500);
+    };
     TooltipManager.prototype.addTextToolTip = function (_a) {
         var nodeId = _a.nodeId, text = _a.text;
         this.game.framework().addTooltip(nodeId, _(text), '', 500);
@@ -10800,8 +10895,7 @@ var TooltipManager = (function () {
     TooltipManager.prototype.removeTooltip = function (nodeId) {
         this.game.framework().removeTooltip(nodeId);
     };
-    TooltipManager.prototype.setupTooltips = function () {
-    };
+    TooltipManager.prototype.setupTooltips = function () { };
     return TooltipManager;
 }());
 var WieChitManager = (function (_super) {
@@ -10850,6 +10944,7 @@ var UnitStack = (function (_super) {
         _this.element = element;
         _this.hovering = false;
         _this.isOpen = false;
+        _this.unitsPerRow = 5;
         _this.element.classList.add('bt_stack');
         _this.faction = faction;
         _this.element.addEventListener('mouseover', function () { return _this.onMouseOver(); });
@@ -10901,9 +10996,15 @@ var UnitStack = (function (_super) {
         }
         cards.forEach(function (card, index) {
             var unitDiv = stock.getCardElement(card);
-            unitDiv.style.top = "calc(var(--btTokenScale) * ".concat(index * (expanded ? 0 : -8), "px)");
+            var row = Math.floor(index / _this.unitsPerRow);
+            var column = index % _this.unitsPerRow;
             var offset = expanded ? 52 : 8;
-            unitDiv.style.left = "calc(var(--btTokenScale) * ".concat(index * (_this.faction === FRENCH ? -1 * offset : offset), "px)");
+            unitDiv.style.top = "calc(var(--btTokenScale) * ".concat(expanded ? row * offset * -1 : index * -8, "px)");
+            var left = expanded ? column * offset : index * offset;
+            if (_this.faction === FRENCH) {
+                left = left * -1;
+            }
+            unitDiv.style.left = "calc(var(--btTokenScale) * ".concat(left, "px)");
         });
         if (!expanded) {
             this.element.removeAttribute('data-expanded');

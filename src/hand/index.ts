@@ -22,22 +22,22 @@ class Hand {
   updateHand() {}
 
   public setupHand() {
-    const node: HTMLElement = $("game_play_area");
-    node.insertAdjacentHTML("beforeend", tplHand());
+    const node: HTMLElement = $('game_play_area');
+    node.insertAdjacentHTML('beforeend', tplHand());
 
-    const handWrapper = $("floating_hand_wrapper");
-    $("floating_hand_button").addEventListener("click", () => {
-      if (handWrapper.dataset.open && handWrapper.dataset.open == "hand") {
+    const handWrapper = $('floating_hand_wrapper');
+    $('floating_hand_button').addEventListener('click', () => {
+      if (handWrapper.dataset.open && handWrapper.dataset.open == 'hand') {
         delete handWrapper.dataset.open;
       } else {
-        handWrapper.dataset.open = "hand";
+        handWrapper.dataset.open = 'hand';
       }
     });
 
     this.hand = new LineStock<BTCard>(
       this.game.cardManager,
-      document.getElementById("player_hand"),
-      { wrap: "nowrap", gap: "12px", center: false }
+      document.getElementById('player_hand'),
+      { wrap: 'nowrap', gap: '12px', center: false }
     );
   }
 
@@ -58,9 +58,17 @@ class Hand {
   }
 
   public open(): void {
-    const handWrapper = $("floating_hand_wrapper");
+    const handWrapper = $('floating_hand_wrapper');
     if (handWrapper) {
-      handWrapper.dataset.open = "hand";
+      handWrapper.dataset.open = 'hand';
     }
+  }
+
+  public updateCardTooltips() {
+    const cards = this.hand.getCards();
+    cards.forEach((card) => {
+      this.game.tooltipManager.removeTooltip(card.id);
+      this.game.tooltipManager.addCardTooltip({ nodeId: card.id, cardId: card.id });
+    });
   }
 }

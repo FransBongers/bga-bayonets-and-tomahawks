@@ -4,6 +4,7 @@ const LOG_TOKEN_NEW_LINE = 'newLine';
 // const LOG_TOKEN_PLAYER_NAME = "playerName";
 // Game specific
 const LOG_TOKEN_CARD = 'card';
+const LOG_TOKEN_CARD_NAME = 'cardName';
 const LOG_TOKEN_MARKER = 'marker';
 const LOG_TOKEN_WIE_CHIT = 'wieChit';
 const LOG_TOKEN_ROAD = 'road';
@@ -33,6 +34,18 @@ const getTokenDiv = ({
     case LOG_TOKEN_MARKER:
       const [tokenType, tokenSide] = value.split(':');
       return tplLogTokenMarker(tokenType, tokenSide);
+    case LOG_TOKEN_CARD_NAME:
+      let cardNameTooltipId = undefined;
+      const withTooltip = value.includes(':');
+      if (withTooltip) {
+        cardNameTooltipId = `bt_tooltip_${game._last_tooltip_id}`;
+        game.tooltipsToMap.push([game._last_tooltip_id, value.split(':')[0]]);
+        game._last_tooltip_id++;
+      }
+      return tlpLogTokenBoldText({
+        text: withTooltip ? value.split(':')[1] : value,
+        tooltipId: cardNameTooltipId,
+      });
     case LOG_TOKEN_NEW_LINE:
       return '<br>';
     case LOG_TOKEN_DIE_RESULT:

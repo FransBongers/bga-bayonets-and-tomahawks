@@ -13,7 +13,12 @@
   padding-bottom: 8px;
   width: 440px;
   min-height: 372px;
+  --btCardScale: 1.5;
   // background-color: purple;
+  .bt_card {
+    min-width: calc(var(--btCardScale)* 250px);
+    min-height: calc(var(--btCardScale)* 179px);
+  }
 
   .bt_card_tooltip_inner_container {
     flex-grow: 1;
@@ -65,20 +70,26 @@
       margin-bottom: 8px;
     }
   }
+
+
 }
 
-.bt_card_in_tooltip {
-  // position: absolute;
-  // bottom: 8px;
-  // left: 290px;
-  margin-right: -100px;
-  margin-left: 8px;
-  align-self: center;
-  width: 240px;
-  height: 334px;
-  background-size: 240px 334px;
-  box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.4);
-  border-radius: 10px;
-  // transform: perspective(60em) rotateY(-10deg)// scale(.93);
-  // animation: ea-wiggle 5s infinite alternate;
+// .bt_card_in_tooltip {
+//   // position: absolute;
+//   // bottom: 8px;
+//   // left: 290px;
+//   margin-right: -100px;
+//   margin-left: 8px;
+//   align-self: center;
+//   width: 240px;
+//   height: 334px;
+//   background-size: 240px 334px;
+//   box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.4);
+//   border-radius: 10px;
+//   // transform: perspective(60em) rotateY(-10deg)// scale(.93);
+//   // animation: ea-wiggle 5s infinite alternate;
+// }
+
+.bt_card_only_tooltip {
+  --btCardScale: 1.8;
 }

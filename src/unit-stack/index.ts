@@ -5,6 +5,7 @@ class UnitStack extends ManualPositionStock<BTToken> {
   private hovering: boolean = false;
   private faction: 'british' | 'french';
   private isOpen: boolean = false;
+  private unitsPerRow: number = 5;
 
   /**
    * @param manager the card manager
@@ -174,15 +175,20 @@ class UnitStack extends ManualPositionStock<BTToken> {
 
     cards.forEach((card, index) => {
       const unitDiv = stock.getCardElement(card);
-      // unitDiv.style.position = 'absolute';
-      unitDiv.style.top = `calc(var(--btTokenScale) * ${
-        index * (expanded ? 0 : -8)
-      }px)`;
+      const row = Math.floor(index / this.unitsPerRow);
+      const column = index % this.unitsPerRow;
+
       const offset = expanded ? 52 : 8;
-      // calc(var(--btTokenScale) * 52px)
-      unitDiv.style.left = `calc(var(--btTokenScale) * ${
-        index * (this.faction === FRENCH ? -1 * offset : offset)
+
+      unitDiv.style.top = `calc(var(--btTokenScale) * ${
+        expanded ? row * offset * -1 : index * -8
       }px)`;
+
+      let left: number = expanded ? column * offset : index * offset;
+      if (this.faction === FRENCH) {
+        left = left * -1;
+      }
+      unitDiv.style.left = `calc(var(--btTokenScale) * ${left}px)`;
     });
     if (!expanded) {
       // TODO: add timeout for this so it is removed after transition finished?

@@ -13,29 +13,35 @@ class BTCardManager extends CardManager<BTCard> {
   clearInterface() {}
 
   setupDiv(card: BTCard, div: HTMLElement) {
-    div.style.width = "calc(var(--btCardScale) * 250px)";
-    div.style.height = "calc(var(--btCardScale) * 179px)";
+    div.style.width = 'calc(var(--btCardScale) * 250px)';
+    div.style.height = 'calc(var(--btCardScale) * 179px)';
 
-    div.style.position = "relative";
-    div.classList.add('bt_card_container')
+    div.style.position = 'relative';
+    div.classList.add('bt_card_container');
   }
 
   setupFrontDiv(card: BTCard, div: HTMLElement) {
-    div.classList.add("bt_card");
-    div.setAttribute("data-card-id", card.id);
-    div.style.width = "calc(var(--btCardScale) * 250px)";
-    div.style.height = "calc(var(--btCardScale) * 179px)";
+    div.classList.add('bt_card');
+    div.setAttribute('data-card-id', card.id);
+    div.style.width = 'calc(var(--btCardScale) * 250px)';
+    div.style.height = 'calc(var(--btCardScale) * 179px)';
+
+    this.game.tooltipManager.addCardTooltip({ nodeId: card.id, cardId: card.id });
   }
 
   setupBackDiv(card: BTCard, div: HTMLElement) {
-    div.classList.add("bt_card");
-    div.setAttribute("data-card-id", `${card.faction}_back`);
-    div.style.width = "calc(var(--btCardScale) * 250px)";
-    div.style.height = "calc(var(--btCardScale) * 179px)";
+    div.classList.add('bt_card');
+    div.setAttribute('data-card-id', `${card.faction}_back`);
+    div.style.width = 'calc(var(--btCardScale) * 250px)';
+    div.style.height = 'calc(var(--btCardScale) * 179px)';
   }
 
   isCardVisible(card: BTCard) {
-    if (card.location.startsWith("hand_") || card.location.startsWith("cardInPlay_") || card.location.startsWith("selected_")) {
+    if (
+      card.location.startsWith('hand_') ||
+      card.location.startsWith('cardInPlay_') ||
+      card.location.startsWith('selected_')
+    ) {
       return true;
     }
     return false;

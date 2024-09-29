@@ -77,6 +77,8 @@ interface BayonetsAndTomahawksGame extends Game {
     checkAction?: string; // Action used in checkAction
   }) => void;
   updateLayout: () => void;
+  _last_tooltip_id: number; // generic
+  tooltipsToMap: [tooltipId: number, card_id: string][]; // generic
   animationManager: AnimationManager;
   cardsInPlay: CardsInPlay;
   hand: Hand;
