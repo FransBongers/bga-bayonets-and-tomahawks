@@ -112,7 +112,7 @@ trait DebugTrait
 
   function debug_test()
   {
-     Notifications::log('can Be', AtomicActions::get(CONSTRUCTION)->canBePerformedBy(Units::getMany(['unit_28', 'unit_81'])->toArray(), Spaces::get(MONTREAL), ARMY_AP, BRITISH));
+      // Connections::get(CHIGNECTOU_MIRAMICHY)->setRoad(1);
     
 
     // AtomicActions::get(WINTER_QUARTERS_PRE_RETURN_TO_COLONIES)->removeColonialBrigadesToDisbanded();
@@ -129,8 +129,8 @@ trait DebugTrait
     // Units::get('unit_20')->eliminate(Players::get());
     // Units::get('unit_23')->eliminate(Players::get());
     // Units::get('unit_121')->setLocation(LOSSES_BOX_BRITISH);
-    // Units::get('unit_122')->setLocation(LOSSES_BOX_BRITISH);
-    // Units::get('unit_46')->setLocation(LOSSES_BOX_BRITISH);
+    Units::get('unit_59')->setLocation(CHIGNECTOU);
+    Units::get('unit_8')->setLocation(CHIGNECTOU);
     // Units::get('unit_35')->setLocation(LOSSES_BOX_BRITISH);
     // Units::get('unit_36')->setLocation(LOSSES_BOX_BRITISH);
     // Units::get('unit_38')->setLocation(LOSSES_BOX_BRITISH);

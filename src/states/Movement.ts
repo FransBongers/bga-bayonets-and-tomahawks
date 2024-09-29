@@ -107,7 +107,7 @@ class MovementState implements State {
       },
     });
 
-    if (this.selectedUnits.length === 0) {
+    if (this.selectedUnits.length === 0 || this.selectedUnits.length === this.args.requiredUnitIds.length) {
       this.game.addPassButton({
         optionalAction: this.args.optionalAction,
       });

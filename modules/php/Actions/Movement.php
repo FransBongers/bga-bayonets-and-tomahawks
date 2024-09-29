@@ -95,15 +95,28 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
       });
     }
 
+    // Required move when finishing road construction
+    $destination = isset($info['destinationId']) && $info['destinationId'] !== null ? Spaces::get($info['destinationId']) : null;
+    if ($destination !== null) {
+      $adjacent = Utils::filter($adjacent, function ($data) use ($destination) {
+        return $data['space']->getId() === $destination->getId();
+      });
+      $connection = $adjacent[0]['connection'];
+      $units = Utils::filter($units, function ($unit) use ($connection) {
+        if (!$connection->isCoastal() && $unit->isFleet()) {
+          return false;
+        }
+        return true;
+      });
+    }
+
     return [
       'source' => $source,
       'adjacent' => $adjacent,
       'fromSpace' => $space,
       'faction' => $playerFaction,
       'units' => $units,
-      // 'destination' => null,
-      // 'test' => $info['destinationId'],
-      'destination' => isset($info['destinationId']) && $info['destinationId'] !== null ? Spaces::get($info['destinationId']) : null,
+      'destination' => $destination,
       'requiredUnitIds' => isset($info['requiredUnitIds']) ? $info['requiredUnitIds'] : [],
       'count' => count($this->ctx->getParent()->getResolvedActions([MOVEMENT])),
       'forcedMarchAvailable' => $forcedMarchAvailable,
