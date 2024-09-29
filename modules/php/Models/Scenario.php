@@ -19,6 +19,7 @@ class Scenario implements \JsonSerializable
   protected $pools;
   protected $victoryMarkerLocation;
   protected $victoryThreshold = [];
+  protected $yearEndBonusDescriptions = [];
 
   public function __construct() {}
 
@@ -120,6 +121,8 @@ class Scenario implements \JsonSerializable
       'name' => $this->name,
       'duration' => $this->duration,
       'reinforcements' => $this->reinforcements,
+      'victoryThreshold' => $this->victoryThreshold,
+      'yearEndBonusDescriptions' => $this->yearEndBonusDescriptions,
     ];
     // foreach ($this->attributes as $attribute => $field) {
     //   $data[$attribute] = $this->$attribute;

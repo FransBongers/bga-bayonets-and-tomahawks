@@ -3076,9 +3076,11 @@ body > .card {
   min-height: 300px;
   padding: 16px;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
+  flex-wrap: nowrap;
   gap: 16px;
+  overflow-y: auto;
+  max-height: 60vh;
 }
 .scenario_modal #scenario_modal_content .bt_victory_track_display {
   background-image: url("img/map.webp");
@@ -3096,7 +3098,8 @@ body > .card {
 }
 .scenario_modal #scenario_modal_content .bt_scenario_info_faction {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 16px;
 }
 .scenario_modal #scenario_modal_content .bt_scenario_info_faction .bt_container {
@@ -3119,8 +3122,8 @@ body > .card {
 .scenario_modal #scenario_modal_content .bt_scenario_info_reinforcements[data-duration="2"] {
   grid-template-columns: max-content max-content max-content;
 }
-.scenario_modal #scenario_modal_content .bt_scenario_info_reinforcements[data-duration="4"] {
-  grid-template-columns: max-content max-content max-content max-content max-content;
+.scenario_modal #scenario_modal_content .bt_scenario_info_reinforcements[data-duration="5"] {
+  grid-template-columns: max-content max-content max-content max-content max-content max-content;
 }
 .scenario_modal #scenario_modal_content .bt_year_end_bonus_container {
   display: flex;

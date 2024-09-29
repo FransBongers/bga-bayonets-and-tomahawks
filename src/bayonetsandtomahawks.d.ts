@@ -60,7 +60,11 @@ interface BayonetsAndTomahawksGame extends Game {
   }) => void;
   setLocationSelected: (props: { id: string }) => void;
   setStackSelected: (props: { spaceId: string; faction: string }) => void;
-  setStackSelectable: (props: { spaceId: string; faction: string; callback: (event: PointerEvent) => void; }) => void;
+  setStackSelectable: (props: {
+    spaceId: string;
+    faction: string;
+    callback: (event: PointerEvent) => void;
+  }) => void;
   setUnitSelectable: (props: {
     id: string;
     callback: (event: PointerEvent) => void;
@@ -203,6 +207,22 @@ interface BTScenario {
   duration: number;
   name: string;
   reinforcements: Record<string, BTScenarioReinforcements>;
+  victoryThreshold: {
+    [faction: string]: {
+      [year: number]: number;
+    };
+  };
+  yearEndBonusDescriptions: {
+    [faction: string]: {
+      [year: number]: {
+        args: {
+          tkn_boldItalicText: string;
+        };
+        log: string;
+        vpBonus: number;
+      };
+    };
+  };
 }
 
 interface BayonetsAndTomahawksGamedatas extends Gamedatas {

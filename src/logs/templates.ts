@@ -1,7 +1,17 @@
 /* ------- DEFAULT LOG TOKENS ------- */
 
-const tlpLogTokenBoldText = ({ text }) =>
-  `<span style="font-weight: 700;">${_(text)}</span>`;
+const tlpLogTokenBoldText = ({
+  text,
+  tooltipId,
+  italic = false,
+}: {
+  text: string;
+  tooltipId?: string;
+  italic?: boolean;
+}) =>
+  `<span ${tooltipId ? `id="${tooltipId}"` : ''} style="font-weight: 700;${
+    italic ? ' font-style: italic;' : ''
+  }">${_(text)}</span>`;
 
 const tplLogTokenPlayerName = ({
   name,

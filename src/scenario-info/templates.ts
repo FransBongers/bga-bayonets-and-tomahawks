@@ -6,7 +6,10 @@ const tplScenarioInfoButton = () => {
     </div>`;
 };
 
-const tplVictoryTrackDisplay = (type: VictoryTrackDisplayType) => {
+const tplVictoryTrackDisplay = (type: string) => {
+  if (!VICTORY_TRACK_DISPLAY_CONFIG[type]) {
+    return type;
+  }
   const {
     width,
     height,
@@ -22,138 +25,56 @@ const tplVictoryTrackDisplay = (type: VictoryTrackDisplayType) => {
 `;
 };
 
-const tplScenarioInfoFactions = (scenario: BTScenario) => {
-  switch (scenario.id) {
-    case 'VaudreuilsPetiteGuerre1755':
-      return `
-      <div>
-        <span class="bt_section_title">${_('French')}</span>
-        <div>
-          <span>${_('Year End Bonus:')}</span>
-          <div class="bt_year_end_bonus_container">
-            <div class="bt_year_end_bonus" data-type="french"><span>+2</span></div>
-            <div class="bt_year_end_bonus_description">
-              <span>${_('Control 1 or more British Settled Spaces')}</span>
-            </div>
+const tplScenarioInfoFactions = (
+  game: BayonetsAndTomahawksGame,
+  scenario: BTScenario
+) => {
+  return [FRENCH, BRITISH]
+    .map(
+      (faction) => `
+   <div>
+    <span class="bt_section_title">${
+      faction === FRENCH ? _('French') : _('British')
+    }</span>
+    <div class="bt_container">
+      <span>${_('Year End Bonus:')}</span>
+      ${Object.entries(scenario.yearEndBonusDescriptions[faction])
+        .map(
+          ([year, data]) => `
+        <span class="bt_section_title">${year}</span>
+        <div class="bt_year_end_bonus_container">
+          <div class="bt_year_end_bonus" data-type="${faction}"><span>+${
+            data.vpBonus
+          }</span></div>
+          <div class="bt_year_end_bonus_description">
+            <span>${game.format_string_recursive(_(data.log), {
+              tkn_boldItalicText: _(data.args.tkn_boldItalicText),
+            })}</span>
           </div>
         </div>
-        <div>
-          <span>${_('Year End Victory Threshold')}</span>
-          ${tplVictoryTrackDisplay('french1')}
-        </div>
-      </div>
-      <div>
-        <span class="bt_section_title">${_('British')}</span>
-        <div>
-          <span>${_('Year End Bonus:')}</span>
-          <div class="bt_year_end_bonus_container">
-            <div class="bt_year_end_bonus" data-type="british"><span>+2</span></div>
-            <div class="bt_year_end_bonus_description">
-              <span>${_('Control 2 or more French Victory Spaces')}</span>
-            </div>
-          </div>
-        </div>
-        <div>
-          <span>${_('Year End Victory Threshold')}</span>
-          ${tplVictoryTrackDisplay('british1')}
-        </div>
-      </div>
-    `;
-    case 'LoudounsGamble1757':
-      return `
-        <div>
-          <span class="bt_section_title">${_('French')}</span>
-          <div>
-            <span>${_('Year End Bonus:')}</span>
-            <div class="bt_year_end_bonus_container">
-              <div class="bt_year_end_bonus" data-type="french"><span>+2</span></div>
-              <div class="bt_year_end_bonus_description">
-                <span>${_('Control 3 or more British Victory Spaces')}</span>
-              </div>
-            </div>
-          </div>
-          <div>
-            <span>${_('Year End Victory Threshold')}</span>
-            ${tplVictoryTrackDisplay('french1')}
-          </div>
-        </div>
-        <div>
-          <span class="bt_section_title">${_('British')}</span>
-          <div>
-            <span>${_('Year End Bonus:')}</span>
-            <div class="bt_year_end_bonus_container">
-              <div class="bt_year_end_bonus" data-type="british"><span>+2</span></div>
-              <div class="bt_year_end_bonus_description">
-                <span>${_('Control 1 or more French Settled Spaces')}</span>
-              </div>
-            </div>
-          </div>
-          <div>
-            <span>${_('Year End Victory Threshold')}</span>
-            ${tplVictoryTrackDisplay('british1')}
-          </div>
-        </div>
-      `;
-    case 'AmherstsJuggernaut1758_1759':
-      return `
-          <div>
-            <span class="bt_section_title">${_('French')}</span>
-            <div class="bt_container">
-              <span>${_('Year End Bonus:')}</span>
-              <span class="bt_section_title">${_('1758')}</span>
-              <div class="bt_year_end_bonus_container">
-                <div class="bt_year_end_bonus" data-type="french"><span>+2</span></div>
-                <div class="bt_year_end_bonus_description">
-                  <span>${_('Control 3 or more British Home Spaces')}</span>
-                </div>
-              </div>
-              <span class="bt_section_title">${_('1759')}</span>
-              <div class="bt_year_end_bonus_container">
-                <div class="bt_year_end_bonus" data-type="french"><span>+2</span></div>
-                <div class="bt_year_end_bonus_description">
-                  <span>${_('For each 3-VP French space not controlled by the British')}</span>
-                </div>
-              </div>
-            </div>
-            <div class="bt_container">
-              <span>${_('Year End Victory Threshold')}</span>
-              <span class="bt_section_title">${_('1758')}</span>
-              ${tplVictoryTrackDisplay('french5')}
-              <span class="bt_section_title">${_('1759')}</span>
-              ${tplVictoryTrackDisplay('british2')}
-            </div>
-          </div>
-          <div>
-            <span class="bt_section_title">${_('British')}</span>
-            <div class="bt_container">
-              <span>${_('Year End Bonus:')}</span>
-              <span class="bt_section_title">${_('1758')}</span>
-              <div class="bt_year_end_bonus_container">
-                <div class="bt_year_end_bonus" data-type="british"><span>+2</span></div>
-                <div class="bt_year_end_bonus_description">
-                  <span>${_('Control 2 or more French Settled Spaces')}</span>
-                </div>
-              </div>
-              <span class="bt_section_title">${_('1759')}</span>
-              <div class="bt_year_end_bonus_container">
-                <div class="bt_year_end_bonus" data-type="british"><span>+2</span></div>
-                <div class="bt_year_end_bonus_description">
-                  <span>${_('For each French Colony with at least two British-controlled spaces')}</span>
-                </div>
-              </div>
-            </div>
-            <div class="bt_container">
-              <span>${_('Year End Victory Threshold')}</span>
-              <span class="bt_section_title">${_('1758')}</span>
-              ${tplVictoryTrackDisplay('british3')}
-              <span class="bt_section_title">${_('1759')}</span>
-              ${tplVictoryTrackDisplay('british3')}
-            </div>
-          </div>
-        `;
-    default:
-      return '';
-  }
+        `
+        )
+        .join('')}
+    </div>
+    <div class="bt_container" style="margin-top: 16px;">
+      <span>${_('Year End Victory Threshold')}</span>
+      ${Object.entries(scenario.victoryThreshold[faction])
+        .map(
+          ([year, threshold]) => `
+          <span class="bt_section_title">${year}</span>
+          ${tplVictoryTrackDisplay(
+            threshold > 0
+              ? `${faction}${threshold}`
+              : (`british${Math.abs(threshold)}` as VictoryTrackDisplayType)
+          )}     
+        `
+        )
+        .join('')}
+    </div>
+  </div>
+  `
+    )
+    .join('');
 };
 
 const tplScenarioModalContent = (
@@ -163,21 +84,24 @@ const tplScenarioModalContent = (
   return `
 <div id="scenario_modal_content">
   <div>
-    <div>
-      <span>${
-        scenario.duration === 1
-          ? game.format_string_recursive(_('${tkn_boldText_duration} 1 year'), {
+    <span>${
+      scenario.duration === 1
+        ? game.format_string_recursive(_('${tkn_boldText_duration} 1 year'), {
+            tkn_boldText_duration: _('Duration:'),
+          })
+        : game.format_string_recursive(
+            _('${tkn_boldText_duration} ${number} years'),
+            {
               tkn_boldText_duration: _('Duration:'),
-            })
-          : game.format_string_recursive(
-              _('${tkn_boldText_duration} ${number} years'),
-              {
-                tkn_boldText_duration: _('Duration:'),
-                number: scenario.duration,
-              }
-            )
-      }</span>
-    </div>
+              number: scenario.duration,
+            }
+          )
+    }</span>
+  </div>
+  <div class="bt_scenario_info_faction">
+      ${tplScenarioInfoFactions(game, scenario)}
+  </div>
+  <div>
     <div style="margin-top: 8px;">
       <span class="bt_section_title">${_('Reinforcements:')}</span>
       <div class="bt_scenario_info_reinforcements" data-duration="${
@@ -223,9 +147,6 @@ const tplScenarioModalContent = (
           .join('')}
       </div>
     </div>
-  </div>
-  <div class="bt_scenario_info_faction">
-      ${tplScenarioInfoFactions(scenario)}
   </div>
 </div>`;
 };

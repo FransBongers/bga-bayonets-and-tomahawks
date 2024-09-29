@@ -33,6 +33,26 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
         1757 => 1
       ]
     ];
+    $this->yearEndBonusDescriptions = [
+      BRITISH => [
+        1757 => [
+          'log' => clienttranslate('Control 1 or more French ${tkn_boldItalicText}'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('Settled Spaces')
+          ],
+          'vpBonus' => 2,
+        ],
+      ],
+      FRENCH => [
+        1757 => [
+          'log' => clienttranslate('Control 3 or more British ${tkn_boldItalicText}'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('Victory Spaces')
+          ],
+          'vpBonus' => 2,
+        ],
+      ]
+    ];
     $this->indianSetup = [
       // Indian Setup
       MIRAMICHY => [

@@ -37,4 +37,11 @@ const VICTORY_TRACK_DISPLAY_CONFIG: Record<
     backgroundPositionY: -16,
     markerLeft: 32,
   },
+  french8: {
+    width: 193,
+    height: 34,
+    backgroundPositionX: -142,
+    backgroundPositionY: -16,
+    markerLeft: 32,
+  },
 };

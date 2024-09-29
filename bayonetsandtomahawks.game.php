@@ -383,14 +383,6 @@ class bayonetsandtomahawks extends Table
         //        // Please add your future database scheme changes here
         //
         //
-        if ($from_version <= 2409262246) {
-            $spaces = Spaces::getAll();
-
-            if (isset($spaces[DISBANDED_COLONIAL_BRIGADES])) {
-                return;
-            }
-            Spaces::setupBoxes();
-        }
 
     }
 }

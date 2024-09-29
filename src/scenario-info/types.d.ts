@@ -1,4 +1,4 @@
-type VictoryTrackDisplayType = 'french1' | 'british1' | 'french5' | 'british2' | 'british3';
+type VictoryTrackDisplayType = 'french1' | 'british1' | 'french5' | 'french8' | 'british2' | 'british3';
 
 interface VictoryTrackDisplayConfig {
   width: number;

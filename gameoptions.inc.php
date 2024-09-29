@@ -43,6 +43,10 @@ $game_options = [
       OPTION_SCENARIO_3 => [
         'name' => totranslate("Amherst's Juggernaut 1758-1759"),
         'tmdisplay' => totranslate("Amherst's Juggernaut 1758-1759"),
+      ],
+      OPTION_SCENARIO_4 => [
+        'name' => totranslate("French & Indian War Full Campaign 1755-1759"),
+        'tmdisplay' => totranslate("French & Indian War Full Campaign 1755-1759"),
       ]
     ],
   ]

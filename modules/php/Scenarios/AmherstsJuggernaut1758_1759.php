@@ -42,6 +42,40 @@ class AmherstsJuggernaut1758_1759 extends \BayonetsAndTomahawks\Models\Scenario
         1759 => -2,
       ]
     ];
+    $this->yearEndBonusDescriptions = [
+      BRITISH => [
+        1758 => [
+          'log' => clienttranslate('Control 2 or more French ${tkn_boldItalicText}'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('Settled Spaces')
+          ],
+          'vpBonus' => 2,
+        ],
+        1759 => [
+          'log' => clienttranslate('For ${tkn_boldItalicText} with at least two British-controlled spaces'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('each French Colony')
+          ],
+          'vpBonus' => 2,
+        ]
+      ],
+      FRENCH => [
+        1758 => [
+          'log' => clienttranslate('Control 3 or more British ${tkn_boldItalicText}'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('Home Spaces')
+          ],
+          'vpBonus' => 2,
+        ],
+        1759 => [
+          'log' => clienttranslate('For ${tkn_boldItalicText} not controlled by the British'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('each 3-VP French space')
+          ],
+          'vpBonus' => 2,
+        ]
+      ]
+    ];
     $this->indianSetup = [
       // Indian Setup
       MIRAMICHY => [
@@ -323,7 +357,7 @@ class AmherstsJuggernaut1758_1759 extends \BayonetsAndTomahawks\Models\Scenario
           HARDY,
           HOLMES,
           ROYAL_NAVY,
-          SAUNDERS, 
+          SAUNDERS,
           BEAUFFREMONT,
           DE_L_ISLE,
           MARINE_ROYALE,
@@ -414,8 +448,7 @@ class AmherstsJuggernaut1758_1759 extends \BayonetsAndTomahawks\Models\Scenario
         ]
       ],
       POOL_FRENCH_COMMANDERS => [
-        'units' => [
-        ]
+        'units' => []
       ],
       POOL_FRENCH_FORTS => [
         'units' => [
@@ -463,14 +496,14 @@ class AmherstsJuggernaut1758_1759 extends \BayonetsAndTomahawks\Models\Scenario
       $countingSpaces = Utils::filter($spaces, function ($space) {
         return $space->isSettledSpace(FRENCH) && $space->isControlledBy(BRITISH);
       });
-  
+
       if (count($countingSpaces) >= 1) {
         return 2;
       }
     } else if ($year === 1759) {
       $britishControlled = Spaces::getControlledBy(BRITISH);
       $bonus = 0;
-      foreach(FRENCH_COLONIES as $colonyId) {
+      foreach (FRENCH_COLONIES as $colonyId) {
         $numberOfBritishControlledInColony = count(Utils::filter($britishControlled, function ($space) use ($colonyId) {
           return $space->getColony() === $colonyId;
         }));
@@ -492,14 +525,14 @@ class AmherstsJuggernaut1758_1759 extends \BayonetsAndTomahawks\Models\Scenario
       $countingSpaces = Utils::filter($frenchControlledSpaces, function ($space) {
         return $space->getHomeSpace() === BRITISH;
       });
-  
+
       if (count($countingSpaces) >= 3) {
         return 2;
       }
     } else if ($year === 1759) {
       $bonus = 0;
       $spaces = Spaces::get([LOUISBOURG, MONTREAL, QUEBEC]);
-      foreach($spaces as $spaceId => $space) {
+      foreach ($spaces as $spaceId => $space) {
         if ($space->getControl() !== BRITISH) {
           $bonus += 2;
         }

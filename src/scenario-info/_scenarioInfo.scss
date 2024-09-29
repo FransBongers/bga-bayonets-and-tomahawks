@@ -80,9 +80,11 @@
     min-height: 300px;
     padding: 16px;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: column;
+    flex-wrap: nowrap;
     gap: 16px;
+    overflow-y: auto;
+    max-height: 60vh;
 
     .bt_victory_track_display {
       // margin: 8px;
@@ -109,7 +111,8 @@
 
     .bt_scenario_info_faction {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
+      flex-wrap: wrap;
       gap: 16px;
 
       .bt_container {
@@ -139,8 +142,8 @@
       grid-template-columns: max-content max-content max-content;
     }
 
-    .bt_scenario_info_reinforcements[data-duration="4"] {
-      grid-template-columns: max-content max-content max-content max-content max-content;
+    .bt_scenario_info_reinforcements[data-duration="5"] {
+      grid-template-columns: max-content max-content max-content max-content max-content max-content;
     }
 
     .bt_year_end_bonus_container {

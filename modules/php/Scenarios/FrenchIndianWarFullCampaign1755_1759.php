@@ -63,6 +63,82 @@ class FrenchIndianWarFullCampaign1755_1759 extends \BayonetsAndTomahawks\Models\
         1759 => -2,
       ]
     ];
+    $this->yearEndBonusDescriptions = [
+      BRITISH => [
+        1755 => [
+          'log' => clienttranslate('Control 2 or more French ${tkn_boldItalicText}'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('Victory Spaces')
+          ],
+          'vpBonus' => 2,
+        ],
+        1756 => [
+          'log' => clienttranslate('Control 2 or more French ${tkn_boldItalicText}'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('Victory Spaces')
+          ],
+          'vpBonus' => 1,
+        ],
+        1757 => [
+          'log' => clienttranslate('Control 1 or more French ${tkn_boldItalicText}'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('Settled Spaces')
+          ],
+          'vpBonus' => 2,
+        ],
+        1758 => [
+          'log' => clienttranslate('Control 2 or more French ${tkn_boldItalicText}'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('Settled Spaces')
+          ],
+          'vpBonus' => 2,
+        ],
+        1759 => [
+          'log' => clienttranslate('For ${tkn_boldItalicText} with at least two British-controlled spaces (up to +6)'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('each French Colony')
+          ],
+          'vpBonus' => 2,
+        ]
+      ],
+      FRENCH => [
+        1755 => [
+          'log' => clienttranslate('Control 1 or more British ${tkn_boldItalicText}'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('Settled Spaces')
+          ],
+          'vpBonus' => 2,
+        ],
+        1756 => [
+          'log' => clienttranslate('Control 1 or more British ${tkn_boldItalicText}'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('Settled Spaces')
+          ],
+          'vpBonus' => 1,
+        ],
+        1757 => [
+          'log' => clienttranslate('Control 3 or more British ${tkn_boldItalicText}'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('Victory Spaces')
+          ],
+          'vpBonus' => 2,
+        ],
+        1758 => [
+          'log' => clienttranslate('Control 3 or more British ${tkn_boldItalicText}'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('Home Spaces')
+          ],
+          'vpBonus' => 2,
+        ],
+        1759 => [
+          'log' => clienttranslate('For ${tkn_boldItalicText} not controlled by the British (up to +6)'),
+          'args' => [
+            'tkn_boldItalicText' => clienttranslate('each 3-VP French space')
+          ],
+          'vpBonus' => 2,
+        ]
+      ]
+    ];
     $this->indianSetup = [
       // Indian Setup
       MIRAMICHY => [
