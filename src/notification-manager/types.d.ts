@@ -257,6 +257,10 @@ interface NotifWinterQuartersDisbandColonialBrigadesArgs {
   units: BTUnit[];
 }
 
+interface NotifWinterQuartersAddUnitsToPoolsArgs {
+  units: BTUnit[];
+}
+
 interface NotifWinterQuartersPlaceIndianUnitsArgs {
   units: BTUnit[];
 }

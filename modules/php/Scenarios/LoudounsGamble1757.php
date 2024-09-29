@@ -3,6 +3,7 @@
 namespace BayonetsAndTomahawks\Scenarios;
 
 use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Spaces;
 
@@ -461,11 +462,8 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
 
   private function getYearEndBonusBritish($spaces)
   {
-    $countingSpaces = Utils::filter($spaces, function ($space) {
-      return $space->isSettledSpace(FRENCH) && $space->isControlledBy(BRITISH);
-    });
-
-    if (count($countingSpaces) >= 1) {
+    $britishControlled = Spaces::getControlledBy(BRITISH);
+    if (GameMap::controlsNumberOfSettledSpacesOfFaction($britishControlled, FRENCH, 1)) {
       return 2;
     }
 
@@ -474,11 +472,8 @@ class LoudounsGamble1757 extends \BayonetsAndTomahawks\Models\Scenario
 
   private function getYearEndBonusFrench($spaces)
   {
-    $countingSpaces = Utils::filter($spaces, function ($space) {
-      return $space->isHomeSpace(BRITISH) && $space->isVictorySpace() && $space->isControlledBy(FRENCH);
-    });
-
-    if (count($countingSpaces) >= 3) {
+    $frenchControlledSpaces = Spaces::getControlledBy(FRENCH);
+    if (GameMap::controlsNumberOfVictorySpacesOfFaction($frenchControlledSpaces, BRITISH, 3)) {
       return 2;
     }
 

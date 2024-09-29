@@ -93,6 +93,7 @@ class NotificationManager {
       'selectReserveCardPrivate',
       'takeControl',
       'vagariesOfWarPickUnits',
+      'winterQuartersAddUnitsToPools',
       'winterQuartersDisbandColonialBrigades',
       'winterQuartersPlaceIndianUnits',
       'winterQuartersReturnFleets',
@@ -738,6 +739,15 @@ class NotificationManager {
   ) {
     const { units, location } = notif.args;
     await this.game.pools.stocks[location].addCards(units);
+  }
+
+  async notif_winterQuartersAddUnitsToPools(
+    notif: Notif<NotifWinterQuartersAddUnitsToPoolsArgs>
+  ) {
+    const { units } = notif.args;
+    await Promise.all(
+      units.map((unit) => this.game.pools.stocks[unit.location].addCard(unit))
+    );
   }
 
   async notif_winterQuartersDisbandColonialBrigades(

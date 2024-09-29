@@ -945,6 +945,13 @@ class Notifications
     ]);
   }
 
+  public static function winterQuartersAddUnitsToPools($units)
+  {
+    self::notifyAll("winterQuartersAddUnitsToPools", clienttranslate('Units are added to pools'), [
+      'units' => $units,
+    ]);
+  }
+
   public static function winterQuartersPlaceIndianUnits($indianUnits)
   {
     self::notifyAll("winterQuartersPlaceIndianUnits", clienttranslate('All Indian units are placed on their linked Village if possible, or placed in the Losses Box'), [

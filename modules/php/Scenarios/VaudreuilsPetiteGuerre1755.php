@@ -3,7 +3,7 @@
 namespace BayonetsAndTomahawks\Scenarios;
 
 use BayonetsAndTomahawks\Core\Notifications;
-use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Managers\Spaces;
 
 class VaudreuilsPetiteGuerre1755 extends \BayonetsAndTomahawks\Models\Scenario
@@ -398,11 +398,8 @@ class VaudreuilsPetiteGuerre1755 extends \BayonetsAndTomahawks\Models\Scenario
 
   private function getYearEndBonusBritish($spaces)
   {
-    $countingSpaces = Utils::filter($spaces, function ($space) {
-      return $space->isHomeSpace(FRENCH) && $space->isVictorySpace() && $space->isControlledBy(BRITISH);
-    });
-
-    if (count($countingSpaces) >= 2) {
+    $britishControlled = Spaces::getControlledBy(BRITISH);
+    if (GameMap::controlsNumberOfVictorySpacesOfFaction($britishControlled, FRENCH, 2)) {
       return 2;
     }
 
@@ -411,11 +408,8 @@ class VaudreuilsPetiteGuerre1755 extends \BayonetsAndTomahawks\Models\Scenario
 
   private function getYearEndBonusFrench($spaces)
   {
-    $countingSpaces = Utils::filter($spaces, function ($space) {
-      return $space->isSettledSpace(BRITISH) && $space->isControlledBy(FRENCH);
-    });
-
-    if (count($countingSpaces) >= 1) {
+    $frenchControlledSpaces = Spaces::getControlledBy(FRENCH);
+    if (GameMap::controlsNumberOfSettledSpacesOfFaction($frenchControlledSpaces, BRITISH, 1)) {
       return 2;
     }
 

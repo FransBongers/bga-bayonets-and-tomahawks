@@ -54,7 +54,7 @@ class WinterQuartersRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     }
 
     // Add units to pools
-    
+    Scenarios::get()->resolveWinterQuartersAdditions($currentYear);
 
     // Move tokens
     Globals::setYear($nextYear);

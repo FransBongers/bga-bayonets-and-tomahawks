@@ -4,6 +4,7 @@ namespace BayonetsAndTomahawks\Models;
 
 use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Managers\Markers;
+use BayonetsAndTomahawks\Managers\Units;
 
 class Scenario implements \JsonSerializable
 {
@@ -19,6 +20,7 @@ class Scenario implements \JsonSerializable
   protected $pools;
   protected $victoryMarkerLocation;
   protected $victoryThreshold = [];
+  protected $winterQuartersAdditions = [];
   protected $yearEndBonusDescriptions = [];
 
   public function __construct() {}
@@ -92,8 +94,22 @@ class Scenario implements \JsonSerializable
     return $this->victoryMarkerLocation;
   }
 
+  public function resolveWinterQuartersAdditions($year)
+  {
+    if (!isset($this->winterQuartersAdditions[$year])) {
+      return;
+    }
+
+    $addedUnits = Units::addUnitsToPools($this->winterQuartersAdditions[$year]);
+    Notifications::winterQuartersAddUnitsToPools($addedUnits);
+  }
+
   public function hasAchievedVictoryThreshold($faction, $year)
   {
+    if (!isset($this->victoryThreshold[$faction][$year])) {
+      return false;
+    }
+
     $vpMarker = Markers::get(VICTORY_MARKER);
     // 'victory_points_' . $faction . '_' . $score;
     $splitLocation = explode('_', $vpMarker->getLocation());

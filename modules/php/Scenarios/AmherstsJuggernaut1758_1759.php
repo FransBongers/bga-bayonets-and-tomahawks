@@ -4,8 +4,8 @@ namespace BayonetsAndTomahawks\Scenarios;
 
 use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Managers\Spaces;
-use BayonetsAndTomahawks\Units\NYorkNJ;
 
 class AmherstsJuggernaut1758_1759 extends \BayonetsAndTomahawks\Models\Scenario
 {
@@ -492,14 +492,9 @@ class AmherstsJuggernaut1758_1759 extends \BayonetsAndTomahawks\Models\Scenario
 
   private function getYearEndBonusBritish($spaces, $year)
   {
-    if ($year === 1758) {
-      $countingSpaces = Utils::filter($spaces, function ($space) {
-        return $space->isSettledSpace(FRENCH) && $space->isControlledBy(BRITISH);
-      });
-
-      if (count($countingSpaces) >= 1) {
-        return 2;
-      }
+    $britishControlled = Spaces::getControlledBy(BRITISH);
+    if ($year === 1758 && GameMap::controlsNumberOfSettledSpacesOfFaction($britishControlled, FRENCH, 2)) {
+      return 2;
     } else if ($year === 1759) {
       $britishControlled = Spaces::getControlledBy(BRITISH);
       $bonus = 0;
@@ -514,21 +509,14 @@ class AmherstsJuggernaut1758_1759 extends \BayonetsAndTomahawks\Models\Scenario
       return $bonus;
     }
 
-
     return 0;
   }
 
   private function getYearEndBonusFrench($spaces, $year)
   {
-    if ($year === 1758) {
-      $frenchControlledSpaces = Spaces::getControlledBy(BRITISH);
-      $countingSpaces = Utils::filter($frenchControlledSpaces, function ($space) {
-        return $space->getHomeSpace() === BRITISH;
-      });
-
-      if (count($countingSpaces) >= 3) {
-        return 2;
-      }
+    $frenchControlledSpaces = Spaces::getControlledBy(FRENCH);
+    if ($year === 1758 && GameMap::controlsNumberOfHomeSpacesOfFaction($frenchControlledSpaces, BRITISH, 3)) {
+      return 2;
     } else if ($year === 1759) {
       $bonus = 0;
       $spaces = Spaces::get([LOUISBOURG, MONTREAL, QUEBEC]);

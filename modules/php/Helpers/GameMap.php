@@ -260,4 +260,40 @@ class GameMap extends \APP_DbObject
       Notifications::placeUnits($player, $units, $space, $faction);
     }
   }
+
+  /**
+   * spaces: spaces controlled by faction
+   * faction: faction to check Settled Space for
+   */
+  public static function controlsNumberOfSettledSpacesOfFaction($spaces, $faction, $number)
+  {
+    $countingSpaces = Utils::filter($spaces, function ($space) use ($faction) {
+      return $space->isSettledSpace($faction);
+    });
+    return count($countingSpaces) >= $number;
+  }
+
+  /**
+   * spaces: spaces controlled by faction
+   * faction: faction to check Victory Space for
+   */
+  public static function controlsNumberOfVictorySpacesOfFaction($spaces, $faction, $number)
+  {
+    $countingSpaces = Utils::filter($spaces, function ($space) use ($faction) {
+      return $space->isHomeSpace($faction) && $space->isVictorySpace();
+    });
+    return count($countingSpaces) >= $number;
+  }
+
+  /**
+   * spaces: spaces controlled by faction
+   * faction: faction to check Home Space for
+   */
+  public static function controlsNumberOfHomeSpacesOfFaction($spaces, $faction, $number)
+  {
+    $countingSpaces = Utils::filter($spaces, function ($space) use ($faction) {
+      return $space->isHomeSpace($faction);
+    });
+    return count($countingSpaces) >= $number;
+  }
 }

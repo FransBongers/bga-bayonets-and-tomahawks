@@ -4391,6 +4391,7 @@ var NotificationManager = (function () {
             'selectReserveCardPrivate',
             'takeControl',
             'vagariesOfWarPickUnits',
+            'winterQuartersAddUnitsToPools',
             'winterQuartersDisbandColonialBrigades',
             'winterQuartersPlaceIndianUnits',
             'winterQuartersReturnFleets',
@@ -5301,6 +5302,22 @@ var NotificationManager = (function () {
                         return [4, this.game.pools.stocks[location].addCards(units)];
                     case 1:
                         _b.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_winterQuartersAddUnitsToPools = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var units;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        units = notif.args.units;
+                        return [4, Promise.all(units.map(function (unit) { return _this.game.pools.stocks[unit.location].addCard(unit); }))];
+                    case 1:
+                        _a.sent();
                         return [2];
                 }
             });

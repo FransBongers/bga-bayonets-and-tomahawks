@@ -4,6 +4,7 @@ namespace BayonetsAndTomahawks\Managers;
 
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Helpers\Utils;
 
@@ -222,6 +223,37 @@ class Units extends \BayonetsAndTomahawks\Helpers\Pieces
     }
 
     self::create($units, null);
+  }
+
+  public static function addUnitsToPools($pools)
+  {
+    $unitIdIndex = count(self::getAll()) + 1;
+    $units = [];
+
+    foreach ($pools as $poolId => $pool) {
+
+      if (!isset($pool['units'])) {
+        continue;
+      }
+      foreach ($pool['units'] as &$unit) {
+        $id = 'unit_' . $unitIdIndex;
+        $data = [
+          'id' => $id,
+          'location' => $poolId,
+          'counter_id' => $unit,
+          'spent' => 0,
+          // 'type' => $unit,
+        ];
+        $data['extra_data'] = ['properties' => []];
+        $units[$id] = $data;
+        $unitIdIndex += 1;
+      }
+    }
+
+    self::create($units, null);
+    return self::getMany(array_map(function ($unit) {
+      return $unit['id'];
+    }, $units))->toArray();
   }
 
   // public function remove($unitId)

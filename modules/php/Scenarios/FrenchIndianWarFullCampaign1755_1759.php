@@ -3,8 +3,10 @@
 namespace BayonetsAndTomahawks\Scenarios;
 
 use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Spaces;
+use BayonetsAndTomahawks\Units\NYorkNJ;
 
 class FrenchIndianWarFullCampaign1755_1759 extends \BayonetsAndTomahawks\Models\Scenario
 {
@@ -351,6 +353,94 @@ class FrenchIndianWarFullCampaign1755_1759 extends \BayonetsAndTomahawks\Models\
       ],
     ];
     $this->connections = [];
+    $this->winterQuartersAdditions = [
+      1756 => [
+        POOL_FLEETS => [
+          'units' => [
+            HARDY,
+            DE_L_ISLE,
+            VOW_FRENCH_NAVY_LOSSES_PUT_BACK,
+          ]
+        ],
+        POOL_BRITISH_METROPOLITAN_VOW => [
+          'units' => [
+            B_15TH_58TH,
+            B_27TH_55TH,
+            B_43RD_46TH,
+            B_61ST_63RD,
+            B_94TH_95TH,
+            B_2ND_ROYAL_AMERICAN,
+            HOWARDS_BUFFS_KINGS_OWN,
+            CAMPBELL,
+            MONTGOMERY,
+            VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH,
+            VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH,
+            VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH,
+          ]
+        ],
+        POOL_BRITISH_LIGHT => [
+          'units' => [
+            GAGE,
+            L_HOWE,
+            MORGAN,
+            SCOTT,
+          ]
+        ],
+        POOL_BRITISH_COLONIAL_VOW => [
+          'units' => [
+            VOW_FEWER_TROOPS_COLONIAL,
+            VOW_PENNSYLVANIA_MUSTERS,
+          ]
+        ],
+        POOL_BRITISH_COLONIAL_VOW_BONUS => [
+          'units' => [
+            PENN_DEL,
+            PENN_DEL,
+          ]
+        ],
+        POOL_FRENCH_METROPOLITAN_VOW => [
+          'units' => [
+            BERRY,
+            DE_LA_MARINE,
+            VOW_FEWER_TROOPS_FRENCH,
+          ]
+        ]
+      ],
+      1757 => [
+        POOL_FLEETS => [
+          'units' => [
+            HOLMES,
+            SAUNDERS,
+          ]
+        ],
+        POOL_BRITISH_METROPOLITAN_VOW => [
+          'units' => [
+            VOW_PICK_TWO_ARTILLERY_OR_LIGHT_BRITISH,
+            VOW_FEWER_TROOPS_BRITISH,
+          ]
+        ],
+        POOL_BRITISH_COLONIAL_VOW => [
+          'units' => [
+            VOW_PITT_SUBSIDIES,
+          ]
+        ],
+        POOL_BRITISH_COLONIAL_VOW_BONUS => [
+          'units' => [
+            NEW_ENGLAND,
+            NEW_ENGLAND,
+            NYORK_NJ,
+            VIRGINIA_S
+          ],
+        ],
+        POOL_FRENCH_METROPOLITAN_VOW => [
+          'units' => [
+            ANGOUMOIS_BEAUVOISIS,
+            BOULONNOIS_ROYAL_BARROIS,
+            FOIX_QUERCY,
+          ]
+        ]
+      ]
+    ];
     $this->pools = [
       POOL_NEUTRAL_INDIANS => [
         'units' => [
@@ -379,17 +469,23 @@ class FrenchIndianWarFullCampaign1755_1759 extends \BayonetsAndTomahawks\Models\
       POOL_BRITISH_COMMANDERS => [
         'units' => [
           BRADSTREET,
+          FORBES,
+          C_HOWE,
+          WOLFE,
         ]
       ],
       POOL_BRITISH_COLONIAL_LIGHT => [
         'units' => [
           ARMSTRONG,
+          DUNN,
           PUTNAM,
         ]
       ],
       POOL_BRITISH_LIGHT => [],
       POOL_BRITISH_ARTILLERY => [
         'units' => [
+          ROYAL_ARTILLERY,
+          ROYAL_ARTILLERY,
           ROYAL_ARTILLERY,
           ROYAL_ARTILLERY,
           ROYAL_ARTILLERY,
@@ -416,10 +512,13 @@ class FrenchIndianWarFullCampaign1755_1759 extends \BayonetsAndTomahawks\Models\
       POOL_BRITISH_METROPOLITAN_VOW => [
         'units' => [
           B_1ST_ROYAL_AMERICAN,
+          ROYAL_SCOTS_17TH,
+          B_22ND_28TH,
           B_44TH_48TH,
+          FRASER,
           ROYAL_HIGHLAND,
           VOW_PICK_TWO_ARTILLERY_BRITISH,
-          VOW_FEWER_TROOPS_BRITISH
+          VOW_FEWER_TROOPS_PUT_BACK_BRITISH,
         ],
       ],
       POOL_BRITISH_COLONIAL_VOW => [
@@ -435,13 +534,14 @@ class FrenchIndianWarFullCampaign1755_1759 extends \BayonetsAndTomahawks\Models\
           VIRGINIA_S,
           VOW_PICK_ONE_COLONIAL_LIGHT,
           VOW_PICK_ONE_COLONIAL_LIGHT_PUT_BACK,
-          VOW_FEWER_TROOPS_COLONIAL,
           VOW_FEWER_TROOPS_PUT_BACK_COLONIAL
         ],
       ],
       POOL_BRITISH_COLONIAL_VOW_BONUS => [],
       POOL_FRENCH_COMMANDERS => [
         'units' => [
+          C_LEVIS,
+          MONTCALM,
           POUCHOT,
         ]
       ],
@@ -458,15 +558,19 @@ class FrenchIndianWarFullCampaign1755_1759 extends \BayonetsAndTomahawks\Models\
       POOL_FRENCH_ARTILLERY => [
         'units' => [
           CANONNIERS_BOMBARDIERS,
+          CANONNIERS_BOMBARDIERS,
         ]
       ],
       POOL_FRENCH_METROPOLITAN_VOW => [
         'units' => [
           BEARN_GUYENNE,
+          LA_SARRE_ROYAL_ROUSSILLON,
           ARTOIS_BOURGOGNE,
           DE_LA_MARINE,
           LANGUEDOC_LA_REINE,
-          VOW_FEWER_TROOPS_FRENCH,
+          VOLONT_ETRANGERS_CAMBIS,
+          VOW_PICK_ONE_ARTILLERY_FRENCH,
+          VOW_FEWER_TROOPS_PUT_BACK_FRENCH,
         ],
       ]
     ];
@@ -476,33 +580,60 @@ class FrenchIndianWarFullCampaign1755_1759 extends \BayonetsAndTomahawks\Models\
   {
     $spaces = Spaces::getAll()->toArray();
     if ($faction === BRITISH) {
-      return $this->getYearEndBonusBritish($spaces);
+      return $this->getYearEndBonusBritish($spaces, $year);
     } else {
-      return $this->getYearEndBonusFrench($spaces);
+      return $this->getYearEndBonusFrench($spaces,  $year);
     }
   }
 
-  private function getYearEndBonusBritish($spaces)
+  private function getYearEndBonusBritish($spaces, $year)
   {
-    $countingSpaces = Utils::filter($spaces, function ($space) {
-      return $space->isHomeSpace(FRENCH) && $space->isVictorySpace() && $space->isControlledBy(BRITISH);
-    });
-
-    if (count($countingSpaces) >= 2) {
+    $britishControlled = Spaces::getControlledBy(BRITISH);
+    if ($year === 1755 && GameMap::controlsNumberOfVictorySpacesOfFaction($britishControlled, FRENCH, 2)) {
       return 2;
+    } else if ($year === 1756 && GameMap::controlsNumberOfVictorySpacesOfFaction($britishControlled, FRENCH, 2)) {
+      return 1;
+    } else if ($year === 1757 && GameMap::controlsNumberOfSettledSpacesOfFaction($britishControlled, FRENCH, 1)) {
+      return 2;
+    } else if ($year === 1758 && GameMap::controlsNumberOfSettledSpacesOfFaction($britishControlled, FRENCH, 2)) {
+      return 2;
+    } else if ($year === 1759) {
+      $britishControlled = Spaces::getControlledBy(BRITISH);
+      $bonus = 0;
+      foreach (FRENCH_COLONIES as $colonyId) {
+        $numberOfBritishControlledInColony = count(Utils::filter($britishControlled, function ($space) use ($colonyId) {
+          return $space->getColony() === $colonyId;
+        }));
+        if ($numberOfBritishControlledInColony >= 2) {
+          $bonus += 2;
+        }
+      }
+      return $bonus;
     }
 
     return 0;
   }
 
-  private function getYearEndBonusFrench($spaces)
+  private function getYearEndBonusFrench($spaces, $year)
   {
-    $countingSpaces = Utils::filter($spaces, function ($space) {
-      return $space->isSettledSpace(BRITISH) && $space->isControlledBy(FRENCH);
-    });
-
-    if (count($countingSpaces) >= 1) {
+    $frenchControlledSpaces = Spaces::getControlledBy(FRENCH);
+    if ($year === 1755 && GameMap::controlsNumberOfSettledSpacesOfFaction($frenchControlledSpaces, BRITISH, 1)) {
       return 2;
+    } else if ($year === 1756 && GameMap::controlsNumberOfSettledSpacesOfFaction($frenchControlledSpaces, BRITISH, 1)) {
+      return 1;
+    } else if ($year === 1757 && GameMap::controlsNumberOfVictorySpacesOfFaction($frenchControlledSpaces, BRITISH, 3)) {
+      return 2;
+    } else if ($year === 1758 && GameMap::controlsNumberOfHomeSpacesOfFaction($frenchControlledSpaces, BRITISH, 3)) {
+      return 2;
+    } else if ($year === 1759) {
+      $bonus = 0;
+      $spaces = Spaces::get([LOUISBOURG, MONTREAL, QUEBEC]);
+      foreach ($spaces as $spaceId => $space) {
+        if ($space->getControl() !== BRITISH) {
+          $bonus += 2;
+        }
+      }
+      return $bonus;
     }
 
     return 0;
