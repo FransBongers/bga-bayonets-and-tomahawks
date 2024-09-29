@@ -26,6 +26,7 @@ class Quebec extends \BayonetsAndTomahawks\Models\Space
       COTE_DU_SUD => COTE_DU_SUD_QUEBEC,
       JACQUES_CARTIER => JACQUES_CARTIER_QUEBEC,
       LES_TROIS_RIVIERES => LES_TROIS_RIVIERES_QUEBEC,
+      NAMASKONKIK => NAMASKONKIK_QUEBEC,
     ];
     $this->adjacentSeaZones = [GULF_OF_SAINT_LAWRENCE];
     $this->coastal = true;

@@ -12,12 +12,50 @@ use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Cards;
+use BayonetsAndTomahawks\Models\Player;
 
-class SelectReserveCard extends \BayonetsAndTomahawks\Models\AtomicAction
+class ActionRoundDrawCards extends \BayonetsAndTomahawks\Models\AtomicAction
 {
   public function getState()
   {
-    return ST_SELECT_RESERVE_CARD;
+    return ST_ACTION_ROUND_DRAW_CARDS;
+  }
+
+  // ..######..########....###....########.########
+  // .##....##....##......##.##......##....##......
+  // .##..........##.....##...##.....##....##......
+  // ..######.....##....##.....##....##....######..
+  // .......##....##....#########....##....##......
+  // .##....##....##....##.....##....##....##......
+  // ..######.....##....##.....##....##....########
+
+  // ....###.....######..########.####..#######..##....##
+  // ...##.##...##....##....##.....##..##.....##.###...##
+  // ..##...##..##..........##.....##..##.....##.####..##
+  // .##.....##.##..........##.....##..##.....##.##.##.##
+  // .#########.##..........##.....##..##.....##.##..####
+  // .##.....##.##....##....##.....##..##.....##.##...###
+  // .##.....##..######.....##....####..#######..##....##
+
+  public function stActionRoundDrawCards()
+  {
+    Notifications::log('stActionRoundDrawCards', $this->ctx->getInfo());
+    // TODO: locationd depends on AR
+    $buildupDeck = in_array(Globals::getActionRound(), [ACTION_ROUND_1, ACTION_ROUND_2, ACTION_ROUND_3]);
+    $britishCard = Cards::pickForLocation(1, $buildupDeck ? Locations::buildUpDeck(BRITISH) : Locations::campaignDeck(BRITISH), Locations::hand(BRITISH))->toArray()[0];
+    $frenchCard = Cards::pickForLocation(1, $buildupDeck ? Locations::buildUpDeck(FRENCH) : Locations::campaignDeck(FRENCH), Locations::hand(FRENCH))->toArray()[0];
+    $indianCard = Cards::pickForLocation(1, Locations::campaignDeck(INDIAN), Locations::selected(INDIAN))->toArray()[0];
+
+    foreach (Players::getAll() as $player) {
+      $faction = $player->getFaction();
+      if ($faction === BRITISH) {
+        Notifications::drawCard($player, $britishCard);
+      } else {
+        Notifications::drawCard($player, $frenchCard);
+        Notifications::drawCard($player, $indianCard);
+      }
+    }
+    $this->resolveAction(['automatic' => true]);
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##
@@ -28,7 +66,7 @@ class SelectReserveCard extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreSelectReserveCard() {}
+  public function stPreActionRoundDrawCards() {}
 
 
   // ....###....########...######....######.
@@ -39,16 +77,10 @@ class SelectReserveCard extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsSelectReserveCard()
+  public function argsActionRoundDrawCards()
   {
 
-    $data['_private'] = [];
-    $players = Players::getAll();
-    foreach ($players as $player) {
-      $data['_private'][$player->getId()] = $player->getHand();
-    }
-
-    return $data;
+    return [];
   }
 
   //  .########..##..........###....##....##.########.########.
@@ -67,46 +99,17 @@ class SelectReserveCard extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassSelectReserveCard()
+  public function actPassActionRoundDrawCards()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  // public function actSelectReserveCard($cardId, $strength)
-  public function actSelectReserveCard($args)
+  // public function actActionRoundDrawCards($cardId, $strength)
+  public function actActionRoundDrawCards($args)
   {
     $cardId = $args['cardId'];
-
-    self::checkAction('actSelectReserveCard');
-
-    $player = Players::getCurrent();
-    $stateArgs = $this->argsSelectReserveCard();
-    $availableCardsForPlayer = $stateArgs['_private'][$player->getId()];
-
-    $selectedCard = Utils::array_find($availableCardsForPlayer, function ($card) use ($cardId) {
-      return $cardId === $card->getId();
-    });
-
-    if ($selectedCard === null) {
-      throw new \BgaVisibleSystemException('This card cannot be selected');
-    }
-
-    $discardedCard = Utils::filter($availableCardsForPlayer, function ($card) use ($cardId) {
-      return $cardId !== $card->getId();
-    })[0];
-
-    Notifications::selectReserveCard($player);
-
-    $discardedCard->discard();
-
-    // Make the player inactive
-    $game = Game::get();
-    $game->gamestate->setPlayerNonMultiactive($player->getId(), 'next');
-    if (count($game->gamestate->getActivePlayerList()) > 0) {
-      return;
-    }
 
     $this->resolveAction($args, true);
   }

@@ -8,7 +8,7 @@ use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\BTHelpers;
-use BayonetsAndTomahawks\Helpers\Log;
+use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Players;
@@ -44,8 +44,18 @@ trait TurnTrait
 
     Cards::setupDecksForYear(BTHelpers::getYear());
 
+    // $britishReserveCards = Cards::pickForLocation(2, Locations::buildUpDeck(BRITISH), Locations::hand(BRITISH))->toArray();
+    // $frenchReserveCards = Cards::pickForLocation(2, Locations::buildUpDeck(FRENCH), Locations::hand(FRENCH))->toArray();
+
+    // foreach (array_merge($britishReserveCards, $frenchReserveCards) as $card) {
+    //   Notifications::drawCard($card->getOwner(), $card);
+    // }
+
     $node = [
       'children' => [
+        [
+          'action' => DRAW_RESERVE_CARDS,
+        ],
         [
           'action' => SELECT_RESERVE_CARD,
           'playerId' => 'all',
@@ -88,6 +98,9 @@ trait TurnTrait
     if ($isActionRound) {
       $node = [
         'children' => [
+          [
+            'action' => ACTION_ROUND_DRAW_CARDS,
+          ],
           [
             'action' => ACTION_ROUND_CHOOSE_CARD,
             'playerId' => 'all',

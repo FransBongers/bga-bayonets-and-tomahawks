@@ -187,15 +187,17 @@ interface NotifPlaceRaidPointsArgs extends NotifWithPlayerArgs {
   faction: string;
 }
 
-interface NotifPlaceWieChitArgs {
+interface NotifDrawWieChitArgs {
   placeChit: boolean;
   faction: BRITISH_FACTION | FRENCH_FACTION;
+  
 }
 
-interface NotifPlaceWieChitPrivateArgs {
+interface NotifDrawWieChitPrivateArgs {
   currentChit: BTWIEChit | null;
   chit: BTWIEChit;
   faction: BRITISH_FACTION | FRENCH_FACTION;
+  placeChit: boolean;
 }
 
 interface NotifReduceUnitArgs {

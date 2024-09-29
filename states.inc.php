@@ -246,6 +246,14 @@ $machinestates = array(
         'possibleactions' => ['actActionRoundChooseFirstPlayer', 'actPassOptionalAction', 'actRestart'],
     ],
 
+    ST_ACTION_ROUND_DRAW_CARDS => [
+        'name' => 'actionRoundDrawCards',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
     ST_ACTION_ROUND_ACTION_PHASE => [
         'name' => 'actionRoundActionPhase',
         'description' => clienttranslate('${actplayer} may perform actions'),
@@ -302,6 +310,15 @@ $machinestates = array(
 
     ST_DRAW_REINFORCEMENTS => [
         'name' => 'drawReinforcements',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+        'updateGameProgression' => true,
+    ],
+
+    ST_DRAW_RESERVE_CARDS => [
+        'name' => 'drawReserveCards',
         'description' => '',
         'type' => 'game',
         'action' => 'stAtomicAction',

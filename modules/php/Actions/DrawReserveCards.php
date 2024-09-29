@@ -13,11 +13,39 @@ use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Cards;
 
-class SelectReserveCard extends \BayonetsAndTomahawks\Models\AtomicAction
+class DrawReserveCards extends \BayonetsAndTomahawks\Models\AtomicAction
 {
   public function getState()
   {
-    return ST_SELECT_RESERVE_CARD;
+    return ST_DRAW_RESERVE_CARDS;
+  }
+
+  // ..######..########....###....########.########
+  // .##....##....##......##.##......##....##......
+  // .##..........##.....##...##.....##....##......
+  // ..######.....##....##.....##....##....######..
+  // .......##....##....#########....##....##......
+  // .##....##....##....##.....##....##....##......
+  // ..######.....##....##.....##....##....########
+
+  // ....###.....######..########.####..#######..##....##
+  // ...##.##...##....##....##.....##..##.....##.###...##
+  // ..##...##..##..........##.....##..##.....##.####..##
+  // .##.....##.##..........##.....##..##.....##.##.##.##
+  // .#########.##..........##.....##..##.....##.##..####
+  // .##.....##.##....##....##.....##..##.....##.##...###
+  // .##.....##..######.....##....####..#######..##....##
+
+  public function stDrawReserveCards()
+  {
+    Notifications::log('stDrawReserveCards', $this->ctx->getInfo());
+    $britishReserveCards = Cards::pickForLocation(2, Locations::buildUpDeck(BRITISH), Locations::hand(BRITISH))->toArray();
+    $frenchReserveCards = Cards::pickForLocation(2, Locations::buildUpDeck(FRENCH), Locations::hand(FRENCH))->toArray();
+
+    foreach (array_merge($britishReserveCards, $frenchReserveCards) as $card) {
+      Notifications::drawCard($card->getOwner(), $card);
+    }
+    $this->resolveAction(['automatic' => true]);
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##
@@ -28,7 +56,7 @@ class SelectReserveCard extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreSelectReserveCard() {}
+  public function stPreDrawReserveCards() {}
 
 
   // ....###....########...######....######.
@@ -39,16 +67,9 @@ class SelectReserveCard extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsSelectReserveCard()
+  public function argsDrawReserveCards()
   {
-
-    $data['_private'] = [];
-    $players = Players::getAll();
-    foreach ($players as $player) {
-      $data['_private'][$player->getId()] = $player->getHand();
-    }
-
-    return $data;
+    return [];
   }
 
   //  .########..##..........###....##....##.########.########.
@@ -67,46 +88,17 @@ class SelectReserveCard extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassSelectReserveCard()
+  public function actPassDrawReserveCards()
   {
     $player = self::getPlayer();
     // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 
-  // public function actSelectReserveCard($cardId, $strength)
-  public function actSelectReserveCard($args)
+  // public function actDrawReserveCards($cardId, $strength)
+  public function actDrawReserveCards($args)
   {
-    $cardId = $args['cardId'];
-
-    self::checkAction('actSelectReserveCard');
-
-    $player = Players::getCurrent();
-    $stateArgs = $this->argsSelectReserveCard();
-    $availableCardsForPlayer = $stateArgs['_private'][$player->getId()];
-
-    $selectedCard = Utils::array_find($availableCardsForPlayer, function ($card) use ($cardId) {
-      return $cardId === $card->getId();
-    });
-
-    if ($selectedCard === null) {
-      throw new \BgaVisibleSystemException('This card cannot be selected');
-    }
-
-    $discardedCard = Utils::filter($availableCardsForPlayer, function ($card) use ($cardId) {
-      return $cardId !== $card->getId();
-    })[0];
-
-    Notifications::selectReserveCard($player);
-
-    $discardedCard->discard();
-
-    // Make the player inactive
-    $game = Game::get();
-    $game->gamestate->setPlayerNonMultiactive($player->getId(), 'next');
-    if (count($game->gamestate->getActivePlayerList()) > 0) {
-      return;
-    }
+    self::checkAction('actDrawReserveCards');
 
     $this->resolveAction($args, true);
   }
@@ -118,6 +110,5 @@ class SelectReserveCard extends \BayonetsAndTomahawks\Models\AtomicAction
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
-
 
 }

@@ -54,22 +54,20 @@ class WarInEuropeChits extends \BayonetsAndTomahawks\Helpers\Pieces
     $currentChit = self::getTopOf($placeholder);
     $draw = self::getTopOf($pool);
 
-    Notifications::drawWieChit($player, $draw);
+    $placeChit = false;
 
     if ($currentChit === null) {
       $draw->setLocation($placeholder);
       $draw->setRevealed(0);
-      Notifications::placeWieChit($player, $currentChit, $draw);
+      $placeChit = true;
     } else if ($draw->getValue() > $currentChit->getValue()) {
       $draw->setLocation($placeholder);
       $draw->setRevealed(0);
       $currentChit->setLocation($pool);
-      Notifications::placeWieChit($player, $currentChit, $draw);
-    } else {
-      Notifications::message(clienttranslate('${player_name} does not replace the WIE chit on their WIE placeholder'), [
-        'player' => $player,
-      ]);
+      $placeChit = true; 
     }
+    Notifications::drawWieChit($player, $currentChit, $draw, $placeChit);
+
     self::shuffle($pool);
   }
 

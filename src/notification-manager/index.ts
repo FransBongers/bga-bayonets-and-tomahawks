@@ -79,8 +79,8 @@ class NotificationManager {
       'placeUnitInLosses',
       'placeUnits',
       'raidPoints',
-      'placeWieChit',
-      'placeWieChitPrivate',
+      'drawWieChit',
+      'drawWieChitPrivate',
       'removeAllRaidedMarkers',
       'removeAllRoutAndOOSMarkers',
       'removeMarkerFromStack',
@@ -140,17 +140,15 @@ class NotificationManager {
       );
       this.game.framework().notifqueue.setSynchronous(notifName, undefined);
 
-      ['discardCardFromHand', 'drawWieChit', 'placeWieChit'].forEach(
-        (notifId) => {
-          this.game
-            .framework()
-            .notifqueue.setIgnoreNotificationCheck(
-              notifId,
-              (notif: Notif<{ playerId: number }>) =>
-                notif.args.playerId == this.game.getPlayerId()
-            );
-        }
-      );
+      ['discardCardFromHand', 'drawWieChit'].forEach((notifId) => {
+        this.game
+          .framework()
+          .notifqueue.setIgnoreNotificationCheck(
+            notifId,
+            (notif: Notif<{ playerId: number }>) =>
+              notif.args.playerId == this.game.getPlayerId()
+          );
+      });
     });
   }
 
@@ -588,21 +586,23 @@ class NotificationManager {
     this.game.tokenManager.updateCardInformations(unit);
   }
 
-  async notif_placeWieChit(notif: Notif<NotifPlaceWieChitArgs>) {
+  async notif_drawWieChit(notif: Notif<NotifDrawWieChitArgs>) {
     const { placeChit, faction } = notif.args;
     if (placeChit) {
       await this.game.gameMap.placeFakeWieChit(faction);
     }
   }
 
-  async notif_placeWieChitPrivate(notif: Notif<NotifPlaceWieChitPrivateArgs>) {
-    const { chit, currentChit, faction } = notif.args;
-    if (currentChit !== null) {
+  async notif_drawWieChitPrivate(notif: Notif<NotifDrawWieChitPrivateArgs>) {
+    const { chit, currentChit, faction, placeChit } = notif.args;
+    if (currentChit !== null && placeChit) {
       await this.game.wieChitManager.removeCard(currentChit);
     }
 
-    chit.revealed = true;
-    await this.game.gameMap.wieChitPlaceholders[faction].addCard(chit);
+    if (placeChit) {
+      chit.revealed = true;
+      await this.game.gameMap.wieChitPlaceholders[faction].addCard(chit);
+    }
   }
 
   async notif_removeAllRaidedMarkers(
