@@ -69,6 +69,7 @@ class RaidSelectTargetState implements State {
   }
 
   private updateInterfaceSelectTargetSpace({ unit }: { unit: BTUnit }) {
+    this.game.clearPossible();
     this.game.clientUpdatePageTitle({
       text: _('${you} must select a target Space to raid'),
       args: {

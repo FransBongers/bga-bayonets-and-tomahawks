@@ -29,6 +29,8 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
     Units::move($unitId, $startSpaceId);
     if ($startSpaceId !== $currentSpace->getId()) {
       Notifications::moveUnit($player, $unit, $currentSpace, Spaces::get($startSpaceId));
+    } else {
+      Notifications::addSpentMarkerToUnits($player, [$unit]);
     }
   }
 

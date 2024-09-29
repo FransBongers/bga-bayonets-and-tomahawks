@@ -9480,6 +9480,7 @@ var RaidSelectTargetState = (function () {
     RaidSelectTargetState.prototype.updateInterfaceSelectTargetSpace = function (_a) {
         var _this = this;
         var unit = _a.unit;
+        this.game.clearPossible();
         this.game.clientUpdatePageTitle({
             text: _('${you} must select a target Space to raid'),
             args: {
