@@ -3981,6 +3981,7 @@ var GameMap = (function () {
         });
     };
     GameMap.prototype.setupGameMap = function (_a) {
+        var _this = this;
         var gamedatas = _a.gamedatas;
         document
             .getElementById('play_area_container')
@@ -3989,6 +3990,11 @@ var GameMap = (function () {
         this.setupMarkers({ gamedatas: gamedatas });
         this.setupConnections({ gamedatas: gamedatas });
         this.setupWieChits({ gamedatas: gamedatas });
+        var configPanel = document.getElementById('info_panel_buttons');
+        if (configPanel) {
+            configPanel.insertAdjacentHTML('afterbegin', tplUnitVisibilityButton());
+            dojo.connect($("bt_unit_visibility_info"), 'onclick', function () { return _this.handleUnitVisibilityChange(); });
+        }
     };
     GameMap.prototype.moveRoundMarker = function (_a) {
         var nextRoundStep = _a.nextRoundStep;
@@ -4082,8 +4088,27 @@ var GameMap = (function () {
         }
         element.remove();
     };
+    GameMap.prototype.handleUnitVisibilityChange = function () {
+        var buttonNode = document.getElementById('eye_button');
+        var gameMapNode = document.getElementById('bt_game_map');
+        if (!(buttonNode && gameMapNode)) {
+            return;
+        }
+        var current = buttonNode.getAttribute('data-units-visible');
+        if (current === 'true') {
+            buttonNode.setAttribute('data-units-visible', 'false');
+            gameMapNode.setAttribute('data-units-visible', 'false');
+        }
+        else {
+            buttonNode.setAttribute('data-units-visible', 'true');
+            gameMapNode.setAttribute('data-units-visible', 'true');
+        }
+    };
     return GameMap;
 }());
+var tplUnitVisibilityButton = function () {
+    return "<div id=\"bt_unit_visibility_info\">\n      <div id=\"eye_button\" data-units-visible=\"true\">\n        <svg  id=\"bt_eye_on_button\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z\" /></svg>\n        <svg id=\"bt_eye_off_button\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M11.83,9L15,12.16C15,12.11 15,12.05 15,12A3,3 0 0,0 12,9C11.94,9 11.89,9 11.83,9M7.53,9.8L9.08,11.35C9.03,11.56 9,11.77 9,12A3,3 0 0,0 12,15C12.22,15 12.44,14.97 12.65,14.92L14.2,16.47C13.53,16.8 12.79,17 12,17A5,5 0 0,1 7,12C7,11.21 7.2,10.47 7.53,9.8M2,4.27L4.28,6.55L4.73,7C3.08,8.3 1.78,10 1,12C2.73,16.39 7,19.5 12,19.5C13.55,19.5 15.03,19.2 16.38,18.66L16.81,19.08L19.73,22L21,20.73L3.27,3M12,7A5,5 0 0,1 17,12C17,12.64 16.87,13.26 16.64,13.82L19.57,16.75C21.07,15.5 22.27,13.86 23,12C21.27,7.61 17,4.5 12,4.5C10.6,4.5 9.26,4.75 8,5.2L10.17,7.35C10.74,7.13 11.35,7 12,7Z\" /></svg>\n      </div>\n    </div>";
+};
 var tplMarker = function (_a) {
     var id = _a.id;
     return "<div id=\"".concat(id, "\" class=\"bt_marker\"></div>");
@@ -4181,7 +4206,7 @@ var tplSailBox = function () { return "\n  <div id=\"sailBox\">\n    <div id=\""
 var tplGameMap = function (_a) {
     var gamedatas = _a.gamedatas;
     var spaces = gamedatas.spaces;
-    return "\n  <div id=\"bt_game_map\">\n    ".concat(tplMarkerSpace({
+    return "\n  <div id=\"bt_game_map\" data-units-visible=\"true\">\n    ".concat(tplMarkerSpace({
         id: OPEN_SEAS_MARKER_SAIL_BOX,
         top: 77.5,
         left: 1374.5,

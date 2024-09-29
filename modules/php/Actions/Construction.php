@@ -335,10 +335,9 @@ class Construction extends \BayonetsAndTomahawks\Actions\UnitMovement
         continue;
       }
       $outnumberInfo = GameMap::factionOutnumbersEnemyInSpace($space, $faction);
-      if ($outnumberInfo['hasEnemyUnits'] && !$outnumberInfo['outnumbers']) {
+      if ($outnumberInfo['hasEnemyUnitsExcludingMilitia'] && !$outnumberInfo['outnumbers']) {
         continue;
       }
-
 
       // Options
       $fort = Utils::array_find($units, function ($unit) use ($spaceId) {

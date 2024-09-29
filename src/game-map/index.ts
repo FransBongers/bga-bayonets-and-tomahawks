@@ -535,6 +535,13 @@ class GameMap {
     this.setupMarkers({ gamedatas });
     this.setupConnections({ gamedatas });
     this.setupWieChits({ gamedatas });
+
+    const configPanel = document.getElementById('info_panel_buttons');
+    if (configPanel) {
+      configPanel.insertAdjacentHTML('afterbegin', tplUnitVisibilityButton());
+      dojo.connect($(`bt_unit_visibility_info`), 'onclick', () => this.handleUnitVisibilityChange());
+    }
+    // tplUnitVisibilityButton
   }
 
   // ..######...########.########.########.########.########...######.
@@ -641,5 +648,21 @@ class GameMap {
       return;
     }
     element.remove();
+  }
+
+  private handleUnitVisibilityChange() {
+    const buttonNode = document.getElementById('eye_button');
+    const gameMapNode = document.getElementById('bt_game_map');
+    if (!(buttonNode && gameMapNode)) {
+      return;
+    }
+    const current = buttonNode.getAttribute('data-units-visible');
+    if (current === 'true') {
+      buttonNode.setAttribute('data-units-visible', 'false');
+      gameMapNode.setAttribute('data-units-visible', 'false');
+    } else {
+      buttonNode.setAttribute('data-units-visible', 'true');
+      gameMapNode.setAttribute('data-units-visible', 'true');
+    }
   }
 }

@@ -2,6 +2,40 @@
 @use 'sass:map';
 @use '../base';
 
+#bt_unit_visibility_info {
+  align-items: center;
+  display: flex;
+
+  #eye_button {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 6px;
+    width: 40px;
+
+    svg {
+      cursor: pointer;
+      width: 80%;
+    }
+
+    svg:hover {
+      fill: white;
+    }
+  }
+
+  #eye_button[data-units-visible="true"] {
+    #bt_eye_off_button {
+      display: none;
+    }
+  }
+
+  #eye_button[data-units-visible="false"] {
+    #bt_eye_on_button {
+      display: none;
+    }
+  }
+}
+
 #bt_game_map {
   background-image: url('img/map.webp');
   // background-size: 1500px 2318px;
@@ -317,4 +351,12 @@
   height: calc(var(--btMapScale) * 182px);
   // background-color: yellow;
   // opacity: 0.5;
+}
+
+#bt_game_map[data-units-visible="false"] {
+  .bt_marker,
+  .bt_marker_side,
+  .bt_token {
+    opacity: 0;
+  }
 }

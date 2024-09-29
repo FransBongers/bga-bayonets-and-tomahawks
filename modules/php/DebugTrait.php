@@ -112,9 +112,7 @@ trait DebugTrait
 
   function debug_test()
   {
-    Spaces::get(WINCHESTER)->setControl(FRENCH);
-    // Spaces::setupBoxes();
-    Notifications::log('yeb', Scenarios::get()->getYearEndBonus(FRENCH, 1755));
+     Notifications::log('can Be', AtomicActions::get(CONSTRUCTION)->canBePerformedBy(Units::getMany(['unit_28', 'unit_81'])->toArray(), Spaces::get(MONTREAL), ARMY_AP, BRITISH));
     
 
     // AtomicActions::get(WINTER_QUARTERS_PRE_RETURN_TO_COLONIES)->removeColonialBrigadesToDisbanded();
