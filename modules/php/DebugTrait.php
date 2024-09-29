@@ -112,7 +112,7 @@ trait DebugTrait
 
   function debug_test()
   {
-      // Connections::get(CHIGNECTOU_MIRAMICHY)->setRoad(1);
+      Connections::get(CHIGNECTOU_MIRAMICHY)->setRoad(0);
     
 
     // AtomicActions::get(WINTER_QUARTERS_PRE_RETURN_TO_COLONIES)->removeColonialBrigadesToDisbanded();
@@ -129,10 +129,10 @@ trait DebugTrait
     // Units::get('unit_20')->eliminate(Players::get());
     // Units::get('unit_23')->eliminate(Players::get());
     // Units::get('unit_121')->setLocation(LOSSES_BOX_BRITISH);
-    Units::get('unit_59')->setLocation(CHIGNECTOU);
-    Units::get('unit_8')->setLocation(CHIGNECTOU);
-    // Units::get('unit_35')->setLocation(LOSSES_BOX_BRITISH);
-    // Units::get('unit_36')->setLocation(LOSSES_BOX_BRITISH);
+    // Units::get('unit_7')->setLocation(BAYE_DE_CATARACOUY);
+    // Units::get('unit_8')->setLocation(CHIGNECTOU);
+    // Units::get('unit_1')->setLocation(POOL_FRENCH_FORTS);
+    // Units::get('unit_2')->setLocation(GRAND_SAULT);
     // Units::get('unit_38')->setLocation(LOSSES_BOX_BRITISH);
     
     // Units::get('unit_127')->setLocation(COTE_DU_SUD);
@@ -165,7 +165,7 @@ trait DebugTrait
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(NEW_YORK), BRITISH);
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(ALBANY), BRITISH);
 
-    // Cards::get('Card39')->insertOnTop(Locations::buildUpDeck(FRENCH));
+    // Cards::get('Card28')->insertOnTop(Locations::buildUpDeck(FRENCH));
     // Cards::get('Card39')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card39')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card19')->insertOnTop(Locations::campaignDeck(BRITISH));

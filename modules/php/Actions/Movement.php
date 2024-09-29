@@ -109,6 +109,19 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
         return true;
       });
     }
+    
+    // Solve edge case where a unit performing double road Construction with Construction Frenzy
+    // cannot move because the first construction action makes it spent.
+    $requiredUnitIds = isset($info['requiredUnitIds']) ? $info['requiredUnitIds'] : [];
+    foreach ($requiredUnitIds as $requiredUnitId) {
+      $inUnits = Utils::array_some($units, function ($unit) use ($requiredUnitId) {
+        return $unit->getId() === $requiredUnitId;
+      });
+      if (!$inUnits) {
+        $units[] = Units::get($requiredUnitId);
+      }
+    }
+    
 
     return [
       'source' => $source,
@@ -117,7 +130,7 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
       'faction' => $playerFaction,
       'units' => $units,
       'destination' => $destination,
-      'requiredUnitIds' => isset($info['requiredUnitIds']) ? $info['requiredUnitIds'] : [],
+      'requiredUnitIds' => $requiredUnitIds,
       'count' => count($this->ctx->getParent()->getResolvedActions([MOVEMENT])),
       'forcedMarchAvailable' => $forcedMarchAvailable,
     ];
