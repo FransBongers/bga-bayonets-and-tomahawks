@@ -228,8 +228,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     );
 
     this.gameMap = new GameMap(this);
-    this.pools = new Pools(this);
     this.tooltipManager = new TooltipManager(this);
+    this.pools = new Pools(this);
 
     if (this.playerOrder.includes(this.getPlayerId())) {
       this.hand = new Hand(this);

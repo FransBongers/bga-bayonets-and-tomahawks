@@ -48,6 +48,9 @@ class TokenManager extends CardManager<BTToken> {
       }
       // div.style.width = "calc(var(--btCardScale) * 250px)";
       // div.style.height = "calc(var(--btCardScale) * 179px)";
+      if (token.counterId.startsWith('VOW')) {
+        this.game.tooltipManager.addUnitTooltip({nodeId: token.id, unit: token});
+      }
     } else if (token.manager === MARKERS) {
       div.classList.add('bt_marker_side');
       div.setAttribute('data-side', 'front');

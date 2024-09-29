@@ -2424,8 +2424,8 @@ var BayonetsAndTomahawks = (function () {
         this.discard = new VoidStock(this.cardManager, document.getElementById('bt_discard'));
         this.deck = new LineStock(this.cardManager, document.getElementById('bt_deck'));
         this.gameMap = new GameMap(this);
-        this.pools = new Pools(this);
         this.tooltipManager = new TooltipManager(this);
+        this.pools = new Pools(this);
         if (this.playerOrder.includes(this.getPlayerId())) {
             this.hand = new Hand(this);
         }
@@ -10825,6 +10825,9 @@ var TokenManager = (function (_super) {
             if (isCommander) {
                 div.setAttribute('data-commander', 'true');
             }
+            if (token.counterId.startsWith('VOW')) {
+                this.game.tooltipManager.addUnitTooltip({ nodeId: token.id, unit: token });
+            }
         }
         else if (token.manager === MARKERS) {
             div.classList.add('bt_marker_side');
@@ -10874,6 +10877,14 @@ var tplCardTooltip = function (_a) {
         content: "\n      TODO\n    ",
     });
 };
+var tplTooltipWithIcon = function (_a) {
+    var title = _a.title, text = _a.text, iconHtml = _a.iconHtml, iconWidth = _a.iconWidth;
+    return "<div class=\"icon_tooltip\">\n            <div class=\"icon_tooltip_icon\"".concat(iconWidth ? "style=\"min-width: ".concat(iconWidth, "px;\"") : '', ">\n              ").concat(iconHtml, "\n            </div>\n            <div class=\"icon_tooltip_content\">\n              ").concat(title ? "<span class=\"tooltip_title\" >".concat(title, "</span>") : '', "\n              <span class=\"tooltip_text\">").concat(text, "</span>\n            </div>\n          </div>");
+};
+var tplTextTooltip = function (_a) {
+    var text = _a.text;
+    return "<span class=\"text_tooltip\">".concat(text, "</span>");
+};
 var TooltipManager = (function () {
     function TooltipManager(game) {
         this.idRegex = /id="[a-z]*_[0-9]*_[0-9]*"/;
@@ -10886,6 +10897,12 @@ var TooltipManager = (function () {
             game: this.game,
             imageOnly: this.game.settings.get({ id: PREF_CARD_INFO_IN_TOOLTIP }) === DISABLED,
         });
+        this.game.framework().addTooltipHtml(nodeId, html, 500);
+    };
+    TooltipManager.prototype.addUnitTooltip = function (_a) {
+        var nodeId = _a.nodeId, unit = _a.unit;
+        var staticData = this.game.getUnitStaticData(unit);
+        var html = "<div class=\"bt_token_side\" data-counter-id=\"".concat(unit.counterId, "\"></div>");
         this.game.framework().addTooltipHtml(nodeId, html, 500);
     };
     TooltipManager.prototype.addTextToolTip = function (_a) {

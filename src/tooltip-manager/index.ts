@@ -33,6 +33,22 @@ class TooltipManager {
     this.game.framework().addTooltipHtml(nodeId, html, 500);
   }
 
+  // public addUnitTooltip({nodeId, unit}: {nodeId: string, unit: BTUnit}) {
+  //   const staticData = this.game.getUnitStaticData(unit);
+  //   const html = tplTooltipWithIcon({
+  //     title: _(staticData.counterText),
+  //     text: '',
+  //     iconHtml: `<div class="card-side front bt_token_side" data-counter-id="${unit.counterId}"></div>`,
+  //     iconWidth: 78,
+  //   });
+  //   this.game.framework().addTooltipHtml(nodeId, html, 500);
+  // }
+  public addUnitTooltip({nodeId, unit}: {nodeId: string, unit: BTUnit}) {
+    const staticData = this.game.getUnitStaticData(unit);
+    const html = `<div class="bt_token_side" data-counter-id="${unit.counterId}"></div>`;
+    this.game.framework().addTooltipHtml(nodeId, html, 500);
+  }
+
   public addTextToolTip({ nodeId, text }: { nodeId: string; text: string }) {
     this.game.framework().addTooltip(nodeId, _(text), '', 500);
   }

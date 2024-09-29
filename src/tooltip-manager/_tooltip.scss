@@ -74,22 +74,47 @@
 
 }
 
-// .bt_card_in_tooltip {
-//   // position: absolute;
-//   // bottom: 8px;
-//   // left: 290px;
-//   margin-right: -100px;
-//   margin-left: 8px;
-//   align-self: center;
-//   width: 240px;
-//   height: 334px;
-//   background-size: 240px 334px;
-//   box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.4);
-//   border-radius: 10px;
-//   // transform: perspective(60em) rotateY(-10deg)// scale(.93);
-//   // animation: ea-wiggle 5s infinite alternate;
-// }
-
 .bt_card_only_tooltip {
   --btCardScale: 1.8;
+}
+
+.icon_tooltip {
+  display: flex;
+  flex-direction: row;
+  width: 250px;
+  --btTokenScale: 1.5;
+  min-height: 82px;
+
+  .icon {
+    margin: 0px;
+  }
+
+  .tooltip_title {
+    font-size: medium;
+    font-weight: bold;
+  }
+
+  .icon_tooltip_icon {
+    // padding-top: 4px;
+  }
+
+  .icon_tooltip_content {
+    display: flex;
+    flex-direction: column;
+    margin-left: 8px;
+  }
+
+  .tooltip_text {
+    text-align: left;
+    font-size: small;
+  }
+}
+
+.dijitTooltipContainer {
+  .bt_token_side {
+    --btTokenScale: 2;
+    position: inherit;
+    min-height: calc(var(--btTokenScale) * 52px);
+    min-width: calc(var(--btTokenScale) * 52px);
+  }
 }

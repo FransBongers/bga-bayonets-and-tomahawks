@@ -3366,6 +3366,37 @@ body > .card {
   --btCardScale: 1.8;
 }
 
+.icon_tooltip {
+  display: flex;
+  flex-direction: row;
+  width: 250px;
+  --btTokenScale: 1.5;
+  min-height: 82px;
+}
+.icon_tooltip .icon {
+  margin: 0px;
+}
+.icon_tooltip .tooltip_title {
+  font-size: medium;
+  font-weight: bold;
+}
+.icon_tooltip .icon_tooltip_content {
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+}
+.icon_tooltip .tooltip_text {
+  text-align: left;
+  font-size: small;
+}
+
+.dijitTooltipContainer .bt_token_side {
+  --btTokenScale: 2;
+  position: inherit;
+  min-height: calc(var(--btTokenScale) * 52px);
+  min-width: calc(var(--btTokenScale) * 52px);
+}
+
 /*! nouislider - 14.6.0 - 6/27/2020 */
 .noUi-target, .noUi-target * {
   -webkit-touch-callout: none;
