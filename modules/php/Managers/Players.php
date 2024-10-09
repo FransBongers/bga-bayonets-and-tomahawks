@@ -206,7 +206,7 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
   /*
    * Get current turn order according to first player variable
    */
-  public function getTurnOrder($firstPlayer = null)
+  public static function getTurnOrder($firstPlayer = null)
   {
     $players = self::getAll()->toArray();
     usort($players, function ($a, $b) {

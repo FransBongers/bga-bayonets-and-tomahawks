@@ -223,11 +223,13 @@ class WinterQuartersReturnToColoniesSelectStack extends \BayonetsAndTomahawks\Ac
       // Notifications::log('stack', $spaceId);
       $stackOptions = $this->getOptionsForStack($spaces, $connections, $units, $stack, $faction);
       // Notifications::log('options ' . $spaceId, );
-      $options[$spaceId] = [
-        'space' => $stack['space'],
-        'units' => $stack['units'],
-        'destinations' => $stackOptions,
-      ];
+      if (count($stackOptions) > 0) {
+        $options[$spaceId] = [
+          'space' => $stack['space'],
+          'units' => $stack['units'],
+          'destinations' => $stackOptions,
+        ];
+      }
     }
 
     return $options;

@@ -112,7 +112,6 @@ trait DebugTrait
 
   function debug_test()
   {
-      Connections::get(CHIGNECTOU_MIRAMICHY)->setRoad(0);
     
 
     // AtomicActions::get(WINTER_QUARTERS_PRE_RETURN_TO_COLONIES)->removeColonialBrigadesToDisbanded();
@@ -130,15 +129,15 @@ trait DebugTrait
     // Units::get('unit_23')->eliminate(Players::get());
     // Units::get('unit_121')->setLocation(LOSSES_BOX_BRITISH);
     // Units::get('unit_7')->setLocation(BAYE_DE_CATARACOUY);
-    // Units::get('unit_8')->setLocation(CHIGNECTOU);
-    // Units::get('unit_1')->setLocation(POOL_FRENCH_FORTS);
-    // Units::get('unit_2')->setLocation(GRAND_SAULT);
+    // Units::get('unit_44')->setLocation(FORKS_OF_THE_OHIO);
+    // Units::get('unit_22')->setLocation(FORKS_OF_THE_OHIO);
+    // Units::get('unit_40')->setLocation(FORKS_OF_THE_OHIO);
     // Units::get('unit_38')->setLocation(LOSSES_BOX_BRITISH);
     
     // Units::get('unit_127')->setLocation(COTE_DU_SUD);
     // Units::get('unit_138')->setLocation(COTE_DE_BEAUPRE);
     // Spaces::get(COTE_DU_SUD)->setControl(BRITISH);
-    // Spaces::get(COTE_DE_BEAUPRE)->setControl(BRITISH);
+    Spaces::get(LA_PRESENTATION)->setControl(BRITISH);
 
 
     // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(FRENCH), ROUT_MARKER, Spaces::get(MONTREAL), FRENCH);

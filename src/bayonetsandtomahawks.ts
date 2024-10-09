@@ -114,7 +114,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   };
 
   constructor() {
-    console.log('bayonetsandtomahawks constructor');
+    debug('bayonetsandtomahawks constructor');
   }
 
   // ..######..########.########.##.....##.########.

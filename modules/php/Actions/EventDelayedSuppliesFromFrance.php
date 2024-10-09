@@ -31,9 +31,7 @@ class EventDelayedSuppliesFromFrance extends \BayonetsAndTomahawks\Models\Atomic
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreEventDelayedSuppliesFromFrance()
-  {
-  }
+  public function stPreEventDelayedSuppliesFromFrance() {}
 
 
   // ....###....########...######....######.
@@ -90,7 +88,7 @@ class EventDelayedSuppliesFromFrance extends \BayonetsAndTomahawks\Models\Atomic
 
     $stateArgs = $this->argsEventDelayedSuppliesFromFrance();
 
-    if (Utils::array_find($stateArgs['indianAP'], function ($ap) use ($indianAP) {
+    if (count($stateArgs['indianAP']) > 0 && Utils::array_find($stateArgs['indianAP'], function ($ap) use ($indianAP) {
       return $ap['id'] === $indianAP;
     }) === null) {
       throw new \feException("ERROR 039");
@@ -107,9 +105,9 @@ class EventDelayedSuppliesFromFrance extends \BayonetsAndTomahawks\Models\Atomic
 
     $player = self::getPlayer();
 
-    Notifications::message(clienttranslate('${player_name} chooses to lose ${indianAP} and ${frenchAP}'), [
+    Notifications::message($indianAP !== null ? clienttranslate('${player_name} chooses to lose ${indianAP} and ${frenchAP}') : clienttranslate('${player_name} chooses to lose ${frenchAP}'), [
       'player' => $player,
-      'indianAP' => $indianAP,
+      'indianAP' => $indianAP !== null ? $indianAP : '',
       'frenchAP' => $frenchAP,
     ]);
 

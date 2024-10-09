@@ -7,6 +7,10 @@ const capitalizeFirstLetter = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+const otherFaction = (faction: BRITISH_FACTION | FRENCH_FACTION): BRITISH_FACTION | FRENCH_FACTION => {
+  return faction === BRITISH ? FRENCH : BRITISH;
+}
+
 const createUnitsLog = (units: BTUnit[]) => {
   let unitsLog = '';
   const unitsLogArgs = {};

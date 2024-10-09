@@ -50,17 +50,20 @@ class BattleRout extends \BayonetsAndTomahawks\Actions\Battle
 
     Notifications::battleRout($faction);
 
+    $units = $space->getUnits($faction);
+
+
     // TODO: refactor to use GameMap function?
     $markerLocation = Locations::stackMarker($space->getId(), $faction);
     $existingMarker = Markers::getOfTypeInLocation(ROUT_MARKER, $markerLocation);
-    if (count($existingMarker) === 0) {
+    if (count($existingMarker) === 0 && count($units) > 0) {
       $marker = Markers::getMarkersFromSupply(ROUT_MARKER)[0];
       $marker->setLocation($markerLocation);
   
       Notifications::placeStackMarker($player, [$marker], $space);
     }
 
-    $unitsToEliminate = $this->getUnitsToEliminate($space, $faction);
+    $unitsToEliminate = $this->getUnitsToEliminate($units, $faction);
 
     if (count($unitsToEliminate) === 1) {
       $unitsToEliminate[0]->eliminate($player);
@@ -149,9 +152,9 @@ class BattleRout extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  private function getUnitsToEliminate($space, $faction)
+  private function getUnitsToEliminate($units, $faction)
   {
-    $units = $space->getUnits();
+    
     /**
      * Priority:
      * 1. Artillery
@@ -161,19 +164,19 @@ class BattleRout extends \BayonetsAndTomahawks\Actions\Battle
      */
 
     $artillery = Utils::filter($units, function ($unit) use ($faction) {
-      return $unit->getFaction() === $faction && $unit->isArtillery();
+      return $unit->isArtillery();
     });
     if (count($artillery) > 0) {
       return $artillery;
     }
     $nonIndian = Utils::filter($units, function ($unit) use ($faction) {
-      return $unit->getFaction() === $faction && !$unit->isIndian() && !$unit->isFort();
+      return !$unit->isIndian() && !$unit->isFort();
     });
     if (count($nonIndian) > 0) {
       return $nonIndian;
     }
     return Utils::filter($units, function ($unit) use ($faction) {
-      return $unit->getFaction() === $faction && $unit->isIndian();
+      return $unit->isIndian();
     });
   }
 }

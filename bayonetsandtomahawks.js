@@ -2353,7 +2353,7 @@ var BayonetsAndTomahawks = (function () {
         this._notif_uid_to_log_id = {};
         this._notif_uid_to_mobile_log_id = {};
         this._selectableNodes = [];
-        console.log('bayonetsandtomahawks constructor');
+        debug('bayonetsandtomahawks constructor');
     }
     BayonetsAndTomahawks.prototype.setup = function (gamedatas) {
         dojo.place("<div id='customActions' style='display:inline-block'></div>", $('generalactions'), 'after');
@@ -3116,6 +3116,9 @@ var isDebug = window.location.host == 'studio.boardgamearena.com' ||
 var debug = isDebug ? console.info.bind(window.console) : function () { };
 var capitalizeFirstLetter = function (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+};
+var otherFaction = function (faction) {
+    return faction === BRITISH ? FRENCH : BRITISH;
 };
 var createUnitsLog = function (units) {
     var unitsLog = '';
@@ -5362,9 +5365,10 @@ var NotificationManager = (function () {
                     });
                 }
                 else {
+                    console.log('remove enemy marker');
                     this.game.gameMap.removeMarkerFromSpace({
                         spaceId: space.id,
-                        type: "".concat(faction, "_control_marker"),
+                        type: "".concat(otherFaction(faction), "_control_marker"),
                     });
                 }
                 return [2];
@@ -7676,6 +7680,10 @@ var EventDelayedSuppliesFromFranceState = (function () {
     EventDelayedSuppliesFromFranceState.prototype.setDescription = function (activePlayerId) { };
     EventDelayedSuppliesFromFranceState.prototype.updateInterfaceInitialStep = function () {
         var _this = this;
+        if (this.args.indianAP.length === 0) {
+            this.updateInterfaceSelectFrenchAP();
+            return;
+        }
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
             text: _('${you} must select an Indian AP to lose'),
@@ -7721,11 +7729,11 @@ var EventDelayedSuppliesFromFranceState = (function () {
     EventDelayedSuppliesFromFranceState.prototype.updateInterfaceConfirm = function () {
         var _this = this;
         this.game.clearPossible();
-        var text = _('Lose ${indianAP} and ${frenchAP}?');
+        var text = this.indianAP === null ? _('Lose ${frenchAP}?') : _('Lose ${indianAP} and ${frenchAP}?');
         this.game.clientUpdatePageTitle({
             text: text,
             args: {
-                indianAP: this.indianAP,
+                indianAP: this.indianAP || '',
                 frenchAP: this.frenchAP,
             },
         });

@@ -39,6 +39,10 @@ class EventDelayedSuppliesFromFranceState implements State {
   // ..######.....##....########.##.........######.
 
   private updateInterfaceInitialStep() {
+    if (this.args.indianAP.length === 0) {
+      this.updateInterfaceSelectFrenchAP();
+      return;
+    }
     this.game.clearPossible();
 
     this.game.clientUpdatePageTitle({
@@ -90,11 +94,11 @@ class EventDelayedSuppliesFromFranceState implements State {
   private updateInterfaceConfirm() {
     this.game.clearPossible();
 
-    const text = _('Lose ${indianAP} and ${frenchAP}?');
+    const text = this.indianAP === null ? _('Lose ${frenchAP}?') : _('Lose ${indianAP} and ${frenchAP}?');
     this.game.clientUpdatePageTitle({
       text,
       args: {
-        indianAP: this.indianAP,
+        indianAP: this.indianAP || '',
         frenchAP: this.frenchAP,
       },
     });

@@ -123,7 +123,7 @@ class WinterQuartersReturnToColoniesLeaveUnits extends \BayonetsAndTomahawks\Act
     $spaceId = $info['spaceId'];
     $space = Spaces::get($spaceId);
 
-    Notifications::message(clienttranslate('${player_name} does not leave units on ${tkn_boldText_spaceName}') . [
+    Notifications::message(clienttranslate('${player_name} does not leave units on ${tkn_boldText_spaceName}') , [
       'player' => $player,
       'tkn_boldText_spaceName' => $space->getName(),
       'i18n' => ['tkn_boldText_spaceName'],

@@ -726,10 +726,11 @@ class NotificationManager {
         type: `${faction}_control_marker`,
       });
     } else {
+      console.log('remove enemy marker');
       // Remove enemy marker
       this.game.gameMap.removeMarkerFromSpace({
         spaceId: space.id,
-        type: `${faction}_control_marker`,
+        type: `${otherFaction(faction)}_control_marker`,
       });
     }
   }
