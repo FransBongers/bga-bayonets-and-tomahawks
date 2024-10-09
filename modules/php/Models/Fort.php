@@ -2,6 +2,7 @@
 namespace BayonetsAndTomahawks\Models;
 
 use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\GameMap;
 
 class Fort extends AbstractUnit
 {
@@ -18,5 +19,6 @@ class Fort extends AbstractUnit
     $this->setReduced(0);
     $this->setLocation(REMOVED_FROM_PLAY);
     Notifications::eliminateUnit($player, $this, $previousLocation);
+    GameMap::lastEliminatedUnitCheck($player, $previousLocation, $this->getFaction());
   }
 }

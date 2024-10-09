@@ -187,6 +187,8 @@ class BattlePenalties extends \BayonetsAndTomahawks\Actions\Battle
       }
     }
 
+    // $this->moveBattleVictoryMarker($attackingPlayer, $attackingFaction, 5);
+
     foreach ([$attackingFaction, $defendingFaction] as $index => $faction) {
       $penalty = abs($penalties[$faction]);
       if ($penalty > 0) {

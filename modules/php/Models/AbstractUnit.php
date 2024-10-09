@@ -276,6 +276,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     $this->setLocation(REMOVED_FROM_PLAY);
     // TODO: use Notifications::removeFromPlay?
     Notifications::eliminateUnit($player, $this, $previousLocation);
+    GameMap::lastEliminatedUnitCheck($player, $previousLocation, $this->getFaction());
   }
 
   public function applyHit($player = null)

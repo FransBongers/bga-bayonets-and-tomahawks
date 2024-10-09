@@ -43,6 +43,8 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
 
   public function stBattleRetreatCheckOptions()
   {
+    $this->returnCommanders();
+
     $info = $this->ctx->getInfo();
     $faction = $info['faction'];
     $spaceId = $info['spaceId'];
@@ -108,21 +110,7 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreBattleRetreatCheckOptions()
-  {
-    // Return commanders to their stacks
-    Units::getInLocationLike(COMMANDER, 'commander_rerolls_track');
-    $commanders = $this->getCommandersOnRerollsTrack();
-    $spaceId = Globals::getActiveBattleSpaceId();
-
-    foreach ($commanders as $faction => $unit) {
-      if ($unit === null) {
-        continue;
-      }
-      $unit->setLocation($spaceId);
-      Notifications::battleReturnCommander(Players::getPlayerForFaction($faction), $unit, $spaceId);
-    }
-  }
+  public function stPreBattleRetreatCheckOptions() {}
 
 
   // ....###....########...######....######.
@@ -208,6 +196,24 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  private function returnCommanders()
+  {
+    // Return commanders to their stacks
+    $commanders = $this->getCommandersOnRerollsTrack();
+    $spaceId = Globals::getActiveBattleSpaceId();
+
+    foreach ($commanders as $faction => $unit) {
+      if ($unit === null) {
+        continue;
+      }
+      $unit->setLocation($spaceId);
+      $player = Players::getPlayerForFaction($faction);
+
+      Notifications::battleReturnCommander($player, $unit, $spaceId);
+      GameMap::lastEliminatedUnitCheck($player, $spaceId, $faction);
+    }
+  }
 
   private function insertRetreatAction($retreatOptions)
   {
@@ -315,8 +321,8 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     }
 
     // 3. A Wilderness Space or friednly Indian Nation Village
-    $wildernessSpaces = Utils::filter($spacesWithoutEnemyUnits, function ($space) {
-      return $space->getControl() === NEUTRAL && in_array($space->getIndianVillage(), [CHEROKEE, IROQUOIS]);
+    $wildernessSpaces = Utils::filter($spacesWithoutEnemyUnits, function ($space) use ($faction) {
+      return $space->getControl() === NEUTRAL || ($space->getControl() === $faction && in_array($space->getIndianVillage(), [CHEROKEE, IROQUOIS]));
     });
 
     if (count($wildernessSpaces) > 0) {
