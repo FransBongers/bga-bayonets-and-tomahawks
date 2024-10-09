@@ -9257,15 +9257,18 @@ var MovementState = (function () {
                 ? ''
                 : DISABLED,
         });
-        this.game.addSecondaryActionButton({
-            id: 'select_all_btn',
-            text: _('Select all'),
-            callback: function () {
-                (_this.selectedUnits = _this.args.units),
-                    _this.updateInterfaceInitialStep();
-            },
-        });
-        if (this.selectedUnits.length === 0 || this.selectedUnits.length === this.args.requiredUnitIds.length) {
+        if (!this.isIndianAPAndMultipleIndianNations()) {
+            this.game.addSecondaryActionButton({
+                id: 'select_all_btn',
+                text: _('Select all'),
+                callback: function () {
+                    (_this.selectedUnits = _this.args.units),
+                        _this.updateInterfaceInitialStep();
+                },
+            });
+        }
+        if (this.selectedUnits.length === 0 ||
+            this.selectedUnits.length === this.args.requiredUnitIds.length) {
             this.game.addPassButton({
                 optionalAction: this.args.optionalAction,
             });
@@ -9291,7 +9294,22 @@ var MovementState = (function () {
     };
     MovementState.prototype.setUnitsSelectable = function () {
         var _this = this;
-        this.args.units.forEach(function (unit) {
+        var units = this.args.units.filter(function (unit) {
+            if ([LIGHT_AP, LIGHT_AP_2X].includes(_this.args.source) &&
+                _this.game.getUnitStaticData(unit).type === COMMANDER &&
+                _this.selectedUnits.some(function (selectedUnit) {
+                    return _this.game.getUnitStaticData(selectedUnit).type === COMMANDER &&
+                        selectedUnit.id !== unit.id;
+                })) {
+                return false;
+            }
+            if ([INDIAN_AP, INDIAN_AP_2X].includes(_this.args.source) &&
+                _this.selectedUnits.some(function (selectedUnit) { return unit.counterId !== selectedUnit.counterId; })) {
+                return false;
+            }
+            return true;
+        });
+        units.forEach(function (unit) {
             _this.game.setUnitSelectable({
                 id: unit.id,
                 callback: function () {
@@ -9327,6 +9345,10 @@ var MovementState = (function () {
         var requiresCoastal = this.selectedUnits.some(function (unit) { return _this.game.getUnitStaticData(unit).type === FLEET; });
         var validDestinations = this.args.adjacent.filter(function (_a) {
             var connection = _a.connection, space = _a.space;
+            if (_this.selectedUnits.some(function (unit) { return _this.game.getUnitStaticData(unit).type === COMMANDER; }) &&
+                !_this.selectedUnits.some(function (unit) { return _this.game.getUnitStaticData(unit).type !== COMMANDER; })) {
+                return false;
+            }
             if (requiresHighway && connection.type !== HIGHWAY) {
                 return false;
             }
@@ -9379,15 +9401,17 @@ var MovementState = (function () {
                 return 0;
         }
     };
-    MovementState.prototype.isSailMovePossible = function () {
-        var _this = this;
-        var selectedFleets = this.selectedUnits.filter(function (unit) {
-            return _this.game.gamedatas.staticData.units[unit.counterId].type === FLEET;
-        }).length;
-        var otherUnits = this.selectedUnits.filter(function (unit) {
-            return ![FLEET, COMMANDER].includes(_this.game.gamedatas.staticData.units[unit.counterId].type);
-        }).length;
-        return selectedFleets > 0 && otherUnits / selectedFleets <= 4;
+    MovementState.prototype.isIndianAPAndMultipleIndianNations = function () {
+        if (![INDIAN_AP, INDIAN_AP_2X].includes(this.args.source)) {
+            return false;
+        }
+        var indianNations = this.args.units.reduce(function (carry, current) {
+            if (!carry.includes(current.counterId)) {
+                carry.push(current.counterId);
+            }
+            return carry;
+        }, []);
+        return indianNations.length > 1;
     };
     return MovementState;
 }());

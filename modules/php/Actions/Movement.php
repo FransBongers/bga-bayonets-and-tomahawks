@@ -334,7 +334,7 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
     }
     if (in_array($source, [LIGHT_AP, LIGHT_AP_2X])) {
       return Utils::filter($unitsThatCanMove, function ($unit) {
-        return $unit->isLight();
+        return $unit->isLight() || $unit->isCommander();
       });
     }
     return $unitsThatCanMove;

@@ -98,16 +98,21 @@ class MovementState implements State {
           : DISABLED,
     });
 
-    this.game.addSecondaryActionButton({
-      id: 'select_all_btn',
-      text: _('Select all'),
-      callback: () => {
-        (this.selectedUnits = this.args.units),
-          this.updateInterfaceInitialStep();
-      },
-    });
+    if (!this.isIndianAPAndMultipleIndianNations()) {
+      this.game.addSecondaryActionButton({
+        id: 'select_all_btn',
+        text: _('Select all'),
+        callback: () => {
+          (this.selectedUnits = this.args.units),
+            this.updateInterfaceInitialStep();
+        },
+      });
+    }
 
-    if (this.selectedUnits.length === 0 || this.selectedUnits.length === this.args.requiredUnitIds.length) {
+    if (
+      this.selectedUnits.length === 0 ||
+      this.selectedUnits.length === this.args.requiredUnitIds.length
+    ) {
       this.game.addPassButton({
         optionalAction: this.args.optionalAction,
       });
@@ -154,10 +159,41 @@ class MovementState implements State {
   }
 
   private setUnitsSelectable() {
-    this.args.units.forEach((unit) => {
+    const units = this.args.units.filter((unit) => {
+      // Check commander movement with light units
+      if (
+        // Source is light AP
+        [LIGHT_AP, LIGHT_AP_2X].includes(this.args.source) &&
+        // Units is commander
+        this.game.getUnitStaticData(unit).type === COMMANDER &&
+        // Another Commander has already been selected
+        this.selectedUnits.some(
+          (selectedUnit) =>
+            this.game.getUnitStaticData(selectedUnit).type === COMMANDER &&
+            selectedUnit.id !== unit.id
+        )
+      ) {
+        return false;
+      }
+
+      // Check same Indian Nation with indian units
+      if (
+        [INDIAN_AP, INDIAN_AP_2X].includes(this.args.source) &&
+        this.selectedUnits.some(
+          (selectedUnit) => unit.counterId !== selectedUnit.counterId
+        )
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+
+    units.forEach((unit) => {
       this.game.setUnitSelectable({
         id: unit.id,
         callback: () => {
+          // Unselect unit
           if (
             this.selectedUnits.some(
               (selectedUnit) => selectedUnit.id === unit.id
@@ -168,8 +204,10 @@ class MovementState implements State {
               (selectedUnit) => selectedUnit.id !== unit.id
             );
           } else {
+            // Add units to selected units
             this.selectedUnits.push(unit);
           }
+          // Reset destination unless there is a fixed destination
           if (this.args.destination === null) {
             this.destination = null;
           }
@@ -206,6 +244,19 @@ class MovementState implements State {
 
     const validDestinations = this.args.adjacent.filter(
       ({ connection, space }) => {
+        // TODO: lone commander movement:
+        if (
+          // If only commanders are selected:
+          this.selectedUnits.some(
+            (unit) => this.game.getUnitStaticData(unit).type === COMMANDER
+          ) &&
+          !this.selectedUnits.some(
+            (unit) => this.game.getUnitStaticData(unit).type !== COMMANDER
+          )
+        ) {
+          return false;
+        }
+
         if (requiresHighway && connection.type !== HIGHWAY) {
           return false;
         }
@@ -272,18 +323,22 @@ class MovementState implements State {
     }
   }
 
-  private isSailMovePossible(): boolean {
-    const selectedFleets = this.selectedUnits.filter(
-      (unit) =>
-        this.game.gamedatas.staticData.units[unit.counterId].type === FLEET
-    ).length;
-    const otherUnits = this.selectedUnits.filter(
-      (unit) =>
-        ![FLEET, COMMANDER].includes(
-          this.game.gamedatas.staticData.units[unit.counterId].type
-        )
-    ).length;
-    return selectedFleets > 0 && otherUnits / selectedFleets <= 4;
+  private isIndianAPAndMultipleIndianNations() {
+    if (![INDIAN_AP, INDIAN_AP_2X].includes(this.args.source)) {
+      return false;
+    }
+
+    const indianNations: string[] = this.args.units.reduce(
+      (carry: string[], current: BTUnit) => {
+        if (!carry.includes(current.counterId)) {
+          carry.push(current.counterId);
+        }
+        return carry;
+      },
+      []
+    );
+
+    return indianNations.length > 1;
   }
 
   //  ..######..##.......####..######..##....##
