@@ -143,16 +143,22 @@ interface OnEnteringMovementStateArgs extends CommonArgs {
   adjacent: {
     space: BTSpace;
     connection: BTConnection;
+    hasEnemyUnits: boolean;
+    requiredForOverwhelm: number;
+    requiredToMove: number;
   }[];
+  destination: BTSpace;
   units: BTUnit[];
   fromSpace: BTSpace;
   faction: BRITISH_FACTION | FRENCH_FACTION;
-  destination: BTSpace;
+  isArmyMovement: boolean;
   requiredUnitIds: string[];
   source: string;
   forcedMarchAvailable: boolean;
   roughSeasActive: boolean;
-  count: number;
+  resolvedMoves: number;
+  unitsThatCannotMoveCount: number;
+  previouslyMovedUnitIds: string[];
 }
 
 interface BTConstructionOptions {
@@ -167,6 +173,10 @@ interface BTConstructionOptions {
       space: BTSpace;
     }
   >;
+  space: BTSpace;
+}
+
+interface OnEnteringMovementLoneCommanderStateArgs extends CommonArgs {
   space: BTSpace;
 }
 

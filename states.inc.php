@@ -589,6 +589,16 @@ $machinestates = array(
         'transitions' => [],
     ],
 
+    ST_MOVEMENT_LONE_COMMANDER => [
+        'name' => 'movementLoneCommander',
+        'description' => clienttranslate('${actplayer} must undo'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actMovementLoneCommander', 'actPassOptionalAction', 'actRestart'],
+    ],
+
     ST_MOVEMENT_LOSE_CONTROL_CHECK => [
         'name' => 'movementLoseControlCheck',
         'description' => '',

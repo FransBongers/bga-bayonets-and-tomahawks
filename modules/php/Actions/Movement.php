@@ -66,6 +66,27 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
+  /**
+   * Required data
+   * - source
+   * - units that can move
+   * - units on space that cannot move
+   * - adjacent connections
+   *    - for adjacent spaces, number of units for overwhelm / battle
+   * - OOS and ROUT markers present
+   * - units that are required to move
+   * - already moved units
+   * - commander options when only moving commanders with AMRY Movement
+   * 
+   * Stack with rout marker
+   * - May not attack
+   *    - may overwhelm
+   * - May only move onto enemy home space if friendly controlled
+   * - 
+   * 
+   * OOS stack
+   * - No restrictions?
+   */
   public function argsMovement()
   {
     $info = $this->ctx->getInfo();
@@ -77,61 +98,40 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
     $player = self::getPlayer();
     $playerFaction = $player->getFaction();
 
+
     $isArmyMovement = in_array($source, [ARMY_AP, ARMY_AP_2X, SAIL_ARMY_AP, SAIL_ARMY_AP_2X, FRENCH_LIGHT_ARMY_AP]);
     $britishForcedMarch = $playerFaction === BRITISH && $isArmyMovement && Cards::isCardInPlay(BRITISH, BRITISH_FORCED_MARCH_CARD_ID) && Globals::getUsedEventCount(BRITISH) === 0;
     $frenchForcedMarch = $playerFaction === FRENCH && $isArmyMovement && Cards::isCardInPlay(FRENCH, FRENCH_FORCED_MARCH_CARD_ID) && Globals::getUsedEventCount(FRENCH) === 0;
     $forcedMarchAvailable = $britishForcedMarch || $frenchForcedMarch;
 
+
     $unitsOnSpace = $space->getUnits($playerFaction);
-    $indianNation = isset($info['indianNation']) ? $info['indianNation'] : null;
-    $units = $this->getUnitsThatCanMove($space, $playerFaction, $unitsOnSpace, $source, $forcedMarchAvailable, $indianNation);
-
-    $adjacent = $space->getAdjacentConnectionsAndSpaces();
-    
-    $unusableByBritishConnectionId = Globals::getHighwayUnusableForBritish();
-    if ($playerFaction === BRITISH && $unusableByBritishConnectionId !== '') {
-      $adjacent = Utils::filter($adjacent, function ($data) use ($unusableByBritishConnectionId) {
-        return $data['connection']->getId() !== $unusableByBritishConnectionId;
-      });
-    }
-
     // Required move when finishing road construction
     $destination = isset($info['destinationId']) && $info['destinationId'] !== null ? Spaces::get($info['destinationId']) : null;
-    if ($destination !== null) {
-      $adjacent = Utils::filter($adjacent, function ($data) use ($destination) {
-        return $data['space']->getId() === $destination->getId();
-      });
-      $connection = $adjacent[0]['connection'];
-      $units = Utils::filter($units, function ($unit) use ($connection) {
-        if (!$connection->isCoastal() && $unit->isFleet()) {
-          return false;
-        }
-        return true;
-      });
-    }
-    
+
+    $stackHasRoutMarker = $space->hasStackMarker(ROUT_MARKER, $playerFaction);;
+    $adjacent = $this->getAdjacentConnectionsAndSpaces($space, $playerFaction, $destination, $stackHasRoutMarker);
+
+    // indianNation is set if indian ap was used and this is a subsequent step
+    $indianNation = isset($info['indianNation']) ? $info['indianNation'] : null;
     // Solve edge case where a unit performing double road Construction with Construction Frenzy
     // cannot move because the first construction action makes it spent.
     $requiredUnitIds = isset($info['requiredUnitIds']) ? $info['requiredUnitIds'] : [];
-    foreach ($requiredUnitIds as $requiredUnitId) {
-      $inUnits = Utils::array_some($units, function ($unit) use ($requiredUnitId) {
-        return $unit->getId() === $requiredUnitId;
-      });
-      if (!$inUnits) {
-        $units[] = Units::get($requiredUnitId);
-      }
-    }
-    
+    $units = $this->getUnitsThatCanMove($space, $playerFaction, $unitsOnSpace, $source, $forcedMarchAvailable, $indianNation, false, $adjacent, $requiredUnitIds);
+    $unitsThatCannotMove = $this->getUnitsThatCannotMove($unitsOnSpace, $units);
 
     return [
       'source' => $source,
       'adjacent' => $adjacent,
+      'destination' => $destination,
       'fromSpace' => $space,
       'faction' => $playerFaction,
+      'isArmyMovement' => $isArmyMovement,
       'units' => $units,
-      'destination' => $destination,
+      'unitsThatCannotMoveCount' => count($unitsThatCannotMove),
+      'previouslyMovedUnitIds' => $this->getUnitsPreviouslyMovedUnits(),
       'requiredUnitIds' => $requiredUnitIds,
-      'count' => count($this->ctx->getParent()->getResolvedActions([MOVEMENT])),
+      'resolvedMoves' => count($this->ctx->getParent()->getResolvedActions([MOVEMENT])),
       'forcedMarchAvailable' => $forcedMarchAvailable,
     ];
   }
@@ -155,6 +155,12 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
   public function actPassMovement()
   {
     $player = self::getPlayer();
+    $info = $this->ctx->getInfo();
+    $spaceId = $info['spaceId'];
+    $space = Spaces::get($spaceId);
+    $units = $space->getUnits($player->getFaction());
+
+    $this->loneCommanderCheck($player, $space, $units);
     // Stats::incPassActionCount($player->getId(), 1);
     // Engine::resolve(PASS);
     $this->resolveAction(PASS);
@@ -262,6 +268,21 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  // Returns units already moved as part of this move action
+  private function getUnitsPreviouslyMovedUnits()
+  {
+    $resolvedMoveActions = $this->ctx->getParent()->getResolvedActions([MOVE_STACK]);
+    $movedUnitIds = [];
+
+    foreach ($resolvedMoveActions as $node) {
+      $resArgs = $node->getActionResolutionArgs();
+      $unitIds = $resArgs['unitIds'];
+      $movedUnitIds = array_merge($movedUnitIds, $unitIds);
+    }
+
+    return array_values(array_unique($movedUnitIds));
+  }
+
   private function usesForcedMarch($stateArgs)
   {
     if (!$stateArgs['forcedMarchAvailable']) {
@@ -274,17 +295,82 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
       return false;
     }
 
-    $regularArmyMovementLimit = $stateArgs['count'] === 2 &&
+    $regularArmyMovementLimit = $stateArgs['resolvedMoves'] === 2 &&
       in_array($stateArgs['source'], [ARMY_AP, SAIL_ARMY_AP, FRENCH_LIGHT_ARMY_AP]);
 
-    $doubleArmyMovementLimit = $stateArgs['count'] === 4 &&
+    $doubleArmyMovementLimit = $stateArgs['resolvedMoves'] === 4 &&
       in_array($stateArgs['source'], [ARMY_AP_2X, SAIL_ARMY_AP_2X, FRENCH_LIGHT_ARMY_AP]);
 
     return $regularArmyMovementLimit || $doubleArmyMovementLimit;
   }
 
-  public function getUnitsThatCanMove($space, $faction, $units, $source, $forcedMarchAvailable, $indianNation = null, $ignoreAlreadyMovedCheck = false)
+  public function getUnitsThatCannotMove($unitsOnSpace, $unitsThatCanMove)
   {
+    $unitsThatCanMoveIds = BTHelpers::returnIds($unitsThatCanMove);
+    return Utils::filter($unitsOnSpace, function ($unit) use ($unitsThatCanMoveIds) {
+      return !in_array($unit->getId(), $unitsThatCanMoveIds);
+    });
+  }
+
+  public function getAdjacentConnectionsAndSpaces($space, $faction, $destination, $stackHasRoutMarker)
+  {
+    $adjacent = $space->getAdjacentConnectionsAndSpaces();
+
+    // French Lake Warships events prevents use of one specific connection
+    $unusableByBritishConnectionId = Globals::getHighwayUnusableForBritish();
+    if ($faction === BRITISH && $unusableByBritishConnectionId !== '') {
+      $adjacent = Utils::filter($adjacent, function ($data) use ($unusableByBritishConnectionId) {
+        return $data['connection']->getId() !== $unusableByBritishConnectionId;
+      });
+    }
+
+    // Destination can be set if required to move due to construction
+    if ($destination !== null) {
+      $adjacent = Utils::filter($adjacent, function ($data) use ($destination) {
+        return $data['space']->getId() === $destination->getId();
+      });
+    }
+
+    $unitsOnMap = Units::getAll()->toArray();
+
+    /**
+     * For each adjacent space determine:
+     * - minimum required: if stack has rout marker and space has enemy units stack must overwhelm
+     * - units required for overwhelm
+     */
+    foreach ($adjacent as $index => $adjacentData) {
+      $adjacentSpace = $adjacentData['space'];
+      $adjacentSpaceId = $adjacentSpace->getId();
+      $unitsOnSpace = Utils::filter($unitsOnMap, function ($unit) use ($adjacentSpaceId) {
+        return $unit->getLocation() === $adjacentSpaceId;
+      });
+      $overwhelmData = GameMap::requiredForOverwhelm($space, $faction, $unitsOnSpace);
+      $adjacent[$index]['hasEnemyUnits'] = $overwhelmData['hasEnemyUnits'];
+      $adjacent[$index]['requiredForOverwhelm'] = $overwhelmData['requiredForOverwhelm'];
+      $adjacent[$index]['requiredToMove'] = $stackHasRoutMarker ? $overwhelmData['requiredForOverwhelm'] : 0;
+    }
+
+    return $adjacent;
+  }
+
+  /**
+   * Units can move when
+   * - Allowed by AP
+   * - Units has not reached MP limit
+   * - No battle in the space OR battle in the space and units outnumber enemy OR battle and faction is british and enemy has bastion
+   * - there is at least one adjacent location a unit can move to?
+   */
+  public function getUnitsThatCanMove(
+    $space,
+    $faction,
+    $units,
+    $source,
+    $forcedMarchAvailable,
+    $indianNation = null,
+    $ignoreAlreadyMovedCheck = false,
+    $adjacent = null,
+    $requiredUnitIds = []
+  ) {
     $currentNumberOfMoves = 0;
     $mpMultiplier = 1;
     if (!$ignoreAlreadyMovedCheck) {
@@ -304,7 +390,7 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
     $roughSeasActive = Cards::isCardInPlay(FRENCH, ROUGH_SEAS_CARD_ID);
 
     // TODO: filter units that are locked in battle?
-    $unitsThatCanMove = Utils::filter($units, function ($unit) use ($ignoreAlreadyMovedCheck, $currentNumberOfMoves, $mpMultiplier, $source, $forcedMarchAvailable, $roughSeasActive) {
+    $unitsThatCanMove = Utils::filter($units, function ($unit) use ($adjacent, $ignoreAlreadyMovedCheck, $currentNumberOfMoves, $mpMultiplier, $source, $forcedMarchAvailable, $roughSeasActive) {
       if ($roughSeasActive && $unit->isFleet()) {
         return false;
       }
@@ -321,9 +407,16 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
       if (!$ignoreAlreadyMovedCheck && $source !== CONSTRUCTION && $currentNumberOfMoves >= $movementPoints) {
         return false;
       }
+      if ($adjacent !== null && !Utils::array_some($adjacent, function ($adjacentData) use ($unit) {
+        return $adjacentData['connection']->canBeUsedByUnit($unit);
+      })) {
+        return false;
+      }
+
       return !$unit->isSpent();
     });
 
+    // Indian AP can only move units of one Indian Nation
     if (in_array($source, [INDIAN_AP, INDIAN_AP_2X])) {
       return Utils::filter($unitsThatCanMove, function ($unit) use ($indianNation) {
         if (!$unit->isIndian()) {
@@ -332,11 +425,24 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
         return $indianNation !== null ? $unit->getCounterId() === $indianNation : true;
       });
     }
+    // One commander can move with light units
     if (in_array($source, [LIGHT_AP, LIGHT_AP_2X])) {
       return Utils::filter($unitsThatCanMove, function ($unit) {
         return $unit->isLight() || $unit->isCommander();
       });
     }
+
+    // Solve edge case where a unit performing double road Construction with Construction Frenzy
+    // cannot move because the first construction action makes it spent.
+    foreach ($requiredUnitIds as $requiredUnitId) {
+      $inUnits = Utils::array_some($unitsThatCanMove, function ($unit) use ($requiredUnitId) {
+        return $unit->getId() === $requiredUnitId;
+      });
+      if (!$inUnits) {
+        $unitsThatCanMove[] = Units::get($requiredUnitId);
+      }
+    }
+
     return $unitsThatCanMove;
   }
 

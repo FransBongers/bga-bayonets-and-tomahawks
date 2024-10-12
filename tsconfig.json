@@ -101,6 +101,7 @@
     "src/states/VagariesOfWarPickUnits.ts",
     "src/states/MarshalTroops.ts",
     "src/states/Movement.ts",
+    "src/states/MovementLoneCommander.ts",
     "src/states/RaidReroll.ts",
     "src/states/RaidSelectTargetState.ts",
     "src/states/SailMovement.ts",

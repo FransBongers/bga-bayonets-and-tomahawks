@@ -112,7 +112,7 @@ trait DebugTrait
 
   function debug_test()
   {
-    GameMap::performIndianNationControlProcedure(IROQUOIS, FRENCH);
+    Notifications::log('check', GameMap::requiredForOverwhelm(Spaces::get(NUMBER_FOUR), FRENCH, Spaces::get(NUMBER_FOUR)->getUnits()));
 
     // AtomicActions::get(WINTER_QUARTERS_PRE_RETURN_TO_COLONIES)->removeColonialBrigadesToDisbanded();
     // Notifications::log(CARLISLE, Spaces::get(CARLISLE)->isFriendlyColonyHomeSpace(BRITISH));
@@ -129,11 +129,15 @@ trait DebugTrait
     // Units::get('unit_23')->eliminate(Players::get());
     // Units::get('unit_121')->setLocation(LOSSES_BOX_BRITISH);
     // Units::get('unit_7')->setLocation(BAYE_DE_CATARACOUY);
-    Units::get('unit_51')->setLocation(ONONTAKE);
-    // Units::get('unit_22')->setLocation(FORKS_OF_THE_OHIO);
+    // Units::get('unit_48')->setLocation(NUMBER_FOUR);
+    // Units::get('unit_1')->setLocation(GOASEK);
+    // Units::get('unit_17')->setLocation(GOASEK);
+    // Units::get('unit_60')->setLocation(GOASEK);
+    // Units::get('unit_61')->setLocation(GOASEK);
+    // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(GOASEK), FRENCH);
     // Units::get('unit_40')->setLocation(FORKS_OF_THE_OHIO);
     // Units::get('unit_38')->setLocation(LOSSES_BOX_BRITISH);
-    
+
     // Units::get('unit_127')->setLocation(COTE_DU_SUD);
     // Units::get('unit_138')->setLocation(COTE_DE_BEAUPRE);
     // Spaces::get(COTE_DU_SUD)->setControl(BRITISH);

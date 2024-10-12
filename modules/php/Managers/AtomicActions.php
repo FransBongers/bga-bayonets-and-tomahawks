@@ -68,6 +68,7 @@ class AtomicActions
     MARSHAL_TROOPS => 'MarshalTroops',
     MOVEMENT => 'Movement',
     MOVEMENT_BATTLE_AND_TAKE_CONTROL_CHECK => 'MovementBattleTakeControlCheck',
+    MOVEMENT_LONE_COMMANDER => 'MovementLoneCommander',
     MOVEMENT_LOSE_CONTROL_CHECK => 'MovementLoseControlCheck',
     MOVEMENT_OVERWHELM_CHECK => 'MovementOverwhelmCheck',
     MOVEMENT_PLACE_SPENT_MARKERS => 'MovementPlaceSpentMarkers',

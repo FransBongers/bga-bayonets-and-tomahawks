@@ -2,6 +2,7 @@ class MovementState implements State {
   private game: BayonetsAndTomahawksGame;
   private args: OnEnteringMovementStateArgs;
   private selectedUnits: BTUnit[] = [];
+  private unselectedUnits: BTUnit[] = [];
   private destination: BTSpace = null;
 
   constructor(game: BayonetsAndTomahawksGame) {
@@ -11,11 +12,14 @@ class MovementState implements State {
   onEnteringState(args: OnEnteringMovementStateArgs) {
     debug('Entering MovementState');
     this.args = args;
-    this.selectedUnits = this.args.units.filter(({ id }) =>
-      this.args.requiredUnitIds.includes(id)
+    this.selectedUnits = this.args.units.filter(
+      ({ id }) =>
+        this.args.requiredUnitIds.includes(id) ||
+        this.args.previouslyMovedUnitIds.includes(id)
     );
+    this.updateUnselectedUnits();
     this.destination = this.args.destination;
-    this.updateInterfaceInitialStep();
+    this.updateInterfaceInitialStep(true);
   }
 
   onLeavingState() {
@@ -40,7 +44,7 @@ class MovementState implements State {
   // .##....##....##....##.......##........##....##
   // ..######.....##....########.##.........######.
 
-  private updateInterfaceInitialStep() {
+  private updateInterfaceInitialStep(firstStep = false) {
     this.game.clearPossible();
 
     const fixedDestination = this.args.destination !== null;
@@ -69,47 +73,46 @@ class MovementState implements State {
     this.setUnitsSelectable();
     this.setUnitsSelected();
 
-    if (this.destination !== null) {
-      this.game.setLocationSelected({ id: this.destination.id });
-    }
-
-    if (this.selectedUnits.length > 0 && this.destination === null) {
-      this.setDestinationsSelectable();
-    }
-
     const usesForcedMarch = this.usesForcedMarch();
 
-    this.game.addPrimaryActionButton({
-      id: 'move_btn',
-      text: usesForcedMarch ? _('Move with Forced March') : _('Move'),
-      callback: () => {
-        this.game.clearPossible();
-        this.game.takeAction({
-          action: 'actMovement',
-          args: {
-            destinationId: this.destination.id,
-            selectedUnitIds: this.selectedUnits.map(({ id }) => id),
-          },
-        });
-      },
-      extraClasses:
-        this.selectedUnits.length > 0 && this.destination !== null
-          ? ''
-          : DISABLED,
-    });
+    if (usesForcedMarch || this.args.destination !== null) {
+      this.game.addPrimaryActionButton({
+        id: 'move_btn',
+        text: usesForcedMarch ? _('Move with Forced March') : _('Move'),
+        callback: () => this.performMoveAction(),
+        extraClasses:
+          this.selectedUnits.length > 0 && this.destination !== null
+            ? ''
+            : DISABLED,
+      });
+    }
+
+    const moveOnDestinationSelect = !usesForcedMarch && !this.args.destination;
+    this.updateAdjacentSpaces(moveOnDestinationSelect);
 
     if (!this.isIndianAPAndMultipleIndianNations()) {
       this.game.addSecondaryActionButton({
         id: 'select_all_btn',
         text: _('Select all'),
         callback: () => {
-          (this.selectedUnits = this.args.units),
-            this.updateInterfaceInitialStep();
+          this.selectedUnits = this.args.units;
+          this.updateUnselectedUnits();
+          this.updateInterfaceInitialStep();
         },
       });
     }
+    this.game.addSecondaryActionButton({
+      id: 'Deselect_all_btn',
+      text: _('Deselect all'),
+      callback: () => {
+        this.selectedUnits = [];
+        this.updateUnselectedUnits();
+        this.updateInterfaceInitialStep();
+      },
+    });
 
     if (
+      firstStep ||
       this.selectedUnits.length === 0 ||
       this.selectedUnits.length === this.args.requiredUnitIds.length
     ) {
@@ -132,6 +135,17 @@ class MovementState implements State {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  private performMoveAction() {
+    this.game.clearPossible();
+    this.game.takeAction({
+      action: 'actMovement',
+      args: {
+        destinationId: this.destination.id,
+        selectedUnitIds: this.selectedUnits.map(({ id }) => id),
+      },
+    });
+  }
+
   private usesForcedMarch(): boolean {
     if (!this.args.forcedMarchAvailable) {
       return false;
@@ -146,11 +160,11 @@ class MovementState implements State {
     }
 
     const regularArmyAPLimit =
-      this.args.count === 2 &&
+      this.args.resolvedMoves === 2 &&
       [ARMY_AP, SAIL_ARMY_AP, FRENCH_LIGHT_ARMY_AP].includes(this.args.source);
 
     const doubleArmyAPLimit =
-      this.args.count === 4 &&
+      this.args.resolvedMoves === 4 &&
       [ARMY_AP_2X, SAIL_ARMY_AP_2X, FRENCH_LIGHT_ARMY_AP].includes(
         this.args.source
       );
@@ -158,9 +172,23 @@ class MovementState implements State {
     return regularArmyAPLimit || doubleArmyAPLimit;
   }
 
+  private updateUnselectedUnits() {
+    this.unselectedUnits = this.args.units.filter(
+      (unit) =>
+        !this.selectedUnits.some((selectedUnit) => selectedUnit.id === unit.id)
+    );
+  }
+
+  private updateDestintionAfterUnitClick() {
+    // Reset destination unless there is a fixed destination
+    if (this.args.destination === null) {
+      this.destination = null;
+    }
+  }
+
   private setUnitsSelectable() {
-    const units = this.args.units.filter((unit) => {
-      // Check commander movement with light units
+    const selectableUnits = this.unselectedUnits.filter((unit) => {
+      // Check if commander has already been selected when moving with light units
       if (
         // Source is light AP
         [LIGHT_AP, LIGHT_AP_2X].includes(this.args.source) &&
@@ -176,7 +204,7 @@ class MovementState implements State {
         return false;
       }
 
-      // Check same Indian Nation with indian units
+      // Check same Indian Nation in case of Indian AP
       if (
         [INDIAN_AP, INDIAN_AP_2X].includes(this.args.source) &&
         this.selectedUnits.some(
@@ -189,28 +217,31 @@ class MovementState implements State {
       return true;
     });
 
-    units.forEach((unit) => {
+    this.selectedUnits.forEach((unit) => {
       this.game.setUnitSelectable({
         id: unit.id,
         callback: () => {
           // Unselect unit
-          if (
-            this.selectedUnits.some(
-              (selectedUnit) => selectedUnit.id === unit.id
-            ) &&
-            !this.args.requiredUnitIds.includes(unit.id)
-          ) {
-            this.selectedUnits = this.selectedUnits.filter(
-              (selectedUnit) => selectedUnit.id !== unit.id
-            );
-          } else {
-            // Add units to selected units
-            this.selectedUnits.push(unit);
-          }
-          // Reset destination unless there is a fixed destination
-          if (this.args.destination === null) {
-            this.destination = null;
-          }
+          this.selectedUnits = this.selectedUnits.filter(
+            (selectedUnit) => selectedUnit.id !== unit.id
+          );
+          this.updateUnselectedUnits();
+          this.updateDestintionAfterUnitClick();
+
+          this.updateInterfaceInitialStep();
+        },
+      });
+    });
+
+    selectableUnits.forEach((unit) => {
+      this.game.setUnitSelectable({
+        id: unit.id,
+        callback: () => {
+          // Add units to selected units
+          this.selectedUnits.push(unit);
+          this.updateUnselectedUnits();
+          this.updateDestintionAfterUnitClick();
+
           this.updateInterfaceInitialStep();
         },
       });
@@ -223,36 +254,63 @@ class MovementState implements State {
     );
   }
 
-  private setDestinationsSelectable() {
+  private onlyCommandersUnselected() {
+    const unselectedCommanders = this.unselectedUnits.filter(
+      (unit) => this.game.getUnitStaticData(unit).type === COMMANDER
+    );
+    return (
+      this.unselectedUnits.length > 0 &&
+      unselectedCommanders.length === this.unselectedUnits.length
+    );
+  }
+
+  private setDestinationsSelectable(moveOnDestinationClick: boolean) {
+    // Not possible to leave commanders behind without other units
+    if (
+      this.args.unitsThatCannotMoveCount === 0 &&
+      this.onlyCommandersUnselected()
+    ) {
+      return;
+    }
+
     const numberOfUnitsForConnectionLimit = this.selectedUnits.filter(
       (unit) => {
-        const staticData = this.getUnitStaticData(unit);
+        const staticData = this.game.getUnitStaticData(unit);
         return ![COMMANDER, FLEET].includes(staticData.type);
       }
     ).length;
+
     const canUsePath = !this.selectedUnits.some(
       (unit) => ![LIGHT, FLEET].includes(this.game.getUnitStaticData(unit).type)
     );
+
     const requiresHighway =
       this.selectedUnits.filter(
-        (unit) => this.getUnitStaticData(unit).type === ARTILLERY
+        (unit) => this.game.getUnitStaticData(unit).type === ARTILLERY
       ).length > 1;
 
     const requiresCoastal = this.selectedUnits.some(
       (unit) => this.game.getUnitStaticData(unit).type === FLEET
     );
 
+    const onlyCommandersSelected =
+      this.selectedUnits.some(
+        (unit) => this.game.getUnitStaticData(unit).type === COMMANDER
+      ) &&
+      !this.selectedUnits.some(
+        (unit) => this.game.getUnitStaticData(unit).type !== COMMANDER
+      );
+
     const validDestinations = this.args.adjacent.filter(
-      ({ connection, space }) => {
-        // TODO: lone commander movement:
+      ({ connection, space, requiredToMove, hasEnemyUnits }) => {
         if (
-          // If only commanders are selected:
-          this.selectedUnits.some(
-            (unit) => this.game.getUnitStaticData(unit).type === COMMANDER
-          ) &&
-          !this.selectedUnits.some(
-            (unit) => this.game.getUnitStaticData(unit).type !== COMMANDER
-          )
+          // If only commanders are selected cannot move
+          onlyCommandersSelected &&
+          // Unless army movement and commander can move through friendly spaces,
+          // free of enemy units
+          (!this.args.isArmyMovement ||
+            space.control !== this.args.faction ||
+            hasEnemyUnits)
         ) {
           return false;
         }
@@ -280,6 +338,9 @@ class MovementState implements State {
         ) {
           return false;
         }
+        if (requiredToMove > numberOfUnitsForConnectionLimit) {
+          return false;
+        }
 
         return true;
       }
@@ -290,14 +351,24 @@ class MovementState implements State {
         id: space.id,
         callback: () => {
           this.destination = space;
-          this.updateInterfaceInitialStep();
+          if (moveOnDestinationClick) {
+            this.performMoveAction();
+          } else {
+            this.updateInterfaceInitialStep();
+          }
         },
       });
     });
   }
 
-  private getUnitStaticData(unit: BTUnit) {
-    return this.game.gamedatas.staticData.units[unit.counterId];
+  private updateAdjacentSpaces(moveOnDestinationClick: boolean) {
+    if (this.destination !== null) {
+      this.game.setLocationSelected({ id: this.destination.id });
+    }
+
+    if (this.selectedUnits.length > 0 && this.destination === null) {
+      this.setDestinationsSelectable(moveOnDestinationClick);
+    }
   }
 
   private getRemainingLimit(connection: BTConnection) {

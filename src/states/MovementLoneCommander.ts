@@ -1,21 +1,21 @@
-class RaidRerollState implements State {
+class MovementLoneCommanderState implements State {
   private game: BayonetsAndTomahawksGame;
-  private args: OnEnteringRaidRerollStateArgs;
+  private args: OnEnteringMovementLoneCommanderStateArgs;
   // private selectedUnit: BTUnit | null = null;
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
   }
 
-  onEnteringState(args: OnEnteringRaidRerollStateArgs) {
-    debug('Entering RaidRerollState');
+  onEnteringState(args: OnEnteringMovementLoneCommanderStateArgs) {
+    debug('Entering MovementLoneCommanderState');
     this.args = args;
     // this.selectedUnit = null;
     this.updateInterfaceInitialStep();
   }
 
   onLeavingState() {
-    debug('Leaving RaidRerollState');
+    debug('Leaving MovementLoneCommanderState');
   }
 
   setDescription(activePlayerId: number) {}
@@ -39,29 +39,19 @@ class RaidRerollState implements State {
   private updateInterfaceInitialStep() {
     this.game.clearPossible();
 
-    this.setPageTitle();
-
-    this.game.addPrimaryActionButton({
-      id: 'reroll_btn',
-      text: _('Reroll'),
-      callback: () => {
-        this.game.clearPossible();
-        this.game.takeAction({
-          action: 'actRaidReroll',
-          args: {
-            reroll: true,
-          },
-        });
+    this.game.clientUpdatePageTitle({
+      text: _(
+        '${you} must undo. A lone Commander must end their movement on an enemy-free space with a friendly stack'
+      ),
+      args: {
+        you: '${you}',
       },
     });
 
-    this.game.addPassButton({
-      text: _('Do not reroll'),
-      optionalAction: this.args.optionalAction,
-    });
+    this.game.setLocationSelected({ id: this.args.space.id });
+
     this.game.addUndoButtons(this.args);
   }
-
 
   //  .##.....##.########.####.##.......####.########.##....##
   //  .##.....##....##.....##..##........##.....##.....##..##.
@@ -70,23 +60,6 @@ class RaidRerollState implements State {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
-
-  private setPageTitle() {
-    let text = '${you}';
-
-    if (this.args.rollType === RAID_INTERCEPTION && this.args.source === PURSUIT_OF_ELEVATED_STATUS) {
-      text = _('${you} may reroll the Interception roll with Pursuit of Elevated Status');
-    } else if (this.args.rollType === RAID_RESOLUTION && this.args.source === PURSUIT_OF_ELEVATED_STATUS) {
-      text = _('${you} may reroll the Raid roll with Pursuit of Elevated Status');
-    }
-
-    this.game.clientUpdatePageTitle({
-      text,
-      args: {
-        you: '${you}',
-      },
-    });
-  }
 
   //  ..######..##.......####..######..##....##
   //  .##....##.##........##..##....##.##...##.

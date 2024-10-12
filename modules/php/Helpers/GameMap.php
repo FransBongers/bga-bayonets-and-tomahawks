@@ -121,6 +121,50 @@ class GameMap extends \APP_DbObject
     });
   }
 
+  /**
+   * Returns minimum number of units required to overwhelm enemy
+   * - returns 1000 if not possible to overwhelm
+   */
+  public static function requiredForOverwhelm($space, $faction, $unitsOnSpace)
+  {
+    // Enemy has Bastion
+    if ($faction === BRITISH && $space->hasBastion()) {
+      return 1000;
+    };
+
+    $enemyUnits = Utils::filter($unitsOnSpace, function ($unit) use ($faction) {
+      return $unit->getFaction() !== $faction && !$unit->isCommander();
+    });
+
+    if (Utils::array_some($enemyUnits, function ($unit) {
+      return $unit->isFort();
+    })) {
+      return 1000;
+    }
+
+    $friendlyUnits = Utils::filter($unitsOnSpace, function ($unit) use ($faction) {
+      return $unit->getFaction() === $faction && !$unit->isCommander();
+    });
+
+    $enemyUnitCount = count($enemyUnits);
+    $friendlyUnitCount = count($friendlyUnits);
+
+    $militia = $space->getMilitia();
+
+    if ($militia > 0 && $space->getHomeSpace() === $faction) {
+      $friendlyUnitCount += $militia;
+    } else if ($militia > 0) {
+      $enemyUnitCount += $militia;
+    }
+
+    $minimumRequired = $enemyUnitCount * 3 + 1 - $friendlyUnitCount;
+
+    return [
+      'requiredForOverwhelm' => max($minimumRequired, 0),
+      'hasEnemyUnits' => $enemyUnitCount > 0,
+    ];
+  }
+
   public static function factionOutnumbersEnemyInSpace($space, $faction)
   {
 

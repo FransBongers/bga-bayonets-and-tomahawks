@@ -46,12 +46,38 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
   {
     $player = self::getPlayer();
     $playerFaction = $player->getFaction();
-    $otherFaction = BTHelpers::getOtherFaction($playerFaction);
     $info = $this->ctx->getInfo();
     $spaceId = $info['spaceId'];
 
     $space = Spaces::get($spaceId);
 
+    $battleOccurs = $this->checkBattle($player, $space, $playerFaction);
+
+    if ($battleOccurs) {
+      $this->resolveAction(['automatic' => true]);
+      return;
+    }
+
+    $this->checkTakeControl($player, $space, $playerFaction);
+
+    if (!in_array($info['source'], [CONSTRUCTION, ACTION_ROUND_SAIL_BOX_LANDING])) {
+      $this->checkAdditionalMovement($space, $playerFaction, $player, $info);
+    }
+
+    $this->resolveAction(['automatic' => true]);
+  }
+
+  //  .##.....##.########.####.##.......####.########.##....##
+  //  .##.....##....##.....##..##........##.....##.....##..##.
+  //  .##.....##....##.....##..##........##.....##......####..
+  //  .##.....##....##.....##..##........##.....##.......##...
+  //  .##.....##....##.....##..##........##.....##.......##...
+  //  .##.....##....##.....##..##........##.....##.......##...
+  //  ..#######.....##....####.########.####....##.......##...
+
+  private function checkBattle($player, $space, $playerFaction)
+  {
+    $otherFaction = BTHelpers::getOtherFaction($playerFaction);
     $enemyUnits = $space->getUnits($otherFaction);
     $militia = $space->getHomeSpace() !== $playerFaction ? $space->getMilitia() : 0;
 
@@ -69,59 +95,27 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
       Notifications::battleRemoveMarker($player, $space);
     }
 
-    if ($battleOccurs) {
-      $this->resolveAction(['automatic' => true]);
-      return;
-    }
+    return $battleOccurs;
+  }
 
+  private function checkTakeControl($player, $space, $playerFaction)
+  {
     $playerTakesControl = $space->getOutpost() &&
       $space->getControl() !== $playerFaction;
 
     if ($playerTakesControl) {
       GameMap::updateControl($player, $space);
-      // $space->setControl($playerFaction);
-      // Notifications::takeControl($player, $space);
-
-      // if ($space->getVictorySpace()) {
-      //   Players::scoreVictoryPoints($player, $space->getValue());
-      // }
     }
-
-    $source = $info['source'];
-
-    // Movement possible if there are units that still can move
-    if (!in_array($source, [CONSTRUCTION, ACTION_ROUND_SAIL_BOX_LANDING])  && $this->unitsCanMove($space, $playerFaction)) {
-      $this->ctx->getParent()->insertAsBrother(Engine::buildTree([
-        'action' => MOVEMENT,
-        'source' => $source,
-        'spaceId' => $spaceId,
-        'playerId' => $player->getId(),
-        'destinationId' => $info['destinationId'],
-        'requiredUnitIds' => $info['requiredUnitIds'],
-        'optional' => true,
-        'indianNation' => isset($info['indianNation']) ? $info['indianNation'] : null,
-      ]));
-    }
-
-    $this->resolveAction(['automatic' => true]);
   }
 
-  //  .##.....##.########.####.##.......####.########.##....##
-  //  .##.....##....##.....##..##........##.....##.....##..##.
-  //  .##.....##....##.....##..##........##.....##......####..
-  //  .##.....##....##.....##..##........##.....##.......##...
-  //  .##.....##....##.....##..##........##.....##.......##...
-  //  .##.....##....##.....##..##........##.....##.......##...
-  //  ..#######.....##....####.########.####....##.......##...
-
-  private function unitsCanMove($space, $faction)
+  private function unitsCanMove($units)
   {
     $currentNumberOfMoves = count($this->ctx->getParent()->getParent()->getResolvedActions([MOVEMENT]));
 
     $info = $this->ctx->getInfo();
     $forcedMarchAvailable = isset($info['forcedMarchAvailable']) && $info['forcedMarchAvailable'];
 
-    $units = $space->getUnits();
+
     $mpMultiplier = in_array($this->ctx->getInfo()['source'], [ARMY_AP_2X, LIGHT_AP_2X, INDIAN_AP_2X, SAIL_ARMY_AP_2X]) ? 2 : 1;
 
     return Utils::array_some($units, function ($unit) use ($mpMultiplier, $currentNumberOfMoves, $forcedMarchAvailable) {
@@ -132,5 +126,25 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
 
       return $movementPoints > $currentNumberOfMoves && !$unit->isSpent();
     });
+  }
+
+  // Movement possible if there are units that still can move
+  private function checkAdditionalMovement($space, $playerFaction, $player, $info)
+  {
+    $units = $space->getUnits($playerFaction);
+    if ($this->unitsCanMove($units)) {
+      $this->ctx->getParent()->insertAsBrother(Engine::buildTree([
+        'action' => MOVEMENT,
+        'source' => $info['source'],
+        'spaceId' => $space->getId(),
+        'playerId' => $player->getId(),
+        'destinationId' => $info['destinationId'],
+        'requiredUnitIds' => $info['requiredUnitIds'],
+        'optional' => true,
+        'indianNation' => isset($info['indianNation']) ? $info['indianNation'] : null,
+      ]));
+    } else {
+      $this->loneCommanderCheck($player, $space, $units);
+    }
   }
 }
