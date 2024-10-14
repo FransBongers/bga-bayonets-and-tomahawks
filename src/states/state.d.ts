@@ -91,6 +91,7 @@ interface OnEnteringActionRoundActionPhaseStateArgs extends CommonArgs {
   card: BTCard;
   availableActionPoints: string[];
   isIndianActions: boolean;
+  faction: BRITISH_FACTION | FRENCH_FACTION;
 }
 
 interface OnEnteringActionRoundChooseCardStateArgs {
@@ -105,6 +106,7 @@ interface OnEnteringActionRoundChooseFirstPlayerStateArgs extends CommonArgs {}
 
 interface OnEnteringActionRoundChooseReactionStateArgs extends CommonArgs {
   actionPoints: BTActionPoint[];
+  faction: BRITISH_FACTION | FRENCH_FACTION;
 }
 
 interface OnEnteringActionRoundSailBoxLandingStateArgs extends CommonArgs {

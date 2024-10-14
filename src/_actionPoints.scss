@@ -1,0 +1,49 @@
+@use 'sass:math';
+@use 'sass:map';
+@use './base';
+
+.bgabutton.bt_british {
+  background-color: base.$british-color;
+}
+
+.bgabutton.bt_french {
+  background-color: base.$french-color;
+}
+
+.bgabutton.bt_indian {
+  background-color: base.$indian-color;
+}
+
+.bgabutton.bt_british:hover,
+.bgabutton.bt_french:hover,
+.bgabutton.bt_indian:hover {
+  background-color: darkgray !important;
+}
+
+.bt_action_point_img {
+  background-image: url('img/action_points.png');
+  background-size: 300% 300%;
+  height: calc(var(--btTokenScale) * 40px);
+  width: calc(var(--btTokenScale) * 40px);
+}
+
+$action-points: (
+  1: 'ARMY_AP',
+  2: 'ARMY_AP_2X',
+  3: 'FRENCH_LIGHT_ARMY_AP',
+  4: 'INDIAN_AP',
+  5: 'INDIAN_AP_2X',
+  6: 'LIGHT_AP',
+  7: 'LIGHT_AP_2X',
+  8: 'SAIL_ARMY_AP',
+  9: 'SAIL_ARMY_AP_2X',
+);
+
+
+@for $i from 1 through 9 {
+  .bt_action_point_img[data-ap-id='#{map.get($action-points,$i)}'] {
+    background-position-x: math.div((($i - 1) % 3 * 100%), 2);
+    background-position-y: math.div(math.floor(calc(($i - 1) / 3)) * 100%, 2);
+
+  }
+}

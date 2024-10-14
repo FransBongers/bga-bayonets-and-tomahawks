@@ -37,8 +37,17 @@ class Card29 extends \BayonetsAndTomahawks\Models\Card
   {
     $frenchPlayer = Players::getPlayerForFaction(FRENCH);
     $year = BTHelpers::getYear();
-    if (in_array($year, [1755, 1756]) || Globals::getControlCherokee() === BRITISH) {
+    $currentControl = Globals::getControlCherokee();
+    if (in_array($year, [1755, 1756]) || $currentControl === BRITISH) {
       GameMap::awardRaidPoints($frenchPlayer, FRENCH, 2);
+      Notifications::message(clienttranslate('${player_name} gains ${tkn_boldText} Raid Points'),[
+        'player' => $frenchPlayer,
+        'tkn_boldText' => 2,
+      ]);
+      
+      return;
+    } else if ($currentControl === FRENCH) {
+      Notifications::message(clienttranslate('The French already control the Cherokee Indian Nation'),[]);
       return;
     }
 
@@ -51,7 +60,7 @@ class Card29 extends \BayonetsAndTomahawks\Models\Card
     if (count($frenchControlledBritishHomeSpaces) >= 2) {
       GameMap::performIndianNationControlProcedure(CHEROKEE, FRENCH);
     } else {
-      Notifications::message(clienttranslate('The French do not control the required British Home Spaces: event does not trigger.'));
+      Notifications::message(clienttranslate('The French do not control the required British Home Spaces: event does not trigger'));
     }
   }
 }

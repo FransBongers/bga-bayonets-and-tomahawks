@@ -3134,6 +3134,17 @@ var createUnitsLog = function (units) {
         args: unitsLogArgs,
     };
 };
+var getFactionClass = function (faction) {
+    switch (faction) {
+        case BRITISH:
+            return 'bt_british';
+        case FRENCH:
+            return 'bt_french';
+        case INDIAN:
+            return 'bt_indian';
+    }
+};
+var tknActionPointLog = function (faction, actionPointId) { return "".concat(faction, ":").concat(actionPointId); };
 var YEAR_TRACK_CONFIG = [
     {
         id: 1755,
@@ -4328,6 +4339,7 @@ var tplInfoPanel = function (scenarioName) { return "\n<div class='player-board'
 var LOG_TOKEN_BOLD_TEXT = 'boldText';
 var LOG_TOKEN_BOLD_ITALIC_TEXT = 'boldItalicText';
 var LOG_TOKEN_NEW_LINE = 'newLine';
+var LOG_TOKEN_ACTION_POINT = 'actionPoint';
 var LOG_TOKEN_CARD = 'card';
 var LOG_TOKEN_CARD_NAME = 'cardName';
 var LOG_TOKEN_MARKER = 'marker';
@@ -4346,10 +4358,13 @@ var getTokenDiv = function (_a) {
             return tlpLogTokenBoldText({ text: value });
         case LOG_TOKEN_BOLD_ITALIC_TEXT:
             return tlpLogTokenBoldText({ text: value, italic: true });
+        case LOG_TOKEN_ACTION_POINT:
+            var _c = value.split(':'), faction = _c[0], actionPointId = _c[1];
+            return tplLogTokenActionPoint(faction, actionPointId);
         case LOG_TOKEN_CARD:
             return tplLogTokenCard(value);
         case LOG_TOKEN_MARKER:
-            var _c = value.split(':'), tokenType = _c[0], tokenSide = _c[1];
+            var _d = value.split(':'), tokenType = _d[0], tokenSide = _d[1];
             return tplLogTokenMarker(tokenType, tokenSide);
         case LOG_TOKEN_CARD_NAME:
             var cardNameTooltipId = undefined;
@@ -4387,6 +4402,9 @@ var tlpLogTokenBoldText = function (_a) {
 var tplLogTokenPlayerName = function (_a) {
     var name = _a.name, color = _a.color;
     return "<span class=\"playername\" style=\"color:#".concat(color, ";\">").concat(name, "</span>");
+};
+var tplLogTokenActionPoint = function (faction, actionPointId) {
+    return "<div class=\"bt_action_point\" data-faction=\"".concat(faction, "\"><div class=\"bt_action_point_img\" data-ap-id=\"").concat(actionPointId, "\"></div></div>");
 };
 var tplLogTokenCard = function (id) {
     return "<div class=\"bt_log_card bt_card\" data-card-id=\"".concat(id, "\"></div>");
@@ -6306,7 +6324,7 @@ var ActionRoundActionPhaseState = (function () {
         this.game.clientUpdatePageTitle({
             text: _('Use ${tkn_actionPoint} to perform an Action?'),
             args: {
-                tkn_actionPoint: actionPointId,
+                tkn_actionPoint: tknActionPointLog(this.args.isIndianActions ? INDIAN : this.args.faction, actionPointId),
             },
         });
         var callback = function () {
@@ -6332,11 +6350,15 @@ var ActionRoundActionPhaseState = (function () {
     };
     ActionRoundActionPhaseState.prototype.addActionButtons = function () {
         var _this = this;
+        var faction = this.args.isIndianActions ? INDIAN : this.args.faction;
         this.args.availableActionPoints.forEach(function (actionPointId, index) {
-            _this.game.addPrimaryActionButton({
+            _this.game.addSecondaryActionButton({
                 id: "ap_".concat(actionPointId, "_").concat(index),
-                text: actionPointId,
+                text: _this.game.format_string_recursive('${tkn_actionPoint}', {
+                    tkn_actionPoint: tknActionPointLog(faction, actionPointId),
+                }),
                 callback: function () { return _this.updateInterfaceConfirm({ actionPointId: actionPointId }); },
+                extraClasses: getFactionClass(faction),
             });
         });
     };
@@ -6494,9 +6516,9 @@ var ActionRoundChooseReactionState = (function () {
         var actionPoint = _a.actionPoint;
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _('Hold ${ap} for Reaction?'),
+            text: _('Hold ${tkn_actionPoint} for Reaction?'),
             args: {
-                ap: actionPoint.id,
+                tkn_actionPoint: tknActionPointLog(this.args.faction, actionPoint.id),
             },
         });
         this.game.addConfirmButton({
@@ -6515,10 +6537,13 @@ var ActionRoundChooseReactionState = (function () {
     ActionRoundChooseReactionState.prototype.addActionPointButtons = function () {
         var _this = this;
         this.args.actionPoints.forEach(function (ap, index) {
-            return _this.game.addPrimaryActionButton({
-                text: _(ap.id),
+            return _this.game.addSecondaryActionButton({
+                text: _this.game.format_string_recursive('${tkn_actionPoint}', {
+                    tkn_actionPoint: tknActionPointLog(_this.args.faction, ap.id),
+                }),
                 id: "action_point_btn_".concat(index),
                 callback: function () { return _this.updateInterfaceConfirm({ actionPoint: ap }); },
+                extraClasses: getFactionClass(_this.args.faction),
             });
         });
     };

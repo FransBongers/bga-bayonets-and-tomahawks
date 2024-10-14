@@ -1,4 +1,5 @@
 @use 'sass:math';
+@use '../base';
 /* ------- UNDO TURN ------- */
 
 /* Cancelled notification messages */
@@ -103,6 +104,10 @@
 }
 
 #customActions {
+  .bt_action_point {
+    --btTokenScale: 0.7;
+  }
+  
   .bt_log_token {
     display: inline-block;
     position: relative;
@@ -161,10 +166,36 @@
     position: relative;
     --btTokenScale: 0.7;
     vertical-align: middle;
+    top: -4px;
+    margin-top: 3px;
+    margin-left: 1px;
+    margin-right: 1px;
+  }
+
+  .bt_action_point {
+    position: relative;
+    --btTokenScale: 0.7;
+    display: inline-block;
+    vertical-align: middle;
     top: -3px;
     margin-top: 3px;
     margin-left: 1px;
     margin-right: 1px;
+    padding: 6px;
+    border-radius: 5%;
+    border: 1px solid black;
+  }
+
+  .bt_action_point[data-faction="british"] {
+    background-color: base.$british-color;
+  }
+  
+  .bt_action_point[data-faction="french"] {
+    background-color: base.$french-color;
+  }
+  
+  .bt_action_point[data-faction="indian"] {
+    background-color: base.$indian-color;
   }
 }
 
@@ -207,5 +238,31 @@
     margin-left: 1px;
     margin-right: 1px;
     vertical-align: middle;
+  }
+
+  .bt_action_point {
+    position: relative;
+    --btTokenScale: 0.7;
+    display: inline-block;
+    vertical-align: middle;
+    top: -3px;
+    margin-top: 3px;
+    margin-left: 1px;
+    margin-right: 1px;
+    padding: 4px;
+    border-radius: 5%;
+    border: 1px solid black;
+  }
+
+  .bt_action_point[data-faction="british"] {
+    background-color: base.$british-color;
+  }
+  
+  .bt_action_point[data-faction="french"] {
+    background-color: base.$french-color;
+  }
+  
+  .bt_action_point[data-faction="indian"] {
+    background-color: base.$indian-color;
   }
 }

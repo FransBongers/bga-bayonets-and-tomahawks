@@ -59,9 +59,9 @@ class ActionRoundChooseReactionState implements State {
   }) {
     this.game.clearPossible();
     this.game.clientUpdatePageTitle({
-      text: _('Hold ${ap} for Reaction?'),
+      text: _('Hold ${tkn_actionPoint} for Reaction?'),
       args: {
-        ap: actionPoint.id,
+        tkn_actionPoint: tknActionPointLog(this.args.faction, actionPoint.id),
       },
     });
 
@@ -89,10 +89,15 @@ class ActionRoundChooseReactionState implements State {
 
   private addActionPointButtons() {
     this.args.actionPoints.forEach((ap, index) =>
-      this.game.addPrimaryActionButton({
-        text: _(ap.id),
+      this.game.addSecondaryActionButton({
+        text: this.game.format_string_recursive('${tkn_actionPoint}', {
+          tkn_actionPoint: tknActionPointLog(this.args.faction, ap.id),
+        }),
         id: `action_point_btn_${index}`,
         callback: () => this.updateInterfaceConfirm({ actionPoint: ap }),
+        extraClasses: getFactionClass(
+          this.args.faction
+        ),
       })
     );
   }

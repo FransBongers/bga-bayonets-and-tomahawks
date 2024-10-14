@@ -278,6 +278,76 @@ body > .card {
   background: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="0 0 70 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;"><g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M23.8,102.1L35.7,102.1" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M35.7,102.1L47.5,102.1" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M35.7,102.1L35.7,90.3" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M51,118C55.2,113.8 57.3,108.7 57.3,102.8C57.3,96.8 55.2,91.8 51,87.6C46.8,83.4 41.7,81.3 35.8,81.3C29.9,81.3 24.8,83.4 20.6,87.6C16.4,91.8 14.3,96.8 14.3,102.8C14.3,108.7 16.4,113.8 20.6,118C24.8,122.2 29.9,124.3 35.8,124.3C41.7,124.3 46.8,122.2 51,118" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M35.7,113.9L35.7,102.1" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M65.3,132.3L51,118" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:7px;"/></g></g></svg>');
 }
 
+.bgabutton.bt_british {
+  background-color: #B73E1F;
+}
+
+.bgabutton.bt_french {
+  background-color: #216295;
+}
+
+.bgabutton.bt_indian {
+  background-color: #8fa32a;
+}
+
+.bgabutton.bt_british:hover,
+.bgabutton.bt_french:hover,
+.bgabutton.bt_indian:hover {
+  background-color: darkgray !important;
+}
+
+.bt_action_point_img {
+  background-image: url("img/action_points.png");
+  background-size: 300% 300%;
+  height: calc(var(--btTokenScale) * 40px);
+  width: calc(var(--btTokenScale) * 40px);
+}
+
+.bt_action_point_img[data-ap-id=ARMY_AP] {
+  background-position-x: 0%;
+  background-position-y: 0%;
+}
+
+.bt_action_point_img[data-ap-id=ARMY_AP_2X] {
+  background-position-x: 50%;
+  background-position-y: 0%;
+}
+
+.bt_action_point_img[data-ap-id=FRENCH_LIGHT_ARMY_AP] {
+  background-position-x: 100%;
+  background-position-y: 0%;
+}
+
+.bt_action_point_img[data-ap-id=INDIAN_AP] {
+  background-position-x: 0%;
+  background-position-y: 50%;
+}
+
+.bt_action_point_img[data-ap-id=INDIAN_AP_2X] {
+  background-position-x: 50%;
+  background-position-y: 50%;
+}
+
+.bt_action_point_img[data-ap-id=LIGHT_AP] {
+  background-position-x: 100%;
+  background-position-y: 50%;
+}
+
+.bt_action_point_img[data-ap-id=LIGHT_AP_2X] {
+  background-position-x: 0%;
+  background-position-y: 100%;
+}
+
+.bt_action_point_img[data-ap-id=SAIL_ARMY_AP] {
+  background-position-x: 50%;
+  background-position-y: 100%;
+}
+
+.bt_action_point_img[data-ap-id=SAIL_ARMY_AP_2X] {
+  background-position-x: 100%;
+  background-position-y: 100%;
+}
+
 .bt_card {
   box-sizing: border-box;
   background-image: url("img/cards.webp");
@@ -1056,6 +1126,9 @@ body > .card {
   background-position-x: 100%;
 }
 
+#customActions .bt_action_point {
+  --btTokenScale: 0.7;
+}
 #customActions .bt_log_token {
   display: inline-block;
   position: relative;
@@ -1108,10 +1181,36 @@ body > .card {
   position: relative;
   --btTokenScale: 0.7;
   vertical-align: middle;
+  top: -4px;
+  margin-top: 3px;
+  margin-left: 1px;
+  margin-right: 1px;
+}
+#pagemaintitletext .bt_action_point,
+#gameaction_status .bt_action_point {
+  position: relative;
+  --btTokenScale: 0.7;
+  display: inline-block;
+  vertical-align: middle;
   top: -3px;
   margin-top: 3px;
   margin-left: 1px;
   margin-right: 1px;
+  padding: 6px;
+  border-radius: 5%;
+  border: 1px solid black;
+}
+#pagemaintitletext .bt_action_point[data-faction=british],
+#gameaction_status .bt_action_point[data-faction=british] {
+  background-color: #B73E1F;
+}
+#pagemaintitletext .bt_action_point[data-faction=french],
+#gameaction_status .bt_action_point[data-faction=french] {
+  background-color: #216295;
+}
+#pagemaintitletext .bt_action_point[data-faction=indian],
+#gameaction_status .bt_action_point[data-faction=indian] {
+  background-color: #8fa32a;
 }
 
 .log > .roundedbox .bt_log_card,
@@ -1152,6 +1251,32 @@ body > .card {
   margin-left: 1px;
   margin-right: 1px;
   vertical-align: middle;
+}
+.log > .roundedbox .bt_action_point,
+.log > .roundedboxinner .bt_action_point {
+  position: relative;
+  --btTokenScale: 0.7;
+  display: inline-block;
+  vertical-align: middle;
+  top: -3px;
+  margin-top: 3px;
+  margin-left: 1px;
+  margin-right: 1px;
+  padding: 4px;
+  border-radius: 5%;
+  border: 1px solid black;
+}
+.log > .roundedbox .bt_action_point[data-faction=british],
+.log > .roundedboxinner .bt_action_point[data-faction=british] {
+  background-color: #B73E1F;
+}
+.log > .roundedbox .bt_action_point[data-faction=french],
+.log > .roundedboxinner .bt_action_point[data-faction=french] {
+  background-color: #216295;
+}
+.log > .roundedbox .bt_action_point[data-faction=indian],
+.log > .roundedboxinner .bt_action_point[data-faction=indian] {
+  background-color: #8fa32a;
 }
 
 /* ------- PLAYER BOARD ------- */

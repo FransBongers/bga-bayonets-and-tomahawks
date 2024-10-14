@@ -58,6 +58,7 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
 
     return [
       'actionPoints' => $actionPoints,
+      'faction' => $faction,
     ];
   }
 
@@ -102,9 +103,10 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
       throw new \feException("ERROR 007");
     }
 
-    Notifications::message(clienttranslate('${player_name} holds ${actionPoint} for Reaction'), [
-      'player' => self::getPlayer(),
-      'actionPoint' => $actionPointId,
+    $player = self::getPlayer();
+    Notifications::message(clienttranslate('${player_name} holds ${tkn_actionPoint} for Reaction'), [
+      'player' => $player,
+      'tkn_actionPoint' => $player->getFaction() . ':' . $actionPointId,
     ]);
 
     Globals::setReactionActionPointId($actionPointId);

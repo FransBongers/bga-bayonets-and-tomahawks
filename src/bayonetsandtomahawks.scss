@@ -16,6 +16,7 @@
 @use '../node_modules/bga-cards/bga-cards'; // Does importing this like this first lead to any issues?
 @use 'sass:math';
 @use 'base';
+@use 'actionPoints';
 @use 'card-managers/cards';
 @use 'cards-in-play/cardsInPlay';
 @use 'game-map/gamemap';

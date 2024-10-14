@@ -56,18 +56,17 @@ class ActionRoundActionPhaseState implements State {
     this.game.addUndoButtons(this.args);
   }
 
-  private updateInterfaceConfirm({
-    actionPointId,
-  }: {
-    actionPointId: string;
-  }) {
+  private updateInterfaceConfirm({ actionPointId }: { actionPointId: string }) {
     this.game.clearPossible();
     this.game.setCardSelected({ id: this.args.card.id });
 
     this.game.clientUpdatePageTitle({
       text: _('Use ${tkn_actionPoint} to perform an Action?'),
       args: {
-        tkn_actionPoint: actionPointId,
+        tkn_actionPoint: tknActionPointLog(
+          this.args.isIndianActions ? INDIAN : this.args.faction,
+          actionPointId
+        ),
       },
     });
 
@@ -105,11 +104,16 @@ class ActionRoundActionPhaseState implements State {
   //  ..#######.....##....####.########.####....##.......##...
 
   private addActionButtons() {
+    const faction = this.args.isIndianActions ? INDIAN : this.args.faction;
+
     this.args.availableActionPoints.forEach((actionPointId, index) => {
-      this.game.addPrimaryActionButton({
+      this.game.addSecondaryActionButton({
         id: `ap_${actionPointId}_${index}`,
-        text: actionPointId,
+        text: this.game.format_string_recursive('${tkn_actionPoint}', {
+          tkn_actionPoint: tknActionPointLog(faction, actionPointId),
+        }),
         callback: () => this.updateInterfaceConfirm({ actionPointId }),
+        extraClasses: getFactionClass(faction),
       });
     });
   }

@@ -31,9 +31,7 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreActionRoundActionPhase()
-  {
-  }
+  public function stPreActionRoundActionPhase() {}
 
 
   // ....###....########...######....######.
@@ -77,6 +75,7 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
 
     return [
       // 'action' => $action,
+      'faction' => self::getPlayer()->getFaction(),
       'card' => $card,
       'isIndianActions' => $isIndianActions,
       'availableActionPoints' => array_map(function ($availableAP) {
@@ -126,9 +125,10 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
       throw new \feException("ERROR 006");
     }
 
-    Notifications::message(clienttranslate('${player_name} uses ${actionPoint}'), [
+    $faction = $stateArgs['isIndianActions'] ? INDIAN : $player->getFaction();
+    Notifications::message(clienttranslate('${player_name} uses ${tkn_actionPoint}'), [
       'player' => $player,
-      'actionPoint' => $actionPointId,
+      'tkn_actionPoint' => $faction . ':' . $actionPointId,
     ]);
 
     // If there are more actionPoints insert same action

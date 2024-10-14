@@ -23,6 +23,10 @@ const tplLogTokenPlayerName = ({
 
 /* ------- GAME SPECIFIC LOG TOKENS ------- */
 
+const tplLogTokenActionPoint = (faction: string, actionPointId: string) => {
+  return `<div class="bt_action_point" data-faction="${faction}"><div class="bt_action_point_img" data-ap-id="${actionPointId}"></div></div>`;
+};
+
 const tplLogTokenCard = (id: string) => {
   return `<div class="bt_log_card bt_card" data-card-id="${id}"></div>`;
 };

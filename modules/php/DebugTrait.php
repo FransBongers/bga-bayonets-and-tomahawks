@@ -130,10 +130,10 @@ trait DebugTrait
     // Units::get('unit_121')->setLocation(LOSSES_BOX_BRITISH);
     // Units::get('unit_7')->setLocation(BAYE_DE_CATARACOUY);
     // Units::get('unit_48')->setLocation(NUMBER_FOUR);
-    Units::get('unit_34')->setLocation(WINCHESTER);
-    Units::get('unit_14')->setLocation(WILLS_CREEK);
-    Units::get('unit_15')->setLocation(WILLS_CREEK);
-    Units::get('unit_38')->setLocation(WILLS_CREEK);
+    // Units::get('unit_34')->setLocation(WINCHESTER);
+    // Units::get('unit_14')->setLocation(WILLS_CREEK);
+    // Units::get('unit_15')->setLocation(WILLS_CREEK);
+    // Units::get('unit_38')->setLocation(WILLS_CREEK);
     // Units::get('unit_92')->setSpent(0);
     // Units::get('unit_93')->setSpent(0);
     // Units::get('unit_60')->setLocation(GOASEK);
@@ -172,7 +172,7 @@ trait DebugTrait
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(NEW_YORK), BRITISH);
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(ALBANY), BRITISH);
 
-    // Cards::get('Card28')->insertOnTop(Locations::buildUpDeck(FRENCH));
+    Cards::get('Card29')->insertOnTop(Locations::buildUpDeck(FRENCH));
     // Cards::get('Card39')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card39')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card19')->insertOnTop(Locations::campaignDeck(BRITISH));
