@@ -193,13 +193,15 @@ class GameMap extends \APP_DbObject
     $numberOfEnemyUnits = count($enemyUnits) + $militia;
 
     $hasEnemyUnits = $numberOfEnemyUnits > 0;
+    $outnumbers = $hasEnemyUnits && count($playerUnits) / $numberOfEnemyUnits > 3;
 
     return [
       'hasEnemyUnits' => $hasEnemyUnits,
       'hasEnemyUnitsExcludingMilitia' => count($enemyUnits) > 0,
-      'outnumbers' => $hasEnemyUnits && count($playerUnits) / $numberOfEnemyUnits > 3,
+      'outnumbers' => $outnumbers,
       'enemyHasBastion' => $enemyHasBastion,
       'enemyHasFort' => $enemyHasFort,
+      'overwhelm' => !($enemyHasFort || $enemyHasBastion) && $outnumbers,
     ];
   }
 

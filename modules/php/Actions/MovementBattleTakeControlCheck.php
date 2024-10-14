@@ -75,13 +75,24 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  /**
+   * Battle occurs if 
+   * - at this point there are still enemy units excluding militia
+   * - militia are not overwhelmed and space was not enemy controlled at start of turn
+   */
   private function checkBattle($player, $space, $playerFaction)
   {
-    $otherFaction = BTHelpers::getOtherFaction($playerFaction);
-    $enemyUnits = $space->getUnits($otherFaction);
-    $militia = $space->getHomeSpace() !== $playerFaction ? $space->getMilitia() : 0;
+    // $otherFaction = BTHelpers::getOtherFaction($playerFaction);
+    // $enemyUnits = $space->getUnits($otherFaction);
+    $enemyMilitia = $space->getHomeSpace() !== $playerFaction ? $space->getMilitia() : 0;
 
-    $battleOccurs = count($enemyUnits) + $militia > 0;
+    $data = GameMap::factionOutnumbersEnemyInSpace($space, $playerFaction);
+    Notifications::log('OUTNUMBER DATA', $data);
+    $overwhelm = $data['overwhelm'];
+
+    $battleOccurs = $data['hasEnemyUnitsExcludingMilitia'] || ($enemyMilitia > 0 && !$overwhelm && $space->getControlStartOfTurn() !== $playerFaction);
+
+    Notifications::log('BATTLE OCCURS', $battleOccurs);
 
     if ($battleOccurs && $space->getBattle() === 0) {
       $space->setBattle(1);
@@ -100,8 +111,15 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
 
   private function checkTakeControl($player, $space, $playerFaction)
   {
-    $playerTakesControl = $space->getOutpost() &&
-      $space->getControl() !== $playerFaction;
+    $enemyControlled = $space->getControl() !== $playerFaction;
+    $homeSpace = $space->getHomeSpace();
+
+    $playerCanTakeControlOfOutpost = $space->getOutpost() && $enemyControlled;
+    $playerCanRetakeHomeSpace = $homeSpace === $playerFaction && $enemyControlled;
+
+    // Can this be replaced with just checking for enemy control?
+    $playerCanTakeEnemyHomeSpace = $homeSpace !== null && $homeSpace !== $playerFaction && $enemyControlled;
+    $playerTakesControl = $playerCanTakeControlOfOutpost || $playerCanRetakeHomeSpace || $playerCanTakeEnemyHomeSpace;
 
     if ($playerTakesControl) {
       GameMap::updateControl($player, $space);

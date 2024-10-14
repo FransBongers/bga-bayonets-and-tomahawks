@@ -90,7 +90,10 @@ class MovementState implements State {
     const moveOnDestinationSelect = !usesForcedMarch && !this.args.destination;
     this.updateAdjacentSpaces(moveOnDestinationSelect);
 
-    if (!this.isIndianAPAndMultipleIndianNations()) {
+    if (
+      !this.isIndianAPAndMultipleIndianNations() &&
+      this.unselectedUnits.length > 0
+    ) {
       this.game.addSecondaryActionButton({
         id: 'select_all_btn',
         text: _('Select all'),
@@ -101,15 +104,17 @@ class MovementState implements State {
         },
       });
     }
-    this.game.addSecondaryActionButton({
-      id: 'Deselect_all_btn',
-      text: _('Deselect all'),
-      callback: () => {
-        this.selectedUnits = [];
-        this.updateUnselectedUnits();
-        this.updateInterfaceInitialStep();
-      },
-    });
+    if (this.selectedUnits.length > 0) {
+      this.game.addSecondaryActionButton({
+        id: 'Deselect_all_btn',
+        text: _('Deselect all'),
+        callback: () => {
+          this.selectedUnits = [];
+          this.updateUnselectedUnits();
+          this.updateInterfaceInitialStep();
+        },
+      });
+    }
 
     if (
       firstStep ||

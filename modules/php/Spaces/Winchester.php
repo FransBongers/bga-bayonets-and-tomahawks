@@ -11,6 +11,7 @@ class Winchester extends \BayonetsAndTomahawks\Models\Space
     $this->colony = VIRGINIA_AND_SOUTH;
     $this->defaultControl = BRITISH;
     $this->homeSpace = BRITISH;
+    $this->militia = 2;
     $this->name = clienttranslate('Winchester');
     $this->settledSpace = true;
     $this->value = 2;

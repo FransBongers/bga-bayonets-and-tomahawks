@@ -112,7 +112,7 @@ trait DebugTrait
 
   function debug_test()
   {
-    Notifications::log('check', GameMap::requiredForOverwhelm(Spaces::get(NUMBER_FOUR), FRENCH, Spaces::get(NUMBER_FOUR)->getUnits()));
+    // Notifications::log('Montreal', Spaces::get(MONTREAL)->setBattle(0));
 
     // AtomicActions::get(WINTER_QUARTERS_PRE_RETURN_TO_COLONIES)->removeColonialBrigadesToDisbanded();
     // Notifications::log(CARLISLE, Spaces::get(CARLISLE)->isFriendlyColonyHomeSpace(BRITISH));
@@ -130,8 +130,12 @@ trait DebugTrait
     // Units::get('unit_121')->setLocation(LOSSES_BOX_BRITISH);
     // Units::get('unit_7')->setLocation(BAYE_DE_CATARACOUY);
     // Units::get('unit_48')->setLocation(NUMBER_FOUR);
-    // Units::get('unit_1')->setLocation(GOASEK);
-    // Units::get('unit_17')->setLocation(GOASEK);
+    Units::get('unit_34')->setLocation(WINCHESTER);
+    Units::get('unit_14')->setLocation(WILLS_CREEK);
+    Units::get('unit_15')->setLocation(WILLS_CREEK);
+    Units::get('unit_38')->setLocation(WILLS_CREEK);
+    // Units::get('unit_92')->setSpent(0);
+    // Units::get('unit_93')->setSpent(0);
     // Units::get('unit_60')->setLocation(GOASEK);
     // Units::get('unit_61')->setLocation(GOASEK);
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(GOASEK), FRENCH);

@@ -9248,7 +9248,8 @@ var MovementState = (function () {
         }
         var moveOnDestinationSelect = !usesForcedMarch && !this.args.destination;
         this.updateAdjacentSpaces(moveOnDestinationSelect);
-        if (!this.isIndianAPAndMultipleIndianNations()) {
+        if (!this.isIndianAPAndMultipleIndianNations() &&
+            this.unselectedUnits.length > 0) {
             this.game.addSecondaryActionButton({
                 id: 'select_all_btn',
                 text: _('Select all'),
@@ -9259,15 +9260,17 @@ var MovementState = (function () {
                 },
             });
         }
-        this.game.addSecondaryActionButton({
-            id: 'Deselect_all_btn',
-            text: _('Deselect all'),
-            callback: function () {
-                _this.selectedUnits = [];
-                _this.updateUnselectedUnits();
-                _this.updateInterfaceInitialStep();
-            },
-        });
+        if (this.selectedUnits.length > 0) {
+            this.game.addSecondaryActionButton({
+                id: 'Deselect_all_btn',
+                text: _('Deselect all'),
+                callback: function () {
+                    _this.selectedUnits = [];
+                    _this.updateUnselectedUnits();
+                    _this.updateInterfaceInitialStep();
+                },
+            });
+        }
         if (firstStep ||
             this.selectedUnits.length === 0 ||
             this.selectedUnits.length === this.args.requiredUnitIds.length) {

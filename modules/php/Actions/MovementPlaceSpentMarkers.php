@@ -44,11 +44,14 @@ class MovementPlaceSpentMarkers extends \BayonetsAndTomahawks\Actions\UnitMoveme
   public function stMovementPlaceSpentMarkers()
   {
     $player = self::getPlayer();
-
+    $playerId = $player->getId();
     $nodes = $this->ctx->getParent()->getResolvedActions([MOVE_STACK]);
 
     $movedUnitIds = [];
     foreach ($nodes as $node) {
+      if ($node->getPlayerId() !== $playerId) {
+        continue;
+      }
       $resArgs = $node->getActionResolutionArgs();
       $movedUnitIds = array_merge($movedUnitIds, isset($resArgs['unitIds']) ? $resArgs['unitIds'] : []);
     }
