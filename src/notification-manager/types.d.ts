@@ -158,7 +158,7 @@ interface NotifScoreVictoryPointsArgs {
 
 interface NotifMoveUnitArgs {
   unit: BTUnit;
-  destination: BTSpace;
+  destination: BTSpace | string;
   faction: Faction;
 }
 

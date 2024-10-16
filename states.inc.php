@@ -707,6 +707,16 @@ $machinestates = array(
         'transitions' => [],
     ],
 
+    ST_BATTLE_MOVE_FLEET => [
+        'name' => 'battleMoveFleet',
+        'description' => clienttranslate('${actplayer} may move a Fleet'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actBattleMoveFleet', 'actPassOptionalAction', 'actRestart'],
+    ],
+
     ST_BATTLE_PENALTIES => [
         'name' => 'battlePenalties',
         'description' => '',

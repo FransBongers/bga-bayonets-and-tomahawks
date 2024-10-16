@@ -52,6 +52,13 @@ interface OnEnteringBattleFortEliminationStateArgs extends CommonArgs {
   faction: BRITISH_FACTION | FRENCH_FACTION;
 }
 
+interface OnEnteringBattleMoveFleetStateArgs extends CommonArgs {
+  units: BTUnit[];
+  space: BTSpace;
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+  destinationIds: string[];
+}
+
 interface OnEnteringBattleRetreatStateArgs extends CommonArgs {
   retreatOptions: BTSpace[];
 }

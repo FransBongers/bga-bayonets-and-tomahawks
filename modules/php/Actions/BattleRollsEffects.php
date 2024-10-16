@@ -237,7 +237,13 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
       $processedDice[] = $dieResult;
 
       if ($battleRollsSequenceStep === FLEETS) {
-        // Insert action to move a non-eliminated fleet
+        $this->ctx->insertAsBrother(new LeafNode([
+          'action' => BATTLE_MOVE_FLEET,
+          'playerId' => $player->getId(),
+          'faction' => $faction,
+          'spaceId' => $space->getId(),
+          'optional' => true,
+        ]));
         break;
       }
 

@@ -39,7 +39,7 @@ interface BayonetsAndTomahawksGame extends Game {
   ) => string;
   getPlayerId: () => number;
   getConnectionStaticData: (connection: BTConnection) => BTConnectionStaticData;
-  getSpaceStaticData: (space: BTSpace) => BTSpaceStaticData;
+  getSpaceStaticData: (space: BTSpace | string) => BTSpaceStaticData;
   getUnitStaticData: (unit: BTUnit) => BTUnitStaticData;
   onCancel: () => void;
   openUnitStack: (unit: BTUnit) => void;

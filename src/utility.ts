@@ -44,4 +44,8 @@ const getFactionClass = (
   }
 };
 
-const tknActionPointLog = (faction: string, actionPointId: string) => `${faction}:${actionPointId}`
+const tknActionPointLog = (faction: string, actionPointId: string) =>
+  `${faction}:${actionPointId}`;
+
+const tknUnitLog = (unit: BTUnit) =>
+  `${unit.counterId}:${unit.reduced ? 'reduced' : 'full'}`;

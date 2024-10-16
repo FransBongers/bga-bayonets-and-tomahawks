@@ -76,6 +76,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     battleApplyHits: BattleApplyHitsState;
     battleCombineReducedUnits: BattleCombineReducedUnitsState;
     battleFortElimination: BattleFortEliminationState;
+    battleMoveFleet: BattleMoveFleetState;
     battleRetreat: BattleRetreatState;
     battleRollsRerolls: BattleRollsRerollsState;
     battleSelectCommander: BattleSelectCommanderState;
@@ -154,6 +155,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       battleApplyHits: new BattleApplyHitsState(this),
       battleCombineReducedUnits: new BattleCombineReducedUnitsState(this),
       battleFortElimination: new BattleFortEliminationState(this),
+      battleMoveFleet: new BattleMoveFleetState(this),
       battleRetreat: new BattleRetreatState(this),
       battleRollsRerolls: new BattleRollsRerollsState(this),
       battleSelectCommander: new BattleSelectCommanderState(this),
@@ -359,8 +361,13 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     return this.gamedatas.staticData.connections[connection.id];
   }
 
-  getSpaceStaticData(space: BTSpace): BTSpaceStaticData {
-    return this.gamedatas.staticData.spaces[space.id];
+  getSpaceStaticData(space: BTSpace | string): BTSpaceStaticData {
+    if (typeof space === 'string') {
+      return this.gamedatas.staticData.spaces[space];
+    } else {
+      return this.gamedatas.staticData.spaces[space.id];
+    }
+    
   }
 
   getUnitStaticData(unit: BTUnit): BTUnitStaticData {

@@ -81,6 +81,7 @@
     "src/states/BattleApplyHitsState.ts",
     "src/states/BattleCombineReducedUnits.ts",
     "src/states/BattleFortElimination.ts",
+    "src/states/BattleMoveFleet.ts",
     "src/states/BattleRetreatState.ts",
     "src/states/BattleRollsRerolls.ts",
     "src/states/BattleSelectCommanderState.ts",

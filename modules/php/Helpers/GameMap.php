@@ -129,7 +129,10 @@ class GameMap extends \APP_DbObject
   {
     // Enemy has Bastion
     if ($faction === BRITISH && $space->hasBastion()) {
-      return 1000;
+      return [
+        'requiredForOverwhelm' => 1000,
+        'hasEnemyUnits' => true,
+      ];
     };
 
     $enemyUnits = Utils::filter($unitsOnSpace, function ($unit) use ($faction) {
@@ -139,7 +142,10 @@ class GameMap extends \APP_DbObject
     if (Utils::array_some($enemyUnits, function ($unit) {
       return $unit->isFort();
     })) {
-      return 1000;
+      return [
+        'requiredForOverwhelm' => 1000,
+        'hasEnemyUnits' => true,
+      ];
     }
 
     $friendlyUnits = Utils::filter($unitsOnSpace, function ($unit) use ($faction) {

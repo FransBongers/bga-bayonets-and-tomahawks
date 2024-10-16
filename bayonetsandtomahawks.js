@@ -2491,6 +2491,7 @@ var BayonetsAndTomahawks = (function () {
             battleApplyHits: new BattleApplyHitsState(this),
             battleCombineReducedUnits: new BattleCombineReducedUnitsState(this),
             battleFortElimination: new BattleFortEliminationState(this),
+            battleMoveFleet: new BattleMoveFleetState(this),
             battleRetreat: new BattleRetreatState(this),
             battleRollsRerolls: new BattleRollsRerollsState(this),
             battleSelectCommander: new BattleSelectCommanderState(this),
@@ -2604,7 +2605,12 @@ var BayonetsAndTomahawks = (function () {
         return this.gamedatas.staticData.connections[connection.id];
     };
     BayonetsAndTomahawks.prototype.getSpaceStaticData = function (space) {
-        return this.gamedatas.staticData.spaces[space.id];
+        if (typeof space === 'string') {
+            return this.gamedatas.staticData.spaces[space];
+        }
+        else {
+            return this.gamedatas.staticData.spaces[space.id];
+        }
     };
     BayonetsAndTomahawks.prototype.getUnitStaticData = function (unit) {
         return this.gamedatas.staticData.units[unit.counterId];
@@ -3263,7 +3269,12 @@ var getFactionClass = function (faction) {
             return 'bt_indian';
     }
 };
-var tknActionPointLog = function (faction, actionPointId) { return "".concat(faction, ":").concat(actionPointId); };
+var tknActionPointLog = function (faction, actionPointId) {
+    return "".concat(faction, ":").concat(actionPointId);
+};
+var tknUnitLog = function (unit) {
+    return "".concat(unit.counterId, ":").concat(unit.reduced ? 'reduced' : 'full');
+};
 var getBattleOrderTitle = function (step) {
     var _a;
     var nameMap = (_a = {},
@@ -5837,12 +5848,13 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_moveUnit = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, unit, destination, faction, unitStack, element;
+            var _a, unit, destination, faction, destinationId, unitStack, element;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _a = notif.args, unit = _a.unit, destination = _a.destination, faction = _a.faction;
-                        unitStack = this.game.gameMap.stacks[destination.id][faction];
+                        destinationId = typeof destination === 'string' ? destination : destination.id;
+                        unitStack = this.game.gameMap.stacks[destinationId][faction];
                         if (!unitStack) return [3, 2];
                         return [4, unitStack.addUnit(unit)];
                     case 1:
@@ -7683,6 +7695,108 @@ var BattleFortEliminationState = (function () {
         callback();
     };
     return BattleFortEliminationState;
+}());
+var BattleMoveFleetState = (function () {
+    function BattleMoveFleetState(game) {
+        this.game = game;
+    }
+    BattleMoveFleetState.prototype.onEnteringState = function (args) {
+        debug('Entering BattleMoveFleetState');
+        this.args = args;
+        this.updateInterfaceInitialStep();
+    };
+    BattleMoveFleetState.prototype.onLeavingState = function () {
+        debug('Leaving BattleMoveFleetState');
+    };
+    BattleMoveFleetState.prototype.setDescription = function (activePlayerId) { };
+    BattleMoveFleetState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} may select a Fleet to move'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.game.openUnitStack(this.args.units[0]);
+        this.args.units.forEach(function (unit) {
+            return _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () { return _this.updateInterfaceSelectSpace({ unit: unit }); },
+            });
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    BattleMoveFleetState.prototype.updateInterfaceSelectSpace = function (_a) {
+        var _this = this;
+        var unit = _a.unit;
+        if (this.args.destinationIds.length === 1) {
+            this.updateInterfaceConfirm({
+                destinationId: this.args.destinationIds[0],
+                unit: unit,
+            });
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a Space to move ${tkn_unit} to'),
+            args: {
+                you: '${you}',
+                tkn_unit: tknUnitLog(unit),
+            },
+        });
+        this.game.setUnitSelected({ id: unit.id });
+        this.args.destinationIds.forEach(function (id) {
+            return _this.game.setLocationSelectable({
+                id: id,
+                callback: function () {
+                    return _this.updateInterfaceConfirm({ destinationId: id, unit: unit });
+                },
+            });
+        });
+        this.game.addCancelButton();
+    };
+    BattleMoveFleetState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var destinationId = _a.destinationId, unit = _a.unit;
+        this.game.clearPossible();
+        this.game.setLocationSelected({ id: destinationId });
+        this.game.setUnitSelected({ id: unit.id });
+        this.game.clientUpdatePageTitle({
+            text: _('Move ${tkn_unit} to ${spaceName}?'),
+            args: {
+                spaceName: destinationId === SAIL_BOX
+                    ? _('the Sail Box')
+                    : _(this.game.getSpaceStaticData(destinationId).name),
+                tkn_unit: tknUnitLog(unit),
+            },
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actBattleMoveFleet',
+                args: {
+                    destinationId: destinationId,
+                    unitId: unit.id,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    return BattleMoveFleetState;
 }());
 var BattleRetreatState = (function () {
     function BattleRetreatState(game) {

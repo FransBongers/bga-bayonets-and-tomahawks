@@ -769,7 +769,7 @@ class Notifications
       'player' => $player,
       'tkn_boldText_1' => $origin->getName(),
       'destination' => $destination,
-      'tkn_boldText_2' => $destination->getName(),
+      'tkn_boldText_2' => $destination === SAIL_BOX ? clienttranslate('the Sail Box') : $destination->getName(),
       'faction' => $player->getFaction(),
       'unit' => $unit->jsonSerialize(),
       'tkn_unit' => $unit->getCounterId(),

@@ -516,7 +516,9 @@ class NotificationManager {
 
   async notif_moveUnit(notif: Notif<NotifMoveUnitArgs>) {
     const { unit, destination, faction } = notif.args;
-    const unitStack = this.game.gameMap.stacks[destination.id][faction];
+    const destinationId =
+      typeof destination === 'string' ? destination : destination.id;
+    const unitStack = this.game.gameMap.stacks[destinationId][faction];
     if (unitStack) {
       await (unitStack as UnitStack).addUnit(unit);
     }
