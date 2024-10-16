@@ -43,6 +43,7 @@ const FACTIONS: Faction[] = [BRITISH, FRENCH, INDIAN];
  */
 const ARTILLERY = 'artillery';
 const BASTION_UNIT_TYPE = 'bastion';
+// const BASTION = 'Bastion';
 const BRIGADE = 'brigade';
 const COMMANDER = 'commander';
 const FLEET = 'fleet';
@@ -228,8 +229,8 @@ const OPEN_SEAS_MARKER_SAIL_BOX = 'openSeasMarkerSailBox';
 const CHEROKEE_CONTROL = 'cherokeeControl';
 const IROQUOIS_CONTROL = 'iroquoisControl';
 
-const CHEROKEE = 'Cherokee';
-const IROQUOIS = 'Iroquois';
+// const CHEROKEE = 'Cherokee';
+// const IROQUOIS = 'Iroquois';
 
 // Losses Boxes
 const LOSSES_BOX_BRITISH = 'lossesBox_british';
@@ -296,6 +297,14 @@ const REMOVE_FORT_CONSTRUCTION_MARKER = 'removeFortConstructionMarkerOrFort';
 const REMOVE_FORT = 'removeFort';
 const PLACE_ROAD_CONSTRUCTION_MARKER = 'placeRoadConstructionMarker';
 const FLIP_ROAD_CONSTRUCTION_MARKER = 'flipRoadConstructionMarker';
+
+
+// Die faces
+const FLAG = 'flag';
+const HIT_TRIANGLE_CIRCLE = 'hit_triangle_circle';
+const HIT_SQUARE_CIRCLE = 'hit_square_circle';
+const B_AND_T = 'b_and_t';
+const MISS = 'miss';
 
 /**
  * Action Points
@@ -368,3 +377,131 @@ const BATTLE_ROLL_SEQUENCE = [
   BASTIONS_OR_FORT,
   ARTILLERY
 ];
+
+
+/**
+ * Counters
+ */
+// British
+const ANNE = 'Anne';
+const ARMSTRONG = 'Armstrong';
+const AUGUSTA = 'Augusta';
+const B_1ST_ROYAL_AMERICAN = 'B1stRoyalAmerican';
+const B_2ND_ROYAL_AMERICAN = 'B2ndRoyalAmerican';
+const B_15TH_58TH = 'B15th58th';
+const B_22ND_28TH = 'B22nd28th';
+const B_27TH_55TH = 'B27th55th';
+const B_35TH_NEW_YORK_COMPANIES = 'B35thNewYorkCompanies';
+const B_40TH_45TH_47TH = 'B40th45th47th';
+const B_43RD_46TH = 'B43rd46th';
+const B_44TH_48TH = 'B44th48th';
+const B_50TH_51ST = 'B50th51st';
+const B_61ST_63RD = 'B61st63rd';
+const B_94TH_95TH = 'B94th95th';
+const BEDFORD = 'Bedford';
+const BOSCAWEN = 'Boscawen';
+const BRADSTREET = 'Bradstreet';
+const CAMPBELL = 'Campbell';
+const COLVILL = 'Colvill';
+const CROWN_POINT = 'CrownPoint';
+const CUMBERLAND = 'Cumberland';
+const DUNN = 'Dunn';
+const DURELL = 'Durell';
+const EDWARD = 'Edward';
+const FRASER = 'Fraser';
+const FORBES = 'Forbes';
+const FREDERICK = 'Frederick';
+const GAGE = 'Gage';
+const GOREHAM = 'Goreham';
+const HARDY = 'Hardy';
+const HERKIMER = 'Herkimer';
+const HOLBURNE = 'Holburne';
+const HOLMES = 'Holmes';
+const HOWARDS_BUFFS_KINGS_OWN = 'HowardsBuffsKingsOwn';
+const C_HOWE = 'CHowe';
+const L_HOWE = 'LHowe';
+const JOHNSON = 'Johnson';
+const LIGONIER = 'Ligonier';
+const MONTGOMERY = 'Montgomery';
+const MORGAN = 'Morgan';
+// const NEW_ENGLAND = 'NewEngland'; // Doubles with Colony
+const NYORK_NJ = 'NYorkNJ';
+const ONTARIO = 'Ontario';
+const PENN_DEL = 'PennDel';
+const PITT = 'Pitt';
+const POWNALL = 'Pownall';
+const PUTNAM = 'Putnam';
+const ROGERS = 'Rogers';
+const ROYAL_ARTILLERY = 'RoyalArtillery';
+const ROYAL_HIGHLAND = 'RoyalHighland';
+const ROYAL_NAVY = 'RoyalNavy';
+const ROYAL_SCOTS_17TH = 'RoyalScots17th';
+const SCOTT = 'Scott';
+const STANWIX = 'Stanwix';
+const SAUNDERS = 'Saunders';
+// TICONDEROGA: doubles with space 
+const VIRGINIA_S = 'VirginiaS';
+const WASHINGTON = 'Washington';
+const WILLIAM_HENRY = 'WilliamHenry';
+const WOLFE = 'Wolfe';
+// French
+const AUBRY = 'Aubry';
+const ANGOUMOIS_BEAUVOISIS = 'AngoumoisBeauvoisis';
+const ARTOIS_BOURGOGNE = 'ArtoisBourgogne';
+const BASTION = 'Bastion';
+const BEARN_GUYENNE = 'BearnGuyenne';
+const BERRY = 'Berry';
+const BEAUFFREMONT = 'Beauffremont';
+const BEAUJEU = 'Beaujeu';
+const BEAUSEJOUR = 'Beausejour';
+const BELESTRE = 'Belestre';
+const BOULONNOIS_ROYAL_BARROIS = 'BoulonnoisRoyalBarrois';
+const BOISHEBERT = 'Boishebert';
+const CANADIENS = 'Canadiens';
+const CANONNIERS_BOMBARDIERS = 'CanonniersBombardiers';
+const CARILLON = 'Carillon';
+const DE_L_ISLE = 'DeLIsle';
+const DE_LA_MOTTE = 'DeLaMotte';
+const DE_LA_MARINE = 'DeLaMarine';
+const DUQUESNE = 'Duquesne';
+const FOIX_QUERCY = 'FoixQuercy';
+const FRONTENAC = 'Frontenac';
+// JACQUES_CARTIER doubles with space
+const LA_SARRE_ROYAL_ROUSSILLON = 'LaSarreRoyalRoussillon';
+const LACORNE = 'Lacorne';
+const LANGIS = 'Langis';
+const LANGLADE = 'Langlade';
+const LANGUEDOC_LA_REINE = 'LanguedocLaReine';
+const LERY = 'Lery';
+const C_LEVIS = 'CLevis'; // Commander
+const F_LEVIS = 'FLevis'; // Fort
+const LIGNERY = 'Lignery';
+const MARINE_ROYALE = 'MarineRoyale';
+const MASSIAC = 'Massiac';
+const MONTCALM = 'Montcalm';
+// NIAGARA doubles with space
+const POUCHOT = 'Pouchot';
+const RIGAUD = 'Rigaud';
+const SAINT_FREDERIC = 'SaintFrederic';
+const VILLIERS = 'Villiers';
+const VOLONT_ETRANGERS_CAMBIS = 'VolontEtrangersCambis';
+// Indian
+const ABENAKI = 'Abenaki';
+const CHAOUANON = 'Chaouanon';
+const CHEROKEE = 'Cherokee';
+const BRITISH_CHEROKEE = 'BritishCherokee';
+const FRENCH_CHEROKEE = 'FrenchCherokee';
+const DELAWARE = 'Delaware';
+const IROQUOIS = 'Iroquois';
+const BRITISH_IROQUOIS = 'BritishIroquois';
+const FRENCH_IROQUOIS = 'FrenchIroquois';
+const KAHNAWAKE = 'Kahnawake';
+const MALECITE = 'Malecite';
+const MICMAC = 'Micmac';
+const MINGO = 'Mingo';
+const MISSISSAGUE = 'Mississague';
+const MOHAWK = 'Mohawk';
+const OUTAOUAIS = 'Outaouais';
+const SENECA = 'Seneca';
+
+const NEW_ENGLAND = 'NewEngland';

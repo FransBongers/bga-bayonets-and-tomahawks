@@ -54,6 +54,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   private _selectableNodes = []; // TODO: use to keep track of selectable classed?
 
   // Game specific
+  public battleInfo: BattleInfo;
   public cardManager: BTCardManager;
   public cardsInPlay: CardsInPlay;
   public discard: VoidStock<BTCard>;
@@ -245,6 +246,8 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     }
     this.notificationManager = new NotificationManager(this);
     this.notificationManager.setupNotifications();
+
+    this.battleInfo = new BattleInfo(this);
 
     this.tooltipManager.setupTooltips();
     debug('Ending game setup');

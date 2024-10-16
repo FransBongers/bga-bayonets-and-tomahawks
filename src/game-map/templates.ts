@@ -175,6 +175,7 @@ const tplGameMap = ({
   const { spaces } = gamedatas;
 
   return `
+  <div id="bt_left_column">
   <div id="bt_game_map" data-units-visible="true">
     ${tplMarkerSpace({
       id: OPEN_SEAS_MARKER_SAIL_BOX,
@@ -211,6 +212,7 @@ const tplGameMap = ({
       top: 24.5,
       left: 1074.5,
     })}    
+  </div>
   </div>`;
 };
 // <div class="bt_marker_test" data-marker-type="victory_point"></div>

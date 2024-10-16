@@ -2230,8 +2230,6 @@ var COMMANDER_REROLLS_TRACK_DEFENDER_3 = 'commander_rerolls_track_defender_3';
 var OPEN_SEAS_MARKER_SAIL_BOX = 'openSeasMarkerSailBox';
 var CHEROKEE_CONTROL = 'cherokeeControl';
 var IROQUOIS_CONTROL = 'iroquoisControl';
-var CHEROKEE = 'Cherokee';
-var IROQUOIS = 'Iroquois';
 var LOSSES_BOX_BRITISH = 'lossesBox_british';
 var LOSSES_BOX_FRENCH = 'lossesBox_french';
 var DISBANDED_COLONIAL_BRIGADES = 'disbandedColonialBrigades';
@@ -2270,6 +2268,11 @@ var REMOVE_FORT_CONSTRUCTION_MARKER = 'removeFortConstructionMarkerOrFort';
 var REMOVE_FORT = 'removeFort';
 var PLACE_ROAD_CONSTRUCTION_MARKER = 'placeRoadConstructionMarker';
 var FLIP_ROAD_CONSTRUCTION_MARKER = 'flipRoadConstructionMarker';
+var FLAG = 'flag';
+var HIT_TRIANGLE_CIRCLE = 'hit_triangle_circle';
+var HIT_SQUARE_CIRCLE = 'hit_square_circle';
+var B_AND_T = 'b_and_t';
+var MISS = 'miss';
 var ARMY_AP = 'ARMY_AP';
 var ARMY_AP_2X = 'ARMY_AP_2X';
 var LIGHT_AP = 'LIGHT_AP';
@@ -2327,6 +2330,121 @@ var BATTLE_ROLL_SEQUENCE = [
     BASTIONS_OR_FORT,
     ARTILLERY
 ];
+var ANNE = 'Anne';
+var ARMSTRONG = 'Armstrong';
+var AUGUSTA = 'Augusta';
+var B_1ST_ROYAL_AMERICAN = 'B1stRoyalAmerican';
+var B_2ND_ROYAL_AMERICAN = 'B2ndRoyalAmerican';
+var B_15TH_58TH = 'B15th58th';
+var B_22ND_28TH = 'B22nd28th';
+var B_27TH_55TH = 'B27th55th';
+var B_35TH_NEW_YORK_COMPANIES = 'B35thNewYorkCompanies';
+var B_40TH_45TH_47TH = 'B40th45th47th';
+var B_43RD_46TH = 'B43rd46th';
+var B_44TH_48TH = 'B44th48th';
+var B_50TH_51ST = 'B50th51st';
+var B_61ST_63RD = 'B61st63rd';
+var B_94TH_95TH = 'B94th95th';
+var BEDFORD = 'Bedford';
+var BOSCAWEN = 'Boscawen';
+var BRADSTREET = 'Bradstreet';
+var CAMPBELL = 'Campbell';
+var COLVILL = 'Colvill';
+var CROWN_POINT = 'CrownPoint';
+var CUMBERLAND = 'Cumberland';
+var DUNN = 'Dunn';
+var DURELL = 'Durell';
+var EDWARD = 'Edward';
+var FRASER = 'Fraser';
+var FORBES = 'Forbes';
+var FREDERICK = 'Frederick';
+var GAGE = 'Gage';
+var GOREHAM = 'Goreham';
+var HARDY = 'Hardy';
+var HERKIMER = 'Herkimer';
+var HOLBURNE = 'Holburne';
+var HOLMES = 'Holmes';
+var HOWARDS_BUFFS_KINGS_OWN = 'HowardsBuffsKingsOwn';
+var C_HOWE = 'CHowe';
+var L_HOWE = 'LHowe';
+var JOHNSON = 'Johnson';
+var LIGONIER = 'Ligonier';
+var MONTGOMERY = 'Montgomery';
+var MORGAN = 'Morgan';
+var NYORK_NJ = 'NYorkNJ';
+var ONTARIO = 'Ontario';
+var PENN_DEL = 'PennDel';
+var PITT = 'Pitt';
+var POWNALL = 'Pownall';
+var PUTNAM = 'Putnam';
+var ROGERS = 'Rogers';
+var ROYAL_ARTILLERY = 'RoyalArtillery';
+var ROYAL_HIGHLAND = 'RoyalHighland';
+var ROYAL_NAVY = 'RoyalNavy';
+var ROYAL_SCOTS_17TH = 'RoyalScots17th';
+var SCOTT = 'Scott';
+var STANWIX = 'Stanwix';
+var SAUNDERS = 'Saunders';
+var VIRGINIA_S = 'VirginiaS';
+var WASHINGTON = 'Washington';
+var WILLIAM_HENRY = 'WilliamHenry';
+var WOLFE = 'Wolfe';
+var AUBRY = 'Aubry';
+var ANGOUMOIS_BEAUVOISIS = 'AngoumoisBeauvoisis';
+var ARTOIS_BOURGOGNE = 'ArtoisBourgogne';
+var BASTION = 'Bastion';
+var BEARN_GUYENNE = 'BearnGuyenne';
+var BERRY = 'Berry';
+var BEAUFFREMONT = 'Beauffremont';
+var BEAUJEU = 'Beaujeu';
+var BEAUSEJOUR = 'Beausejour';
+var BELESTRE = 'Belestre';
+var BOULONNOIS_ROYAL_BARROIS = 'BoulonnoisRoyalBarrois';
+var BOISHEBERT = 'Boishebert';
+var CANADIENS = 'Canadiens';
+var CANONNIERS_BOMBARDIERS = 'CanonniersBombardiers';
+var CARILLON = 'Carillon';
+var DE_L_ISLE = 'DeLIsle';
+var DE_LA_MOTTE = 'DeLaMotte';
+var DE_LA_MARINE = 'DeLaMarine';
+var DUQUESNE = 'Duquesne';
+var FOIX_QUERCY = 'FoixQuercy';
+var FRONTENAC = 'Frontenac';
+var LA_SARRE_ROYAL_ROUSSILLON = 'LaSarreRoyalRoussillon';
+var LACORNE = 'Lacorne';
+var LANGIS = 'Langis';
+var LANGLADE = 'Langlade';
+var LANGUEDOC_LA_REINE = 'LanguedocLaReine';
+var LERY = 'Lery';
+var C_LEVIS = 'CLevis';
+var F_LEVIS = 'FLevis';
+var LIGNERY = 'Lignery';
+var MARINE_ROYALE = 'MarineRoyale';
+var MASSIAC = 'Massiac';
+var MONTCALM = 'Montcalm';
+var POUCHOT = 'Pouchot';
+var RIGAUD = 'Rigaud';
+var SAINT_FREDERIC = 'SaintFrederic';
+var VILLIERS = 'Villiers';
+var VOLONT_ETRANGERS_CAMBIS = 'VolontEtrangersCambis';
+var ABENAKI = 'Abenaki';
+var CHAOUANON = 'Chaouanon';
+var CHEROKEE = 'Cherokee';
+var BRITISH_CHEROKEE = 'BritishCherokee';
+var FRENCH_CHEROKEE = 'FrenchCherokee';
+var DELAWARE = 'Delaware';
+var IROQUOIS = 'Iroquois';
+var BRITISH_IROQUOIS = 'BritishIroquois';
+var FRENCH_IROQUOIS = 'FrenchIroquois';
+var KAHNAWAKE = 'Kahnawake';
+var MALECITE = 'Malecite';
+var MICMAC = 'Micmac';
+var MINGO = 'Mingo';
+var MISSISSAGUE = 'Mississague';
+var MOHAWK = 'Mohawk';
+var OUTAOUAIS = 'Outaouais';
+var SENECA = 'Seneca';
+var NEW_ENGLAND = 'NewEngland';
 define([
     'dojo',
     'dojo/_base/declare',
@@ -2437,6 +2555,7 @@ var BayonetsAndTomahawks = (function () {
         }
         this.notificationManager = new NotificationManager(this);
         this.notificationManager.setupNotifications();
+        this.battleInfo = new BattleInfo(this);
         this.tooltipManager.setupTooltips();
         debug('Ending game setup');
     };
@@ -3145,6 +3264,696 @@ var getFactionClass = function (faction) {
     }
 };
 var tknActionPointLog = function (faction, actionPointId) { return "".concat(faction, ":").concat(actionPointId); };
+var getBattleOrderTitle = function (step) {
+    var _a;
+    var nameMap = (_a = {},
+        _a[NON_INDIAN_LIGHT] = _('Non-Indian Light'),
+        _a[INDIAN] = _('Indian Light'),
+        _a[HIGHLAND_BRIGADES] = _('Highland Brigades'),
+        _a[METROPOLITAN_BRIGADES] = _('Metropolitan Brigades'),
+        _a[NON_METROPOLITAN_BRIGADES] = _('Non-Metropolitan Brigades'),
+        _a[FLEETS] = _('Fleets'),
+        _a[BASTIONS_OR_FORT] = _('Bastion or Fort'),
+        _a[ARTILLERY] = _('Artillery'),
+        _a[MILITIA] = _('Militia'),
+        _a);
+    return nameMap[step] || '';
+};
+var getBattleHitPriorityTitle = function (step) {
+    var _a;
+    var nameMap = (_a = {},
+        _a[NON_INDIAN_LIGHT] = _('Non-Indian Light'),
+        _a[INDIAN] = _('Indian Light'),
+        _a[HIGHLAND_BRIGADES] = _('Highland Brigade'),
+        _a[METROPOLITAN_BRIGADES] = _('Metropolitan Brigade'),
+        _a[NON_METROPOLITAN_BRIGADES] = _('Non-Metropolitan Brigade'),
+        _a[FLEETS] = _('Fleet'),
+        _a[FORT] = _('Fort'),
+        _a[BASTIONS_OR_FORT] = _('Bastion or Fort'),
+        _a[ARTILLERY] = _('Artillery'),
+        _a[BATTLE_INFO_FIRST_HIT_TO_HIGHLAND] = _('First Hit to Highland'),
+        _a);
+    return nameMap[step] || '';
+};
+var getBattleOrderConfig = function () {
+    var _a;
+    return (_a = {},
+        _a[NON_INDIAN_LIGHT] = {
+            title: getBattleOrderTitle(NON_INDIAN_LIGHT),
+            counterIds: [LACORNE, WASHINGTON, L_HOWE],
+        },
+        _a[INDIAN] = {
+            title: getBattleOrderTitle(INDIAN),
+            counterIds: [DELAWARE, MOHAWK],
+        },
+        _a[HIGHLAND_BRIGADES] = {
+            title: getBattleOrderTitle(HIGHLAND_BRIGADES),
+            counterIds: [FRASER],
+        },
+        _a[METROPOLITAN_BRIGADES] = {
+            title: getBattleOrderTitle(METROPOLITAN_BRIGADES),
+            counterIds: [BOULONNOIS_ROYAL_BARROIS, B_22ND_28TH],
+        },
+        _a[NON_METROPOLITAN_BRIGADES] = {
+            title: getBattleOrderTitle(NON_METROPOLITAN_BRIGADES),
+            counterIds: [CANADIENS, NEW_ENGLAND],
+        },
+        _a[FLEETS] = {
+            title: getBattleOrderTitle(FLEETS),
+            counterIds: [DE_LA_MOTTE, HOLBURNE],
+        },
+        _a[BASTIONS_OR_FORT] = {
+            title: getBattleOrderTitle(BASTIONS_OR_FORT),
+            counterIds: [CARILLON, BASTION, CUMBERLAND],
+        },
+        _a[ARTILLERY] = {
+            title: getBattleOrderTitle(ARTILLERY),
+            counterIds: [CANONNIERS_BOMBARDIERS, ROYAL_ARTILLERY],
+        },
+        _a[MILITIA] = {
+            title: getBattleOrderTitle(MILITIA),
+            counterIds: [FRENCH_MILITIA_MARKER, BRITISH_MILITIA_MARKER],
+        },
+        _a);
+};
+var BATTLE_INFO_ADVANCE_BATTLE_MARKER = 'BATTLE_INFO_ADVANCE_BATTLE_MARKER';
+var BATTLE_INFO_FIRST_HIT_TO_HIGHLAND = 'BATTLE_INFO_FIRST_HIT_TO_HIGHLAND';
+var BATTLE_INFO_MAY_MOVE_TO_COASTAL_HOME_SPACE = 'BATTLE_INFO_MAY_MOVE_TO_COASTAL_HOME_SPACE';
+var BATTLE_INFO_NA = 'BATTLE_INFO_NA';
+var getBattleInfoCellContent = function (type) {
+    switch (type) {
+        case MISS:
+            return "<span>".concat(_('Miss'), "</span>");
+        case BATTLE_INFO_ADVANCE_BATTLE_MARKER:
+            return "<span>".concat(_('Advance Battle Marker'), "</span>");
+        case BATTLE_INFO_MAY_MOVE_TO_COASTAL_HOME_SPACE:
+            return "<span>".concat(_('May move to friendly non-Battle Coastal Home space'), "</span>");
+        case BATTLE_INFO_NA:
+            return _('N/A');
+        default:
+            return '<div>This should not be here</div>';
+    }
+};
+var getBattlePriorityContent = function (input) {
+    return input
+        .map(function (_a) {
+        var index = _a.index, step = _a.step, classes = _a.classes;
+        var itemClasses = [];
+        if (index === 1) {
+            itemClasses.push('bt_battle_priority_1');
+        }
+        if (classes) {
+            itemClasses.push(classes);
+        }
+        return "\n    <div".concat(itemClasses.length > 0 ? " class=\"".concat(itemClasses.join(' '), "\"") : '', "><span class=\"bt_battle_priority_index\">").concat(index ? "".concat(index, ".") : '', "</span><span>").concat(getBattleHitPriorityTitle(step), "</span></div>\n  ");
+    })
+        .join('');
+};
+var BATTLE_DIE_RESULT_IF_ENEMY_TRIANGLE = 'BATTLE_DIE_RESULT_IF_ENEMY_TRIANGLE';
+var BATTLE_DIE_RESULT_IF_ENEMY_SQUARE = 'BATTLE_DIE_RESULT_IF_ENEMY_SQUARE';
+var BATTLE_DIE_RESULT_IF_ENEMY_CIRCLE = 'BATTLE_DIE_RESULT_IF_ENEMY_CIRCLE';
+var BATTLE_DIE_RESULT_IF_ENEMY_CIRCLE_NO_BASTION = 'BATTLE_DIE_RESULT_IF_ENEMY_CIRCLE_NO_BASTION';
+var BATTLE_DIE_RESULT_APPLY_HIT_TO_ENENMY_SQUARE_IF_MARKER_OVER_0 = 'BATTLE_DIE_RESULT_APPLY_HIT_TO_ENENMY_SQUARE_IF_MARKER_OVER_0';
+var BATTLE_DIE_RESULT_APPLY_HIT_IF_MARKER_OVER_0 = 'BATTLE_DIE_RESULT_APPLY_HIT_IF_MARKER_OVER_0';
+var BATTLE_DIE_RESULT_REMOVE_ENEMY_MILITIA = 'BATTLE_DIE_RESULT_REMOVE_ENEMY_MILITIA';
+var BATTLE_DIE_RESULT_RESOLVE_SQUARE_CIRCLE = 'BATTLE_DIE_RESULT_RESOLVE_SQUARE_CIRCLE';
+var getDieResultText = function (game, textId) {
+    switch (textId) {
+        case BATTLE_DIE_RESULT_IF_ENEMY_TRIANGLE:
+            return game.format_string_recursive(_('If there is an enemy ${tkn_shape} unit:'), {
+                tkn_shape: 'triangle',
+            });
+        case BATTLE_DIE_RESULT_IF_ENEMY_SQUARE:
+            return game.format_string_recursive(_('If there is an enemy ${tkn_shape} unit:'), {
+                tkn_shape: 'square',
+            });
+        case BATTLE_DIE_RESULT_IF_ENEMY_CIRCLE:
+            return game.format_string_recursive(_('If there is an enemy ${tkn_shape} unit:'), {
+                tkn_shape: 'circle',
+            });
+        case BATTLE_DIE_RESULT_IF_ENEMY_CIRCLE_NO_BASTION:
+            return game.format_string_recursive(_('If there is an enemy ${tkn_shape} unit (other than ${tkn_unit}):'), {
+                tkn_shape: 'circle',
+                tkn_unit: BASTION,
+            });
+        case BATTLE_INFO_ADVANCE_BATTLE_MARKER:
+            return _('Advance Battle Marker');
+        case BATTLE_DIE_RESULT_APPLY_HIT_IF_MARKER_OVER_0:
+            return _('If Marker > 0: apply Hit');
+        case BATTLE_DIE_RESULT_APPLY_HIT_TO_ENENMY_SQUARE_IF_MARKER_OVER_0:
+            return game.format_string_recursive(_('If Marker > 0: apply Hit to enemy ${tkn_shape} unit ${tkn_newLine}${tkn_italicText}'), {
+                tkn_shape: 'square',
+                tkn_italicText: _('Prioritize Metropolitan Brigade'),
+                tkn_newLine: '',
+            });
+        case BATTLE_DIE_RESULT_REMOVE_ENEMY_MILITIA:
+            return _('Remove 1 enemy Militia');
+        case BATTLE_DIE_RESULT_RESOLVE_SQUARE_CIRCLE:
+            return game.format_string_recursive(_('Resolve ${tkn_dieResult} result'), {
+                tkn_dieResult: HIT_SQUARE_CIRCLE,
+            });
+        default:
+            return 'This should not be here';
+    }
+};
+var getBattleResolveDieContent = function (game, input) {
+    return input
+        .map(function (_a) {
+        var index = _a.index, textId = _a.textId, classes = _a.classes;
+        var itemClasses = [];
+        if (classes) {
+            itemClasses.push(classes);
+        }
+        return "\n    <div".concat(itemClasses.length > 0 ? " class=\"".concat(itemClasses.join(' '), "\"") : '', ">\n    ").concat(index ? "<span class=\"bt_battle_resolve_die_index\">".concat(index, ".</span>") : '', "\n    <span>").concat(getDieResultText(game, textId), "</span></div>\n  ");
+    })
+        .join('');
+};
+var getBattleInfoDieResultConfig = function (game) { return [
+    {
+        content: getBattleResolveDieContent(game, [
+            {
+                textId: BATTLE_DIE_RESULT_IF_ENEMY_TRIANGLE,
+            },
+            {
+                index: 1,
+                textId: BATTLE_INFO_ADVANCE_BATTLE_MARKER,
+            },
+            {
+                index: 2,
+                textId: BATTLE_DIE_RESULT_APPLY_HIT_IF_MARKER_OVER_0,
+            },
+        ]),
+        column: {
+            from: 2,
+            to: 3,
+        },
+        row: {
+            from: 2,
+            to: 4,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattleInfoCellContent(MISS),
+        column: {
+            from: 3,
+            to: 4,
+        },
+        row: {
+            from: 2,
+            to: 4,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattleInfoCellContent(MISS),
+        column: {
+            from: 4,
+            to: 5,
+        },
+        row: {
+            from: 2,
+            to: 4,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattleInfoCellContent(BATTLE_INFO_ADVANCE_BATTLE_MARKER),
+        column: {
+            from: 5,
+            to: 6,
+        },
+        row: {
+            from: 2,
+            to: 4,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattleInfoCellContent(MISS),
+        column: {
+            from: 6,
+            to: 7,
+        },
+        row: {
+            from: 2,
+            to: 4,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattlePriorityContent([
+            {
+                index: 1,
+                step: NON_INDIAN_LIGHT,
+            },
+            {
+                index: 2,
+                step: INDIAN,
+            },
+        ]),
+        column: {
+            from: 7,
+            to: 8,
+        },
+        row: {
+            from: 2,
+            to: 3,
+        },
+        extraClasses: 'bt_center bt_align_left'
+    },
+    {
+        content: getBattlePriorityContent([
+            {
+                index: 1,
+                step: INDIAN,
+            },
+            {
+                index: 2,
+                step: NON_INDIAN_LIGHT,
+            },
+        ]),
+        column: {
+            from: 7,
+            to: 8,
+        },
+        row: {
+            from: 3,
+            to: 4,
+        },
+        extraClasses: 'bt_center bt_align_left'
+    },
+    {
+        content: getBattleInfoCellContent(MISS),
+        column: {
+            from: 2,
+            to: 3,
+        },
+        row: {
+            from: 4,
+            to: 7,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattleResolveDieContent(game, [
+            {
+                textId: BATTLE_DIE_RESULT_IF_ENEMY_SQUARE,
+            },
+            {
+                index: 1,
+                textId: BATTLE_INFO_ADVANCE_BATTLE_MARKER,
+            },
+            {
+                index: 2,
+                textId: BATTLE_DIE_RESULT_APPLY_HIT_IF_MARKER_OVER_0,
+            },
+        ]),
+        column: {
+            from: 3,
+            to: 4,
+        },
+        row: {
+            from: 4,
+            to: 7,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattleResolveDieContent(game, [
+            {
+                index: 1,
+                textId: BATTLE_DIE_RESULT_REMOVE_ENEMY_MILITIA,
+            },
+            {
+                index: 2,
+                textId: BATTLE_DIE_RESULT_RESOLVE_SQUARE_CIRCLE,
+            },
+        ]),
+        column: {
+            from: 4,
+            to: 5,
+        },
+        row: {
+            from: 4,
+            to: 6,
+        },
+        extraClasses: 'bt_center bt_align_left'
+    },
+    {
+        content: getBattleResolveDieContent(game, [
+            {
+                textId: BATTLE_DIE_RESULT_REMOVE_ENEMY_MILITIA,
+            },
+        ]),
+        column: {
+            from: 4,
+            to: 5,
+        },
+        row: {
+            from: 6,
+            to: 7,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattleInfoCellContent(BATTLE_INFO_ADVANCE_BATTLE_MARKER),
+        column: {
+            from: 5,
+            to: 6,
+        },
+        row: {
+            from: 4,
+            to: 7,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattleInfoCellContent(MISS),
+        column: {
+            from: 6,
+            to: 7,
+        },
+        row: {
+            from: 4,
+            to: 7,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattlePriorityContent([
+            {
+                index: 1,
+                step: METROPOLITAN_BRIGADES,
+            },
+            {
+                step: BATTLE_INFO_FIRST_HIT_TO_HIGHLAND,
+                classes: 'bt_highland_first',
+            },
+            {
+                index: 2,
+                step: NON_METROPOLITAN_BRIGADES,
+            },
+        ]),
+        column: {
+            from: 7,
+            to: 8,
+        },
+        row: {
+            from: 4,
+            to: 6,
+        },
+        extraClasses: 'bt_center bt_align_left'
+    },
+    {
+        content: getBattlePriorityContent([
+            {
+                index: 1,
+                step: NON_METROPOLITAN_BRIGADES,
+            },
+            {
+                index: 2,
+                step: METROPOLITAN_BRIGADES,
+            },
+            {
+                step: BATTLE_INFO_FIRST_HIT_TO_HIGHLAND,
+                classes: 'bt_highland_first',
+            },
+        ]),
+        column: {
+            from: 7,
+            to: 8,
+        },
+        row: {
+            from: 6,
+            to: 7,
+        },
+        extraClasses: 'bt_center bt_align_left'
+    },
+    {
+        content: getBattleResolveDieContent(game, [
+            {
+                textId: BATTLE_DIE_RESULT_IF_ENEMY_CIRCLE_NO_BASTION,
+            },
+            {
+                index: 1,
+                textId: BATTLE_INFO_ADVANCE_BATTLE_MARKER,
+            },
+            {
+                index: 2,
+                textId: BATTLE_DIE_RESULT_APPLY_HIT_IF_MARKER_OVER_0,
+            },
+        ]),
+        column: {
+            from: 2,
+            to: 4,
+        },
+        row: {
+            from: 7,
+            to: 8,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattleInfoCellContent(BATTLE_INFO_MAY_MOVE_TO_COASTAL_HOME_SPACE),
+        column: {
+            from: 4,
+            to: 5,
+        },
+        row: {
+            from: 7,
+            to: 8,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattleInfoCellContent(BATTLE_INFO_ADVANCE_BATTLE_MARKER),
+        column: {
+            from: 5,
+            to: 6,
+        },
+        row: {
+            from: 7,
+            to: 10,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattleInfoCellContent(MISS),
+        column: {
+            from: 6,
+            to: 7,
+        },
+        row: {
+            from: 7,
+            to: 10,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattlePriorityContent([
+            {
+                index: 1,
+                step: FLEETS,
+            },
+            {
+                index: 2,
+                step: ARTILLERY,
+            },
+            {
+                index: 3,
+                step: FORT,
+            },
+        ]),
+        column: {
+            from: 7,
+            to: 8,
+        },
+        row: {
+            from: 7,
+            to: 8,
+        },
+        extraClasses: 'bt_center bt_align_left'
+    },
+    {
+        content: getBattleResolveDieContent(game, [
+            {
+                textId: BATTLE_DIE_RESULT_IF_ENEMY_CIRCLE,
+            },
+            {
+                index: 1,
+                textId: BATTLE_INFO_ADVANCE_BATTLE_MARKER,
+            },
+            {
+                index: 2,
+                textId: BATTLE_DIE_RESULT_APPLY_HIT_IF_MARKER_OVER_0,
+            },
+        ]),
+        column: {
+            from: 2,
+            to: 4,
+        },
+        row: {
+            from: 8,
+            to: 10,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattleResolveDieContent(game, [
+            {
+                textId: BATTLE_DIE_RESULT_IF_ENEMY_SQUARE,
+            },
+            {
+                index: 1,
+                textId: BATTLE_INFO_ADVANCE_BATTLE_MARKER,
+            },
+            {
+                index: 2,
+                textId: BATTLE_DIE_RESULT_APPLY_HIT_TO_ENENMY_SQUARE_IF_MARKER_OVER_0,
+            },
+        ]),
+        column: {
+            from: 4,
+            to: 5,
+        },
+        row: {
+            from: 8,
+            to: 10,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattlePriorityContent([
+            {
+                index: 1,
+                step: ARTILLERY,
+            },
+            {
+                index: 2,
+                step: FLEETS,
+            },
+        ]),
+        column: {
+            from: 7,
+            to: 8,
+        },
+        row: {
+            from: 8,
+            to: 9,
+        },
+        extraClasses: 'bt_center bt_align_left'
+    },
+    {
+        content: getBattlePriorityContent([
+            {
+                index: 1,
+                step: ARTILLERY,
+            },
+            {
+                index: 2,
+                step: BASTIONS_OR_FORT,
+            },
+            {
+                index: 3,
+                step: FLEETS,
+            },
+        ]),
+        column: {
+            from: 7,
+            to: 8,
+        },
+        row: {
+            from: 9,
+            to: 10,
+        },
+        extraClasses: 'bt_center bt_align_left'
+    },
+    {
+        content: getBattleInfoCellContent(MISS),
+        column: {
+            from: 2,
+            to: 5,
+        },
+        row: {
+            from: 10,
+            to: 11,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattleInfoCellContent(BATTLE_INFO_ADVANCE_BATTLE_MARKER),
+        column: {
+            from: 5,
+            to: 6,
+        },
+        row: {
+            from: 10,
+            to: 11,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattleInfoCellContent(MISS),
+        column: {
+            from: 6,
+            to: 7,
+        },
+        row: {
+            from: 10,
+            to: 11,
+        },
+        extraClasses: 'bt_center'
+    },
+    {
+        content: getBattleInfoCellContent(BATTLE_INFO_NA),
+        column: {
+            from: 7,
+            to: 8,
+        },
+        row: {
+            from: 10,
+            to: 11,
+        },
+        extraClasses: 'bt_center'
+    },
+]; };
+var BattleInfo = (function () {
+    function BattleInfo(game) {
+        this.stocks = {};
+        this.game = game;
+        var gamedatas = game.gamedatas;
+        this.setupBattleInfo({ gamedatas: gamedatas });
+    }
+    BattleInfo.prototype.clearInterface = function () {
+        Object.values(this.stocks).forEach(function (stock) { return stock.removeAll(); });
+    };
+    BattleInfo.prototype.updateInterface = function (gamedatas) {
+    };
+    BattleInfo.prototype.setupBattleInfo = function (_a) {
+        var gamedatas = _a.gamedatas;
+        document
+            .getElementById('bt_left_column')
+            .insertAdjacentHTML('beforeend', tplBattleInfo(this.game));
+    };
+    return BattleInfo;
+}());
+var tplBattleInfo = function (game) {
+    return "<div class=\"bt_battle_info_container\">\n<div class=\"bt_battle_info\">\n<div class=\"bt_grid_cell bt_center\">".concat(_('Unit type'), "</div>\n  <div class=\"bt_grid_cell bt_center\">").concat(tplLogDieResult(HIT_TRIANGLE_CIRCLE), "</div>\n  <div class=\"bt_grid_cell bt_center\">").concat(tplLogDieResult(HIT_SQUARE_CIRCLE), "</div>\n  <div class=\"bt_grid_cell bt_center\">").concat(tplLogDieResult(B_AND_T), "</div>\n  <div class=\"bt_grid_cell bt_center\">").concat(tplLogDieResult(FLAG), "</div>\n  <div class=\"bt_grid_cell bt_center\">").concat(tplLogDieResult(MISS), "</div>\n  <div class=\"bt_grid_cell bt_center\">").concat(_('Unit Hit'), "</div>\n  ").concat(Object.entries(getBattleOrderConfig())
+        .map(function (_a) {
+        var type = _a[0], config = _a[1];
+        return "\n    <div class=\"bt_battle_info_".concat(type, " bt_grid_cell\">\n      <div>").concat(config.title, "</div>\n      <div>\n        ").concat(config.counterIds
+            .map(function (counterId) { return type === MILITIA ? game.format_string_recursive('${tkn_marker}', { tkn_marker: counterId }) :
+            game.format_string_recursive('${tkn_unit}', { tkn_unit: counterId }); })
+            .join(''), "\n      </div>\n    </div>\n    ");
+    })
+        .join(''), "\n  ").concat(getBattleInfoDieResultConfig(game)
+        .map(function (_a) {
+        var column = _a.column, content = _a.content, row = _a.row, extraClasses = _a.extraClasses;
+        return "\n      <div class=\"bt_grid_cell ".concat(extraClasses, "\" style=\"grid-column: ").concat(column.from, " / ").concat(column.to, "; grid-row: ").concat(row.from, " / ").concat(row.to, ";\">\n        ").concat(content, "\n      </div>\n    ");
+    })
+        .join(''), "\n</div>\n</div>");
+};
 var YEAR_TRACK_CONFIG = [
     {
         id: 1755,
@@ -4221,7 +5030,7 @@ var tplSailBox = function () { return "\n  <div id=\"sailBox\">\n    <div id=\""
 var tplGameMap = function (_a) {
     var gamedatas = _a.gamedatas;
     var spaces = gamedatas.spaces;
-    return "\n  <div id=\"bt_game_map\" data-units-visible=\"true\">\n    ".concat(tplMarkerSpace({
+    return "\n  <div id=\"bt_left_column\">\n  <div id=\"bt_game_map\" data-units-visible=\"true\">\n    ".concat(tplMarkerSpace({
         id: OPEN_SEAS_MARKER_SAIL_BOX,
         top: 77.5,
         left: 1374.5,
@@ -4241,7 +5050,7 @@ var tplGameMap = function (_a) {
         id: "wieChitPlaceholder_british",
         top: 24.5,
         left: 1074.5,
-    }), "    \n  </div>");
+    }), "    \n  </div>\n  </div>");
 };
 var Hand = (function () {
     function Hand(game) {
@@ -4338,6 +5147,7 @@ var InfoPanel = (function () {
 var tplInfoPanel = function (scenarioName) { return "\n<div class='player-board' id=\"info_panel\">\n  <div id=\"info_panel_scenario\">\n    <span>".concat(_(scenarioName), "</span>\n  </div>\n  <div id=\"info_panel_buttons\">\n\n  </div>\n</div>"); };
 var LOG_TOKEN_BOLD_TEXT = 'boldText';
 var LOG_TOKEN_BOLD_ITALIC_TEXT = 'boldItalicText';
+var LOG_TOKEN_ITALIC_TEXT = 'italicText';
 var LOG_TOKEN_NEW_LINE = 'newLine';
 var LOG_TOKEN_ACTION_POINT = 'actionPoint';
 var LOG_TOKEN_CARD = 'card';
@@ -4358,6 +5168,8 @@ var getTokenDiv = function (_a) {
             return tlpLogTokenBoldText({ text: value });
         case LOG_TOKEN_BOLD_ITALIC_TEXT:
             return tlpLogTokenBoldText({ text: value, italic: true });
+        case LOG_TOKEN_ITALIC_TEXT:
+            return tlpLogTokenBoldText({ text: value, italic: true, bold: false });
         case LOG_TOKEN_ACTION_POINT:
             var _c = value.split(':'), faction = _c[0], actionPointId = _c[1];
             return tplLogTokenActionPoint(faction, actionPointId);
@@ -4396,8 +5208,8 @@ var getTokenDiv = function (_a) {
     }
 };
 var tlpLogTokenBoldText = function (_a) {
-    var text = _a.text, tooltipId = _a.tooltipId, _b = _a.italic, italic = _b === void 0 ? false : _b;
-    return "<span ".concat(tooltipId ? "id=\"".concat(tooltipId, "\"") : '', " style=\"font-weight: 700;").concat(italic ? ' font-style: italic;' : '', "\">").concat(_(text), "</span>");
+    var text = _a.text, tooltipId = _a.tooltipId, _b = _a.italic, italic = _b === void 0 ? false : _b, _c = _a.bold, bold = _c === void 0 ? true : _c;
+    return "<span ".concat(tooltipId ? "id=\"".concat(tooltipId, "\"") : '', " style=\"").concat(bold ? 'font-weight: 700;' : '').concat(italic ? ' font-style: italic;' : '', "\">").concat(_(text), "</span>");
 };
 var tplLogTokenPlayerName = function (_a) {
     var name = _a.name, color = _a.color;

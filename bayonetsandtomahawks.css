@@ -287,7 +287,7 @@ body > .card {
 }
 
 .bgabutton.bt_indian {
-  background-color: #8fa32a;
+  background-color: #9cb049;
 }
 
 .bgabutton.bt_british:hover,
@@ -346,6 +346,119 @@ body > .card {
 .bt_action_point_img[data-ap-id=SAIL_ARMY_AP_2X] {
   background-position-x: 100%;
   background-position-y: 100%;
+}
+
+.bt_battle_info_container {
+  width: calc(var(--leftColumnScale) * 1.333333 * 1125px);
+  height: calc(var(--leftColumnScale) * 1.333333 * 717px);
+}
+
+.bt_battle_info {
+  max-width: 1125px;
+  background-color: yellow;
+  min-height: 100px;
+  grid-column: 1/3;
+  border-top: 1px solid black;
+  border-right: 1px solid black;
+  background-color: ivory;
+  box-shadow: 1px 1px 5px #000;
+  scale: calc(var(--leftColumnScale) * 1.33333);
+  transform-origin: top left;
+  width: 1125px;
+  display: grid;
+  grid-template-columns: 170px 200px 200px 200px 80px 60px 215px;
+  --btTokenScale: 1;
+}
+.bt_battle_info .bt_grid_cell {
+  padding: 4px;
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
+}
+.bt_battle_info .bt_center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.bt_battle_info .bt_align_left {
+  align-items: flex-start;
+}
+.bt_battle_info .bt_battle_priority_1 {
+  font-weight: bold;
+}
+.bt_battle_info .bt_battle_priority_index {
+  margin-right: 4px;
+}
+.bt_battle_info .bt_battle_resolve_die_index {
+  margin-right: 4px;
+}
+.bt_battle_info .bt_highland_first {
+  margin-left: 20px;
+  font-style: italic;
+}
+.bt_battle_info .bt_battle_info_NON_INDIAN_LIGHT {
+  grid-column: 1/2;
+  grid-row: 2/3;
+}
+.bt_battle_info .bt_battle_info_indian {
+  grid-column: 1/2;
+  grid-row: 3/4;
+}
+.bt_battle_info .bt_battle_info_HIGHLAND_BRIGADES {
+  grid-column: 1/2;
+  grid-row: 4/5;
+}
+.bt_battle_info .bt_battle_info_METROPOLITAN_BRIGADES {
+  grid-column: 1/2;
+  grid-row: 5/6;
+}
+.bt_battle_info .bt_battle_info_NON_METROPOLITAN_BRIGADES {
+  grid-column: 1/2;
+  grid-row: 6/7;
+}
+.bt_battle_info .bt_battle_info_FLEETS {
+  grid-column: 1/2;
+  grid-row: 7/8;
+}
+.bt_battle_info .bt_battle_info_BASTIONS_OR_FORT {
+  grid-column: 1/2;
+  grid-row: 8/9;
+}
+.bt_battle_info .bt_battle_info_artillery {
+  grid-column: 1/2;
+  grid-row: 9/10;
+}
+.bt_battle_info .bt_battle_info_MILITIA {
+  grid-column: 1/2;
+  grid-row: 10/11;
+}
+.bt_battle_info .bt_log_die,
+.bt_battle_info .bt_marker_side,
+.bt_battle_info .bt_token_side {
+  position: relative;
+  display: inline-block;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+.bt_battle_info .bt_token_side {
+  --btTokenScale: 0.85;
+}
+.bt_battle_info .bt_marker_side {
+  --btMarkerScale: 0.85;
+  border: 1px solid black;
+}
+.bt_battle_info .bt_log_die {
+  --btTokenScale: 0.85;
+}
+.bt_battle_info span .bt_token_side {
+  --btTokenScale: 0.6;
+}
+.bt_battle_info span .bt_log_die,
+.bt_battle_info span .bt_marker_side,
+.bt_battle_info span .bt_token_side {
+  top: -3px;
+  margin-top: 3px;
+  vertical-align: middle;
 }
 
 .bt_card {
@@ -1210,7 +1323,7 @@ body > .card {
 }
 #pagemaintitletext .bt_action_point[data-faction=indian],
 #gameaction_status .bt_action_point[data-faction=indian] {
-  background-color: #8fa32a;
+  background-color: #9cb049;
 }
 
 .log > .roundedbox .bt_log_card,
@@ -1276,7 +1389,7 @@ body > .card {
 }
 .log > .roundedbox .bt_action_point[data-faction=indian],
 .log > .roundedboxinner .bt_action_point[data-faction=indian] {
-  background-color: #8fa32a;
+  background-color: #9cb049;
 }
 
 /* ------- PLAYER BOARD ------- */
@@ -3940,6 +4053,14 @@ html {
 /* Hide player is now online, player is now offline messages */
 .notif_playerstatus {
   display: none !important;
+}
+
+#bt_left_column {
+  width: calc(var(--leftColumnScale) * 1500px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
 }
 
 /*# sourceMappingURL=bayonetsandtomahawks.css.map */

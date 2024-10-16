@@ -17,6 +17,7 @@
 @use 'sass:math';
 @use 'base';
 @use 'actionPoints';
+@use 'battle-info/battleInfo';
 @use 'card-managers/cards';
 @use 'cards-in-play/cardsInPlay';
 @use 'game-map/gamemap';
@@ -110,4 +111,14 @@ html {
 /* Hide player is now online, player is now offline messages */
 .notif_playerstatus {
   display: none !important;
+}
+
+#bt_left_column {
+  width: calc(var(--leftColumnScale) * 1500px);
+  display: flex;
+  flex-direction: column;
+  // flex-wrap: wrap;
+  // padding: 4px;
+  gap: 8px;
+  align-items: center;
 }
