@@ -99,7 +99,7 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
       if ($faction === FRENCH && $cardsInPlay[INDIAN]->getEvent() !== null && $cardsInPlay[INDIAN]->getEvent()[AR_START]) {
         $this->ctx->getParent()->pushChild(new LeafNode([
           'action' => ACTION_ROUND_RESOLVE_AR_START_EVENT,
-          // 'playerId' => $player->getId(),
+          'playerId' => $player->getId(),
           'faction' => INDIAN,
           'cardId' => $cardsInPlay[INDIAN]->getId(),
         ]));
@@ -107,7 +107,7 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
       if ($cardsInPlay[$faction]->getEvent() !== null && $cardsInPlay[$faction]->getEvent()[AR_START]) {
         $this->ctx->getParent()->pushChild(new LeafNode([
           'action' => ACTION_ROUND_RESOLVE_AR_START_EVENT,
-          // 'playerId' => $player->getId(),
+          'playerId' => $player->getId(),
           'faction' => $faction,
           'cardId' => $cardsInPlay[$faction]->getId(),
         ]));

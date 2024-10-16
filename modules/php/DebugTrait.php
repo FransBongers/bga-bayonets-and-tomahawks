@@ -172,8 +172,8 @@ trait DebugTrait
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(NEW_YORK), BRITISH);
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(ALBANY), BRITISH);
 
-    Cards::get('Card29')->insertOnTop(Locations::buildUpDeck(FRENCH));
-    // Cards::get('Card39')->insertOnTop(Locations::buildUpDeck(BRITISH));
+    Cards::get('Card31')->insertOnTop(Locations::buildUpDeck(FRENCH));
+    Cards::get('Card11')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card39')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card19')->insertOnTop(Locations::campaignDeck(BRITISH));
     // Cards::get('Card51')->insertOnTop(Locations::campaignDeck(INDIAN));
