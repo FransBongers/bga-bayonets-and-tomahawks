@@ -92,6 +92,7 @@ class EventBritishEncroachment extends \BayonetsAndTomahawks\Models\AtomicAction
         // TODO: insert extra state to pick village?
       } else {
         $space = $villages[0];
+        $unit->setLocation($space->getId());
         Notifications::placeUnits($player, [$unit], $space, FRENCH);
         if ($space->getControl() === BRITISH && $space->getDefaultControl() !== BRITISH) {
           $space->setControl($space->getDefaultControl());

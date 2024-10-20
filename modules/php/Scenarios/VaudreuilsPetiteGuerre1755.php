@@ -76,13 +76,13 @@ class VaudreuilsPetiteGuerre1755 extends \BayonetsAndTomahawks\Models\Scenario
       MONTREAL => [
         'id' => MONTREAL,
         'units' => [
-          MISSISSAGUE,
+          KAHNAWAKE,
         ]
       ],
       TORONTO => [
         'id' => TORONTO,
         'units' => [
-          KAHNAWAKE,
+          MISSISSAGUE,
         ]
       ],
       GENNISHEYO => [

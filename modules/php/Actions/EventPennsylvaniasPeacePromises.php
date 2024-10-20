@@ -31,9 +31,7 @@ class EventPennsylvaniasPeacePromises extends \BayonetsAndTomahawks\Models\Atomi
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreEventPennsylvaniasPeacePromises()
-  {
-  }
+  public function stPreEventPennsylvaniasPeacePromises() {}
 
 
   // ....###....########...######....######.
@@ -125,8 +123,10 @@ class EventPennsylvaniasPeacePromises extends \BayonetsAndTomahawks\Models\Atomi
 
   private function getOptions()
   {
-    $units = Utils::filter(Units::getAll()->toArray(), function ($unit) {
-      return in_array($unit->getCounterId(), [MINGO, DELAWARE, CHAOUANON]) && $unit->getLocation() !== Locations::lossesBox(FRENCH);
+    $offMapAreas = [Locations::lossesBox(FRENCH), REMOVED_FROM_PLAY];
+
+    $units = Utils::filter(Units::getAll()->toArray(), function ($unit) use ($offMapAreas) {
+      return in_array($unit->getCounterId(), [MINGO, DELAWARE, CHAOUANON]) && !in_array($unit->getLocation(), $offMapAreas);
     });
     return $units;
   }

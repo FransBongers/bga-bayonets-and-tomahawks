@@ -164,13 +164,13 @@ class FrenchIndianWarFullCampaign1755_1759 extends \BayonetsAndTomahawks\Models\
       MONTREAL => [
         'id' => MONTREAL,
         'units' => [
-          MISSISSAGUE,
+          KAHNAWAKE,
         ]
       ],
       TORONTO => [
         'id' => TORONTO,
         'units' => [
-          KAHNAWAKE,
+          MISSISSAGUE,
         ]
       ],
       GENNISHEYO => [
