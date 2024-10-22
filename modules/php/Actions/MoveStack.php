@@ -103,11 +103,21 @@ class MoveStack extends \BayonetsAndTomahawks\Actions\UnitMovement
       $originMarker = Utils::array_find($originMarkers, function ($marker) use ($markerType) {
         return Utils::startsWith($marker->getId(), $markerType);
       });
+      $hasOriginMarker = $originMarker !== null;
+      $hasDestinationMarker = $destinationMarker !== null;
 
-
-      if ($originMarker !== null && $destinationHasUnits && !$unitsRemainInOrigin) {
-        // Remove if destination does not have the marker (ie, stack joins a unit without marker)
+      /**
+       * Possibilities
+       * origin marker, no units remain, destination has units => remove marker
+       * orgin marker, units remain, destination has units => don't do anything
+       * origin marker, no destination units => marker moves, extra marker is created if units remain
+       */
+      if ($hasOriginMarker && $destinationHasUnits && !$unitsRemainInOrigin) {
+        // Always remove if no units remain and destination has units.
+        // Marker needs to be removed both when destination has marker or not
         $originMarker->remove($player);
+      } else if ($hasOriginMarker && $destinationHasUnits && !$hasDestinationMarker && $unitsRemainInOrigin) {
+        // Marker remains in origin. And unit moving to new destination will not get a marker
       } else if ($originMarker !== null) {
         // Move marker
         $originMarker->setLocation(Locations::stackMarker($destinationId, $playerFaction));

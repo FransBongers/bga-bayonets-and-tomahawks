@@ -5,6 +5,7 @@ namespace BayonetsAndTomahawks\Managers;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Game;
 use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Helpers\Utils;
@@ -131,9 +132,7 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
     $cards = Utils::filter(Cards::getAll()->toArray(), function ($card) {
       return $card->getLocation() !== REMOVED_FROM_PLAY;
     });
-    Cards::move(array_map(function ($card) {
-      return $card->getId();
-    }, $cards), Locations::cardPool());
+    Cards::move(BTHelpers::returnIds($cards), Locations::cardPool());
 
 
     $britishBuildupDeck = [];
@@ -142,7 +141,7 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
     $frenchCampaignDeck = [];
     $indianCampaignDeck = [];
 
-    $cards = Cards::getAll()->toArray();
+    $cards = Cards::getInLocation(Locations::cardPool())->toArray();
 
     foreach ($cards as $card) {
       $cardId = $card->getId();
@@ -187,13 +186,9 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
 
     // return;
     foreach ($cardIds as $cId) {
-      // $card = self::getCardInstance($cId);
 
       $location = Locations::cardPool();
       $extraData = null;
-      // // $location = 'deck';
-
-
 
       $cards[$cId] = [
         'id' => $cId,
@@ -211,17 +206,4 @@ class Cards extends \BayonetsAndTomahawks\Helpers\Pieces
   {
     self::setupLoadCards();
   }
-
-  // private static function yearsMatchScenario($card, $scenarioCards)
-  // {
-  //   $years = $card->getYears();
-  //   if ($card->getYears() === null) {
-  //     return true;
-  //   }
-  //   $faction = $card->getFaction();
-  //   // check if at least one years match
-  //   return Utils::array_some($years, function ($year) use ($scenarioCards, $faction) {
-  //     return in_array($year, $scenarioCards[$faction]);
-  //   });
-  // }
 }
