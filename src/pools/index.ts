@@ -8,8 +8,8 @@
 
 class Pools {
   protected game: BayonetsAndTomahawksGame;
-
   public stocks: Record<string, LineStock<BTToken>> = {};
+
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
@@ -72,7 +72,7 @@ class Pools {
   // Setup functions
   setupPools({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
     document
-      .getElementById('play_area_container')
+      .getElementById('bt_tabbed_column_content_pools')
       .insertAdjacentHTML('beforeend', tplPoolsContainer());
     this.setupPoolsStocks({ gamedatas });
   }

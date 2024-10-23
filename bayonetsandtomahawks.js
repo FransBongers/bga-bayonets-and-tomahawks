@@ -2545,6 +2545,7 @@ var BayonetsAndTomahawks = (function () {
         this.deck = new LineStock(this.cardManager, document.getElementById('bt_deck'));
         this.gameMap = new GameMap(this);
         this.tooltipManager = new TooltipManager(this);
+        this.tabbedColumn = new TabbedColumn(this);
         this.pools = new Pools(this);
         if (this.playerOrder.includes(this.getPlayerId())) {
             this.hand = new Hand(this);
@@ -3167,7 +3168,10 @@ var CardsInPlay = (function () {
         this.game = game;
         this.setupCardsInPlay({ gamedatas: game.gamedatas });
     }
-    CardsInPlay.prototype.clearInterface = function () { };
+    CardsInPlay.prototype.clearInterface = function () {
+        var _this = this;
+        FACTIONS.forEach(function (faction) { return _this.clearPlayerPanel(faction); });
+    };
     CardsInPlay.prototype.updateCardsInPlay = function (_a) {
         var _this = this;
         var gamedatas = _a.gamedatas;
@@ -3181,6 +3185,8 @@ var CardsInPlay = (function () {
     CardsInPlay.prototype.setupCardsInPlay = function (_a) {
         var _b;
         var gamedatas = _a.gamedatas;
+        var node = document.getElementById('bt_tabbed_column_content_cards');
+        node.insertAdjacentHTML('afterbegin', tplCardsInPlay());
         this.cards = (_b = {},
             _b[BRITISH] = new LineStock(this.game.cardManager, document.getElementById('british_card_in_play'), { direction: 'column', center: false }),
             _b[FRENCH] = new LineStock(this.game.cardManager, document.getElementById('french_card_in_play'), { direction: 'column', center: false }),
@@ -3191,9 +3197,16 @@ var CardsInPlay = (function () {
     CardsInPlay.prototype.addCard = function (_a) {
         var card = _a.card, faction = _a.faction;
         return __awaiter(this, void 0, void 0, function () {
+            var playerPanelNode;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4, this.cards[faction].addCard(card)];
+                    case 0:
+                        playerPanelNode = document.getElementById("".concat(faction, "_action_points"));
+                        card.actionPoints.forEach(function (_a) {
+                            var id = _a.id;
+                            playerPanelNode.insertAdjacentHTML('beforeend', tplLogTokenActionPoint(faction, id));
+                        });
+                        return [4, this.cards[faction].addCard(card)];
                     case 1:
                         _b.sent();
                         return [2];
@@ -3209,6 +3222,7 @@ var CardsInPlay = (function () {
                     case 0: return [4, this.cards[faction].removeCard(card)];
                     case 1:
                         _b.sent();
+                        this.clearPlayerPanel(faction);
                         return [2];
                 }
             });
@@ -3228,14 +3242,23 @@ var CardsInPlay = (function () {
             var cards = _this.cards[faction].getCards();
             cards.forEach(function (card) {
                 _this.game.tooltipManager.removeTooltip(card.id);
-                _this.game.tooltipManager.addCardTooltip({ nodeId: card.id, cardId: card.id });
+                _this.game.tooltipManager.addCardTooltip({
+                    nodeId: card.id,
+                    cardId: card.id,
+                });
             });
         });
+    };
+    CardsInPlay.prototype.clearPlayerPanel = function (faction) {
+        var playerPanelNode = document.getElementById("".concat(faction, "_action_points"));
+        if (playerPanelNode) {
+            playerPanelNode.replaceChildren();
+        }
     };
     return CardsInPlay;
 }());
 var tplCardsInPlay = function () {
-    return "<div id=\"bt_cards_in_play\">\n            <span>Cards in play</span>\n            <div class=\"bt_cards_in_play_container\">\n              <div id=\"british_card_in_play\" class=\"bt_card_in_play\">\n                <div class=\"bt_card_in_play_border\"></div>\n              </div>\n              <div id=\"french_card_in_play\" class=\"bt_card_in_play\">\n                <div class=\"bt_card_in_play_border\"></div>\n              </div>\n              <div id=\"indian_card_in_play\" class=\"bt_card_in_play\">\n                <div class=\"bt_card_in_play_border\"></div>\n              </div>\n            </div>\n          </div\n  ";
+    return "<div id=\"bt_cards_in_play\">\n            <div class=\"bt_card_in_play_container\">\n              <span>".concat(_('French card'), "</span>\n              <div id=\"french_card_in_play\" class=\"bt_card_in_play\">\n                <div class=\"bt_card_in_play_border\"></div>\n              </div>\n            </div>\n            <div class=\"bt_card_in_play_container\">\n              <span>").concat(_('Indian card'), "</span>\n              <div id=\"indian_card_in_play\" class=\"bt_card_in_play\">\n                <div class=\"bt_card_in_play_border\"></div>\n              </div>\n            </div>\n            <div class=\"bt_card_in_play_container\">\n              <span>").concat(_('British card'), "</span>\n              <div id=\"british_card_in_play\" class=\"bt_card_in_play\">\n                <div class=\"bt_card_in_play_border\"></div>\n              </div>\n            </div>\n          </div\n  ");
 };
 var isDebug = window.location.host == 'studio.boardgamearena.com' ||
     window.location.hash.indexOf('debug') > -1;
@@ -3944,7 +3967,7 @@ var BattleInfo = (function () {
     BattleInfo.prototype.setupBattleInfo = function (_a) {
         var gamedatas = _a.gamedatas;
         document
-            .getElementById('bt_left_column')
+            .getElementById('bt_tabbed_column_content_battle')
             .insertAdjacentHTML('beforeend', tplBattleInfo(this.game));
     };
     return BattleInfo;
@@ -5680,6 +5703,7 @@ var NotificationManager = (function () {
                         return [4, this.game.discard.addCard(card)];
                     case 1:
                         _a.sent();
+                        this.game.cardsInPlay.clearPlayerPanel(card.faction);
                         return [2];
                 }
             });
@@ -6402,9 +6426,9 @@ var BatPlayer = (function () {
 }());
 var tplPlayerPanel = function (_a) {
     var playerId = _a.playerId, faction = _a.faction;
-    return "\n  <div id=\"bt_player_panel_".concat(playerId, "\" class=\"bt_player_panel\">\n    <div class=\"bt_cards_in_play_container\">\n      <div id=\"").concat(faction, "_card_in_play\" class=\"bt_card_in_play\">\n        <div class=\"bt_card_in_play_border\"></div>\n      </div>\n      ").concat(faction === 'french'
-        ? "<div id=\"indian_card_in_play\" class=\"bt_card_in_play\">\n        <div class=\"bt_card_in_play_border\"></div>\n      </div>"
-        : '', "\n    </div>\n  </div>");
+    return "\n  <div id=\"bt_player_panel_".concat(playerId, "\" class=\"bt_player_panel\">\n    ").concat(faction === 'french'
+        ? "<div id=\"indian_action_points\" class=\"bt_action_points\" data-faction=\"indian\"></div>"
+        : '', "\n    <div id=\"").concat(faction, "_action_points\" class=\"bt_action_points\" data-faction=\"").concat(faction, "\">\n    </div>\n  </div>");
 };
 var Pools = (function () {
     function Pools(game) {
@@ -6440,14 +6464,14 @@ var Pools = (function () {
     Pools.prototype.setupPools = function (_a) {
         var gamedatas = _a.gamedatas;
         document
-            .getElementById('play_area_container')
+            .getElementById('bt_tabbed_column_content_pools')
             .insertAdjacentHTML('beforeend', tplPoolsContainer());
         this.setupPoolsStocks({ gamedatas: gamedatas });
     };
     return Pools;
 }());
 var tplPoolsContainer = function () {
-    return "\n  <div id=\"bt_right_column\">\n  ".concat(tplDrawnReinforcements(), "\n    ").concat(tplPoolFleets(), "\n    ").concat(tplPoolNeutralIndians(), "\n    ").concat(tplPoolBritish(), "\n    ").concat(tplPoolFrench(), "\n  </div>");
+    return "\n    ".concat(tplDrawnReinforcements(), "\n    ").concat(tplPoolFleets(), "\n    ").concat(tplPoolNeutralIndians(), "\n    ").concat(tplPoolBritish(), "\n    ").concat(tplPoolFrench());
 };
 var tplDrawnReinforcements = function () { return "\n<div id=\"bt_drawn_reinforcements\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Drawn Reinforcements'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Fleets'), "</span></div>\n    <div id=\"reinforcementsFleets\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('British'), "</span></div>\n    <div id=\"reinforcementsBritish\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('French'), "</span></div>\n    <div id=\"reinforcementsFrench\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial'), "</span></div>\n    <div id=\"reinforcementsColonial\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
 var tplPoolFleets = function () { return "\n<div id=\"bt_pool_fleets\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Fleets'), "</span></div>\n  <div id=\"poolFleets\" class=\"bt_unit_pool\"></div>\n</div>"); };
@@ -11881,6 +11905,65 @@ var WinterQuartersReturnToColoniesStep2SelectStackState = (function () {
     };
     return WinterQuartersReturnToColoniesStep2SelectStackState;
 }());
+var TabbedColumn = (function () {
+    function TabbedColumn(game) {
+        this.selectedTab = 'cards';
+        this.tabs = {
+            cards: {
+                text: _('Cards'),
+            },
+            battle: {
+                text: _('Battle'),
+            },
+            pools: {
+                text: _('Pools'),
+            },
+        };
+        this.game = game;
+        var gamedatas = game.gamedatas;
+        this.setup({ gamedatas: gamedatas });
+    }
+    TabbedColumn.prototype.clearInterface = function () { };
+    TabbedColumn.prototype.updateInterface = function (gamedatas) { };
+    TabbedColumn.prototype.setup = function (_a) {
+        var _this = this;
+        var gamedatas = _a.gamedatas;
+        document
+            .getElementById('play_area_container')
+            .insertAdjacentHTML('beforeend', tplTabbedColumn(this.tabs));
+        this.changeTab(this.selectedTab);
+        Object.keys(this.tabs).forEach(function (id) {
+            dojo.connect($("bt_tabbed_column_tab_".concat(id)), 'onclick', function () {
+                return _this.changeTab(id);
+            });
+        });
+    };
+    TabbedColumn.prototype.changeTab = function (id) {
+        var currentTab = document.getElementById("bt_tabbed_column_tab_".concat(this.selectedTab));
+        var currentTabContent = document.getElementById("bt_tabbed_column_content_".concat(this.selectedTab));
+        currentTab.setAttribute('data-state', 'inactive');
+        if (currentTabContent) {
+            currentTabContent.setAttribute('data-visible', 'false');
+        }
+        this.selectedTab = id;
+        var tab = document.getElementById("bt_tabbed_column_tab_".concat(id));
+        var tabContent = document.getElementById("bt_tabbed_column_content_".concat(this.selectedTab));
+        tab.setAttribute('data-state', 'active');
+        if (tabContent) {
+            tabContent.setAttribute('data-visible', 'true');
+        }
+    };
+    return TabbedColumn;
+}());
+var tplTabbedColumnTab = function (id, info) { return "\n<div id=\"bt_tabbed_column_tab_".concat(id, "\" class=\"bt_tabbed_column_tab\" data-state=\"inactive\">\n  <span>").concat(_(info.text), "</span>\n</div>\n"); };
+var tplTabbedColumn = function (tabs) {
+    return "\n  <div id=\"bt_tabbed_column\">\n    <div id=\"bt_tabbed_column_tabs\">\n      ".concat(Object.entries(tabs)
+        .map(function (_a) {
+        var id = _a[0], info = _a[1];
+        return tplTabbedColumnTab(id, info);
+    })
+        .join(''), "\n    </div>\n    <div id=\"bt_tabbed_column_content_cards\" class=\"bt_tabbed_column_content\" data-visible=\"false\">\n    </div>\n    <div id=\"bt_tabbed_column_content_battle\" class=\"bt_tabbed_column_content\" data-visible=\"false\">\n    </div>\n    <div id=\"bt_tabbed_column_content_pools\" class=\"bt_tabbed_column_content\" data-visible=\"false\">\n    </div>\n  </div>");
+};
 var TokenManager = (function (_super) {
     __extends(TokenManager, _super);
     function TokenManager(game) {

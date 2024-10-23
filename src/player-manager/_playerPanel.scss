@@ -1,38 +1,62 @@
-
 @use 'sass:math';
+@use '../base';
 /* ------- PLAYER BOARD ------- */
 
 .player-board {
   --btCardScale: 0.92;
 
-  .bt_cards_in_play_container {
+  .bt_action_points {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    --btTokenScale: 1;
+    padding: 6px 3px;
+    margin: 8px -3px;
+    height: 40px;
     align-items: center;
-    // flex-wrap: wrap;
+    justify-content: center;
     gap: 8px;
-    margin-top: 8px;
-    margin-bottom: 2px;
-  
-    .bt_card_in_play {
-      position: relative;
-      box-sizing: border-box;
-      width: calc(var(--btCardScale) * 250px);
-      // width: 100%;
-      height: calc(var(--btCardScale) * 179px);
-  
-      .bt_card_in_play_border {
-        box-sizing: border-box;
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        width: calc(var(--btCardScale) * 250px);
-        height: calc(var(--btCardScale) * 179px);
-        // width: 100%;
-        border: calc(var(--btCardScale) * 2px) black dashed;
-        border-radius: calc(var(--btCardScale) * 5px);        
-      }
-    }
   }
-}
 
+  .bt_action_points[data-faction="british"] {
+    background-color: base.$british-color;
+  }
+
+  .bt_action_points[data-faction="french"] {
+    background-color: base.$french-color;
+  }
+
+  .bt_action_points[data-faction="indian"] {
+    background-color: base.$indian-color;
+  }
+
+  // .bt_cards_in_play_container {
+  //   display: flex;
+  //   flex-direction: column;
+  //   align-items: center;
+  //   // flex-wrap: wrap;
+  //   gap: 8px;
+  //   margin-top: 8px;
+  //   margin-bottom: 2px;
+
+  //   .bt_card_in_play {
+  //     position: relative;
+  //     box-sizing: border-box;
+  //     width: calc(var(--btCardScale) * 250px);
+  //     // width: 100%;
+  //     height: calc(var(--btCardScale) * 179px);
+
+  //     .bt_card_in_play_border {
+  //       box-sizing: border-box;
+  //       position: absolute;
+  //       top: 0px;
+  //       left: 0px;
+  //       width: calc(var(--btCardScale) * 250px);
+  //       height: calc(var(--btCardScale) * 179px);
+  //       // width: 100%;
+  //       border: calc(var(--btCardScale) * 2px) black dashed;
+  //       border-radius: calc(var(--btCardScale) * 5px);
+  //     }
+  //   }
+  // }
+}

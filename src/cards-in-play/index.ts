@@ -19,7 +19,9 @@ class CardsInPlay {
     this.setupCardsInPlay({ gamedatas: game.gamedatas });
   }
 
-  clearInterface() {}
+  clearInterface() {
+    FACTIONS.forEach((faction) => this.clearPlayerPanel(faction));
+  }
 
   updateCardsInPlay({
     gamedatas,
@@ -39,8 +41,10 @@ class CardsInPlay {
   }: {
     gamedatas: BayonetsAndTomahawksGamedatas;
   }) {
-    // const node: HTMLElement = $("bt_right_column");
-    // node.insertAdjacentHTML("afterbegin", tplCardsInPlay());
+    const node: HTMLElement = document.getElementById(
+      'bt_tabbed_column_content_cards'
+    );
+    node.insertAdjacentHTML('afterbegin', tplCardsInPlay());
 
     this.cards = {
       [BRITISH]: new LineStock<BTCard>(
@@ -70,6 +74,13 @@ class CardsInPlay {
     card: BTCard;
     faction: Faction;
   }): Promise<void> {
+    const playerPanelNode = document.getElementById(`${faction}_action_points`);
+    card.actionPoints.forEach(({ id }) => {
+      playerPanelNode.insertAdjacentHTML(
+        'beforeend',
+        tplLogTokenActionPoint(faction, id)
+      );
+    });
     await this.cards[faction].addCard(card);
   }
 
@@ -81,6 +92,7 @@ class CardsInPlay {
     faction: Faction;
   }): Promise<void> {
     await this.cards[faction].removeCard(card);
+    this.clearPlayerPanel(faction);
   }
 
   public getCards({ faction }: { faction: Faction }): BTCard[] {
@@ -96,8 +108,18 @@ class CardsInPlay {
       const cards = this.cards[faction].getCards();
       cards.forEach((card) => {
         this.game.tooltipManager.removeTooltip(card.id);
-        this.game.tooltipManager.addCardTooltip({ nodeId: card.id, cardId: card.id });
+        this.game.tooltipManager.addCardTooltip({
+          nodeId: card.id,
+          cardId: card.id,
+        });
       });
     });
+  }
+
+  public clearPlayerPanel(faction: string) {
+    const playerPanelNode = document.getElementById(`${faction}_action_points`);
+    if (playerPanelNode) {
+      playerPanelNode.replaceChildren();
+    }
   }
 }

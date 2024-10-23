@@ -1,13 +1,32 @@
-class BattleInfo {
+// .########...#######...#######..##........######.
+// .##.....##.##.....##.##.....##.##.......##....##
+// .##.....##.##.....##.##.....##.##.......##......
+// .########..##.....##.##.....##.##........######.
+// .##........##.....##.##.....##.##.............##
+// .##........##.....##.##.....##.##.......##....##
+// .##.........#######...#######..########..######.
+
+class TabbedColumn {
   protected game: BayonetsAndTomahawksGame;
 
-  public stocks: Record<string, LineStock<BTToken>> = {};
+  private selectedTab: TabbedColumnId = 'cards';
+  private tabs: TabbedColumnTabInfo = {
+    cards: {
+      text: _('Cards'),
+    },
+    battle: {
+      text: _('Battle'),
+    },
+    pools: {
+      text: _('Pools'),
+    },
+  };
 
   constructor(game: BayonetsAndTomahawksGame) {
     this.game = game;
     const gamedatas = game.gamedatas;
 
-    this.setupBattleInfo({ gamedatas });
+    this.setup({ gamedatas });
   }
 
   // .##.....##.##....##.########...#######.
@@ -18,13 +37,9 @@ class BattleInfo {
   // .##.....##.##...###.##.....##.##.....##
   // ..#######..##....##.########...#######.
 
-  clearInterface() {
-    Object.values(this.stocks).forEach((stock) => stock.removeAll());
-  }
+  clearInterface() {}
 
-  updateInterface(gamedatas: BayonetsAndTomahawksGamedatas) {
-    
-  }
+  updateInterface(gamedatas: BayonetsAndTomahawksGamedatas) {}
 
   // ..######..########.########.##.....##.########.
   // .##....##.##..........##....##.....##.##.....##
@@ -35,13 +50,19 @@ class BattleInfo {
   // ..######..########....##.....#######..##.......
 
   // Setup functions
-  setupBattleInfo({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
+  setup({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
     document
-      .getElementById('bt_tabbed_column_content_battle')
-      .insertAdjacentHTML('beforeend', tplBattleInfo(this.game));
+      .getElementById('play_area_container')
+      .insertAdjacentHTML('beforeend', tplTabbedColumn(this.tabs));
 
+    this.changeTab(this.selectedTab);
+    Object.keys(this.tabs).forEach((id: TabbedColumnId) => {
+      dojo.connect($(`bt_tabbed_column_tab_${id}`), 'onclick', () =>
+        this.changeTab(id)
+      );
+    });
   }
-  
+
   // ..######...########.########.########.########.########...######.
   // .##....##..##..........##.......##....##.......##.....##.##....##
   // .##........##..........##.......##....##.......##.....##.##......
@@ -65,4 +86,27 @@ class BattleInfo {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  public changeTab(id: TabbedColumnId) {
+    const currentTab = document.getElementById(
+      `bt_tabbed_column_tab_${this.selectedTab}`
+    );
+    const currentTabContent = document.getElementById(
+      `bt_tabbed_column_content_${this.selectedTab}`
+    );
+    currentTab.setAttribute('data-state', 'inactive');
+    if (currentTabContent) {
+      currentTabContent.setAttribute('data-visible', 'false');
+    }
+
+    this.selectedTab = id;
+    const tab = document.getElementById(`bt_tabbed_column_tab_${id}`);
+    const tabContent = document.getElementById(
+      `bt_tabbed_column_content_${this.selectedTab}`
+    );
+    tab.setAttribute('data-state', 'active');
+    if (tabContent) {
+      tabContent.setAttribute('data-visible', 'true');
+    }
+  }
 }

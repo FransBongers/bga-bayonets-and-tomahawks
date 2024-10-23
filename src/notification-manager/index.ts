@@ -402,6 +402,7 @@ class NotificationManager {
   async notif_discardCardInPlay(notif: Notif<NotifDiscardCardsInPlayArgs>) {
     const { card } = notif.args;
     await this.game.discard.addCard(card);
+    this.game.cardsInPlay.clearPlayerPanel(card.faction)
   }
 
   async notif_drawCardPrivate(notif: Notif<NotifDrawCardPrivateArgs>) {

@@ -349,8 +349,8 @@ body > .card {
 }
 
 .bt_battle_info_container {
-  width: calc(var(--leftColumnScale) * 1.333333 * 1125px);
-  height: calc(var(--leftColumnScale) * 1.333333 * 717px);
+  width: calc(var(--rightColumnScale) * 1.333333 * 1125px);
+  height: calc(var(--rightColumnScale) * 1.333333 * 717px);
 }
 
 .bt_battle_info {
@@ -361,8 +361,7 @@ body > .card {
   border-top: 1px solid black;
   border-right: 1px solid black;
   background-color: ivory;
-  box-shadow: 1px 1px 5px #000;
-  scale: calc(var(--leftColumnScale) * 1.33333);
+  scale: calc(var(--rightColumnScale) * 1.33333);
   transform-origin: top left;
   width: 1125px;
   display: grid;
@@ -779,22 +778,19 @@ body > .card {
   min-width: 100px;
   background-color: ivory;
   padding: 8px;
-  box-shadow: 1px 1px 5px #000;
   --btCardScale: 1;
-}
-#bt_cards_in_play .bt_cards_in_play_container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px;
 }
-#bt_cards_in_play .bt_cards_in_play_container .bt_card_in_play {
+#bt_cards_in_play .bt_card_in_play_container .bt_card_in_play {
   position: relative;
   box-sizing: border-box;
   width: calc(var(--btCardScale) * 250px);
   height: calc(var(--btCardScale) * 179px);
 }
-#bt_cards_in_play .bt_cards_in_play_container .bt_card_in_play .bt_card_in_play_border {
+#bt_cards_in_play .bt_card_in_play_container .bt_card_in_play .bt_card_in_play_border {
   box-sizing: border-box;
   position: absolute;
   top: 0px;
@@ -1396,32 +1392,29 @@ body > .card {
 .player-board {
   --btCardScale: 0.92;
 }
-.player-board .bt_cards_in_play_container {
+.player-board .bt_action_points {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+  --btTokenScale: 1;
+  padding: 6px 3px;
+  margin: 8px -3px;
+  height: 40px;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  margin-top: 8px;
-  margin-bottom: 2px;
 }
-.player-board .bt_cards_in_play_container .bt_card_in_play {
-  position: relative;
-  box-sizing: border-box;
-  width: calc(var(--btCardScale) * 250px);
-  height: calc(var(--btCardScale) * 179px);
+.player-board .bt_action_points[data-faction=british] {
+  background-color: #B73E1F;
 }
-.player-board .bt_cards_in_play_container .bt_card_in_play .bt_card_in_play_border {
-  box-sizing: border-box;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: calc(var(--btCardScale) * 250px);
-  height: calc(var(--btCardScale) * 179px);
-  border: calc(var(--btCardScale) * 2px) black dashed;
-  border-radius: calc(var(--btCardScale) * 5px);
+.player-board .bt_action_points[data-faction=french] {
+  background-color: #216295;
+}
+.player-board .bt_action_points[data-faction=indian] {
+  background-color: #9cb049;
 }
 
-#bt_right_column {
+#bt_tabbed_column_content_pools {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -1436,7 +1429,6 @@ body > .card {
   min-width: 100px;
   background-color: ivory;
   padding: 4px;
-  box-shadow: 1px 1px 5px #000;
   --btTokenScale: 1;
 }
 
@@ -3569,6 +3561,52 @@ body > .card {
   padding: 8px;
   display: flex;
   flex-wrap: wrap;
+}
+
+#bt_tabbed_column {
+  background-color: ivory;
+  box-shadow: 1px 1px 5px #000;
+  min-height: fit-content;
+  max-height: 0;
+}
+#bt_tabbed_column #bt_tabbed_column_tabs {
+  height: 30px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  margin-bottom: 8px;
+}
+#bt_tabbed_column .bt_tabbed_column_tab {
+  flex-grow: 1;
+  width: 33.3333%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
+}
+#bt_tabbed_column .bt_tabbed_column_tab span {
+  font-weight: bold;
+  font-size: large;
+  text-align: center;
+}
+#bt_tabbed_column .bt_tabbed_column_tab[data-state=inactive] {
+  background-color: rgba(30, 20, 17, 0.5);
+}
+#bt_tabbed_column .bt_tabbed_column_tab[data-state=active] {
+  border-bottom: none;
+  cursor: auto;
+}
+#bt_tabbed_column .bt_tabbed_column_content[data-visible=false] {
+  display: none;
+}
+#bt_tabbed_column .bt_tabbed_column_tab:first-child {
+  border-left: none !important;
+}
+#bt_tabbed_column .bt_tabbed_column_tab:last-child {
+  border-right: none;
 }
 
 .dijitTooltipContainer {

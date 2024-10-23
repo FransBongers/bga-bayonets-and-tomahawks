@@ -1,12 +1,10 @@
 const tplPoolsContainer = () => {
   return `
-  <div id="bt_right_column">
-  ${tplDrawnReinforcements()}
+    ${tplDrawnReinforcements()}
     ${tplPoolFleets()}
     ${tplPoolNeutralIndians()}
     ${tplPoolBritish()}
-    ${tplPoolFrench()}
-  </div>`
+    ${tplPoolFrench()}`
 }
 
 // ${tplPool({type: 'french'})}

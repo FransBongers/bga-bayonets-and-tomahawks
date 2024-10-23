@@ -63,6 +63,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public hand: Hand;
   public pools: Pools;
   public scenarioInfo: ScenarioInfo;
+  public tabbedColumn: TabbedColumn;
   public tokenManager: TokenManager;
   public wieChitManager: WieChitManager;
 
@@ -234,6 +235,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
 
     this.gameMap = new GameMap(this);
     this.tooltipManager = new TooltipManager(this);
+    this.tabbedColumn = new TabbedColumn(this);
     this.pools = new Pools(this);
 
     if (this.playerOrder.includes(this.getPlayerId())) {
