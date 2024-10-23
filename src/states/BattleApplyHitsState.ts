@@ -9,6 +9,7 @@ class BattleApplyHitsState implements State {
   onEnteringState(args: OnEnteringBattleApplyHitsStateArgs) {
     debug('Entering BattleApplyHitsState');
     this.args = args;
+    this.game.tabbedColumn.changeTab('battle');
     this.updateInterfaceInitialStep();
   }
 

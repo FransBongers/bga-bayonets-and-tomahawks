@@ -5577,6 +5577,7 @@ var NotificationManager = (function () {
                 switch (_b.label) {
                     case 0:
                         _a = notif.args, attackerMarker = _a.attackerMarker, defenderMarker = _a.defenderMarker;
+                        this.game.tabbedColumn.changeTab('battle');
                         return [4, Promise.all([
                                 this.game.gameMap.battleTrack[attackerMarker.location].addCard(attackerMarker),
                                 this.game.gameMap.battleTrack[defenderMarker.location].addCard(defenderMarker),
@@ -5734,6 +5735,7 @@ var NotificationManager = (function () {
                 switch (_b.label) {
                     case 0:
                         _a = notif.args, units = _a.units, location = _a.location;
+                        this.game.tabbedColumn.changeTab('pools');
                         return [4, this.game.pools.stocks[location].addCards(units)];
                     case 1:
                         _b.sent();
@@ -6430,6 +6432,83 @@ var tplPlayerPanel = function (_a) {
         ? "<div id=\"indian_action_points\" class=\"bt_action_points\" data-faction=\"indian\"></div>"
         : '', "\n    <div id=\"").concat(faction, "_action_points\" class=\"bt_action_points\" data-faction=\"").concat(faction, "\">\n    </div>\n  </div>");
 };
+var getPoolConfig = function () { return [
+    {
+        id: POOL_FLEETS,
+        title: _('Fleets'),
+        faction: NEUTRAL,
+    },
+    {
+        id: POOL_NEUTRAL_INDIANS,
+        title: _('Neutral Indians'),
+        faction: NEUTRAL,
+    },
+    {
+        id: POOL_BRITISH_COMMANDERS,
+        title: _('Commanders'),
+        faction: BRITISH,
+    },
+    {
+        id: POOL_BRITISH_LIGHT,
+        title: _('Light'),
+        faction: BRITISH,
+    },
+    {
+        id: POOL_BRITISH_COLONIAL_LIGHT,
+        title: _('Colonial Light'),
+        faction: BRITISH,
+    },
+    {
+        id: POOL_BRITISH_ARTILLERY,
+        title: _('Artillery'),
+        faction: BRITISH,
+    },
+    {
+        id: POOL_BRITISH_FORTS,
+        title: _('Forts'),
+        faction: BRITISH,
+    },
+    {
+        id: POOL_BRITISH_METROPOLITAN_VOW,
+        title: _('Metropolitan Brigades & VoW'),
+        faction: BRITISH,
+    },
+    {
+        id: POOL_BRITISH_COLONIAL_VOW,
+        title: _('Colonial Brigades & VoW'),
+        faction: BRITISH,
+    },
+    {
+        id: POOL_BRITISH_COLONIAL_VOW_BONUS,
+        title: _('Colonial VoW Bonus'),
+        faction: BRITISH,
+    },
+    {
+        id: POOL_FRENCH_COMMANDERS,
+        title: _('Commanders'),
+        faction: FRENCH,
+    },
+    {
+        id: POOL_FRENCH_LIGHT,
+        title: _('Light'),
+        faction: FRENCH,
+    },
+    {
+        id: POOL_FRENCH_ARTILLERY,
+        title: _('Artillery'),
+        faction: FRENCH,
+    },
+    {
+        id: POOL_FRENCH_FORTS,
+        title: _('Forts'),
+        faction: FRENCH,
+    },
+    {
+        id: POOL_FRENCH_METROPOLITAN_VOW,
+        title: _('Metropolitan Brigades & VoW'),
+        faction: FRENCH,
+    },
+]; };
 var Pools = (function () {
     function Pools(game) {
         this.stocks = {};
@@ -6471,16 +6550,17 @@ var Pools = (function () {
     return Pools;
 }());
 var tplPoolsContainer = function () {
-    return "\n    ".concat(tplDrawnReinforcements(), "\n    ").concat(tplPoolFleets(), "\n    ").concat(tplPoolNeutralIndians(), "\n    ").concat(tplPoolBritish(), "\n    ").concat(tplPoolFrench());
+    return "\n    <div class=\"bt_section\"><span>".concat(_('Drawn Reinforcements'), "</span></div>\n    ").concat(tplDrawnReinforcements(), "\n    <div class=\"bt_section\"><span>").concat(_('Unit Pools'), "</span></div>\n    ").concat(tplPools());
 };
-var tplDrawnReinforcements = function () { return "\n<div id=\"bt_drawn_reinforcements\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Drawn Reinforcements'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Fleets'), "</span></div>\n    <div id=\"reinforcementsFleets\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('British'), "</span></div>\n    <div id=\"reinforcementsBritish\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('French'), "</span></div>\n    <div id=\"reinforcementsFrench\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial'), "</span></div>\n    <div id=\"reinforcementsColonial\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
-var tplPoolFleets = function () { return "\n<div id=\"bt_pool_fleets\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Fleets'), "</span></div>\n  <div id=\"poolFleets\" class=\"bt_unit_pool\"></div>\n</div>"); };
-var tplPoolNeutralIndians = function () { return "\n<div id=\"bt_pool_neutralIndians\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('Neutral Indians'), "</span></div>\n  <div id=\"poolNeutralIndians\" class=\"bt_unit_pool\"></div>\n</div>"); };
-var tplPoolBritish = function () { return "\n<div id=\"bt_pool_british\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('British'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Commanders'), "</span></div>\n    <div id=\"poolBritishCommanders\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Light'), "</span></div>\n    <div id=\"poolBritishLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial Light'), "</span></div>\n    <div id=\"poolBritishColonialLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Artillery'), "</span></div>\n    <div id=\"poolBritishArtillery\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Forts'), "</span></div>\n    <div id=\"poolBritishForts\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Metropolitan Brigades & VoW'), "</span></div>\n    <div id=\"poolBritishMetropolitanVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial Brigades & VoW'), "</span></div>\n    <div id=\"poolBritishColonialVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Colonial VoW Bonus'), "</span></div>\n    <div id=\"poolBritishColonialVoWBonus\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
-var tplPoolFrench = function () { return "\n<div id=\"bt_pool_french\" class=\"bt_unit_pool_container\">\n  <div><span>".concat(_('French'), "</span></div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Commanders'), "</span></div>\n    <div id=\"poolFrenchCommanders\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Light'), "</span></div>\n    <div id=\"poolFrenchLight\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Artillery'), "</span></div>\n    <div id=\"poolFrenchArtillery\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Forts'), "</span></div>\n    <div id=\"poolFrenchForts\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div>\n    <div class=\"bt_unit_pool_section_title\"><span>").concat(_('Metropolitan Brigades & VoW'), "</span></div>\n    <div id=\"poolFrenchMetropolitanVoW\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
-var tplPool = function (_a) {
-    var type = _a.type;
-    return "<div id=\"bt_pool_".concat(type, "\" class=\"bt_unit_pool\">\n  </div>");
+var tplDrawnReinforcements = function () { return "\n<div id=\"bt_drawn_reinforcements\">\n  <div class=\"bt_unit_pool_container\">\n    <div class=\"bt_unit_pool_section_title\" data-faction=\"neutral\"><span>".concat(_('Fleets'), "</span></div>\n    <div id=\"reinforcementsFleets\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div class=\"bt_unit_pool_container\">\n    <div class=\"bt_unit_pool_section_title\" data-faction=\"british\"><span>").concat(_('British'), "</span></div>\n    <div id=\"reinforcementsBritish\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div class=\"bt_unit_pool_container\">\n    <div class=\"bt_unit_pool_section_title\" data-faction=\"british\"><span>").concat(_('Colonial'), "</span></div>\n    <div id=\"reinforcementsColonial\" class=\"bt_unit_pool\"></div>\n  </div>\n  <div class=\"bt_unit_pool_container\">\n    <div class=\"bt_unit_pool_section_title\" data-faction=\"french\"><span>").concat(_('French'), "</span></div>\n    <div id=\"reinforcementsFrench\" class=\"bt_unit_pool\"></div>\n  </div>\n</div>\n"); };
+var tplUnitPool = function (_a) {
+    var id = _a.id, title = _a.title, faction = _a.faction;
+    return "\n  <div class=\"bt_unit_pool_container\">\n    <div class=\"bt_unit_pool_section_title\" data-faction=\"".concat(faction, "\"><span>").concat(_(title), "</span></div>\n    <div id=\"").concat(id, "\" class=\"bt_unit_pool\"></div>\n  </div>\n");
+};
+var tplPools = function () {
+    return getPoolConfig()
+        .map(function (config) { return tplUnitPool(config); })
+        .join('');
 };
 var VICTORY_TRACK_DISPLAY_CONFIG = {
     british1: {
@@ -7298,6 +7378,7 @@ var ActionRoundChooseFirstPlayerState = (function () {
     ActionRoundChooseFirstPlayerState.prototype.onEnteringState = function (args) {
         debug("Entering ActionRoundChooseFirstPlayerState");
         this.args = args;
+        this.game.tabbedColumn.changeTab('cards');
         this.updateInterfaceInitialStep();
     };
     ActionRoundChooseFirstPlayerState.prototype.onLeavingState = function () {
@@ -7338,6 +7419,7 @@ var ActionRoundChooseReactionState = (function () {
     ActionRoundChooseReactionState.prototype.onEnteringState = function (args) {
         debug('Entering ActionRoundChooseReactionState');
         this.args = args;
+        this.game.tabbedColumn.changeTab('cards');
         this.updateInterfaceInitialStep();
     };
     ActionRoundChooseReactionState.prototype.onLeavingState = function () {
@@ -7479,6 +7561,7 @@ var BattleApplyHitsState = (function () {
     BattleApplyHitsState.prototype.onEnteringState = function (args) {
         debug('Entering BattleApplyHitsState');
         this.args = args;
+        this.game.tabbedColumn.changeTab('battle');
         this.updateInterfaceInitialStep();
     };
     BattleApplyHitsState.prototype.onLeavingState = function () {
@@ -7555,6 +7638,7 @@ var BattleCombineReducedUnitsState = (function () {
     BattleCombineReducedUnitsState.prototype.onEnteringState = function (args) {
         debug('Entering BattleCombineReducedUnitsState');
         this.args = args;
+        this.game.tabbedColumn.changeTab('battle');
         this.updateInterfaceInitialStep();
     };
     BattleCombineReducedUnitsState.prototype.onLeavingState = function () {
@@ -7668,6 +7752,7 @@ var BattleFortEliminationState = (function () {
     BattleFortEliminationState.prototype.onEnteringState = function (args) {
         debug('Entering BattleFortEliminationState');
         this.args = args;
+        this.game.tabbedColumn.changeTab('battle');
         this.updateInterfaceInitialStep();
     };
     BattleFortEliminationState.prototype.onLeavingState = function () {
@@ -7727,6 +7812,7 @@ var BattleMoveFleetState = (function () {
     BattleMoveFleetState.prototype.onEnteringState = function (args) {
         debug('Entering BattleMoveFleetState');
         this.args = args;
+        this.game.tabbedColumn.changeTab('battle');
         this.updateInterfaceInitialStep();
     };
     BattleMoveFleetState.prototype.onLeavingState = function () {
@@ -7829,6 +7915,7 @@ var BattleRetreatState = (function () {
     BattleRetreatState.prototype.onEnteringState = function (args) {
         debug('Entering BattleRetreatState');
         this.args = args;
+        this.game.tabbedColumn.changeTab('battle');
         this.updateInterfaceInitialStep();
     };
     BattleRetreatState.prototype.onLeavingState = function () {
@@ -7898,6 +7985,7 @@ var BattleRollsRerollsState = (function () {
         this.args = args;
         this.singleSource = false;
         this.singleDie = false;
+        this.game.tabbedColumn.changeTab('battle');
         this.updateInterfaceInitialStep();
     };
     BattleRollsRerollsState.prototype.onLeavingState = function () {
@@ -8034,6 +8122,7 @@ var BattleSelectCommanderState = (function () {
     BattleSelectCommanderState.prototype.onEnteringState = function (args) {
         debug('Entering BattleSelectCommanderState');
         this.args = args;
+        this.game.tabbedColumn.changeTab('battle');
         this.updateInterfaceInitialStep();
     };
     BattleSelectCommanderState.prototype.onLeavingState = function () {
@@ -8114,6 +8203,7 @@ var ColonialsEnlistUnitPlacementState = (function () {
         this.args = args;
         this.localMoves = {};
         this.placedUnits = {};
+        this.game.tabbedColumn.changeTab('pools');
         this.updateInterfaceInitialStep();
     };
     ColonialsEnlistUnitPlacementState.prototype.onLeavingState = function () {
@@ -9652,6 +9742,7 @@ var FleetsArriveUnitPlacementState = (function () {
         this.placedFleets = {};
         this.placedUnits = {};
         this.placedCommanders = {};
+        this.game.tabbedColumn.changeTab('pools');
         this.updateInterfaceInitialStep();
     };
     FleetsArriveUnitPlacementState.prototype.onLeavingState = function () {
@@ -9910,6 +10001,7 @@ var VagariesOfWarPickUnitsState = (function () {
         this.args = args;
         this.selectedUnitIds = [];
         this.selectedVoWToken = null;
+        this.game.tabbedColumn.changeTab('pools');
         this.updateInterfaceInitialStep();
     };
     VagariesOfWarPickUnitsState.prototype.onLeavingState = function () {
@@ -11918,6 +12010,9 @@ var TabbedColumn = (function () {
             pools: {
                 text: _('Pools'),
             },
+            playerAid: {
+                text: _('Player aid'),
+            },
         };
         this.game = game;
         var gamedatas = game.gamedatas;
@@ -11962,7 +12057,7 @@ var tplTabbedColumn = function (tabs) {
         var id = _a[0], info = _a[1];
         return tplTabbedColumnTab(id, info);
     })
-        .join(''), "\n    </div>\n    <div id=\"bt_tabbed_column_content_cards\" class=\"bt_tabbed_column_content\" data-visible=\"false\">\n    </div>\n    <div id=\"bt_tabbed_column_content_battle\" class=\"bt_tabbed_column_content\" data-visible=\"false\">\n    </div>\n    <div id=\"bt_tabbed_column_content_pools\" class=\"bt_tabbed_column_content\" data-visible=\"false\">\n    </div>\n  </div>");
+        .join(''), "\n    </div>\n    <div id=\"bt_tabbed_column_content_cards\" class=\"bt_tabbed_column_content\" data-visible=\"false\">\n    </div>\n    <div id=\"bt_tabbed_column_content_battle\" class=\"bt_tabbed_column_content\" data-visible=\"false\">\n    </div>\n    <div id=\"bt_tabbed_column_content_pools\" class=\"bt_tabbed_column_content\" data-visible=\"false\">\n    </div>\n    <div id=\"bt_tabbed_column_content_playerAid\" class=\"bt_tabbed_column_content\" data-visible=\"false\">\n     TODO\n    </div>\n  </div>");
 };
 var TokenManager = (function (_super) {
     __extends(TokenManager, _super);

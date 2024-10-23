@@ -13,6 +13,7 @@ class BattleRollsRerollsState implements State {
     this.args = args;
     this.singleSource = false;
     this.singleDie = false;
+    this.game.tabbedColumn.changeTab('battle');
     this.updateInterfaceInitialStep();
   }
 

@@ -9,6 +9,7 @@ class BattleMoveFleetState implements State {
   onEnteringState(args: OnEnteringBattleMoveFleetStateArgs) {
     debug('Entering BattleMoveFleetState');
     this.args = args;
+    this.game.tabbedColumn.changeTab('battle');
     this.updateInterfaceInitialStep();
   }
 

@@ -9,6 +9,7 @@ class ActionRoundChooseFirstPlayerState implements State {
   onEnteringState(args: OnEnteringActionRoundChooseFirstPlayerStateArgs) {
     debug("Entering ActionRoundChooseFirstPlayerState");
     this.args = args;
+    this.game.tabbedColumn.changeTab('cards');
     this.updateInterfaceInitialStep();
   }
 

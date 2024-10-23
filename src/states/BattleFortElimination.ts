@@ -9,6 +9,7 @@ class BattleFortEliminationState implements State {
   onEnteringState(args: OnEnteringBattleFortEliminationStateArgs) {
     debug('Entering BattleFortEliminationState');
     this.args = args;
+    this.game.tabbedColumn.changeTab('battle');
     this.updateInterfaceInitialStep();
   }
 

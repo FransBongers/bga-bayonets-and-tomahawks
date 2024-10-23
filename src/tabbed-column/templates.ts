@@ -18,5 +18,8 @@ const tplTabbedColumn = (tabs: TabbedColumnTabInfo) => {
     </div>
     <div id="bt_tabbed_column_content_pools" class="bt_tabbed_column_content" data-visible="false">
     </div>
+    <div id="bt_tabbed_column_content_playerAid" class="bt_tabbed_column_content" data-visible="false">
+     TODO
+    </div>
   </div>`;
 };

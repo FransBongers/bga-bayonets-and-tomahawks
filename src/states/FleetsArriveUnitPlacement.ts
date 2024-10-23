@@ -19,7 +19,7 @@ class FleetsArriveUnitPlacementState implements State {
     this.placedFleets = {};
     this.placedUnits = {};
     this.placedCommanders = {};
-
+    this.game.tabbedColumn.changeTab('pools');
     this.updateInterfaceInitialStep();
   }
 

@@ -21,6 +21,7 @@ class VagariesOfWarPickUnitsState implements State {
     this.args = args;
     this.selectedUnitIds = [];
     this.selectedVoWToken = null;
+    this.game.tabbedColumn.changeTab('pools');
     this.updateInterfaceInitialStep();
   }
 

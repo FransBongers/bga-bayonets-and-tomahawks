@@ -328,7 +328,7 @@ class NotificationManager {
 
   async notif_battleStart(notif: Notif<NotifBattleStartArgs>) {
     const { attackerMarker, defenderMarker } = notif.args;
-
+    this.game.tabbedColumn.changeTab('battle');
     await Promise.all([
       this.game.gameMap.battleTrack[attackerMarker.location].addCard(
         attackerMarker
@@ -414,6 +414,7 @@ class NotificationManager {
 
   async notif_drawnReinforcements(notif: Notif<NotifDrawnReinforcementsArgs>) {
     const { units, location } = notif.args;
+    this.game.tabbedColumn.changeTab('pools');
     await this.game.pools.stocks[location].addCards(units);
   }
 

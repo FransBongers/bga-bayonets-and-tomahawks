@@ -1415,31 +1415,60 @@ body > .card {
 }
 
 #bt_tabbed_column_content_pools {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  gap: 8px;
-  flex-grow: 1;
+  display: grid;
+  grid-gap: 8px;
+  grid-template-columns: 1fr 1fr 1fr;
   --btPoolScale: var(--rightColumnScale);
-  --btTokenScale: 1;
+  --btTokenScale: 0.8;
+  padding: 8px;
+}
+#bt_tabbed_column_content_pools #bt_drawn_reinforcements {
+  grid-column: 1/4;
+  display: grid;
+  grid-gap: 8px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+#bt_tabbed_column_content_pools .bt_section {
+  grid-column: 1/4;
+  font-weight: bold;
 }
 
 .bt_unit_pool_container {
-  min-height: 52px;
-  min-width: 100px;
+  min-height: 42px;
   background-color: ivory;
-  padding: 4px;
-  --btTokenScale: 1;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
 .bt_unit_pool {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  padding: 4px;
+  min-height: 42px;
 }
 
 .bt_unit_pool_section_title {
-  margin-top: 8px;
+  font-weight: bold;
+  padding: 4px;
+  font-size: small;
+}
+
+.bt_unit_pool_section_title[data-faction=british] {
+  background-color: #B73E1F;
+  color: ivory;
+}
+
+.bt_unit_pool_section_title[data-faction=french] {
+  background-color: #216295;
+  color: ivory;
+}
+
+.bt_unit_pool_section_title[data-faction=neutral] {
+  background: -moz-linear-gradient(10deg, #216295 50%, #B73E1F 50%);
+  background: -webkit-linear-gradient(10deg, #216295 50%, #B73E1F 50%);
+  background: linear-gradient(10deg, #216295 50%, #B73E1F 50%);
+  color: ivory;
 }
 
 .bt_token {
@@ -3567,7 +3596,6 @@ body > .card {
   background-color: ivory;
   box-shadow: 1px 1px 5px #000;
   min-height: fit-content;
-  max-height: 0;
 }
 #bt_tabbed_column #bt_tabbed_column_tabs {
   height: 30px;
@@ -3578,7 +3606,7 @@ body > .card {
 }
 #bt_tabbed_column .bt_tabbed_column_tab {
   flex-grow: 1;
-  width: 33.3333%;
+  width: 25%;
   cursor: pointer;
   display: flex;
   flex-direction: row;
@@ -3607,6 +3635,10 @@ body > .card {
 }
 #bt_tabbed_column .bt_tabbed_column_tab:last-child {
   border-right: none;
+}
+
+#play_area_container[data-two-columns=enabled] #bt_tabbed_column {
+  max-height: 0;
 }
 
 .dijitTooltipContainer {

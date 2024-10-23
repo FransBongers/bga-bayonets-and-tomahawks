@@ -9,6 +9,7 @@ class BattleSelectCommanderState implements State {
   onEnteringState(args: OnEnteringBattleSelectCommanderStateArgs) {
     debug('Entering BattleSelectCommanderState');
     this.args = args;
+    this.game.tabbedColumn.changeTab('battle');
     this.updateInterfaceInitialStep();
   }
 

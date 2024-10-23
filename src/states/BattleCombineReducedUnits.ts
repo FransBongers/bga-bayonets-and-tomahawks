@@ -9,6 +9,7 @@ class BattleCombineReducedUnitsState implements State {
   onEnteringState(args: OnEnteringBattleCombineReducedUnitsStateArgs) {
     debug('Entering BattleCombineReducedUnitsState');
     this.args = args;
+    this.game.tabbedColumn.changeTab('battle');
     this.updateInterfaceInitialStep();
   }
 

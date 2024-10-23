@@ -2,7 +2,6 @@
   background-color: ivory;
   box-shadow: 1px 1px 5px #000;
   min-height: fit-content;
-  max-height: 0;
 
   #bt_tabbed_column_tabs {
     height: 30px;
@@ -14,7 +13,7 @@
 
   .bt_tabbed_column_tab {
     flex-grow: 1;
-    width: 33.3333%;
+    width: 25%;
     cursor: pointer;
     display: flex;
     flex-direction: row;
@@ -32,16 +31,16 @@
     }
   }
 
-  .bt_tabbed_column_tab[data-state="inactive"] {
-    background-color: rgba(30, 20, 17, .5);
+  .bt_tabbed_column_tab[data-state='inactive'] {
+    background-color: rgba(30, 20, 17, 0.5);
   }
 
-  .bt_tabbed_column_tab[data-state="active"] {
+  .bt_tabbed_column_tab[data-state='active'] {
     border-bottom: none;
     cursor: auto;
   }
 
-  .bt_tabbed_column_content[data-visible="false"] {
+  .bt_tabbed_column_content[data-visible='false'] {
     display: none;
   }
 
@@ -51,5 +50,11 @@
 
   .bt_tabbed_column_tab:last-child {
     border-right: none;
+  }
+}
+
+#play_area_container[data-two-columns='enabled'] {
+  #bt_tabbed_column {
+    max-height: 0;
   }
 }

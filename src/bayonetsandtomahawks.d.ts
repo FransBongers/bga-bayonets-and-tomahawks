@@ -87,6 +87,7 @@ interface BayonetsAndTomahawksGame extends Game {
   playerManager: PlayerManager;
   pools: Pools;
   settings: Settings;
+  tabbedColumn: TabbedColumn;
   tokenManager: TokenManager;
   tooltipManager: TooltipManager;
   wieChitManager: WieChitManager;

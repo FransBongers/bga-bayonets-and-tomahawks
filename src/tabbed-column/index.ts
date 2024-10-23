@@ -20,6 +20,9 @@ class TabbedColumn {
     pools: {
       text: _('Pools'),
     },
+    playerAid: {
+      text: _('Player aid'),
+    },
   };
 
   constructor(game: BayonetsAndTomahawksGame) {

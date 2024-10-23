@@ -1,2 +1,2 @@
-type TabbedColumnId = 'battle' | 'cards' | 'pools';
+type TabbedColumnId = 'battle' | 'cards' | 'pools' | 'playerAid';
 type TabbedColumnTabInfo = Record<TabbedColumnId, { text: string }>;

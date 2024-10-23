@@ -9,6 +9,7 @@ class ActionRoundChooseReactionState implements State {
   onEnteringState(args: OnEnteringActionRoundChooseReactionStateArgs) {
     debug('Entering ActionRoundChooseReactionState');
     this.args = args;
+    this.game.tabbedColumn.changeTab('cards');
     this.updateInterfaceInitialStep();
   }
 

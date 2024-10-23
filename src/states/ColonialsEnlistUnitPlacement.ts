@@ -15,7 +15,7 @@ class ColonialsEnlistUnitPlacementState implements State {
     this.localMoves = {};
 
     this.placedUnits = {};
-
+    this.game.tabbedColumn.changeTab('pools');
     this.updateInterfaceInitialStep();
   }
 

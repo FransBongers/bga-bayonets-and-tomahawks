@@ -9,6 +9,7 @@ class BattleRetreatState implements State {
   onEnteringState(args: OnEnteringBattleRetreatStateArgs) {
     debug('Entering BattleRetreatState');
     this.args = args;
+    this.game.tabbedColumn.changeTab('battle');
     this.updateInterfaceInitialStep();
   }
 

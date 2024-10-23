@@ -62,6 +62,7 @@
     "src/player-manager/player.ts",
     "src/player-manager/templates.ts",
     "src/player-manager/types.d.ts",
+    "src/pools/config.ts",
     "src/pools/index.ts",
     "src/pools/templates.ts",
     "src/scenario-info/config.ts",
