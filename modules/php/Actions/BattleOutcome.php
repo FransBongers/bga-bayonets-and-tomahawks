@@ -186,9 +186,6 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
     $attackerMilitia = count(Markers::getOfTypeInLocation($militiaCounterMap[$attackerFaction], Locations::stackMarker($spaceId, $attackerFaction)));
     $defenderMilitia = count(Markers::getOfTypeInLocation($militiaCounterMap[$defenderFaction], Locations::stackMarker($spaceId, $defenderFaction)));
     
-    Notifications::log('attackerMilitia', $attackerMilitia);
-    Notifications::log('defenderMilitia', $defenderMilitia);
-
     $attackerUnitCount = count($attackersUnits) + $attackerMilitia;
     $defenderUnitCount = count($defendersUnits) + $defenderMilitia;
 

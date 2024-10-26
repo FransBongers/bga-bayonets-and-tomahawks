@@ -105,10 +105,10 @@ class EventDelayedSuppliesFromFrance extends \BayonetsAndTomahawks\Models\Atomic
 
     $player = self::getPlayer();
 
-    Notifications::message($indianAP !== null ? clienttranslate('${player_name} chooses to lose ${indianAP} and ${frenchAP}') : clienttranslate('${player_name} chooses to lose ${frenchAP}'), [
+    Notifications::message($indianAP !== null ? clienttranslate('${player_name} loses ${tkn_actionPoint_indian} and ${tkn_actionPoint_french}') : clienttranslate('${player_name} loses ${tkn_actionPoint_french}'), [
       'player' => $player,
-      'indianAP' => $indianAP !== null ? $indianAP : '',
-      'frenchAP' => $frenchAP,
+      'tkn_actionPoint_indian' => $indianAP !== null ? implode(':', [INDIAN, $indianAP]) : '',
+      'tkn_actionPoint_french' => implode(':', [FRENCH, $frenchAP]),
     ]);
 
     $this->resolveAction($args);

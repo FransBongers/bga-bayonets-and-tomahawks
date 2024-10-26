@@ -8758,13 +8758,16 @@ var EventDelayedSuppliesFromFranceState = (function () {
             },
         });
         this.args.indianAP.forEach(function (actionPoint, index) {
-            _this.game.addPrimaryActionButton({
-                id: "ap_".concat(actionPoint, "_").concat(index),
-                text: actionPoint.id,
+            _this.game.addSecondaryActionButton({
+                id: "ap_".concat(actionPoint.id, "_").concat(index),
+                text: _this.game.format_string_recursive('${tkn_actionPoint}', {
+                    tkn_actionPoint: tknActionPointLog(INDIAN, actionPoint.id),
+                }),
                 callback: function () {
                     _this.indianAP = actionPoint.id;
                     _this.updateInterfaceSelectFrenchAP();
                 },
+                extraClasses: getFactionClass(INDIAN),
             });
         });
         this.game.addPassButton({
@@ -8782,25 +8785,32 @@ var EventDelayedSuppliesFromFranceState = (function () {
             },
         });
         this.args.frenchAP.forEach(function (actionPoint, index) {
-            _this.game.addPrimaryActionButton({
-                id: "ap_".concat(actionPoint, "_").concat(index),
-                text: actionPoint.id,
+            _this.game.addSecondaryActionButton({
+                id: "ap_".concat(actionPoint.id, "_").concat(index),
+                text: _this.game.format_string_recursive('${tkn_actionPoint}', {
+                    tkn_actionPoint: tknActionPointLog(FRENCH, actionPoint.id),
+                }),
                 callback: function () {
                     _this.frenchAP = actionPoint.id;
                     _this.updateInterfaceConfirm();
                 },
+                extraClasses: getFactionClass(FRENCH),
             });
         });
     };
     EventDelayedSuppliesFromFranceState.prototype.updateInterfaceConfirm = function () {
         var _this = this;
         this.game.clearPossible();
-        var text = this.indianAP === null ? _('Lose ${frenchAP}?') : _('Lose ${indianAP} and ${frenchAP}?');
+        var text = this.indianAP === null
+            ? _('Lose ${tkn_actionPoint_french}?')
+            : _('Lose ${tkn_actionPoint_indian} and ${tkn_actionPoint_french}?');
         this.game.clientUpdatePageTitle({
             text: text,
             args: {
-                indianAP: this.indianAP || '',
-                frenchAP: this.frenchAP,
+                tkn_actionPoint_indian: this.indianAP
+                    ? tknActionPointLog(INDIAN, this.indianAP)
+                    : '',
+                tkn_actionPoint_french: tknActionPointLog(FRENCH, this.frenchAP),
             },
         });
         var callback = function () {

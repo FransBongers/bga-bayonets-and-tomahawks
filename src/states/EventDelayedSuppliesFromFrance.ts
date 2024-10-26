@@ -53,13 +53,16 @@ class EventDelayedSuppliesFromFranceState implements State {
     });
 
     this.args.indianAP.forEach((actionPoint, index) => {
-      this.game.addPrimaryActionButton({
-        id: `ap_${actionPoint}_${index}`,
-        text: actionPoint.id,
+      this.game.addSecondaryActionButton({
+        id: `ap_${actionPoint.id}_${index}`,
+        text: this.game.format_string_recursive('${tkn_actionPoint}', {
+          tkn_actionPoint: tknActionPointLog(INDIAN, actionPoint.id),
+        }),
         callback: () => {
           this.indianAP = actionPoint.id;
           this.updateInterfaceSelectFrenchAP();
         },
+        extraClasses: getFactionClass(INDIAN),
       });
     });
 
@@ -80,26 +83,42 @@ class EventDelayedSuppliesFromFranceState implements State {
     });
 
     this.args.frenchAP.forEach((actionPoint, index) => {
-      this.game.addPrimaryActionButton({
-        id: `ap_${actionPoint}_${index}`,
-        text: actionPoint.id,
+      this.game.addSecondaryActionButton({
+        id: `ap_${actionPoint.id}_${index}`,
+        text: this.game.format_string_recursive('${tkn_actionPoint}', {
+          tkn_actionPoint: tknActionPointLog(FRENCH, actionPoint.id),
+        }),
         callback: () => {
           this.frenchAP = actionPoint.id;
           this.updateInterfaceConfirm();
         },
+        extraClasses: getFactionClass(FRENCH),
       });
+      // this.game.addPrimaryActionButton({
+      //   id: `ap_${actionPoint}_${index}`,
+      //   text: actionPoint.id,
+      //   callback: () => {
+      //     this.frenchAP = actionPoint.id;
+      //     this.updateInterfaceConfirm();
+      //   },
+      // });
     });
   }
 
   private updateInterfaceConfirm() {
     this.game.clearPossible();
 
-    const text = this.indianAP === null ? _('Lose ${frenchAP}?') : _('Lose ${indianAP} and ${frenchAP}?');
+    const text =
+      this.indianAP === null
+        ? _('Lose ${tkn_actionPoint_french}?')
+        : _('Lose ${tkn_actionPoint_indian} and ${tkn_actionPoint_french}?');
     this.game.clientUpdatePageTitle({
       text,
       args: {
-        indianAP: this.indianAP || '',
-        frenchAP: this.frenchAP,
+        tkn_actionPoint_indian: this.indianAP
+          ? tknActionPointLog(INDIAN, this.indianAP)
+          : '',
+        tkn_actionPoint_french: tknActionPointLog(FRENCH, this.frenchAP),
       },
     });
 
