@@ -131,7 +131,7 @@ trait DebugTrait
     // Units::get('unit_7')->setLocation(BAYE_DE_CATARACOUY);
     // Units::get('unit_48')->setLocation(NUMBER_FOUR);
     // Units::get('unit_37')->setLocation(LOSSES_BOX_FRENCH);
-    // Units::get('unit_38')->setLocation(LOSSES_BOX_FRENCH);
+    Units::get('unit_3')->setLocation(REMOVED_FROM_PLAY);
     // Units::get('unit_15')->setLocation(WILLS_CREEK);
     // Units::get('unit_38')->setLocation(WILLS_CREEK);
     // Units::get('unit_92')->setSpent(0);
@@ -175,7 +175,7 @@ trait DebugTrait
     // Cards::get('Card06')->insertOnTop(Locations::buildUpDeck(FRENCH));
     // Cards::get('Card11')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card06')->insertOnTop(Locations::campaignDeck(FRENCH));
-    Cards::get('Card06')->insertOnTop(Locations::campaignDeck(BRITISH));
+    // Cards::get('Card06')->insertOnTop(Locations::campaignDeck(BRITISH));
     // Cards::get('Card51')->insertOnTop(Locations::campaignDeck(INDIAN));
 
 
