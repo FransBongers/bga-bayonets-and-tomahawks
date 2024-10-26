@@ -51,8 +51,7 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     $parentInfo = $this->ctx->getParent()->getInfo();
     $spaceId = $parentInfo['spaceId'];
     $space = Spaces::get($spaceId);
-    Notifications::log('stBattlePreparation', $parentInfo);
-    $units = $space->getUnits();
+    // $units = $space->getUnits();
 
     $defendingFaction = $space->getDefender();
     $attackingFaction = Players::otherFaction($defendingFaction);
@@ -163,7 +162,6 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
   private function checkCoupDeMain($space)
   {
     $coupDeMainInPlay = Cards::isCardInPlay(FRENCH, COUP_DE_MAIN_CARD_ID);
-    Notifications::log('coupDeMainInPlay', $coupDeMainInPlay);
     if (!$coupDeMainInPlay || ($coupDeMainInPlay && Globals::getUsedEventCount(FRENCH) === 1)) {   
       return;
     }
@@ -172,7 +170,6 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     $hasBritishFort = Utils::array_some($space->getUnits(BRITISH), function ($unit) {
       return $unit->isFort();
     });
-    Notifications::log('hasBritishFort', $hasBritishFort);
     if (!$hasBritishFort) {
       return;
     }

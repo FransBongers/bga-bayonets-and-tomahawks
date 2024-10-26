@@ -32,7 +32,6 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
 
   public function stPreActionRoundChooseReaction()
   {
-    // Notifications::log('stPreActionRoundChooseReaction', $this->ctx->getInfo());
 
   }
 

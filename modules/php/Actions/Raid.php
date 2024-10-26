@@ -44,11 +44,10 @@ class Raid extends \BayonetsAndTomahawks\Actions\StackAction
 
   protected function getSpaceWeight($units, $spaceId, $playerFaction)
   {
-    // Notifications::log('getSpaceWeight', $spaceId);
     $enemyUnits = Utils::filter($units, function ($unit) use ($spaceId, $playerFaction) {
       return $unit->getLocation() === $spaceId && $unit->getFaction() !== $playerFaction;
     });
-    // Notifications::log('enemyUnits', $enemyUnits);
+
     if (count($enemyUnits) === 0) {
       return 1;
     }

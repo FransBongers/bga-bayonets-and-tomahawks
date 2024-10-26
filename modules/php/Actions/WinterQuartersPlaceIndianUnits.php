@@ -136,12 +136,10 @@ class WinterQuartersPlaceIndianUnits extends \BayonetsAndTomahawks\Models\Atomic
   //  ..#######.....##....####.########.####....##.......##...
 
   private function getIndianNationVillage($villages, $placedOnMap, $unit) {
-    Notifications::log('getIndianNationVillage',$unit);
-    Notifications::log('placedOnMap',$placedOnMap);
     $alreadyPlaced = Utils::filter($placedOnMap, function ($placedUnit) use ($villages, $unit) {
       return $unit->getCounterId() === $placedUnit->getCounterId() && in_array($placedUnit->getLocation(), $villages);
     });
-    Notifications::log('alreadyPlaced',$alreadyPlaced);
+
     return $villages[count($alreadyPlaced)];
   }
 }

@@ -45,7 +45,6 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
   public function argsActionRoundChooseFirstPlayer()
   {
 
-    // Notifications::log('argsActionRoundChooseFirstPlayer',[]);
     return [];
   }
 

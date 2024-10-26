@@ -46,8 +46,6 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
 
   public function stActionRoundEnd()
   {
-    // Notifications::log('stActionRoundEndUpdates', []);
-
     // 1. Discard played cards facedown.
     $cardsInPlay = Cards::getCardsInPlay();
     Notifications::discardCardsInPlayMessage();
@@ -78,7 +76,6 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     // TODO: end of year check here?
 
     $currentActionRound = Globals::getActionRound();
-    // Notifications::log('currentActionRound', $currentActionRound);
     $nextActionRound = null;
     switch ($currentActionRound) {
       case ACTION_ROUND_1:
@@ -119,7 +116,7 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
         $nextActionRound = ACTION_ROUND_1;
         break;
     }
-    // Notifications::log('nextActionRound', $nextActionRound);
+
     Globals::setActionRound($nextActionRound);
     Globals::setFirstPlayerId(0);
     Globals::setSecondPlayerId(0);

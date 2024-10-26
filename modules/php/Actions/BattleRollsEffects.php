@@ -210,9 +210,6 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
 
   private function applyBAndTResults($space, $diceResults, $battleRollsSequenceStep, $player, $faction)
   {
-    Notifications::log('applyBAndTResults', $battleRollsSequenceStep);
-    Notifications::log('diceResults', $diceResults);
-
     $unprocessedDice = $diceResults;
     $processedDice = [];
     $possibleUnitsToApplyHitTo = [];

@@ -69,7 +69,6 @@ class EventSmallpoxInfectedBlankets extends \BayonetsAndTomahawks\Models\AtomicA
   public function argsEventSmallpoxInfectedBlankets()
   {
 
-    // Notifications::log('argsEventSmallpoxInfectedBlankets',[]);
     return [
       'units' => $this->getOptions(),
     ];

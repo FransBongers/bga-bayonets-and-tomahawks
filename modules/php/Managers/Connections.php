@@ -58,8 +58,8 @@ class Connections extends \BayonetsAndTomahawks\Helpers\Pieces
     include dirname(__FILE__) . '/../Connections/list.inc.php';
 
     $connections = [];
-    // Notifications::log('scenario', $scenario);
-    // // return;
+
+    // return;
     foreach ($connectionIds as $cId) {
       // $card = self::getCardInstance($cId);
 

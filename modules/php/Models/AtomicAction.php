@@ -60,10 +60,6 @@ class AtomicAction
    */
   public static function checkAction($action, $byPassActiveCheck = false)
   {
-    // Notifications::log('checkAction',[
-    //   'action' => $action,
-    //   'byPassActiveCheck' => $byPassActiveCheck
-    // ]);
     if ($byPassActiveCheck) {
       Game::get()->gamestate->checkPossibleAction($action);
     } else {

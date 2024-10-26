@@ -45,7 +45,6 @@ class EventPennsylvaniasPeacePromises extends \BayonetsAndTomahawks\Models\Atomi
   public function argsEventPennsylvaniasPeacePromises()
   {
 
-    // Notifications::log('argsEventPennsylvaniasPeacePromises',[]);
     return [
       'units' => $this->getOptions(),
     ];

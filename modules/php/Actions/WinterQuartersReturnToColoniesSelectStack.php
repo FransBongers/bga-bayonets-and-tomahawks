@@ -138,9 +138,6 @@ class WinterQuartersReturnToColoniesSelectStack extends \BayonetsAndTomahawks\Ac
       }
     }
 
-    Notifications::log('data', [
-      'option' => $option,
-    ]);
     $faction = $this->ctx->getInfo()['faction'];
     $playerId = $this->ctx->getPlayerId();
 
@@ -205,7 +202,6 @@ class WinterQuartersReturnToColoniesSelectStack extends \BayonetsAndTomahawks\Ac
 
     $stacks = GameMap::getStacks(null, $unitsThatMightNeedToReturn)[$faction];
 
-    // Notifications::log('stacks before', $stacks);
     $options = [];
 
     foreach ($stacks as $spaceId => $stack) {
@@ -220,9 +216,9 @@ class WinterQuartersReturnToColoniesSelectStack extends \BayonetsAndTomahawks\Ac
         unset($stacks[$spaceId]);
         continue;
       }
-      // Notifications::log('stack', $spaceId);
+
       $stackOptions = $this->getOptionsForStack($spaces, $connections, $units, $stack, $faction);
-      // Notifications::log('options ' . $spaceId, );
+
       if (count($stackOptions) > 0) {
         $options[$spaceId] = [
           'space' => $stack['space'],

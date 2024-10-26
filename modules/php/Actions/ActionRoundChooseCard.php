@@ -92,7 +92,6 @@ class ActionRoundChooseCard extends \BayonetsAndTomahawks\Models\AtomicAction
     $cardId = $args['cardId'];
 
     self::checkAction('actActionRoundChooseCard');
-    Notifications::log('actActionRoundChooseCard', $args);
 
     $player = Players::getCurrent();
 

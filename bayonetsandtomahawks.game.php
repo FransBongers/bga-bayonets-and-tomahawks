@@ -164,7 +164,7 @@ class bayonetsandtomahawks extends Table
     {
         // TODO: compute and return the game progression
         $scenario = Scenarios::get();
-        Notifications::log('scenario', $scenario);
+
         $duration = $scenario->getDuration();
         $totalActionRounds = $duration * 12;
 

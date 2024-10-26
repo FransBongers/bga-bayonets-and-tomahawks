@@ -59,7 +59,7 @@ class BattleMilitiaRolls extends \BayonetsAndTomahawks\Actions\Battle
         continue;
       }
       $diceResults = BTDice::rollMultiple($militiaCount);
-      // Notifications::log('diceResults', $diceResults);
+
       Notifications::battleMilitiaRoll($playersPerFaction[$faction], $diceResults);
       $flagCount = count(Utils::filter($diceResults, function ($dieResult) {
         return $dieResult === FLAG;

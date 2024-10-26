@@ -87,12 +87,10 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
     $enemyMilitia = $space->getHomeSpace() !== $playerFaction ? $space->getMilitia() : 0;
 
     $data = GameMap::factionOutnumbersEnemyInSpace($space, $playerFaction);
-    Notifications::log('OUTNUMBER DATA', $data);
+
     $overwhelm = $data['overwhelm'];
 
     $battleOccurs = $data['hasEnemyUnitsExcludingMilitia'] || ($enemyMilitia > 0 && !$overwhelm && $space->getControlStartOfTurn() !== $playerFaction);
-
-    Notifications::log('BATTLE OCCURS', $battleOccurs);
 
     if ($battleOccurs && $space->getBattle() === 0) {
       $space->setBattle(1);

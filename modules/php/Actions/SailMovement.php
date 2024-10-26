@@ -112,8 +112,6 @@ class SailMovement extends \BayonetsAndTomahawks\Models\AtomicAction
     self::checkAction('actSailMovement');
     $selectedUnitIds = array_values(array_unique($args['selectedUnitIds']));
 
-    Notifications::log('selectedUnitIds', $selectedUnitIds);
-
     $stateArgs = $this->argsSailMovement();
 
     $units = Utils::filter($stateArgs['units'], function ($unit) use ($selectedUnitIds) {

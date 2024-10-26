@@ -38,7 +38,6 @@ class DrawReserveCards extends \BayonetsAndTomahawks\Models\AtomicAction
 
   public function stDrawReserveCards()
   {
-    Notifications::log('stDrawReserveCards', $this->ctx->getInfo());
     $britishReserveCards = Cards::pickForLocation(2, Locations::buildUpDeck(BRITISH), Locations::hand(BRITISH))->toArray();
     $frenchReserveCards = Cards::pickForLocation(2, Locations::buildUpDeck(FRENCH), Locations::hand(FRENCH))->toArray();
 

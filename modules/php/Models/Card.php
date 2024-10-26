@@ -58,7 +58,6 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
 
   public function getUiData()
   {
-    // Notifications::log('getUiData card model', []);
     return $this->jsonSerialize(); // Static datas are already in js file
   }
 

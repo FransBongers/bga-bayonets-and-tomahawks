@@ -2,6 +2,9 @@
 
 namespace BayonetsAndTomahawks\StackActions;
 
+/**
+ * Can just removed?
+ */
 class Raid extends \BayonetsAndTomahawks\Models\StackAction
 {
   public function __construct()

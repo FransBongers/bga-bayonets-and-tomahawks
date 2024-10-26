@@ -30,11 +30,6 @@ class ActionPoint implements \JsonSerializable
 
   public function canActivateStackInSpace($space, $player)
   {
-    // Notifications::log('canActivateStackInSpace', [
-    //   'space' => $space,
-    //   'player' => $player,
-    // ]);
-
     // return;
     $actions = [];
 
@@ -58,7 +53,6 @@ class ActionPoint implements \JsonSerializable
 
 
     foreach ($this->actionsAllowed as $actionId) {
-      // Notifications::log('actionId', $actionId);
       $action = AtomicActions::get($actionId);
       if ($action->canBePerformedBy($units,  $space, $this, $playerFaction)) {
         $actions[] = $action->getUiData();

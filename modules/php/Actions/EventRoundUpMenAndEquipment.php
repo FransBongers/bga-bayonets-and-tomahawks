@@ -47,7 +47,7 @@ class EventRoundUpMenAndEquipment extends \BayonetsAndTomahawks\Models\AtomicAct
   {
     $info = $this->ctx->getInfo();
     $faction = $info['faction'];
-    // Notifications::log('argsEventRoundUpMenAndEquipment',[]);
+
     return [
       'options' => $this->getOptions($faction),
     ];

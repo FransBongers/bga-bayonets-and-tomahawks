@@ -39,8 +39,7 @@ class ActionRoundDrawCards extends \BayonetsAndTomahawks\Models\AtomicAction
 
   public function stActionRoundDrawCards()
   {
-    Notifications::log('stActionRoundDrawCards', $this->ctx->getInfo());
-    // TODO: locationd depends on AR
+    // TODO: location depends on AR
     $buildupDeck = in_array(Globals::getActionRound(), [ACTION_ROUND_1, ACTION_ROUND_2, ACTION_ROUND_3]);
     $britishCard = Cards::pickForLocation(1, $buildupDeck ? Locations::buildUpDeck(BRITISH) : Locations::campaignDeck(BRITISH), Locations::hand(BRITISH))->toArray()[0];
     $frenchCard = Cards::pickForLocation(1, $buildupDeck ? Locations::buildUpDeck(FRENCH) : Locations::campaignDeck(FRENCH), Locations::hand(FRENCH))->toArray()[0];

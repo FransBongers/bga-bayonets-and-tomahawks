@@ -19,13 +19,7 @@ class PathCalculator extends \APP_DbObject
 
   function findAllPathsUtil($allSpaces, $set, $sourceId, $destinationId, $visited, $localPathList)
   {
-    // Notifications::log('findAllPathsUtil', [
-    //   'sourceId' => $sourceId,
-    //   'destinationId' => $destinationId,
-    //   'localPathList' => $localPathList,
-    // ]);
     if ($sourceId === $destinationId) {
-      // Notifications::log('path',$localPathList);
       // Todo: check if necessary to clone?
       $clone = [];
       foreach ($localPathList as $spaceId) {

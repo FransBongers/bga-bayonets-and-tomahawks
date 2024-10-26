@@ -1,7 +1,7 @@
 <?php
 namespace BayonetsAndTomahawks\Units;
 
-class Bastion extends \BayonetsAndTomahawks\Models\Fort
+class Bastion extends \BayonetsAndTomahawks\Models\BastionModel
 {
   public function __construct($row)
   {

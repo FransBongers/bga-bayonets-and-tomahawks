@@ -237,7 +237,6 @@ class WinterQuartersReturnToColoniesStep2SelectStack extends \BayonetsAndTomahaw
 
     $stacks = GameMap::getStacks($spaces, $unitsThatMightNeedToReturn)[$faction];
 
-    // Notifications::log('stacks before', $stacks);
     $options = [];
 
     $destinationIds = $this->getDestinationIds($spaces, $faction);

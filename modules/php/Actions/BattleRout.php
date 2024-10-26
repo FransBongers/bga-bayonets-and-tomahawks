@@ -65,6 +65,8 @@ class BattleRout extends \BayonetsAndTomahawks\Actions\Battle
 
     $unitsToEliminate = $this->getUnitsToEliminate($units, $faction);
 
+    Notifications::log('unitsToEliminate', $unitsToEliminate);
+
     if (count($unitsToEliminate) === 1) {
       $unitsToEliminate[0]->eliminate($player);
     } else if (count($unitsToEliminate) > 1) {

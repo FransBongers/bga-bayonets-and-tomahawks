@@ -71,7 +71,6 @@ class EventDiseaseInFrenchCamp extends \BayonetsAndTomahawks\Models\AtomicAction
   public function argsEventDiseaseInFrenchCamp()
   {
 
-    // Notifications::log('argsEventDiseaseInFrenchCamp',[]);
     return [
       'options' => $this->getOptions(),
     ];

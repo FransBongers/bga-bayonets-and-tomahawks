@@ -74,8 +74,6 @@ class EventArmedBattoemen extends \BayonetsAndTomahawks\Models\AtomicAction
 
   public function argsEventArmedBattoemen()
   {
-
-    // Notifications::log('argsEventArmedBattoemen',[]);
     return [
       'markers' => $this->getOptions(),
     ];

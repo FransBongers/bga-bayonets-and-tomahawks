@@ -5,6 +5,9 @@ namespace BayonetsAndTomahawks\StackActions;
 use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Helpers\Utils;
 
+/**
+ * Can just removed?
+ */
 class LightMovement extends \BayonetsAndTomahawks\Models\StackAction
 {
   public function __construct()
@@ -28,19 +31,5 @@ class LightMovement extends \BayonetsAndTomahawks\Models\StackAction
     return $hasLightUnit;
   }
 
-  // public function getFlow($playerId, $originId, $indianActionPoint)
-  // {
-  //   return [
-  //     'stackAction' => LIGHT_MOVEMENT,
-  //     'indianActionPoint' => $indianActionPoint,
-  //     'originId' => $originId,
-  //     'children' => [
-  //       [
-  //         'action' => MOVEMENT_LIGHT,
-  //         'space' => $originId,
-  //         'playerId' => $playerId,
-  //       ],
-  //     ],
-  //   ];
-  // }
+
 }

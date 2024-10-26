@@ -12,7 +12,6 @@ class LeafNode extends AbstractNode
 {
   public function __construct($info = [])
   {
-    // Notifications::log('construct leaf', $info);
     parent::__construct($info, []);
     $this->info['type'] = NODE_LEAF;
   }
