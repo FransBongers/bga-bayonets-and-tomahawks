@@ -129,11 +129,11 @@
   }
 
   span[data-faction='british'] {
-    color: #b73e20;
+    color: base.$british-color;
   }
 
   span[data-faction='french'] {
-    color: #216396;
+    color: base.$french-color;
   }
 }
 

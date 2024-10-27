@@ -84,7 +84,9 @@ class Player extends \BayonetsAndTomahawks\Helpers\DB_Model
   public function getFaction()
   {
     $color = $this->getColor();
-    return $color === "B73E20" ? BRITISH : FRENCH;
+    // TODO: remove old color
+    // Old and updated color. 
+    return in_array($color, ["B73E1F", "B73E20"]) ? BRITISH : FRENCH;
   }
 
   public function discardReserveCard()

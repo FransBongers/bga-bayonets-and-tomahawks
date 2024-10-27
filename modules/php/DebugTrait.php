@@ -42,7 +42,7 @@ trait DebugTrait
 
   function debug_test()
   {
-    Globals::setCurrentStepOfRound(SELECT_CARD_TO_PLAY_STEP);
+    // Globals::setCurrentStepOfRound(SELECT_CARD_TO_PLAY_STEP);
 
     // Units::get('unit_121')->setLocation(LOSSES_BOX_BRITISH);
     // Units::get('unit_7')->setLocation(BAYE_DE_CATARACOUY);
@@ -57,11 +57,11 @@ trait DebugTrait
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(NEW_YORK), BRITISH);
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(ALBANY), BRITISH);
 
-    // Cards::get('Card06')->insertOnTop(Locations::buildUpDeck(FRENCH));
-    // Cards::get('Card11')->insertOnTop(Locations::buildUpDeck(BRITISH));
+    Cards::get('Card30')->insertOnTop(Locations::buildUpDeck(FRENCH));
+    Cards::get('Card14')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card06')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card06')->insertOnTop(Locations::campaignDeck(BRITISH));
-    // Cards::get('Card51')->insertOnTop(Locations::campaignDeck(INDIAN));
+    Cards::get('Card54')->insertOnTop(Locations::campaignDeck(INDIAN));
 
   }
 

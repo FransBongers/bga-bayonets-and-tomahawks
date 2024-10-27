@@ -900,10 +900,10 @@ body > .card {
   margin-left: -2px;
 }
 .bt_connection span[data-faction=british] {
-  color: #b73e20;
+  color: #B73E1F;
 }
 .bt_connection span[data-faction=french] {
-  color: #216396;
+  color: #216295;
 }
 
 .bt_space {
