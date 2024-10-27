@@ -55,6 +55,7 @@ class NotificationManager {
       'battleReturnCommander',
       'battleStart',
       'battleSelectCommander',
+      'chooseReaction',
       'commanderDraw',
       'constructionFort',
       'constructionRoad',
@@ -340,6 +341,11 @@ class NotificationManager {
         defenderMarker
       ),
     ]);
+  }
+
+  async notif_chooseReaction(notif: Notif<NotifChooseReactionArgs>) {
+    const {playerId, actionPointId} = notif.args;
+    this.getPlayer({playerId}).setReactionActionPointId(actionPointId);
   }
 
   async notif_constructionFort(notif: Notif<NotifConstructionFortArgs>) {

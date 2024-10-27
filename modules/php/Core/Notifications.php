@@ -66,6 +66,15 @@ class Notifications
     ]);
   }
 
+  public static function chooseReaction($player, $actionPointId)
+  {
+    self::notifyAll('chooseReaction', clienttranslate('${player_name} holds ${tkn_actionPoint} for Reaction'), [
+      'player' => $player,
+      'tkn_actionPoint' => $player->getFaction() . ':' . $actionPointId,
+      'actionPointId' => $actionPointId,
+    ]);
+  }
+
   public static function refreshHand($player, $hand)
   {
     // foreach ($hand as &$card) {

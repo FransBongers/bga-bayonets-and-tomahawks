@@ -269,7 +269,7 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
 interface BayonetsAndTomahawksPlayerData extends BgaPlayer {
   hand: BTCard[];
   faction: BRITISH_FACTION | FRENCH_FACTION;
-  actionPoints: Record<Faction, BTActionPoint[]>;
+  actionPoints: Record<Faction, BTActionPoint[]> & {reactionActionPointId?: string};
   wieChit: {
     chit: BTWIEChit | null;
     hasChit: boolean;

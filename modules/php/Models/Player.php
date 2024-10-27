@@ -118,6 +118,11 @@ class Player extends \BayonetsAndTomahawks\Helpers\DB_Model
     } else if ($faction === FRENCH) {
       $actionPoints[INDIAN] = [];
     }
+
+    if (Globals::getFirstPlayerId() === $this->getId()) {
+      $actionPoints['reactionActionPointId'] = Globals::getReactionActionPointId();
+    }
+
     return $actionPoints;
   }
 }

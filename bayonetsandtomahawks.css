@@ -348,6 +348,56 @@ body > .card {
   background-position-y: 100%;
 }
 
+.bt_action_point_img[data-reaction=true] {
+  background-image: url("img/markers.webp");
+  background-size: 800% 600%;
+}
+
+.bt_action_point_img[data-ap-id=ARMY_AP][data-reaction=true] {
+  background-position-x: 42.8571428571%;
+  background-position-y: 80%;
+}
+
+.bt_action_point_img[data-ap-id=ARMY_AP_2X][data-reaction=true] {
+  background-position-x: 0%;
+  background-position-y: 80%;
+}
+
+.bt_action_point_img[data-ap-id=FRENCH_LIGHT_ARMY_AP][data-reaction=true] {
+  background-position-x: 57.1428571429%;
+  background-position-y: 80%;
+}
+
+.bt_action_point_img[data-ap-id=INDIAN_AP][data-reaction=true] {
+  background-position-x: 71.4285714286%;
+  background-position-y: 80%;
+}
+
+.bt_action_point_img[data-ap-id=INDIAN_AP_2X][data-reaction=true] {
+  background-position-x: 14.2857142857%;
+  background-position-y: 80%;
+}
+
+.bt_action_point_img[data-ap-id=LIGHT_AP][data-reaction=true] {
+  background-position-x: 71.4285714286%;
+  background-position-y: 80%;
+}
+
+.bt_action_point_img[data-ap-id=LIGHT_AP_2X][data-reaction=true] {
+  background-position-x: 14.2857142857%;
+  background-position-y: 80%;
+}
+
+.bt_action_point_img[data-ap-id=SAIL_ARMY_AP][data-reaction=true] {
+  background-position-x: 85.7142857143%;
+  background-position-y: 80%;
+}
+
+.bt_action_point_img[data-ap-id=SAIL_ARMY_AP_2X][data-reaction=true] {
+  background-position-x: 28.5714285714%;
+  background-position-y: 80%;
+}
+
 .bt_battle_info_container {
   width: calc(var(--rightColumnScale) * 1.333333 * 1125px);
   height: calc(var(--rightColumnScale) * 1.333333 * 717px);

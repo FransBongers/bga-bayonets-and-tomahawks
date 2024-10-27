@@ -99,10 +99,11 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
     }
 
     $player = self::getPlayer();
-    Notifications::message(clienttranslate('${player_name} holds ${tkn_actionPoint} for Reaction'), [
-      'player' => $player,
-      'tkn_actionPoint' => $player->getFaction() . ':' . $actionPointId,
-    ]);
+    Notifications::chooseReaction($player, $actionPointId);
+    // Notifications::message(clienttranslate('${player_name} holds ${tkn_actionPoint} for Reaction'), [
+    //   'player' => $player,
+    //   'tkn_actionPoint' => $player->getFaction() . ':' . $actionPointId,
+    // ]);
 
     Globals::setReactionActionPointId($actionPointId);
     Stats::incReaction($player->getId(), 1);

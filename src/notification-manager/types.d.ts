@@ -85,6 +85,10 @@ interface NotifDrawnReinforcementsArgs {
   location: string;
 }
 
+interface NotifChooseReactionArgs extends NotifWithPlayerArgs {
+  actionPointId: string;
+}
+
 interface NotifConstructionFortArgs extends NotifWithPlayerArgs {
   faction: BRITISH_FACTION | FRENCH_FACTION;
   fort: BTUnit | null;

@@ -5349,6 +5349,7 @@ var NotificationManager = (function () {
             'battleReturnCommander',
             'battleStart',
             'battleSelectCommander',
+            'chooseReaction',
             'commanderDraw',
             'constructionFort',
             'constructionRoad',
@@ -5639,6 +5640,16 @@ var NotificationManager = (function () {
                         _b.sent();
                         return [2];
                 }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_chooseReaction = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, playerId, actionPointId;
+            return __generator(this, function (_b) {
+                _a = notif.args, playerId = _a.playerId, actionPointId = _a.actionPointId;
+                this.getPlayer({ playerId: playerId }).setReactionActionPointId(actionPointId);
+                return [2];
             });
         });
     };
@@ -6499,6 +6510,9 @@ var BatPlayer = (function () {
         if (this.faction === FRENCH) {
             this.setActionPoints(INDIAN, playerGamedatas.actionPoints[INDIAN]);
         }
+        if (playerGamedatas.actionPoints.reactionActionPointId) {
+            this.setReactionActionPointId(playerGamedatas.actionPoints.reactionActionPointId);
+        }
     };
     BatPlayer.prototype.clearInterface = function () {
         this.clearPlayerPanel(this.faction);
@@ -6544,6 +6558,16 @@ var BatPlayer = (function () {
         var playerPanelNode = document.getElementById("".concat(faction, "_action_points"));
         if (playerPanelNode) {
             playerPanelNode.replaceChildren();
+        }
+    };
+    BatPlayer.prototype.setReactionActionPointId = function (actionPointId) {
+        var playerPanelNode = document.getElementById("".concat(this.faction, "_action_points"));
+        for (var i = 0; i < playerPanelNode.children.length; i++) {
+            var node = playerPanelNode.children.item(i);
+            if (node.children.item(0).getAttribute('data-ap-id') === actionPointId) {
+                node.children.item(0).setAttribute('data-reaction', 'true');
+                break;
+            }
         }
     };
     return BatPlayer;

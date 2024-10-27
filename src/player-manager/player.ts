@@ -105,6 +105,10 @@ class BatPlayer {
     if (this.faction === FRENCH) {
       this.setActionPoints(INDIAN, playerGamedatas.actionPoints[INDIAN]);
     }
+
+    if (playerGamedatas.actionPoints.reactionActionPointId) {
+      this.setReactionActionPointId(playerGamedatas.actionPoints.reactionActionPointId);
+    }
   }
 
   clearInterface() {
@@ -187,6 +191,17 @@ class BatPlayer {
     if (playerPanelNode) {
       playerPanelNode.replaceChildren();
     }
+  }
+
+  public setReactionActionPointId(actionPointId: string) {
+    const playerPanelNode = document.getElementById(`${this.faction}_action_points`);
+    for (let i = 0; i < playerPanelNode.children.length; i++) {
+      const node = playerPanelNode.children.item(i);
+      if (node.children.item(0).getAttribute('data-ap-id') === actionPointId) {
+        node.children.item(0).setAttribute('data-reaction', 'true');
+        break;
+      }
+    }  
   }
 
   // ....###.....######..########.####..#######..##....##..######.
