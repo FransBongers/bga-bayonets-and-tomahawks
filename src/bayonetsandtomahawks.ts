@@ -52,6 +52,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   private _notif_uid_to_log_id = {};
   private _notif_uid_to_mobile_log_id = {};
   private _selectableNodes = []; // TODO: use to keep track of selectable classed?
+  public mobileVersion: boolean = false;
 
   // Game specific
   public battleInfo: BattleInfo;
@@ -130,6 +131,9 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   // .##....##.##..........##....##.....##.##.......
   // ..######..########....##.....#######..##.......
   public setup(gamedatas: BayonetsAndTomahawksGamedatas) {
+    const body = document.getElementById('ebd-body');
+    this.mobileVersion = body && body.classList.contains('mobile_version');
+
     // Create a new div for buttons to avoid BGA auto clearing it
     dojo.place(
       "<div id='customActions' style='display:inline-block'></div>",
@@ -881,6 +885,10 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       const rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
       ROOT.style.setProperty('--rightColumnScale', `${rightColumnScale}`);
     }
+
+    if (this.hand) {
+      this.hand.updateFloatingHandScale();
+    }
   }
 
   // .########.########.....###....##.....##.########.##......##..#######..########..##....##
@@ -1078,6 +1086,11 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       return;
     }
     container.insertAdjacentElement('afterbegin', infoPanel);
+
+    if (this.mobileVersion) {
+      const stepTrackerNode = document.getElementById('step_tracker');
+      container.insertBefore(stepTrackerNode, container.childNodes[2]);
+    }
   }
 
   setAlwaysFixTopActions(alwaysFixed = true, maximum = 30) {

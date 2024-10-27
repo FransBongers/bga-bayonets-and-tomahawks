@@ -1047,6 +1047,7 @@ body > .card {
   border-top: 1px solid #7c5d45;
   border-right: 1px solid #7c5d45;
   border-top-right-radius: 8px;
+  --btCardScale: var(--handScale);
 }
 #floating_hand_wrapper[data-open] {
   transform: translateY(0px);
@@ -1110,9 +1111,10 @@ body > .card {
 }
 #floating_hand_wrapper #floating_hand #player_hand {
   box-sizing: border-box;
-  min-width: 536px;
-  min-height: 203px;
-  padding: 12px;
+  min-width: calc(var(--handScale) * 536px);
+  min-height: calc(var(--handScale) * 203px);
+  padding: calc(var(--handScale) * 12px);
+  gap: calc(var(--handScale) * 12px) !important;
 }
 
 #info_panel {

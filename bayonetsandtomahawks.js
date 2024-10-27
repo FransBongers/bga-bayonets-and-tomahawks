@@ -2511,9 +2511,12 @@ var BayonetsAndTomahawks = (function () {
         this._notif_uid_to_log_id = {};
         this._notif_uid_to_mobile_log_id = {};
         this._selectableNodes = [];
+        this.mobileVersion = false;
         debug('bayonetsandtomahawks constructor');
     }
     BayonetsAndTomahawks.prototype.setup = function (gamedatas) {
+        var body = document.getElementById('ebd-body');
+        this.mobileVersion = body && body.classList.contains('mobile_version');
         dojo.place("<div id='customActions' style='display:inline-block'></div>", $('generalactions'), 'after');
         this.setAlwaysFixTopActions();
         this.setupDontPreloadImages();
@@ -2978,6 +2981,9 @@ var BayonetsAndTomahawks = (function () {
             var rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
             ROOT.style.setProperty('--rightColumnScale', "".concat(rightColumnScale));
         }
+        if (this.hand) {
+            this.hand.updateFloatingHandScale();
+        }
     };
     BayonetsAndTomahawks.prototype.onAddingNewUndoableStepToLog = function (notif) {
         var _this = this;
@@ -3112,6 +3118,10 @@ var BayonetsAndTomahawks = (function () {
             return;
         }
         container.insertAdjacentElement('afterbegin', infoPanel);
+        if (this.mobileVersion) {
+            var stepTrackerNode = document.getElementById('step_tracker');
+            container.insertBefore(stepTrackerNode, container.childNodes[2]);
+        }
     };
     BayonetsAndTomahawks.prototype.setAlwaysFixTopActions = function (alwaysFixed, maximum) {
         if (alwaysFixed === void 0) { alwaysFixed = true; }
@@ -5139,6 +5149,7 @@ var Hand = (function () {
     Hand.prototype.setupHand = function () {
         var node = $('game_play_area');
         node.insertAdjacentHTML('beforeend', tplHand());
+        this.updateFloatingHandScale();
         var handWrapper = $('floating_hand_wrapper');
         $('floating_hand_button').addEventListener('click', function () {
             if (handWrapper.dataset.open && handWrapper.dataset.open == 'hand') {
@@ -5149,6 +5160,18 @@ var Hand = (function () {
             }
         });
         this.hand = new LineStock(this.game.cardManager, document.getElementById('player_hand'), { wrap: 'nowrap', gap: '12px', center: false });
+    };
+    Hand.prototype.updateFloatingHandScale = function () {
+        var WIDTH = $('game_play_area').getBoundingClientRect()['width'];
+        var wrapperNode = document.getElementById('floating_hand_wrapper');
+        var MIN_WIDTH_THREE_CARDS = 800;
+        if (WIDTH <= MIN_WIDTH_THREE_CARDS) {
+            var handScale = WIDTH / MIN_WIDTH_THREE_CARDS;
+            wrapperNode.style.setProperty('--handScale', "".concat(handScale));
+        }
+        else {
+            wrapperNode.style.setProperty('--handScale', '1');
+        }
     };
     Hand.prototype.addCard = function (card) {
         return __awaiter(this, void 0, void 0, function () {

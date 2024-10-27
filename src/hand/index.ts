@@ -25,6 +25,8 @@ class Hand {
     const node: HTMLElement = $('game_play_area');
     node.insertAdjacentHTML('beforeend', tplHand());
 
+    this.updateFloatingHandScale();
+
     const handWrapper = $('floating_hand_wrapper');
     $('floating_hand_button').addEventListener('click', () => {
       if (handWrapper.dataset.open && handWrapper.dataset.open == 'hand') {
@@ -39,6 +41,23 @@ class Hand {
       document.getElementById('player_hand'),
       { wrap: 'nowrap', gap: '12px', center: false }
     );
+  }
+
+  public updateFloatingHandScale()
+  {
+    const WIDTH = $('game_play_area').getBoundingClientRect()['width'];
+
+    const wrapperNode = document.getElementById('floating_hand_wrapper');
+
+    const MIN_WIDTH_THREE_CARDS = 800;
+
+    if (WIDTH <= MIN_WIDTH_THREE_CARDS) {
+      const handScale = WIDTH / MIN_WIDTH_THREE_CARDS;
+      wrapperNode.style.setProperty('--handScale', `${handScale}`);
+    } else {
+      wrapperNode.style.setProperty('--handScale', '1');
+    }
+
   }
 
   public async addCard(card: BTCard): Promise<void> {

@@ -1,10 +1,12 @@
+@use 'sass:math';
+
 #floating_hand_wrapper {
   position: fixed;
   bottom: 0;
   left: 0;
   transition: transform 0.8s;
   z-index: 1000;
-  
+
   &[data-open] {
     transform: translateY(0px);
   }
@@ -13,11 +15,13 @@
   // box-shadow: 0 0 10px 1px #ff0;
   // box-shadow: 0 0 10px 1px ivory;
   box-shadow: 0 0 10px 1px #f8f8f8; // BGA white
-  
+
   background-color: rgba(40, 39, 36, 0.78);
   border-top: 1px solid #7c5d45;
   border-right: 1px solid #7c5d45;
   border-top-right-radius: 8px;
+
+  --btCardScale: var(--handScale);
 
   #floating_hand_button_container {
     // background-color: yellow;
@@ -35,7 +39,7 @@
       box-shadow: 2px 2px 5px black;
       // background-color: gray;
       background-color: #fff;
-      
+
       margin: 0px 5px;
       margin-top: -38px;
       cursor: pointer;
@@ -70,20 +74,16 @@
     background: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.47,4.35L20.13,3.79V12.82L22.56,6.96C22.97,5.94 22.5,4.77 21.47,4.35M1.97,8.05L6.93,20C7.24,20.77 7.97,21.24 8.74,21.26C9,21.26 9.27,21.21 9.53,21.1L16.9,18.05C17.65,17.74 18.11,17 18.13,16.26C18.14,16 18.09,15.71 18,15.45L13,3.5C12.71,2.73 11.97,2.26 11.19,2.25C10.93,2.25 10.67,2.31 10.42,2.4L3.06,5.45C2.04,5.87 1.55,7.04 1.97,8.05M18.12,4.25A2,2 0 0,0 16.12,2.25H14.67L18.12,10.59" /></svg>');
   }
 
-  &[data-open="hand"] .icon {
+  &[data-open='hand'] .icon {
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 6.91L17.09 4L12 9.09L6.91 4L4 6.91L9.09 12L4 17.09L6.91 20L12 14.91L17.09 20L20 17.09L14.91 12L20 6.91Z" /></svg>');
   }
 
-  &:not([data-open])
-  #floating_hand_button_container
-  #floating_hand_button {
+  &:not([data-open]) #floating_hand_button_container #floating_hand_button {
     margin: 0px 5px;
     margin-top: -40px;
   }
 
-  &[data-open="hand"]
-    #floating_hand_button_container
-    #floating_hand_button {
+  &[data-open='hand'] #floating_hand_button_container #floating_hand_button {
     margin-top: -58px;
     margin-bottom: 20px;
   }
@@ -97,9 +97,10 @@
 
     #player_hand {
       box-sizing: border-box;
-      min-width: 536px;
-      min-height: 203px;
-      padding: 12px;
+      min-width: calc(var(--handScale) * 536px);
+      min-height: calc(var(--handScale) * 203px);
+      padding: calc(var(--handScale) * 12px);
+      gap: calc(var(--handScale) * 12px) !important; 
     }
   }
 }
