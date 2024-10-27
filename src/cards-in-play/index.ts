@@ -20,7 +20,7 @@ class CardsInPlay {
   }
 
   clearInterface() {
-    FACTIONS.forEach((faction) => this.clearPlayerPanel(faction));
+
   }
 
   updateCardsInPlay({
@@ -74,13 +74,13 @@ class CardsInPlay {
     card: BTCard;
     faction: Faction;
   }): Promise<void> {
-    const playerPanelNode = document.getElementById(`${faction}_action_points`);
-    card.actionPoints.forEach(({ id }) => {
-      playerPanelNode.insertAdjacentHTML(
-        'beforeend',
-        tplLogTokenActionPoint(faction, id)
-      );
-    });
+    // const playerPanelNode = document.getElementById(`${faction}_action_points`);
+    // card.actionPoints.forEach(({ id }) => {
+    //   playerPanelNode.insertAdjacentHTML(
+    //     'beforeend',
+    //     tplLogTokenActionPoint(faction, id)
+    //   );
+    // });
     await this.cards[faction].addCard(card);
   }
 
@@ -92,7 +92,6 @@ class CardsInPlay {
     faction: Faction;
   }): Promise<void> {
     await this.cards[faction].removeCard(card);
-    this.clearPlayerPanel(faction);
   }
 
   public getCards({ faction }: { faction: Faction }): BTCard[] {
@@ -116,10 +115,4 @@ class CardsInPlay {
     });
   }
 
-  public clearPlayerPanel(faction: string) {
-    const playerPanelNode = document.getElementById(`${faction}_action_points`);
-    if (playerPanelNode) {
-      playerPanelNode.replaceChildren();
-    }
-  }
 }

@@ -92,6 +92,7 @@ class NotificationManager {
       'selectReserveCard',
       'selectReserveCardPrivate',
       'takeControl',
+      'updateActionPoints',
       'updateCurrentStepOfRound',
       'vagariesOfWarPickUnits',
       'winterQuartersAddUnitsToPools',
@@ -403,8 +404,9 @@ class NotificationManager {
 
   async notif_discardCardInPlay(notif: Notif<NotifDiscardCardsInPlayArgs>) {
     const { card } = notif.args;
+    this.game.playerManager.getPlayerForFaction(card.faction as Faction).clearPlayerPanel(card.faction);
     await this.game.discard.addCard(card);
-    this.game.cardsInPlay.clearPlayerPanel(card.faction)
+
   }
 
   async notif_drawCardPrivate(notif: Notif<NotifDrawCardPrivateArgs>) {
@@ -686,10 +688,13 @@ class NotificationManager {
   }
 
   async notif_revealCardsInPlay(notif: Notif<NotifRevealCardsInPlayArgs>) {
-    // const {british, french, indian} = notif.args;
+    const { actionPoints } = notif.args;
 
     const factions: Faction[] = [BRITISH, FRENCH, INDIAN];
     for (let faction of factions) {
+      this.game.playerManager
+        .getPlayerForFaction(faction)
+        .setActionPoints(faction, actionPoints[faction]);
       await this.game.cardsInPlay.addCard({
         card: notif.args[faction],
         faction,
@@ -732,7 +737,6 @@ class NotificationManager {
         type: `${faction}_control_marker`,
       });
     } else {
-      console.log('remove enemy marker');
       // Remove enemy marker
       this.game.gameMap.removeMarkerFromSpace({
         spaceId: space.id,
@@ -741,8 +745,17 @@ class NotificationManager {
     }
   }
 
-  async notif_updateCurrentStepOfRound(notif: Notif<NotifUpdateCurrentStepOfRoundArgs>) {
-    const {round, step} = notif.args;
+  async notif_updateActionPoints(notif: Notif<NotifUpdateActionPointsArgs>)
+  {
+    const {faction, actionPoints, operation} = notif.args
+    const player = this.game.playerManager.getPlayerForFaction(faction);
+    player.updateActionPoints(faction, actionPoints, operation);
+  }
+
+  async notif_updateCurrentStepOfRound(
+    notif: Notif<NotifUpdateCurrentStepOfRoundArgs>
+  ) {
+    const { round, step } = notif.args;
     this.game.stepTracker.update(round, step);
   }
 

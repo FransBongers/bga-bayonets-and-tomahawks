@@ -100,7 +100,9 @@ class EventDelayedSuppliesFromFrance extends \BayonetsAndTomahawks\Models\Atomic
     };
 
     Globals::setLostAPFrench([$frenchAP]);
+    Notifications::updateActionPoints(FRENCH, [$frenchAP], REMOVE_AP);
     Globals::setLostAPIndian([$indianAP]);
+    Notifications::updateActionPoints(INDIAN, [$indianAP], REMOVE_AP);
 
     $player = self::getPlayer();
 

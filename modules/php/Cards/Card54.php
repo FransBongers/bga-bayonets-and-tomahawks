@@ -3,6 +3,7 @@
 namespace BayonetsAndTomahawks\Cards;
 
 use BayonetsAndTomahawks\Core\Globals;
+use BayonetsAndTomahawks\Core\Notifications;
 
 class Card54 extends \BayonetsAndTomahawks\Models\Card
 {
@@ -27,5 +28,6 @@ class Card54 extends \BayonetsAndTomahawks\Models\Card
         'id' => LIGHT_AP
       ]
     ]);
+    Notifications::updateActionPoints(FRENCH, [LIGHT_AP], ADD_AP);
   }
 }

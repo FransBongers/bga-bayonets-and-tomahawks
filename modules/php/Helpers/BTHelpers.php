@@ -37,6 +37,17 @@ class BTHelpers extends \APP_DbObject
     return $result;
   }
 
+  public static function getLostActionPoints($faction)
+  {
+    if ($faction === INDIAN) {
+      return Globals::getLostAPIndian();
+    } else if ($faction === BRITISH) {
+      return Globals::getLostAPBritish();
+    } else {
+      return Globals::getLostAPFrench();
+    }
+  }
+
   public static function getOtherFaction($faction)
   {
     return $faction === BRITISH ? FRENCH : BRITISH;

@@ -3,6 +3,7 @@
 namespace BayonetsAndTomahawks\Cards;
 
 use BayonetsAndTomahawks\Core\Globals;
+use BayonetsAndTomahawks\Core\Notifications;
 
 class Card30 extends \BayonetsAndTomahawks\Models\Card
 {
@@ -30,5 +31,6 @@ class Card30 extends \BayonetsAndTomahawks\Models\Card
   public function resolveARStart($ctx)
   {
     Globals::setLostAPBritish([ARMY_AP, ARMY_AP]);
+    Notifications::updateActionPoints(BRITISH, [ARMY_AP, ARMY_AP], REMOVE_AP);
   }
 }

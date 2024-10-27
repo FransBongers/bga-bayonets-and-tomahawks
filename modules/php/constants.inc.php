@@ -27,6 +27,12 @@ const PASS = 99;
 const AFTER_FINISHING_ACTION = 'afterFinishing';
 
 /**
+ * Operations on Action points
+ */
+const REMOVE_AP = 'REMOVE_AP';
+const ADD_AP = 'ADD_AP';
+
+/**
  * State ids / names
  */
 

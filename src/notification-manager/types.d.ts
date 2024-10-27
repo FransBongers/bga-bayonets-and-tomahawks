@@ -235,6 +235,7 @@ interface NotifRevealCardsInPlayArgs {
   british: BTCard;
   french: BTCard;
   indian: BTCard;
+  actionPoints: Record<Faction, BTActionPoint[]>;
 }
 
 interface NotifSelectReserveCardArgs extends NotifWithPlayerArgs {
@@ -248,6 +249,12 @@ interface NotifSelectReserveCardPrivateArgs extends NotifWithPlayerArgs {
 interface NotifTakeControlArgs extends NotifWithPlayerArgs {
   faction: BRITISH_FACTION | FRENCH_FACTION;
   space: BTSpace;
+}
+
+interface NotifUpdateActionPointsArgs {
+  faction: Faction;
+  actionPoints: string[];
+  operation: string;
 }
 
 interface NotifUpdateCurrentStepOfRoundArgs {

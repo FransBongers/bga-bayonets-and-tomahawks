@@ -1015,12 +1015,17 @@ class Notifications
     self::notifyAll("returnWIEChitsToPool", '', []);
   }
 
-  public static function revealCardsInPlay($britishCard, $frenchCard, $indianCard)
+  public static function revealCardsInPlay($britishCard, $frenchCard, $indianCard, $britishAP, $frenchAP, $indianAP)
   {
     self::notifyAll("revealCardsInPlay", clienttranslate('Both players have selected a card. Cards are revealed'), [
       'british' => $britishCard,
       'french' => $frenchCard,
       'indian' => $indianCard,
+      'actionPoints' => [
+        BRITISH => $britishAP,
+        FRENCH => $frenchAP,
+        INDIAN => $indianAP,
+      ]
     ]);
   }
 
@@ -1055,6 +1060,15 @@ class Notifications
     $text = $criteriaHaveBeenMet ? clienttranslate('${player_name} gets Year End Bonus') : clienttranslate('${player_name} does not get Year End Bonus');
     self::message($text, [
       'player' => $player
+    ]);
+  }
+
+  public static function updateActionPoints($faction, $actionPoints, $operation)
+  {
+    self::notifyAll("updateActionPoints", '', [
+      'faction' => $faction,
+      'actionPoints' => $actionPoints,
+      'operation' => $operation
     ]);
   }
 

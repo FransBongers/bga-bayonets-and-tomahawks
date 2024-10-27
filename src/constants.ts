@@ -15,6 +15,12 @@ const BT_SELECTED = 'bt_selected';
 const DISCARD = 'discard';
 
 /**
+ * Operations on Action points
+ */
+const REMOVE_AP = 'REMOVE_AP';
+const ADD_AP = 'ADD_AP';
+
+/**
  * Setting ids
  */
 // const CARD_SIZE_IN_LOG = 'cardSizeInLog';

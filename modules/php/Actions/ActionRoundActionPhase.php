@@ -62,7 +62,10 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
       $card = Cards::getTopOf(Locations::cardInPlay($this->getPlayer()->getFaction()));
     }
 
-    $lostAP = $this->getLostActionPoints($isIndianActions);
+    $player = self::getPlayer();
+    $playerFaction = $player->getFaction();
+
+    $lostAP = BTHelpers::getLostActionPoints($isIndianActions ? INDIAN : $playerFaction);
     $unavailableActionPoints = array_merge($usedActionPoints, $lostAP);
 
     $availableActionPoints = isset($info['isReaction']) && $info['isReaction'] ?
@@ -71,7 +74,7 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
           'id' => $this->ctx->getInfo()['actionPointId']
         ]
       ] :
-      BTHelpers::getAvailableActionPoints($unavailableActionPoints, $card, self::getPlayer()->getFaction() === FRENCH && !$isIndianActions ? Globals::getAddedAPFrench() : []);
+      BTHelpers::getAvailableActionPoints($unavailableActionPoints, $card, $playerFaction === FRENCH && !$isIndianActions ? Globals::getAddedAPFrench() : []);
 
     return [
       // 'action' => $action,
@@ -159,19 +162,6 @@ class ActionRoundActionPhase extends \BayonetsAndTomahawks\Models\AtomicAction
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
-
-  private function getLostActionPoints($isIndianActions)
-  {
-    if ($isIndianActions) {
-      return Globals::getLostAPIndian();
-    };
-    $faction = self::getPlayer()->getFaction();
-    if ($faction === BRITISH) {
-      return Globals::getLostAPBritish();
-    } else {
-      return Globals::getLostAPFrench();
-    }
-  }
 
   private function getUsedActionPoints()
   {

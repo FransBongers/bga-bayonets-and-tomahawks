@@ -49,7 +49,7 @@ class BatPlayer {
   // .##....##.##..........##....##.....##.##.......
   // ..######..########....##.....#######..##.......
 
-  updatePlayer(playerGamedatas: BayonetsAndTomahawksPlayerData ) {
+  updatePlayer(playerGamedatas: BayonetsAndTomahawksPlayerData) {
     this.updatePlayerPanel({ playerGamedatas });
   }
 
@@ -77,24 +77,42 @@ class BatPlayer {
   }: {
     playerGamedatas: BayonetsAndTomahawksPlayerData;
   }) {
-    const playerBoardDiv: HTMLElement = $("player_board_" + this.playerId);
+    const playerBoardDiv: HTMLElement = $('player_board_' + this.playerId);
     playerBoardDiv.insertAdjacentHTML(
-      "beforeend",
+      'beforeend',
       tplPlayerPanel({ playerId: this.playerId, faction: this.faction })
     );
 
     this.updatePlayerPanel({ playerGamedatas });
   }
 
-  updatePlayerPanel({ playerGamedatas }: { playerGamedatas: BgaPlayer }) {
+  updatePlayerPanel({
+    playerGamedatas,
+  }: {
+    playerGamedatas: BayonetsAndTomahawksPlayerData;
+  }) {
     if (this.game.framework().scoreCtrl?.[this.playerId]) {
       this.game
         .framework()
         .scoreCtrl[this.playerId].setValue(Number(playerGamedatas.score));
     }
+
+    this.setActionPoints(
+      this.faction,
+      playerGamedatas.actionPoints[this.faction]
+    );
+
+    if (this.faction === FRENCH) {
+      this.setActionPoints(INDIAN, playerGamedatas.actionPoints[INDIAN]);
+    }
   }
 
-  clearInterface() {}
+  clearInterface() {
+    this.clearPlayerPanel(this.faction);
+    if (this.faction === FRENCH) {
+      this.clearPlayerPanel(INDIAN);
+    }
+  }
 
   // ..######...########.########.########.########.########...######.
   // .##....##..##..........##.......##....##.......##.....##.##....##
@@ -135,6 +153,41 @@ class BatPlayer {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  public setActionPoints(faction: Faction, actionPoints: BTActionPoint[]) {
+    const playerPanelNode = document.getElementById(`${faction}_action_points`);
+
+    actionPoints.forEach(({ id }) => {
+      playerPanelNode.insertAdjacentHTML(
+        'beforeend',
+        tplLogTokenActionPoint(this.faction, id)
+      );
+    });
+  }
+
+  public updateActionPoints(faction: Faction, actionPoints: string[], operation: string) {
+    actionPoints.forEach((actionPoint) => {
+      const playerPanelNode = document.getElementById(`${faction}_action_points`);
+      if (operation === ADD_AP) {
+        playerPanelNode.insertAdjacentHTML('beforeend', tplLogTokenActionPoint(faction, actionPoint))
+      } else if (operation === REMOVE_AP) {
+        for (let i = 0; i < playerPanelNode.children.length; i++) {
+          const node = playerPanelNode.children.item(i);
+          if (node.children.item(0).getAttribute('data-ap-id') === actionPoint) {
+            node.remove();
+            break;
+          }
+        }    
+      }
+    })
+  }
+
+  public clearPlayerPanel(faction: string) {
+    const playerPanelNode = document.getElementById(`${faction}_action_points`);
+    if (playerPanelNode) {
+      playerPanelNode.replaceChildren();
+    }
+  }
 
   // ....###.....######..########.####..#######..##....##..######.
   // ...##.##...##....##....##.....##..##.....##.###...##.##....##

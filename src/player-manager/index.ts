@@ -37,6 +37,12 @@ class PlayerManager {
     return Object.values(this.players);
   }
 
+  getPlayerForFaction(faction: Faction) {
+    return this.getPlayers().filter((player) => {
+      return player.faction === faction || (faction === INDIAN && player.faction === FRENCH);
+    })[0];
+  }
+
   getPlayerIds(): number[] {
     return Object.keys(this.players).map(Number);
   }

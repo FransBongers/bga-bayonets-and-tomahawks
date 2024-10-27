@@ -132,12 +132,20 @@ class ActionRoundChooseCard extends \BayonetsAndTomahawks\Models\AtomicAction
     $britishCard = Cards::getTopOf(Locations::cardInPlay(BRITISH));
     $frenchCard = Cards::getTopOf(Locations::cardInPlay(FRENCH));
     $indianCard = Cards::getTopOf(Locations::cardInPlay(INDIAN));
-    Notifications::revealCardsInPlay($britishCard, $frenchCard, $indianCard);
 
     // Determine initiative
     $factionWithInitiative = $frenchCard->getInitiativeValue() >= $britishCard->getInitiativeValue() ? FRENCH : BRITISH;
+    $playersPerFaction = Players::getPlayersForFactions();
+    $factionPlayer = $playersPerFaction[$factionWithInitiative];
+
+    $britishAP = $playersPerFaction[BRITISH]->getActionPointsInPlay()[BRITISH];
+    $frenchAndIndianAP = $playersPerFaction[FRENCH]->getActionPointsInPlay();
+    $frenchAP = $frenchAndIndianAP[FRENCH];
+    $indianAP = $frenchAndIndianAP[INDIAN];
+
+    Notifications::revealCardsInPlay($britishCard, $frenchCard, $indianCard, $britishAP, $frenchAP, $indianAP);
     Notifications::gainInitiative($factionWithInitiative);
-    $factionPlayer = Players::getPlayerForFaction($factionWithInitiative);
+    
 
     // Add choose first player step to engine
     $this->ctx->insertAsBrother(new LeafNode([

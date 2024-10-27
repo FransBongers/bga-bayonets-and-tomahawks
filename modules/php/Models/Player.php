@@ -6,8 +6,8 @@ use BayonetsAndTomahawks\Core\Game;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Core\Preferences;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\Locations;
-use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Events;
 use BayonetsAndTomahawks\Managers\Players;
@@ -48,11 +48,14 @@ class Player extends \BayonetsAndTomahawks\Helpers\DB_Model
 
     $wieChit = WarInEuropeChits::getTopOf(Locations::wieChitPlaceholder($this->getFaction()));
 
+
+
     return array_merge(
       $data,
       [
         'faction' => $this->getFaction(),
         'hand' => $isCurrentPlayer ? $this->getHand() : [],
+        'actionPoints' => $this->getActionPointsInPlay(),
         'wieChit' => [
           'hasChit' => $wieChit !== null,
           'chit' => $isCurrentPlayer || ($wieChit !== null && $wieChit->isRevealed()) ? $wieChit : null,
@@ -95,5 +98,26 @@ class Player extends \BayonetsAndTomahawks\Helpers\DB_Model
     foreach ($cards as $card) {
       $card->discard();
     }
+  }
+
+  public function getActionPointsInPlay()
+  {
+    $faction = $this->getFaction();
+    $actionPoints = [
+      $faction => [],
+    ];
+    
+    $cardsInPlay = Cards::getCardsInPlay();
+    if ($cardsInPlay[$faction] !== null) {
+      $lostAP = BTHelpers::getLostActionPoints($faction);
+      $actionPoints[$faction] = BTHelpers::getAvailableActionPoints($lostAP, $cardsInPlay[$faction], $faction === FRENCH ? Globals::getAddedAPFrench() : []);
+    }
+    if ($faction === FRENCH && $cardsInPlay[INDIAN] !== null) {
+      $lostAP = BTHelpers::getLostActionPoints(INDIAN);
+      $actionPoints[INDIAN] = BTHelpers::getAvailableActionPoints($lostAP, $cardsInPlay[INDIAN], []);
+    } else if ($faction === FRENCH) {
+      $actionPoints[INDIAN] = [];
+    }
+    return $actionPoints;
   }
 }
