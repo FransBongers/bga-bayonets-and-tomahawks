@@ -121,7 +121,6 @@ class BattleFortElimination extends \BayonetsAndTomahawks\Actions\Battle
   public function actPassBattleFortElimination()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

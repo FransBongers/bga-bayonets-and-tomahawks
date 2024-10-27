@@ -95,7 +95,6 @@ class EventDiseaseInFrenchCamp extends \BayonetsAndTomahawks\Models\AtomicAction
   public function actPassEventDiseaseInFrenchCamp()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

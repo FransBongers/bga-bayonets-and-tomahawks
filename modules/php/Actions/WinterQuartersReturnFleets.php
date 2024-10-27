@@ -106,7 +106,6 @@ class WinterQuartersReturnFleets extends \BayonetsAndTomahawks\Models\AtomicActi
   public function actPassWinterQuartersReturnFleets()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

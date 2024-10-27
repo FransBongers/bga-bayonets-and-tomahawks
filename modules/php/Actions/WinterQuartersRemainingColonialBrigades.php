@@ -96,7 +96,6 @@ class WinterQuartersRemainingColonialBrigades extends \BayonetsAndTomahawks\Mode
   public function actPassWinterQuartersRemainingColonialBrigades()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

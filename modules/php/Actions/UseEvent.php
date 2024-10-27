@@ -92,7 +92,7 @@ class UseEvent extends \BayonetsAndTomahawks\Actions\Battle
   {
     $player = self::getPlayer();
     $stateArgs = $this->argsUseEvent();
-    // Stats::incPassActionCount($player->getId(), 1);
+
     Notifications::message(clienttranslate('${player_name} does not use ${tkn_boldText_eventTitle}'), [
       'player' => $player,
       'tkn_boldText_eventTitle' => $stateArgs['eventTitle'],

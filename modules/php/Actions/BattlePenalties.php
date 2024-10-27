@@ -106,7 +106,6 @@ class BattlePenalties extends \BayonetsAndTomahawks\Actions\Battle
   public function actPassBattlePenalties()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

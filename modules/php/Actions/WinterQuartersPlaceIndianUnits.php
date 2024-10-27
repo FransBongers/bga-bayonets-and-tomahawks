@@ -114,7 +114,6 @@ class WinterQuartersPlaceIndianUnits extends \BayonetsAndTomahawks\Models\Atomic
   public function actPassWinterQuartersPlaceIndianUnits()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

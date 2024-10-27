@@ -104,7 +104,7 @@ class VagariesOfWarPickUnits extends \BayonetsAndTomahawks\Actions\LogisticsRoun
   public function actPassVagariesOfWarPickUnits()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
+
     Engine::resolve(PASS);
   }
 

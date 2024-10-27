@@ -103,7 +103,6 @@ class EventFrenchLakeWarships extends \BayonetsAndTomahawks\Models\AtomicAction
   public function actPassEventFrenchLakeWarships()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

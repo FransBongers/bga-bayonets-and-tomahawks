@@ -77,7 +77,6 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
   public function actPassActionRoundChooseFirstPlayer()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

@@ -99,7 +99,6 @@ class BattleApplyHits extends \BayonetsAndTomahawks\Actions\Battle
   public function actPassBattleApplyHits()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

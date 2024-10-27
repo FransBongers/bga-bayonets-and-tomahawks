@@ -119,7 +119,6 @@ class WinterQuartersMoveStackOnSailBox extends \BayonetsAndTomahawks\Models\Atom
   public function actPassWinterQuartersMoveStackOnSailBox()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

@@ -169,7 +169,6 @@ class RaidResolution extends \BayonetsAndTomahawks\Actions\Raid
   public function actPassRaidResolution()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

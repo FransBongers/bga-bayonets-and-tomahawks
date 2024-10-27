@@ -133,7 +133,6 @@ class BattleRout extends \BayonetsAndTomahawks\Actions\Battle
   public function actPassBattleRout()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

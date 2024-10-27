@@ -104,7 +104,6 @@ class Construction extends \BayonetsAndTomahawks\Actions\UnitMovement
   public function actPassConstruction()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

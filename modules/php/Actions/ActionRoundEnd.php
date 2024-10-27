@@ -186,7 +186,6 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
   public function actPassActionRoundEnd()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

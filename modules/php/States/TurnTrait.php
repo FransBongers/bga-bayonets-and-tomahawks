@@ -81,8 +81,6 @@ trait TurnTrait
     $britishPlayerId = $playerIds[BRITISH];
     $frenchPlayerId = $playerIds[FRENCH];
 
-    // Stats::incPlayerTurnCount($player);
-    // Stats::incTurnCount(1);
     $node = [];
     $currentRoundStep = Globals::getActionRound();
 
@@ -226,8 +224,6 @@ trait TurnTrait
     $player = Players::getActive();
     self::giveExtraTime($player->getId());
 
-    // Stats::incPlayerTurnCount($player);
-    // Stats::incTurnCount(1);
     $node = [
       'children' => [
         [
@@ -238,15 +234,6 @@ trait TurnTrait
           'action' => ACTION_ROUND_CHOOSE_CARD,
           'playerId' => 'all',
         ],
-        // [
-        //   'children' => [
-        //     [
-        //       'action' => FREE_ACTION,
-        //       'optional' => true,
-        //       'playerId' => $player->getId(),
-        //     ],
-        //   ]
-        // ]
       ],
     ];
     // Notifications::startTurn($player);

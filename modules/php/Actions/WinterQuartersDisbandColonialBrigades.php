@@ -114,7 +114,7 @@ class WinterQuartersDisbandColonialBrigades extends \BayonetsAndTomahawks\Models
   public function actPassWinterQuartersDisbandColonialBrigades()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
+
     Engine::resolve(PASS);
   }
 

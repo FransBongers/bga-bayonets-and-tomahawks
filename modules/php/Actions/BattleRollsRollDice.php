@@ -137,7 +137,6 @@ class BattleRollsRollDice extends \BayonetsAndTomahawks\Actions\Battle
   public function actPassBattleRollsRollDice()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

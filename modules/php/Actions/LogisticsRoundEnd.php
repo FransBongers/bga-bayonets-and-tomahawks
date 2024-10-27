@@ -104,7 +104,6 @@ class LogisticsRoundEnd extends \BayonetsAndTomahawks\Actions\LogisticsRounds
   public function actPassLogisticsRoundEnd()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

@@ -90,7 +90,6 @@ class DrawReserveCards extends \BayonetsAndTomahawks\Models\AtomicAction
   public function actPassDrawReserveCards()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

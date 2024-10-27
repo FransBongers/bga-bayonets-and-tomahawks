@@ -187,8 +187,6 @@ class DrawReinforcements extends \BayonetsAndTomahawks\Actions\LogisticsRounds
 
   public function actPassDrawReinforcements()
   {
-    // $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

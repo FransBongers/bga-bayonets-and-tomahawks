@@ -140,7 +140,6 @@ class WinterQuartersReturnToColoniesMoveStack extends \BayonetsAndTomahawks\Acti
   public function actPassWinterQuartersReturnToColoniesMoveStack()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

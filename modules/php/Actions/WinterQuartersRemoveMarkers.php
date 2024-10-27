@@ -95,7 +95,6 @@ class WinterQuartersRemoveMarkers extends \BayonetsAndTomahawks\Models\AtomicAct
   public function actPassWinterQuartersRemoveMarkers()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

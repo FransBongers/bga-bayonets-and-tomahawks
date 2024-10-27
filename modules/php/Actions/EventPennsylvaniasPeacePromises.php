@@ -69,7 +69,6 @@ class EventPennsylvaniasPeacePromises extends \BayonetsAndTomahawks\Models\Atomi
   public function actPassEventPennsylvaniasPeacePromises()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

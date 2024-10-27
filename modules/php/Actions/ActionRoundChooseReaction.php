@@ -80,7 +80,6 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
   public function actPassActionRoundChooseReaction()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

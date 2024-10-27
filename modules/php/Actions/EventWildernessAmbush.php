@@ -86,7 +86,6 @@ class EventWildernessAmbush extends \BayonetsAndTomahawks\Actions\Battle
   public function actPassEventWildernessAmbush()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Notifications::message(clienttranslate('${player_name} does not use ${tkn_boldText_eventName}'), [
       'player' => $player,
       'tkn_boldText_eventName' => clienttranslate('Wilderness Ambush'),

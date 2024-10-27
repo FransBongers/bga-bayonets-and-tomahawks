@@ -135,7 +135,6 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
   public function actPassBattleCleanup()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

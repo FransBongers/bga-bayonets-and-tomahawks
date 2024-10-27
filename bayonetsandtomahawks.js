@@ -12090,19 +12090,19 @@ var getARStepConfig = function (isAR1) {
             {
                 id: SELECT_RESERVE_CARD_STEP,
                 stepNumber: 0,
-                text: _('Select Reserve card'),
+                text: _('Choose Reserve card'),
             },
         ]
         : [];
     return steps.concat([
         {
             id: SELECT_CARD_TO_PLAY_STEP,
-            text: _('Select card to Play'),
+            text: _('Choose card to Play'),
             stepNumber: 1,
         },
         {
             id: SELECT_FIRST_PLAYER_STEP,
-            text: _('Select First Player'),
+            text: _('Choose First Player'),
             stepNumber: 2,
         },
         {

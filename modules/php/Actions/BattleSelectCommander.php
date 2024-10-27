@@ -99,7 +99,6 @@ class BattleSelectCommander extends \BayonetsAndTomahawks\Actions\Battle
   public function actPassBattleSelectCommander()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

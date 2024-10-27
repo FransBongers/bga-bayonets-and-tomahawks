@@ -96,7 +96,6 @@ class MarshalTroops extends \BayonetsAndTomahawks\Actions\UnitMovement
   public function actPassMarshalTroops()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

@@ -75,7 +75,6 @@ class EventDelayedSuppliesFromFrance extends \BayonetsAndTomahawks\Models\Atomic
   public function actPassEventDelayedSuppliesFromFrance()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

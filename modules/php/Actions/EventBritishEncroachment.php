@@ -138,7 +138,6 @@ class EventBritishEncroachment extends \BayonetsAndTomahawks\Models\AtomicAction
   public function actPassEventBritishEncroachment()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

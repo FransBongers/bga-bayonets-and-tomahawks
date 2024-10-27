@@ -91,7 +91,6 @@ class ActionRoundChooseCard extends \BayonetsAndTomahawks\Models\AtomicAction
   public function actPassActionRoundChooseCard()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

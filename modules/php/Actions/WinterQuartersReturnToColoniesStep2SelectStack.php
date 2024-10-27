@@ -106,7 +106,6 @@ class WinterQuartersReturnToColoniesStep2SelectStack extends \BayonetsAndTomahaw
   public function actPassWinterQuartersReturnToColoniesStep2SelectStack()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

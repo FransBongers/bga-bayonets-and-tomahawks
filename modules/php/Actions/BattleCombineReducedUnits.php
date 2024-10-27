@@ -91,7 +91,6 @@ class BattleCombineReducedUnits extends \BayonetsAndTomahawks\Actions\Battle
   public function actPassBattleCombineReducedUnits()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

@@ -93,7 +93,6 @@ class EventSmallpoxInfectedBlankets extends \BayonetsAndTomahawks\Models\AtomicA
   public function actPassEventSmallpoxInfectedBlankets()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

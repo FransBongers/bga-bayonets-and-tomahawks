@@ -116,7 +116,6 @@ class ActionRoundResolveARStartEvent extends \BayonetsAndTomahawks\Models\Atomic
   public function actPassActionRoundResolveARStartEvent()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

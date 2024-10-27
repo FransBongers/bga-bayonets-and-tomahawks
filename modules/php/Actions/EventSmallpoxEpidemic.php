@@ -128,7 +128,6 @@ class EventSmallpoxEpidemic extends \BayonetsAndTomahawks\Models\AtomicAction
   public function actPassEventSmallpoxEpidemic()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

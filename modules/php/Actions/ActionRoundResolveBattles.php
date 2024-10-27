@@ -135,7 +135,6 @@ class ActionRoundResolveBattles extends \BayonetsAndTomahawks\Models\AtomicActio
   public function actPassActionRoundResolveBattles()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

@@ -102,7 +102,6 @@ class SailMovement extends \BayonetsAndTomahawks\Models\AtomicAction
   public function actPassSailMovement()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
 
     $this->resolveAction(PASS);
   }

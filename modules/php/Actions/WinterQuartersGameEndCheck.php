@@ -132,7 +132,6 @@ class WinterQuartersGameEndCheck extends \BayonetsAndTomahawks\Models\AtomicActi
   public function actPassWinterQuartersGameEndCheck()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

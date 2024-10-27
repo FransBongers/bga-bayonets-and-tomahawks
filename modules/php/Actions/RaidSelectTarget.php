@@ -129,7 +129,6 @@ class RaidSelectTarget extends \BayonetsAndTomahawks\Actions\Raid
   public function actPassRaidSelectTarget()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

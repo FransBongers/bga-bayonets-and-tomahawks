@@ -97,7 +97,6 @@ class EventWinteringRearAdmiral extends \BayonetsAndTomahawks\Actions\Battle
   public function actPassEventWinteringRearAdmiral()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
 
     $this->resolveAction(PASS);
   }

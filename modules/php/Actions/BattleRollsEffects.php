@@ -172,7 +172,6 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
   public function actPassBattleRollsEffects()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

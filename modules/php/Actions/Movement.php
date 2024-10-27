@@ -161,8 +161,6 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
     $units = $space->getUnits($player->getFaction());
 
     $this->loneCommanderCheck($player, $space, $units);
-    // Stats::incPassActionCount($player->getId(), 1);
-    // Engine::resolve(PASS);
     $this->resolveAction(PASS);
   }
 

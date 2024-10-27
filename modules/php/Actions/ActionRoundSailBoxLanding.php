@@ -103,7 +103,6 @@ class ActionRoundSailBoxLanding extends \BayonetsAndTomahawks\Models\AtomicActio
   public function actPassActionRoundSailBoxLanding()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

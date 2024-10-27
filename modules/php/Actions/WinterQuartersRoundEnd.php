@@ -117,7 +117,6 @@ class WinterQuartersRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
   public function actPassWinterQuartersRoundEnd()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

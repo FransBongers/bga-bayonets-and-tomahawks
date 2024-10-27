@@ -105,8 +105,6 @@ class VagariesOfWarPutBackInPool extends \BayonetsAndTomahawks\Actions\Logistics
 
   public function actPassVagariesOfWarPutBackInPool()
   {
-    // $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

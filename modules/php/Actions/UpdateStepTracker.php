@@ -79,7 +79,6 @@ class UpdateStepTracker extends \BayonetsAndTomahawks\Models\AtomicAction
   public function actPassUpdateStepTracker()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

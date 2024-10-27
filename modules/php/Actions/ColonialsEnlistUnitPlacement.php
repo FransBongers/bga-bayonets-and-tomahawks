@@ -104,7 +104,6 @@ class ColonialsEnlistUnitPlacement extends \BayonetsAndTomahawks\Actions\Logisti
   public function actPassColonialsEnlistUnitPlacement()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

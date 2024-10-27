@@ -59,8 +59,6 @@ class PlayerAction extends \BayonetsAndTomahawks\Models\AtomicAction
   public function actPassPlayerAction()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
-    // Engine::resolve(PASS);
     $this->resolveAction(PASS);
   }
 

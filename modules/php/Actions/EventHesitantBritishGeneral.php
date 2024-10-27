@@ -70,7 +70,6 @@ class EventHesitantBritishGeneral extends \BayonetsAndTomahawks\Models\AtomicAct
   public function actPassEventHesitantBritishGeneral()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

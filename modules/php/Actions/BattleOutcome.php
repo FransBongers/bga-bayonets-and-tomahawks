@@ -136,7 +136,6 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
   public function actPassBattleOutcome()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

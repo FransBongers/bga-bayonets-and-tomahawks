@@ -1,0 +1,47 @@
+{
+  "table": {
+    "winner": {
+      "id": 10,
+      "name": "Winning faction",
+      "type": "int"
+    }
+  },
+  "player": {
+    "winPercentageAsBritish": {
+      "id": 30,
+      "name": "Win % as British",
+      "type": "int"
+    },
+    "winPercentageAsFrench": {
+      "id": 31,
+      "name": "Win % as French",
+      "type": "int"
+    },
+    "raid": {
+      "id": 32,
+      "name": "Raid actions",
+      "type": "int"
+    },
+    "movement": {
+      "id": 33,
+      "name": "Movement actions",
+      "type": "int"
+    },
+    "marshalTroops": {
+      "id": 34,
+      "name": "Marshal Troops actions",
+      "type": "int"
+    },
+    "construction": {
+      "id": 35,
+      "name": "Construction actions",
+      "type": "int"
+    }
+  },
+  "value_labels": {
+    "10": [
+      "British",
+      "French"
+    ]
+  }
+}

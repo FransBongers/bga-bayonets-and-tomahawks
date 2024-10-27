@@ -127,7 +127,6 @@ class FleetsArriveUnitPlacement extends \BayonetsAndTomahawks\Actions\LogisticsR
   public function actPassFleetsArriveUnitPlacement()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

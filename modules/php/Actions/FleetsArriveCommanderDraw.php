@@ -120,7 +120,6 @@ class FleetsArriveCommanderDraw extends \BayonetsAndTomahawks\Actions\LogisticsR
   public function actPassFleetsArriveCommanderDraw()
   {
     // $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Engine::resolve(PASS);
   }
 

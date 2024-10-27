@@ -87,7 +87,6 @@ class EventStagedLacrosseGame extends \BayonetsAndTomahawks\Models\AtomicAction
   public function actPassEventStagedLacrosseGame()
   {
     $player = self::getPlayer();
-    // Stats::incPassActionCount($player->getId(), 1);
     Notifications::message(clienttranslate('${player_name} does not use Staged Lacrosse Game'), [
       'player' => $player
     ]);
