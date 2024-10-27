@@ -87,6 +87,7 @@ interface BayonetsAndTomahawksGame extends Game {
   playerManager: PlayerManager;
   pools: Pools;
   settings: Settings;
+  stepTracker: StepTracker;
   tabbedColumn: TabbedColumn;
   tokenManager: TokenManager;
   tooltipManager: TooltipManager;
@@ -240,6 +241,10 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
     Cherokee: BRITISH_FACTION | FRENCH_FACTION | 'neutral';
     Iroquois: BRITISH_FACTION | FRENCH_FACTION | 'neutral';
   };
+  currentRound: {
+    id: string;
+    step: string;
+  }
   markers: {
     year_marker: BTMarker;
     round_marker: BTMarker;

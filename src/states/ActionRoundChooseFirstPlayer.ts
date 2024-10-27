@@ -7,14 +7,14 @@ class ActionRoundChooseFirstPlayerState implements State {
   }
 
   onEnteringState(args: OnEnteringActionRoundChooseFirstPlayerStateArgs) {
-    debug("Entering ActionRoundChooseFirstPlayerState");
+    debug('Entering ActionRoundChooseFirstPlayerState');
     this.args = args;
     this.game.tabbedColumn.changeTab('cards');
     this.updateInterfaceInitialStep();
   }
 
   onLeavingState() {
-    debug("Leaving ActionRoundChooseFirstPlayerState");
+    debug('Leaving ActionRoundChooseFirstPlayerState');
   }
 
   setDescription(activePlayerId: number) {}
@@ -38,9 +38,9 @@ class ActionRoundChooseFirstPlayerState implements State {
   private updateInterfaceInitialStep() {
     this.game.clearPossible();
     this.game.clientUpdatePageTitle({
-      text: _("${you} must choose the First Player for this Action Round"),
+      text: _('${you} must choose the First Player for this Action Round'),
       args: {
-        you: "${you}",
+        you: '${you}',
       },
     });
     this.game.hand.open();
@@ -48,13 +48,15 @@ class ActionRoundChooseFirstPlayerState implements State {
     this.game.playerManager.getPlayers().forEach((player) => {
       this.game.addPlayerButton({
         player: player.playerData,
-        callback: () =>
+        callback: () => {
+          this.game.clearPossible();
           this.game.takeAction({
-            action: "actActionRoundChooseFirstPlayer",
+            action: 'actActionRoundChooseFirstPlayer',
             args: {
               playerId: player.getPlayerId(),
             },
-          }),
+          });
+        },
       });
     });
 

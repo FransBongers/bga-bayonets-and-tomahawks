@@ -52,6 +52,8 @@ const ST_SETUP_ACTION_ROUND = 20;
 const ST_SELECT_RESERVE_CARD = 21;
 const ST_PLAYER_ACTION = 22;
 
+const ST_UPDATE_STEP_TRACKER = 28;
+
 const ST_ACTION_ROUND_DRAW_CARDS = 29;
 const ST_ACTION_ROUND_CHOOSE_CARD = 30;
 const ST_ACTION_ROUND_CHOOSE_FIRST_PLAYER = 31;
@@ -222,6 +224,7 @@ const MOVEMENT_PLACE_SPENT_MARKERS = 'MOVEMENT_PLACE_SPENT_MARKERS';
 const MOVE_STACK = 'MOVE_STACK';
 const PLACE_MARKER_ON_STACK = 'PLACE_MARKER_ON_STACK';
 const SAIL_MOVEMENT = 'SAIL_MOVEMENT';
+const UPDATE_STEP_TRACKER = 'UPDATE_STEP_TRACKER';
 const VAGARIES_OF_WAR_PICK_UNITS = 'VAGARIES_OF_WAR_PICK_UNITS';
 const VAGARIES_OF_WAR_PUT_BACK_IN_POOL = 'VAGARIES_OF_WAR_PUT_BACK_IN_POOL';
 const WINTER_QUARTERS_DISBAND_COLONIAL_BRIGADES = 'WINTER_QUARTERS_DISBAND_COLONIAL_BRIGADES';
@@ -304,6 +307,41 @@ const VICTORY_POINTS_BRITISH_10 = 'victory_points_british_10';
 const BATTLE_MARKERS_POOL = 'battle_markers_pool';
 
 const OPEN_SEAS_MARKER_SAIL_BOX = 'openSeasMarkerSailBox';
+
+/**
+ * Steps of actions rounds (used for tracker in UI)
+ */
+const SELECT_RESERVE_CARD_STEP = 'selectReserveCardStep';
+const SELECT_CARD_TO_PLAY_STEP = 'selectCardToPlayStep';
+const SELECT_FIRST_PLAYER_STEP = 'selectFirstPlayerStep';
+const RESOLVE_AR_START_EVENTS_STEP = 'resolveARStartEventsStep';
+const FIRST_PLAYER_ACTIONS_STEP = 'firstPlayerActionsStep';
+const SECOND_PLAYER_ACTIONS_STEP = 'secondPlayerActionsStep';
+const FIRST_PLAYER_REACTION_STEP = 'firstPlayerReactionStep';
+const RESOLVE_BATTLES_STEP = 'resolveBattlesStep';
+const END_OF_AR_STEPS = 'endOfARSteps';
+
+// Fleets arrive
+const DRAW_FLEETS_STEP = 'drawFleetsStep';
+const DRAW_BRITISH_UNITS_STEP = 'drawBritishUnitsStep';
+const DRAW_FRENCH_UNITS_STEP = 'drawFrenchUnitsStep';
+const PLACE_BRITISH_UNITS_STEP = 'placeBritishUnitsStep';
+const PLACE_FRENCH_UNITS_STEP = 'placeFrenchUnitsStep';
+
+// Colonials Enlist
+const DRAW_COLONIAL_REINFORCEMENTS_STEP = 'drawColonialReinforcementsStep';
+const PLACE_COLONIAL_UNITS_STEP = 'placeColonialUnitsStep';
+
+// Winter Quarters
+const PERFORM_VICTORY_CHECK_STEP = 'performVictoryCheckStep';
+const REMOVE_MARKERS_STEP = 'removeMarkersStep';
+const MOVE_STACKS_ON_SAIL_BOX_STEP = 'moveStacksOnSailBoxStep';
+const PLACE_INDIAN_UNITS_STEP = 'placeIndianUnitsStep';
+const MOVE_COLONIAL_BRIGADES_TO_DISBANDED_STEP = 'moveColonialBrigadesToDisbandedStep';
+const RETURN_TO_COLONIES_STEP = 'returnToColoniesStep';
+const RETURN_FLEETS_TO_FLEET_POOL_STEP = 'returnFleetsToFleetPoolStep';
+const PLACE_UNITS_FROM_LOSSES_BOX_STEP = 'placeUnitsFromLossesBoxStep';
+const END_OF_YEAR_STEP = 'endOfYearStep';
 
 // Die faces
 const FLAG = 'flag';

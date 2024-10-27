@@ -54,6 +54,10 @@ trait TurnTrait
     $node = [
       'children' => [
         [
+          'action' => UPDATE_STEP_TRACKER,
+          'step' => SELECT_RESERVE_CARD_STEP,
+        ],
+        [
           'action' => DRAW_RESERVE_CARDS,
         ],
         [
@@ -98,6 +102,10 @@ trait TurnTrait
     if ($isActionRound) {
       $node = [
         'children' => [
+          [
+            'action' => UPDATE_STEP_TRACKER,
+            'step' => SELECT_CARD_TO_PLAY_STEP,
+          ],
           [
             'action' => ACTION_ROUND_DRAW_CARDS,
           ],
@@ -161,6 +169,11 @@ trait TurnTrait
     $node = [
       'children' => [
         [
+          'action' => UPDATE_STEP_TRACKER,
+          'playerId' => $playerId,
+          'step' => FIRST_PLAYER_REACTION_STEP,
+        ],
+        [
           'action' => ACTION_ROUND_ACTION_PHASE,
           'playerId' => $playerId,
           'optional' => true,
@@ -180,8 +193,18 @@ trait TurnTrait
     $node = [
       'children' => [
         [
+          'action' => UPDATE_STEP_TRACKER,
+          'playerId' => $playerId,
+          'step' => RESOLVE_BATTLES_STEP,
+        ],
+        [
           'action' => ACTION_ROUND_RESOLVE_BATTLES,
           'playerId' => $playerId,
+        ],
+        [
+          'action' => UPDATE_STEP_TRACKER,
+          'playerId' => $playerId,
+          'step' => END_OF_AR_STEPS,
         ],
         [
           'action' => ACTION_ROUND_END,
@@ -299,9 +322,17 @@ trait TurnTrait
     $node = [
       'children' => [
         [
+          'action' => UPDATE_STEP_TRACKER,
+          'step' => PERFORM_VICTORY_CHECK_STEP,
+        ],
+        [
           'action' => WINTER_QUARTERS_GAME_END_CHECK,
         ],
         // 17.2.1 and 17.2.2
+        [
+          'action' => UPDATE_STEP_TRACKER,
+          'step' => REMOVE_MARKERS_STEP,
+        ],
         [
           'action' => WINTER_QUARTERS_REMOVE_MARKERS,
         ],
@@ -314,7 +345,13 @@ trait TurnTrait
       if (Utils::array_some($unitsOnSailBox, function ($unit) use ($faction) {
         return $unit->getFaction() === $faction;
       })) {
-        $node['children'][] =         [
+        $node['children'][] = [
+          'action' => UPDATE_STEP_TRACKER,
+          'step' => MOVE_STACKS_ON_SAIL_BOX_STEP,
+          'playerId' => $playerIds[$faction],
+        ];
+
+        $node['children'][] = [
           'action' => WINTER_QUARTERS_MOVE_STACK_ON_SAIL_BOX,
           'playerId' => $playerIds[$faction],
           'faction' => $faction,
@@ -327,9 +364,17 @@ trait TurnTrait
       [
         // Place Indian Units on their villages
         [
+          'action' => UPDATE_STEP_TRACKER,
+          'step' => PLACE_INDIAN_UNITS_STEP,
+        ],
+        [
           'action' => WINTER_QUARTERS_PLACE_INDIAN_UNITS,
         ],
         // Move Colonal Brigades to Disbanded Colonial Brigades
+        [
+          'action' => UPDATE_STEP_TRACKER,
+          'step' => MOVE_COLONIAL_BRIGADES_TO_DISBANDED_STEP,
+        ],
         [
           'children' => [
             [
@@ -339,6 +384,10 @@ trait TurnTrait
           ]
         ],
         // Return to Colonies
+        [
+          'action' => UPDATE_STEP_TRACKER,
+          'step' => RETURN_TO_COLONIES_STEP,
+        ],
         [
           'children' => [
             [
@@ -407,9 +456,18 @@ trait TurnTrait
         ],
         // Return all Fleets on the map to the fleets pool
         [
+          'action' => UPDATE_STEP_TRACKER,
+          'step' => RETURN_FLEETS_TO_FLEET_POOL_STEP,
+        ],
+        [
           'action' => WINTER_QUARTERS_RETURN_FLEETS,
         ],
         // Place units from Losses Box
+        [
+          'action' => UPDATE_STEP_TRACKER,
+          'step' => PLACE_UNITS_FROM_LOSSES_BOX_STEP,
+          'playerId' => $playerIds[BRITISH],
+        ],
         [
           'action' => WINTER_QUARTERS_PLACE_UNITS_FROM_LOSSES_BOX,
           'faction' => BRITISH,
@@ -423,95 +481,14 @@ trait TurnTrait
         // Reset cards
         // Advance Year Marker
         [
+          'action' => UPDATE_STEP_TRACKER,
+          'step' => END_OF_YEAR_STEP,
+        ],
+        [
           'action' => WINTER_QUARTERS_ROUND_END,
         ]
       ]
     );
-
-    // Place Indian Units on their villages
-    // $node['children'][] = [
-    //   'action' => WINTER_QUARTERS_PLACE_INDIAN_UNITS,
-    // ];
-    // Move Colonal Brigades to Disbanded Colonial Brigades
-    // $node['children'][] = [
-    //   'children' => [
-    //     [
-    //       'action' => WINTER_QUARTERS_DISBAND_COLONIAL_BRIGADES,
-    //       'playerId' => $playerIds[BRITISH],
-    //     ]
-    //   ]
-    // ];
-    // Return to Colonies
-    // $node['children'][] = [
-    //   'children' => [
-    //     [
-    //       'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_SELECT_STACK,
-    //       'faction' => BRITISH,
-    //       'playerId' => $playerIds[BRITISH],
-    //     ]
-    //   ]
-    // ];
-    // $node['children'][] = [
-    //   'children' => [
-    //     [
-    //       'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_STEP2_SELECT_STACK,
-    //       'faction' => BRITISH,
-    //       'playerId' => $playerIds[BRITISH],
-    //     ]
-    //   ]
-    // ];
-    // $node['children'][] = [
-    //   'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_REDEPLOY_COMMANDERS,
-    //   'faction' => BRITISH,
-    //   'playerId' => $playerIds[BRITISH],
-    //   'optional' => true,
-    // ];
-    // $node['children'][] = [
-    //   'children' => [
-    //     [
-    //       'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_COMBINE_REDUCED_UNITS,
-    //       'faction' => BRITISH,
-    //       'playerId' => $playerIds[BRITISH],
-    //     ]
-    //   ]
-    // ];
-    // $node['children'][] = [
-    //   'children' => [
-    //     [
-    //       'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_SELECT_STACK,
-    //       'faction' => FRENCH,
-    //       'playerId' => $playerIds[FRENCH],
-    //     ]
-    //   ]
-    // ];
-    // $node['children'][] = [
-    //   'children' => [
-    //     [
-    //       'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_STEP2_SELECT_STACK,
-    //       'faction' => FRENCH,
-    //       'playerId' => $playerIds[FRENCH],
-    //     ]
-    //   ]
-    // ];
-    // $node['children'][] = [
-    //   'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_REDEPLOY_COMMANDERS,
-    //   'faction' => FRENCH,
-    //   'playerId' => $playerIds[FRENCH],
-    //   'optional' => true,
-    // ];
-    // $node['children'][] = [
-    //   'children' => [
-    //     [
-    //       'action' => WINTER_QUARTERS_RETURN_TO_COLONIES_COMBINE_REDUCED_UNITS,
-    //       'faction' => FRENCH,
-    //       'playerId' => $playerIds[FRENCH],
-    //     ]
-    //   ]
-    // ];
-
-    // $node['children'][] = [
-    //   'action' => WINTER_QUARTERS_ROUND_END,
-    // ];
 
     return $node;
   }
@@ -520,6 +497,11 @@ trait TurnTrait
   {
     $node = [
       'children' => [
+        [
+          'action' => UPDATE_STEP_TRACKER,
+          'playerId' => $britishPlayerId,
+          'step' => DRAW_COLONIAL_REINFORCEMENTS_STEP,
+        ],
         [
           'action' => DRAW_REINFORCEMENTS,
           'playerId' => $britishPlayerId,
@@ -536,6 +518,11 @@ trait TurnTrait
           'playerId' => $britishPlayerId,
           'faction' => BRITISH,
           'pool' => POOL_BRITISH_COLONIAL_VOW,
+        ],
+        [
+          'action' => UPDATE_STEP_TRACKER,
+          'playerId' => $britishPlayerId,
+          'step' => PLACE_COLONIAL_UNITS_STEP,
         ],
         [
           'action' => COLONIALS_ENLIST_UNIT_PLACEMENT,
@@ -556,6 +543,11 @@ trait TurnTrait
     $node = [
       'children' => [
         [
+          'action' => UPDATE_STEP_TRACKER,
+          'playerId' => $britishPlayerId,
+          'step' => DRAW_FLEETS_STEP,
+        ],
+        [
           'action' => DRAW_REINFORCEMENTS,
           'playerId' => $britishPlayerId,
           'pool' => POOL_FLEETS,
@@ -565,6 +557,11 @@ trait TurnTrait
           'playerId' => $britishPlayerId,
           'faction' => BRITISH,
           'pool' => POOL_FLEETS,
+        ],
+        [
+          'action' => UPDATE_STEP_TRACKER,
+          'playerId' => $britishPlayerId,
+          'step' => DRAW_BRITISH_UNITS_STEP,
         ],
         [
           'action' => DRAW_REINFORCEMENTS,
@@ -590,6 +587,11 @@ trait TurnTrait
           'pool' => POOL_BRITISH_METROPOLITAN_VOW,
         ],
         [
+          'action' => UPDATE_STEP_TRACKER,
+          'playerId' => $frenchPlayerId,
+          'step' => DRAW_FRENCH_UNITS_STEP,
+        ],
+        [
           'action' => DRAW_REINFORCEMENTS,
           'playerId' => $frenchPlayerId,
           'pool' => POOL_FRENCH_METROPOLITAN_VOW,
@@ -611,11 +613,21 @@ trait TurnTrait
           'playerId' => $frenchPlayerId,
           'faction' => FRENCH,
           'pool' => POOL_FRENCH_METROPOLITAN_VOW,
+        ],
+        [
+          'action' => UPDATE_STEP_TRACKER,
+          'playerId' => $britishPlayerId,
+          'step' => PLACE_BRITISH_UNITS_STEP,
         ],
         [
           'action' => FLEETS_ARRIVE_UNIT_PLACEMENT,
           'playerId' => $britishPlayerId,
           'faction' => BRITISH,
+        ],
+        [
+          'action' => UPDATE_STEP_TRACKER,
+          'playerId' => $frenchPlayerId,
+          'step' => PLACE_FRENCH_UNITS_STEP,
         ],
         [
           'action' => FLEETS_ARRIVE_UNIT_PLACEMENT,
@@ -624,7 +636,8 @@ trait TurnTrait
         ],
         [
           'action' => LOGISTICS_ROUND_END,
-          'logisticsRound' => FLEETS_ARRIVE
+          'logisticsRound' => FLEETS_ARRIVE,
+          'playerId' => $britishPlayerId,
         ],
       ],
     ];
@@ -637,6 +650,11 @@ trait TurnTrait
 
     $flow = [
       'children' => [
+        [
+          'action' => UPDATE_STEP_TRACKER,
+          'playerId' => $playerId,
+          'step' => $isFirstplayer ? FIRST_PLAYER_ACTIONS_STEP : SECOND_PLAYER_ACTIONS_STEP,
+        ],
         [
           'action' => ACTION_ROUND_SAIL_BOX_LANDING,
           'playerId' => $playerId,

@@ -173,7 +173,7 @@ class Notifications
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  private static function getFactionName($faction)
+  public static function getFactionName($faction)
   {
     $map = [
       BRITISH => clienttranslate('British'),
@@ -1055,6 +1055,14 @@ class Notifications
     $text = $criteriaHaveBeenMet ? clienttranslate('${player_name} gets Year End Bonus') : clienttranslate('${player_name} does not get Year End Bonus');
     self::message($text, [
       'player' => $player
+    ]);
+  }
+
+  public static function updateCurrentStepOfRound($round, $step)
+  {
+    self::notifyAll("updateCurrentStepOfRound", '', [
+      'round' => $round,
+      'step' => $step,
     ]);
   }
 

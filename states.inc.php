@@ -973,4 +973,12 @@ $machinestates = array(
         'action' => 'stAtomicAction',
         'transitions' => [],
     ],
+
+    ST_UPDATE_STEP_TRACKER => [
+        'name' => 'updateStepTracker',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
 );

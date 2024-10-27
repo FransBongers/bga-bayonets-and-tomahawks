@@ -82,6 +82,7 @@ class AtomicActions
     RAID_RESOLUTION => 'RaidResolution',
     SAIL_MOVEMENT => 'SailMovement',
     SELECT_RESERVE_CARD => 'SelectReserveCard',
+    UPDATE_STEP_TRACKER => 'UpdateStepTracker',
     VAGARIES_OF_WAR_PICK_UNITS => 'VagariesOfWarPickUnits',
     VAGARIES_OF_WAR_PUT_BACK_IN_POOL => 'VagariesOfWarPutBackInPool',
     WINTER_QUARTERS_DISBAND_COLONIAL_BRIGADES => 'WinterQuartersDisbandColonialBrigades',

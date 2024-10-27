@@ -160,7 +160,9 @@ class WinterQuartersReturnToColoniesStep2SelectStack extends \BayonetsAndTomahaw
       Notifications::moveStack($player, $unitsThatDoNotRemain, [], $option['space'], $destination, null, false, $destinationId === SAIL_BOX);
     }
 
-    GameMap::loseControlCheck($player, Spaces::get($originId));
+    $origin = Spaces::get($originId);
+    GameMap::loseControlCheck($player, $origin);
+    $this->removeBattleMarkerCheck($player, $origin);
 
     $faction = $this->ctx->getInfo()['faction'];
     $playerId = $this->ctx->getPlayerId();
@@ -187,6 +189,14 @@ class WinterQuartersReturnToColoniesStep2SelectStack extends \BayonetsAndTomahaw
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  private function removeBattleMarkerCheck($player, $space)
+  {
+    if ($space->getBattle() === 1) {
+      $space->setBattle(1);
+      Notifications::battleRemoveMarker($player, $space);
+    }
+  }
 
   private function getDestinationIds($spaces, $faction)
   {

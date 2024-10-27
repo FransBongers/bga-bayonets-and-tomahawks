@@ -25,6 +25,7 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'test' => 'obj',
     'year' => 'int',
     'actionRound' => 'str',
+    'currentStepOfRound' => 'str',
     'firstPlayerId' => 'int',
     'secondPlayerId' => 'int',
     'reactionActionPointId' => 'str',
@@ -184,6 +185,9 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     self::setNoIndianUnitMayBeActivated(false);
     self::setWinteringRearAdmiralPlayed(false);
     self::setHighwayUnusableForBritish('');
+
+    
+    
   }
 
   public static function getUsedEventCount($faction) {

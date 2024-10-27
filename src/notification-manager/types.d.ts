@@ -250,6 +250,11 @@ interface NotifTakeControlArgs extends NotifWithPlayerArgs {
   space: BTSpace;
 }
 
+interface NotifUpdateCurrentStepOfRoundArgs {
+  round: string;
+  step: string;
+}
+
 interface NotifVagariesOfWarPickUnitsArgs extends NotifWithPlayerArgs {
   units: BTUnit[];
   location: string;

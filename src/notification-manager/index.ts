@@ -92,6 +92,7 @@ class NotificationManager {
       'selectReserveCard',
       'selectReserveCardPrivate',
       'takeControl',
+      'updateCurrentStepOfRound',
       'vagariesOfWarPickUnits',
       'winterQuartersAddUnitsToPools',
       'winterQuartersDisbandColonialBrigades',
@@ -222,6 +223,7 @@ class NotificationManager {
     this.game.gamedatas = updatedGamedatas;
     this.game.clearInterface();
 
+    this.game.stepTracker.updateInterface(updatedGamedatas);
     this.game.playerManager.updatePlayers({ gamedatas: updatedGamedatas });
     this.game.gameMap.updateInterface(updatedGamedatas);
     this.game.pools.updateInterface(updatedGamedatas);
@@ -737,6 +739,11 @@ class NotificationManager {
         type: `${otherFaction(faction)}_control_marker`,
       });
     }
+  }
+
+  async notif_updateCurrentStepOfRound(notif: Notif<NotifUpdateCurrentStepOfRoundArgs>) {
+    const {round, step} = notif.args;
+    this.game.stepTracker.update(round, step);
   }
 
   async notif_vagariesOfWarPickUnits(

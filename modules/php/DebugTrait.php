@@ -42,7 +42,7 @@ trait DebugTrait
 
   function debug_test()
   {
-    Notifications::log('replaced', str_replace(['Bastion1', 'Bastion2'], '',QUEBEC_BASTION_2));
+    Globals::setCurrentStepOfRound(SELECT_CARD_TO_PLAY_STEP);
 
     // Units::get('unit_121')->setLocation(LOSSES_BOX_BRITISH);
     // Units::get('unit_7')->setLocation(BAYE_DE_CATARACOUY);

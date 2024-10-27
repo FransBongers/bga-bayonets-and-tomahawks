@@ -63,6 +63,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public hand: Hand;
   public pools: Pools;
   public scenarioInfo: ScenarioInfo;
+  public stepTracker: StepTracker;
   public tabbedColumn: TabbedColumn;
   public tokenManager: TokenManager;
   public wieChitManager: WieChitManager;
@@ -252,6 +253,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     this.notificationManager.setupNotifications();
 
     this.battleInfo = new BattleInfo(this);
+    this.stepTracker = new StepTracker(this);
 
     this.tooltipManager.setupTooltips();
     debug('Ending game setup');

@@ -1,5 +1,5 @@
 const MIN_PLAY_AREA_WIDTH = 1500; // Is this still used?
-const MIN_NOTIFICATION_MS = 1200;
+const MIN_NOTIFICATION_MS = 1000;
 
 const ENABLED = 'enabled';
 /**
@@ -505,3 +505,58 @@ const OUTAOUAIS = 'Outaouais';
 const SENECA = 'Seneca';
 
 const NEW_ENGLAND = 'NewEngland';
+
+/**
+ * Action and Logistics rounds
+ */
+const ACTION_ROUND_1 = 'action_round_track_ar1';
+const ACTION_ROUND_2 = 'action_round_track_ar2';
+const ACTION_ROUND_3 = 'action_round_track_ar3';
+const ACTION_ROUND_4 = 'action_round_track_ar4';
+const ACTION_ROUND_5 = 'action_round_track_ar5';
+const ACTION_ROUND_6 = 'action_round_track_ar6';
+const ACTION_ROUND_7 = 'action_round_track_ar7';
+const ACTION_ROUND_8 = 'action_round_track_ar8';
+const ACTION_ROUND_9 = 'action_round_track_ar9';
+const FLEETS_ARRIVE = 'action_round_track_fleetsArrive';
+const COLONIALS_ENLIST = 'action_round_track_colonialsEnlist';
+const WINTER_QUARTERS = 'action_round_track_winterQuarters';
+
+const LOGISTICS_ROUNDS = [
+  FLEETS_ARRIVE, COLONIALS_ENLIST, WINTER_QUARTERS
+];
+
+/**
+ * Steps in Action and Logistics round
+ */
+const SELECT_RESERVE_CARD_STEP = 'selectReserveCardStep';
+const SELECT_CARD_TO_PLAY_STEP = 'selectCardToPlayStep';
+const SELECT_FIRST_PLAYER_STEP = 'selectFirstPlayerStep';
+const RESOLVE_AR_START_EVENTS_STEP = 'resolveARStartEventsStep';
+const FIRST_PLAYER_ACTIONS_STEP = 'firstPlayerActionsStep';
+const SECOND_PLAYER_ACTIONS_STEP = 'secondPlayerActionsStep';
+const FIRST_PLAYER_REACTION_STEP = 'firstPlayerReactionStep';
+const RESOLVE_BATTLES_STEP = 'resolveBattlesStep';
+const END_OF_AR_STEPS = 'endOfARSteps';
+
+// Fleets Arrive
+const DRAW_FLEETS_STEP = 'drawFleetsStep';
+const DRAW_BRITISH_UNITS_STEP = 'drawBritishUnitsStep';
+const DRAW_FRENCH_UNITS_STEP = 'drawFrenchUnitsStep';
+const PLACE_BRITISH_UNITS_STEP = 'placeBritishUnitsStep';
+const PLACE_FRENCH_UNITS_STEP = 'placeFrenchUnitsStep';
+
+// Colonials Enlist
+const DRAW_COLONIAL_REINFORCEMENTS_STEP = 'drawColonialReinforcementsStep';
+const PLACE_COLONIAL_UNITS_STEP = 'placeColonialUnitsStep';
+
+// Winter Quarters
+const PERFORM_VICTORY_CHECK_STEP = 'performVictoryCheckStep';
+const REMOVE_MARKERS_STEP = 'removeMarkersStep';
+const MOVE_STACKS_ON_SAIL_BOX_STEP = 'moveStacksOnSailBoxStep';
+const PLACE_INDIAN_UNITS_STEP = 'placeIndianUnitsStep';
+const MOVE_COLONIAL_BRIGADES_TO_DISBANDED_STEP = 'moveColonialBrigadesToDisbandedStep';
+const RETURN_TO_COLONIES_STEP = 'returnToColoniesStep';
+const RETURN_FLEETS_TO_FLEET_POOL_STEP = 'returnFleetsToFleetPoolStep';
+const PLACE_UNITS_FROM_LOSSES_BOX_STEP = 'placeUnitsFromLossesBoxStep';
+const END_OF_YEAR_STEP = 'endOfYearStep';

@@ -139,6 +139,10 @@ class bayonetsandtomahawks extends Table
             'canceledNotifIds' => Log::getCanceledNotifIds(),
             'cardsInPlay' => Cards::getCardsInPlay(),
             'connections' => Connections::getUiData(),
+            'currentRound' => [
+                'id' => Globals::getActionRound(),
+                'step' => Globals::getCurrentStepOfRound(),
+            ],
             'playerOrder' => Players::getPlayerOrder(),
             'players' => Players::getUiData($pId),
             'staticData' => [

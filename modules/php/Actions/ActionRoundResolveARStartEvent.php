@@ -8,6 +8,7 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
@@ -40,6 +41,7 @@ class ActionRoundResolveARStartEvent extends \BayonetsAndTomahawks\Models\Atomic
 
   public function stActionRoundResolveARStartEvent()
   {
+    BTHelpers::updateStepTracker(RESOLVE_AR_START_EVENTS_STEP);
     $info = $this->ctx->getInfo();
     $cardId = $info['cardId'];
     $faction = $info['faction'];

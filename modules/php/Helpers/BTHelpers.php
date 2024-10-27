@@ -2,6 +2,7 @@
 
 namespace BayonetsAndTomahawks\Helpers;
 
+use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Spaces;
@@ -144,5 +145,12 @@ class BTHelpers extends \APP_DbObject
 
     // Return to Sail Box
     return [SAIL_BOX];
+  }
+
+  public static function updateStepTracker($newStep)
+  {
+    $currentRound = Globals::getActionRound();
+    Globals::setCurrentStepOfRound($newStep);
+    Notifications::updateCurrentStepOfRound($currentRound, $newStep);
   }
 }

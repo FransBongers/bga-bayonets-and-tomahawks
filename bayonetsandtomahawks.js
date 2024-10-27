@@ -2061,7 +2061,7 @@ var CardManager = (function () {
     return CardManager;
 }());
 var MIN_PLAY_AREA_WIDTH = 1500;
-var MIN_NOTIFICATION_MS = 1200;
+var MIN_NOTIFICATION_MS = 1000;
 var ENABLED = 'enabled';
 var DISABLED = 'disabled';
 var BT_SELECTABLE = 'bt_selectable';
@@ -2445,6 +2445,46 @@ var MOHAWK = 'Mohawk';
 var OUTAOUAIS = 'Outaouais';
 var SENECA = 'Seneca';
 var NEW_ENGLAND = 'NewEngland';
+var ACTION_ROUND_1 = 'action_round_track_ar1';
+var ACTION_ROUND_2 = 'action_round_track_ar2';
+var ACTION_ROUND_3 = 'action_round_track_ar3';
+var ACTION_ROUND_4 = 'action_round_track_ar4';
+var ACTION_ROUND_5 = 'action_round_track_ar5';
+var ACTION_ROUND_6 = 'action_round_track_ar6';
+var ACTION_ROUND_7 = 'action_round_track_ar7';
+var ACTION_ROUND_8 = 'action_round_track_ar8';
+var ACTION_ROUND_9 = 'action_round_track_ar9';
+var FLEETS_ARRIVE = 'action_round_track_fleetsArrive';
+var COLONIALS_ENLIST = 'action_round_track_colonialsEnlist';
+var WINTER_QUARTERS = 'action_round_track_winterQuarters';
+var LOGISTICS_ROUNDS = [
+    FLEETS_ARRIVE, COLONIALS_ENLIST, WINTER_QUARTERS
+];
+var SELECT_RESERVE_CARD_STEP = 'selectReserveCardStep';
+var SELECT_CARD_TO_PLAY_STEP = 'selectCardToPlayStep';
+var SELECT_FIRST_PLAYER_STEP = 'selectFirstPlayerStep';
+var RESOLVE_AR_START_EVENTS_STEP = 'resolveARStartEventsStep';
+var FIRST_PLAYER_ACTIONS_STEP = 'firstPlayerActionsStep';
+var SECOND_PLAYER_ACTIONS_STEP = 'secondPlayerActionsStep';
+var FIRST_PLAYER_REACTION_STEP = 'firstPlayerReactionStep';
+var RESOLVE_BATTLES_STEP = 'resolveBattlesStep';
+var END_OF_AR_STEPS = 'endOfARSteps';
+var DRAW_FLEETS_STEP = 'drawFleetsStep';
+var DRAW_BRITISH_UNITS_STEP = 'drawBritishUnitsStep';
+var DRAW_FRENCH_UNITS_STEP = 'drawFrenchUnitsStep';
+var PLACE_BRITISH_UNITS_STEP = 'placeBritishUnitsStep';
+var PLACE_FRENCH_UNITS_STEP = 'placeFrenchUnitsStep';
+var DRAW_COLONIAL_REINFORCEMENTS_STEP = 'drawColonialReinforcementsStep';
+var PLACE_COLONIAL_UNITS_STEP = 'placeColonialUnitsStep';
+var PERFORM_VICTORY_CHECK_STEP = 'performVictoryCheckStep';
+var REMOVE_MARKERS_STEP = 'removeMarkersStep';
+var MOVE_STACKS_ON_SAIL_BOX_STEP = 'moveStacksOnSailBoxStep';
+var PLACE_INDIAN_UNITS_STEP = 'placeIndianUnitsStep';
+var MOVE_COLONIAL_BRIGADES_TO_DISBANDED_STEP = 'moveColonialBrigadesToDisbandedStep';
+var RETURN_TO_COLONIES_STEP = 'returnToColoniesStep';
+var RETURN_FLEETS_TO_FLEET_POOL_STEP = 'returnFleetsToFleetPoolStep';
+var PLACE_UNITS_FROM_LOSSES_BOX_STEP = 'placeUnitsFromLossesBoxStep';
+var END_OF_YEAR_STEP = 'endOfYearStep';
 define([
     'dojo',
     'dojo/_base/declare',
@@ -2558,6 +2598,7 @@ var BayonetsAndTomahawks = (function () {
         this.notificationManager = new NotificationManager(this);
         this.notificationManager.setupNotifications();
         this.battleInfo = new BattleInfo(this);
+        this.stepTracker = new StepTracker(this);
         this.tooltipManager.setupTooltips();
         debug('Ending game setup');
     };
@@ -5335,6 +5376,7 @@ var NotificationManager = (function () {
             'selectReserveCard',
             'selectReserveCardPrivate',
             'takeControl',
+            'updateCurrentStepOfRound',
             'vagariesOfWarPickUnits',
             'winterQuartersAddUnitsToPools',
             'winterQuartersDisbandColonialBrigades',
@@ -5419,6 +5461,7 @@ var NotificationManager = (function () {
                 updatedGamedatas = __assign(__assign({}, this.game.gamedatas), notif.args.datas);
                 this.game.gamedatas = updatedGamedatas;
                 this.game.clearInterface();
+                this.game.stepTracker.updateInterface(updatedGamedatas);
                 this.game.playerManager.updatePlayers({ gamedatas: updatedGamedatas });
                 this.game.gameMap.updateInterface(updatedGamedatas);
                 this.game.pools.updateInterface(updatedGamedatas);
@@ -6240,6 +6283,16 @@ var NotificationManager = (function () {
                         type: "".concat(otherFaction(faction), "_control_marker"),
                     });
                 }
+                return [2];
+            });
+        });
+    };
+    NotificationManager.prototype.notif_updateCurrentStepOfRound = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, round, step;
+            return __generator(this, function (_b) {
+                _a = notif.args, round = _a.round, step = _a.step;
+                this.game.stepTracker.update(round, step);
                 return [2];
             });
         });
@@ -7376,22 +7429,22 @@ var ActionRoundChooseFirstPlayerState = (function () {
         this.game = game;
     }
     ActionRoundChooseFirstPlayerState.prototype.onEnteringState = function (args) {
-        debug("Entering ActionRoundChooseFirstPlayerState");
+        debug('Entering ActionRoundChooseFirstPlayerState');
         this.args = args;
         this.game.tabbedColumn.changeTab('cards');
         this.updateInterfaceInitialStep();
     };
     ActionRoundChooseFirstPlayerState.prototype.onLeavingState = function () {
-        debug("Leaving ActionRoundChooseFirstPlayerState");
+        debug('Leaving ActionRoundChooseFirstPlayerState');
     };
     ActionRoundChooseFirstPlayerState.prototype.setDescription = function (activePlayerId) { };
     ActionRoundChooseFirstPlayerState.prototype.updateInterfaceInitialStep = function () {
         var _this = this;
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _("${you} must choose the First Player for this Action Round"),
+            text: _('${you} must choose the First Player for this Action Round'),
             args: {
-                you: "${you}",
+                you: '${you}',
             },
         });
         this.game.hand.open();
@@ -7399,8 +7452,9 @@ var ActionRoundChooseFirstPlayerState = (function () {
             _this.game.addPlayerButton({
                 player: player.playerData,
                 callback: function () {
-                    return _this.game.takeAction({
-                        action: "actActionRoundChooseFirstPlayer",
+                    _this.game.clearPossible();
+                    _this.game.takeAction({
+                        action: 'actActionRoundChooseFirstPlayer',
                         args: {
                             playerId: player.getPlayerId(),
                         },
@@ -12007,6 +12061,222 @@ var WinterQuartersReturnToColoniesStep2SelectStackState = (function () {
     };
     return WinterQuartersReturnToColoniesStep2SelectStackState;
 }());
+var getARStepConfig = function (isAR1) {
+    var steps = isAR1
+        ? [
+            {
+                id: SELECT_RESERVE_CARD_STEP,
+                stepNumber: 0,
+                text: _('Select Reserve card'),
+            },
+        ]
+        : [];
+    return steps.concat([
+        {
+            id: SELECT_CARD_TO_PLAY_STEP,
+            text: _('Select card to Play'),
+            stepNumber: 1,
+        },
+        {
+            id: SELECT_FIRST_PLAYER_STEP,
+            text: _('Select First Player'),
+            stepNumber: 2,
+        },
+        {
+            id: RESOLVE_AR_START_EVENTS_STEP,
+            text: _('Resolve "AR Start" Events'),
+            stepNumber: 3,
+        },
+        {
+            id: FIRST_PLAYER_ACTIONS_STEP,
+            text: _('First Player Action Phase'),
+            stepNumber: 4,
+        },
+        {
+            id: SECOND_PLAYER_ACTIONS_STEP,
+            text: _('Second Player Action Phase'),
+            stepNumber: 5,
+        },
+        {
+            id: FIRST_PLAYER_REACTION_STEP,
+            text: _('First Player Reaction'),
+            stepNumber: 6,
+        },
+        { id: RESOLVE_BATTLES_STEP, text: _('Resolve Battles'), stepNumber: 7 },
+        { id: END_OF_AR_STEPS, text: _('End of Action Round'), stepNumber: 8 },
+    ]);
+};
+var getCurrentRoundName = function (currentRound) {
+    switch (currentRound) {
+        case ACTION_ROUND_1:
+        case ACTION_ROUND_2:
+        case ACTION_ROUND_3:
+        case ACTION_ROUND_4:
+        case ACTION_ROUND_5:
+        case ACTION_ROUND_6:
+        case ACTION_ROUND_7:
+        case ACTION_ROUND_8:
+        case ACTION_ROUND_9:
+            return _('Action Round ${number}').replace('${number}', currentRound.slice(-1));
+        case FLEETS_ARRIVE:
+            return _('Fleets Arrive');
+        case COLONIALS_ENLIST:
+            return _('Colonials Enlist');
+        case WINTER_QUARTERS:
+            return _('Winter Quarters');
+        default:
+            return '';
+    }
+};
+var getFleetsArriveConfig = function () { return [
+    { id: DRAW_FLEETS_STEP, text: _('Draw Fleets'), stepNumber: 1 },
+    {
+        id: DRAW_BRITISH_UNITS_STEP,
+        text: _('Draw British Units and VoW'),
+        stepNumber: 2,
+    },
+    {
+        id: DRAW_FRENCH_UNITS_STEP,
+        text: _('Draw French Units and VoW'),
+        stepNumber: 3,
+    },
+    {
+        id: PLACE_BRITISH_UNITS_STEP,
+        text: _('Place British Units'),
+        stepNumber: 4,
+    },
+    { id: PLACE_FRENCH_UNITS_STEP, text: _('Place French Units'), stepNumber: 5 },
+]; };
+var getColonialsEnlistConfig = function () { return [
+    {
+        id: DRAW_COLONIAL_REINFORCEMENTS_STEP,
+        text: _('Draw Colonial Units and VoW'),
+        stepNumber: 1,
+    },
+    {
+        id: PLACE_COLONIAL_UNITS_STEP,
+        text: _('Place Colonial Units'),
+        stepNumber: 2,
+    },
+]; };
+var getWinterQuartersConfig = function () { return [
+    { id: PERFORM_VICTORY_CHECK_STEP, text: _('Victory Check'), stepNumber: 1 },
+    { id: REMOVE_MARKERS_STEP, text: _('Remove Markers on map'), stepNumber: 2 },
+    {
+        id: MOVE_STACKS_ON_SAIL_BOX_STEP,
+        text: _('Move stacks on Sail box'),
+        stepNumber: 3,
+    },
+    {
+        id: PLACE_INDIAN_UNITS_STEP,
+        text: _('Place Indian units on villages'),
+        stepNumber: 4,
+    },
+    {
+        id: MOVE_COLONIAL_BRIGADES_TO_DISBANDED_STEP,
+        text: _('Disband Colonial Brigades'),
+        stepNumber: 5,
+    },
+    { id: RETURN_TO_COLONIES_STEP, text: _('Return to Colonies'), stepNumber: 6 },
+    {
+        id: RETURN_FLEETS_TO_FLEET_POOL_STEP,
+        text: _('Return Fleets to Fleets pool'),
+        stepNumber: 7,
+    },
+    {
+        id: PLACE_UNITS_FROM_LOSSES_BOX_STEP,
+        text: _('Place units from Losses box'),
+        stepNumber: 8,
+    },
+    {
+        id: END_OF_YEAR_STEP,
+        text: _('End of Year'),
+        stepNumber: 9,
+    },
+]; };
+var getStepConfig = function (currentRound) {
+    switch (currentRound) {
+        case ACTION_ROUND_1:
+            return getARStepConfig(true);
+        case ACTION_ROUND_2:
+        case ACTION_ROUND_3:
+        case ACTION_ROUND_4:
+        case ACTION_ROUND_5:
+        case ACTION_ROUND_6:
+        case ACTION_ROUND_7:
+        case ACTION_ROUND_8:
+        case ACTION_ROUND_9:
+            return getARStepConfig(false);
+        case FLEETS_ARRIVE:
+            return getFleetsArriveConfig();
+        case COLONIALS_ENLIST:
+            return getColonialsEnlistConfig();
+        case WINTER_QUARTERS:
+            return getWinterQuartersConfig();
+        default:
+            return [];
+    }
+};
+var StepTracker = (function () {
+    function StepTracker(game) {
+        this.game = game;
+        var gamedatas = game.gamedatas;
+        this.setup({ gamedatas: gamedatas });
+    }
+    StepTracker.prototype.clearInterface = function () { };
+    StepTracker.prototype.updateInterface = function (gamedatas) {
+        this.update(gamedatas.currentRound.id, gamedatas.currentRound.step);
+    };
+    StepTracker.prototype.setup = function (_a) {
+        var gamedatas = _a.gamedatas;
+        var node = document.getElementById('player_boards');
+        if (!node) {
+            return;
+        }
+        node.insertAdjacentHTML('beforeend', tplStepTracker(gamedatas.currentRound.id));
+        this.currentRound = '';
+        this.currentStep = '';
+        if (gamedatas.currentRound.step) {
+            this.update(gamedatas.currentRound.id, gamedatas.currentRound.step);
+        }
+    };
+    StepTracker.prototype.update = function (round, step) {
+        if (this.currentRound !== round) {
+            var titleNode = document.getElementById('step_stracker_title');
+            if (titleNode) {
+                titleNode.replaceChildren(getCurrentRoundName(round));
+            }
+            if (LOGISTICS_ROUNDS.includes(round) ||
+                LOGISTICS_ROUNDS.includes(this.currentRound)) {
+                var contentNode = document.getElementById('step_tracker_content');
+                if (contentNode) {
+                    contentNode.replaceChildren();
+                    contentNode.insertAdjacentHTML('afterbegin', tplStepTrackerContent(round));
+                }
+            }
+            this.currentRound = round;
+        }
+        this.changeCurrentStep(step);
+    };
+    StepTracker.prototype.changeCurrentStep = function (step) {
+        if (this.currentStep) {
+            var currentActiveStepNode = document.getElementById(this.currentStep);
+            if (currentActiveStepNode) {
+                currentActiveStepNode.setAttribute('data-active', 'false');
+            }
+        }
+        this.currentStep = step;
+        var newActiveStepNode = document.getElementById(step);
+        if (newActiveStepNode) {
+            newActiveStepNode.setAttribute('data-active', 'true');
+        }
+    };
+    return StepTracker;
+}());
+var tplStepTrackerContent = function (currentRound) { return getStepConfig(currentRound)
+    .map(function (roundConfig) { return "\n  <li id=\"".concat(roundConfig.id, "\" data-active=\"false\">").concat(roundConfig.stepNumber, ". ").concat(_(roundConfig.text), "</li>\n"); })
+    .join(''); };
+var tplStepTracker = function (currentRound) { return "\n<div id=\"step_tracker\" class='player-board'>\n  <div id=\"step_stracker_title_container\">\n    <span id=\"step_stracker_title\" class=\"bt_title\">".concat(_(getCurrentRoundName(currentRound)), "</span>\n  </div>\n  <ul id=\"step_tracker_content\">\n  ").concat(tplStepTrackerContent(currentRound), "\n  </ul>\n</div>"); };
 var TabbedColumn = (function () {
     function TabbedColumn(game) {
         this.selectedTab = 'cards';

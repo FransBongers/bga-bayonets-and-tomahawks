@@ -8,6 +8,7 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Players;
@@ -21,16 +22,25 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
     return ST_ACTION_ROUND_CHOOSE_FIRST_PLAYER;
   }
 
-  // .########..########..########.......###.....######..########.####..#######..##....##
-  // .##.....##.##.....##.##............##.##...##....##....##.....##..##.....##.###...##
-  // .##.....##.##.....##.##...........##...##..##..........##.....##..##.....##.####..##
-  // .########..########..######......##.....##.##..........##.....##..##.....##.##.##.##
-  // .##........##...##...##..........#########.##..........##.....##..##.....##.##..####
-  // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
-  // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
+  // ..######..########....###....########.########
+  // .##....##....##......##.##......##....##......
+  // .##..........##.....##...##.....##....##......
+  // ..######.....##....##.....##....##....######..
+  // .......##....##....#########....##....##......
+  // .##....##....##....##.....##....##....##......
+  // ..######.....##....##.....##....##....########
 
-  public function stPreActionRoundChooseFirstPlayer()
+  // ....###.....######..########.####..#######..##....##
+  // ...##.##...##....##....##.....##..##.....##.###...##
+  // ..##...##..##..........##.....##..##.....##.####..##
+  // .##.....##.##..........##.....##..##.....##.##.##.##
+  // .#########.##..........##.....##..##.....##.##..####
+  // .##.....##.##....##....##.....##..##.....##.##...###
+  // .##.....##..######.....##....####..#######..##....##
+
+  public function stActionRoundChooseFirstPlayer()
   {
+    BTHelpers::updateStepTracker(SELECT_FIRST_PLAYER_STEP);
   }
 
 
@@ -86,6 +96,11 @@ class ActionRoundChooseFirstPlayer extends \BayonetsAndTomahawks\Models\AtomicAc
     $secondPlayer = Utils::array_find($players, function ($player) use ($firstPlayerId) {
       return $player->getId() !== $firstPlayerId;
     });
+
+    Notifications::message(clienttranslate('${player_name} chooses the ${faction} to be first'), [
+      'player' => self::getPlayer(),
+      'faction' => Notifications::getFactionName($firstPlayer->getFaction()),
+    ]);
 
     Globals::setFirstPlayerId($firstPlayer->getId());
     Globals::setSecondPlayerId($secondPlayer->getId());
