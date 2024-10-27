@@ -7644,7 +7644,16 @@ var BattleApplyHitsState = (function () {
     BattleApplyHitsState.prototype.onLeavingState = function () {
         debug('Leaving BattleApplyHitsState');
     };
-    BattleApplyHitsState.prototype.setDescription = function (activePlayerId) { };
+    BattleApplyHitsState.prototype.setDescription = function (activePlayerId, args) {
+        this.args = args;
+        this.game.clientUpdatePageTitle({
+            text: this.args.eliminate ? _('${actplayer} must eliminate a unit') : _('${actplayer} must apply Hit'),
+            args: {
+                actplayer: '${actplayer}'
+            },
+            nonActivePlayers: true,
+        });
+    };
     BattleApplyHitsState.prototype.updateInterfaceInitialStep = function () {
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
@@ -12269,13 +12278,10 @@ var StepTracker = (function () {
             if (titleNode) {
                 titleNode.replaceChildren(getCurrentRoundName(round));
             }
-            if (LOGISTICS_ROUNDS.includes(round) ||
-                LOGISTICS_ROUNDS.includes(this.currentRound)) {
-                var contentNode = document.getElementById('step_tracker_content');
-                if (contentNode) {
-                    contentNode.replaceChildren();
-                    contentNode.insertAdjacentHTML('afterbegin', tplStepTrackerContent(round));
-                }
+            var contentNode = document.getElementById('step_tracker_content');
+            if (contentNode) {
+                contentNode.replaceChildren();
+                contentNode.insertAdjacentHTML('afterbegin', tplStepTrackerContent(round));
             }
             this.currentRound = round;
         }

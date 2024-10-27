@@ -1,5 +1,7 @@
 <?php
+
 namespace BayonetsAndTomahawks\Core;
+
 use BayonetsAndTomahawks\Managers\Players;
 
 class Stats extends \BayonetsAndTomahawks\Helpers\DB_Manager
@@ -34,7 +36,7 @@ class Stats extends \BayonetsAndTomahawks\Helpers\DB_Manager
     $existingStats = self::DB()
       ->get()
       ->map(function ($stat) {
-        return $stat['type'] . ',' . ($stat['playerId'] == null ? 'table' : 'player');
+        return $stat['type'] . ',' . ($stat['playerId'] == null ? 'table' : 'player,' . $stat['playerId']);
       })
       ->toArray();
 
@@ -55,17 +57,27 @@ class Stats extends \BayonetsAndTomahawks\Helpers\DB_Manager
     }
 
     // Deal with player stats
-    $playerIds = Players::getAll()->getIds();
-    foreach ($stats['player'] as $stat) {
-      if ($stat['id'] < 10) {
-        continue;
-      }
+    $players = Players::getAll();
+    // $playerIds = Players::getAll()->getIds();
 
-      if (!in_array($stat['id'] . ',player', $existingStats)) {
-        foreach ($playerIds as $i => $playerId) {
+    foreach ($players as $playerId => $player) {
+      foreach ($stats['player'] as $stat) {
+        $statId = $stat['id'];
+        if ($statId < 10) {
+          continue;
+        }
+        $faction = $player->getFaction();
+
+        if ((in_array($statId, STATS_SIDE_SPECIFIC[BRITISH]) || in_array($statId, STATS_SIDE_SPECIFIC[FRENCH]))
+          && !in_array($statId, STATS_SIDE_SPECIFIC[$faction])
+        ) {
+          continue;
+        }
+
+        if (!in_array($statId . ',player,' . $playerId, $existingStats)) {
           $value = $default[$stat['type']];
           $values[] = [
-            'stats_type' => $stat['id'],
+            'stats_type' => $statId,
             'stats_player_id' => $playerId,
             'stats_value' => $value,
           ];
@@ -182,7 +194,4 @@ class Stats extends \BayonetsAndTomahawks\Helpers\DB_Manager
     }
     return null;
   }
-
 }
-
-?>

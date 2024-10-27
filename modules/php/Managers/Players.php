@@ -245,8 +245,15 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
 
   public static function setWinner($player)
   {
-    // TODO: update scores for scenarios where players van win with 'negative points'
-    // Set score relative to threshold?
+    $score = $player->getScore();
+    // Player won with a negative threshold
+    // Need to update to positive score due to framework
+    if ($score === 0) {
+      $player->setScore(1);
+      $otherPlayer = self::getOther($player->getId());
+      $otherPlayer->setScore(0);
+    }
+
   }
 
   public static function scoreVictoryPoints($player, $points)

@@ -46,8 +46,6 @@ class WinterQuartersGameEndCheck extends \BayonetsAndTomahawks\Models\AtomicActi
   public function stWinterQuartersGameEndCheck()
   {
     $scenario = Scenarios::get();
-    // $yearMarker = Markers::get(YEAR_MARKER);
-    // $year = intval(explode('_', $yearMarker->getLocation())[2]);
     $year = BTHelpers::getYear();
 
     $players = Players::getPlayersForFactions();
@@ -77,7 +75,7 @@ class WinterQuartersGameEndCheck extends \BayonetsAndTomahawks\Models\AtomicActi
         Players::setWinner($players[$faction]);
 
         // Add pre end of game state to set statistics?
-        Game::get()->gamestate->jumpToState(ST_END_GAME);
+        Game::get()->gamestate->jumpToState(ST_PRE_END_GAME);
         return;
       }
     }

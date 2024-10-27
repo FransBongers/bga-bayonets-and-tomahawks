@@ -36,6 +36,11 @@
       "id": 35,
       "name": "Construction actions",
       "type": "int"
+    },
+    "reaction": {
+      "id": 36,
+      "name": "Reaction count",
+      "type": "int"
     }
   },
   "value_labels": {

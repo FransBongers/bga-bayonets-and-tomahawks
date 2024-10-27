@@ -17,7 +17,16 @@ class BattleApplyHitsState implements State {
     debug('Leaving BattleApplyHitsState');
   }
 
-  setDescription(activePlayerId: number) {}
+  setDescription(activePlayerId: number, args: OnEnteringBattleApplyHitsStateArgs) {
+    this.args = args;
+    this.game.clientUpdatePageTitle({
+      text: this.args.eliminate ? _('${actplayer} must eliminate a unit') : _('${actplayer} must apply Hit'),
+      args: {
+        actplayer: '${actplayer}'
+      },
+      nonActivePlayers: true,
+    });
+  }
 
   //  .####.##....##.########.########.########..########....###.....######..########
   //  ..##..###...##....##....##.......##.....##.##.........##.##...##....##.##......

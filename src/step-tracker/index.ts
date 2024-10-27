@@ -82,17 +82,15 @@ class StepTracker {
         titleNode.replaceChildren(getCurrentRoundName(round));
       }
 
-      // Update content if we switch from or to Logistics Round
-      if (
-        LOGISTICS_ROUNDS.includes(round) ||
-        LOGISTICS_ROUNDS.includes(this.currentRound)
-      ) {
-        const contentNode = document.getElementById('step_tracker_content');
-        if (contentNode) {
-          contentNode.replaceChildren();
-          contentNode.insertAdjacentHTML('afterbegin', tplStepTrackerContent(round));
-        }
+      const contentNode = document.getElementById('step_tracker_content');
+      if (contentNode) {
+        contentNode.replaceChildren();
+        contentNode.insertAdjacentHTML(
+          'afterbegin',
+          tplStepTrackerContent(round)
+        );
       }
+
       this.currentRound = round;
     }
 

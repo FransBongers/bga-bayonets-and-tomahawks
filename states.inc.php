@@ -176,6 +176,14 @@ $machinestates = array(
     // .##....##..##.....##.##.....##.##......
     // ..######...##.....##.##.....##.########
 
+    ST_PRE_END_GAME => [
+        'name' => 'preEndGame',
+        'description' => '',
+        'type' => 'game',
+        'action' => 'stAtomicAction',
+        'transitions' => [],
+    ],
+
     // Final state.
     // Please do not modify (and do not overload action/args methods).
     ST_END_GAME => [

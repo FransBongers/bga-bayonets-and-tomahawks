@@ -30,10 +30,7 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreActionRoundChooseReaction()
-  {
-
-  }
+  public function stPreActionRoundChooseReaction() {}
 
 
   // ....###....########...######....######.
@@ -108,6 +105,7 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
     ]);
 
     Globals::setReactionActionPointId($actionPointId);
+    Stats::incReaction($player->getId(), 1);
 
     $this->resolveAction($args);
   }

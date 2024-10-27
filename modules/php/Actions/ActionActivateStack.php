@@ -31,9 +31,7 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreActionActivateStack()
-  {
-  }
+  public function stPreActionActivateStack() {}
 
 
   // ....###....########...######....######.
@@ -108,11 +106,15 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
       throw new \feException("Not allowed to perform selected action");
     }
 
+
+
     $actionPointId = $this->ctx->getParent()->getInfo()['actionPointId'];
     $flow = AtomicActions::get($action['id'])->getFlow($actionPointId, self::getPlayer()->getId(), $stackId);
     $this->ctx->insertAsBrother(Engine::buildTree($flow));
 
-    Notifications::activateStack(self::getPlayer(), Spaces::get($stackId), $action['name']);
+    $player = self::getPlayer();
+    $this->updateStats($player, $actionId);
+    Notifications::activateStack($player, Spaces::get($stackId), $action['name']);
 
     $this->resolveAction($args);
   }
@@ -124,4 +126,26 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  private function updateStats($player, $acionId)
+  {
+    $playerId = $player->getId();
+
+    switch ($acionId) {
+      case MOVEMENT:
+        Stats::incMovement($playerId, 1);
+        return;
+      case RAID_SELECT_TARGET:
+        Stats::incRaid($playerId, 1);
+        return;
+      case MARSHAL_TROOPS:
+        Stats::incMarshalTroops($playerId, 1);
+        return;
+      case CONSTRUCTION:
+        Stats::incConstruction($playerId, 1);
+        return;
+      default:
+        return;
+    }
+  }
 }

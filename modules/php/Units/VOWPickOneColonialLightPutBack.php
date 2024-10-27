@@ -9,6 +9,6 @@ class VOWPickOneColonialLightPutBack extends \BayonetsAndTomahawks\Models\Vagari
     $this->counterId = VOW_PICK_ONE_COLONIAL_LIGHT_PUT_BACK;
     $this->counterText = clienttranslate('Pick 1 Colonial Light unit');
     $this->faction = BRITISH;
-    $this->putTokenBackInPool;
+    $this->putTokenBackInPool = true;
   }
 }

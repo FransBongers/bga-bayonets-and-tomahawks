@@ -75,6 +75,7 @@ class AtomicActions
     MOVEMENT_PLACE_SPENT_MARKERS => 'MovementPlaceSpentMarkers',
     MOVE_STACK => 'MoveStack',
     PLACE_MARKER_ON_STACK => 'PlaceMarkerOnStack',
+    PRE_END_GAME => 'PreEndGame',
     RAID_SELECT_TARGET => 'RaidSelectTarget',
     RAID_MOVE => 'RaidMove',
     RAID_INTERCEPTION => 'RaidInterception',
