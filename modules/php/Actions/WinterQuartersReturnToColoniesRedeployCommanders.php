@@ -179,7 +179,8 @@ class WinterQuartersReturnToColoniesRedeployCommanders extends \BayonetsAndTomah
 
     return [
       'commanders' => Utils::filter($units, function ($unit) use ($faction) {
-        return $unit->getFaction() === $faction && $unit->isCommander() && !Utils::startsWith($unit->getLocation(), 'pool');
+        $location = $unit->getLocation();
+        return $unit->getFaction() === $faction && $unit->isCommander() && !Utils::startsWith($location, 'pool') && $location !== REMOVED_FROM_PLAY;
       }),
       'stacks' => $stacks,
     ];
