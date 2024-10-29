@@ -1,0 +1,24 @@
+{
+  "100": {
+    "name": "Scenario",
+    "values": {
+      "1": {
+        "name": "Vaudreil's Petite Guerre 1755",
+        "tmdisplay": "Vaudreil's Petite Guerre 1755"
+      },
+      "2": {
+        "name": "Loudoun's Gamble 1757",
+        "tmdisplay": "Loudoun's Gamble 1757"
+      },
+      "3": {
+        "name": "Amherst's Juggernaut 1758-1759",
+        "tmdisplay": "Amherst's Juggernaut 1758-1759"
+      },
+      "4": {
+        "name": "French & Indian War Full Campaign 1755-1759",
+        "tmdisplay": "French & Indian War Full Campaign 1755-1759",
+        "nobeginner": true
+      }
+    }
+  }
+}

@@ -110,7 +110,7 @@ class bayonetsandtomahawks extends Table
     protected function setupNewGame($players, $options = array())
     {
         Globals::setupNewGame($players, $options);
-        Preferences::setupNewGame($players, $options);
+        // Preferences::setupNewGame($players, $options);
         Players::setupNewGame($players, $options);
         Stats::checkExistence();
         Spaces::setupNewGame($players, $options);
