@@ -47,9 +47,6 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
       ->get()
       ->toArray();
 
-    usort($locations, function ($a, $b) {
-      return $a->getBattlePriority() - $b->getBattlePriority();
-    });
     return $locations;
   }
 

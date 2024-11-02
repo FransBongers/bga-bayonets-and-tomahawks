@@ -244,6 +244,7 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   currentRound: {
     id: string;
     step: string;
+    battleOrder: BattleOrderStep[];
   }
   markers: {
     year_marker: BTMarker;

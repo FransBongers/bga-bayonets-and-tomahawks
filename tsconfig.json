@@ -86,6 +86,7 @@
     "src/states/BattleRetreatState.ts",
     "src/states/BattleRollsRerolls.ts",
     "src/states/BattleSelectCommanderState.ts",
+    "src/states/BattleSelectSpace.ts",
     "src/states/ColonialsEnlistUnitPlacement.ts",
     "src/states/ConfirmPartialTurn.ts",
     "src/states/ConfirmTurn.ts",

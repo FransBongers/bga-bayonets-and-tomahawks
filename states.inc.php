@@ -767,6 +767,16 @@ $machinestates = array(
         'possibleactions' => ['actBattleSelectCommander', 'actPassOptionalAction', 'actRestart'],
     ],
 
+    ST_BATTLE_SELECT_SPACE => [
+        'name' => 'battleSelectSpace',
+        'description' => clienttranslate('${actplayer} must select the space for the next battle'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actBattleSelectSpace', 'actPassOptionalAction', 'actRestart'],
+    ],
+
     ST_BATTLE_ROLLS_ROLL_DICE => [
         'name' => 'battleRollsRollDice',
         'description' => '',

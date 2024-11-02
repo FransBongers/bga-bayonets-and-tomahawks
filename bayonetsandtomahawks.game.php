@@ -142,6 +142,7 @@ class bayonetsandtomahawks extends Table
             'currentRound' => [
                 'id' => Globals::getActionRound(),
                 'step' => Globals::getCurrentStepOfRound(),
+                'battleOrder' => Globals::getBattleOrder(),
             ],
             'playerOrder' => Players::getPlayerOrder(),
             'players' => Players::getUiData($pId),

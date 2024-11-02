@@ -50,6 +50,7 @@ class NotificationManager {
       'moveBattleVictoryMarker',
       'battle',
       'battleCleanup',
+      'battleOrder',
       'battleRemoveMarker',
       'battleReroll',
       'battleReturnCommander',
@@ -289,6 +290,11 @@ class NotificationManager {
         type: 'battle_marker',
       });
     }
+  }
+
+  async notif_battleOrder(notif: Notif<NotifBattleOrderArgs>) {
+    const {battleOrder} = notif.args;
+    this.game.stepTracker.addBattleOrder(battleOrder);
   }
 
   async notif_battleRemoveMarker(notif: Notif<NotifBattleRemoveMarkerArgs>) {
@@ -761,8 +767,8 @@ class NotificationManager {
   async notif_updateCurrentStepOfRound(
     notif: Notif<NotifUpdateCurrentStepOfRoundArgs>
   ) {
-    const { round, step } = notif.args;
-    this.game.stepTracker.update(round, step);
+    const { round, step, battleOrder } = notif.args;
+    this.game.stepTracker.update(round, step, battleOrder);
   }
 
   async notif_vagariesOfWarPickUnits(

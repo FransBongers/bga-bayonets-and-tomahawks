@@ -162,6 +162,6 @@ class BTHelpers extends \APP_DbObject
   {
     $currentRound = Globals::getActionRound();
     Globals::setCurrentStepOfRound($newStep);
-    Notifications::updateCurrentStepOfRound($currentRound, $newStep);
+    Notifications::updateCurrentStepOfRound($currentRound, $newStep, Globals::getBattleOrder());
   }
 }

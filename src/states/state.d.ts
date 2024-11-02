@@ -80,6 +80,10 @@ interface OnEnteringBattleSelectCommanderStateArgs extends CommonArgs {
   faction: BRITISH_FACTION | FRENCH_FACTION;
 }
 
+interface OnEnteringBattleSelectSpaceStateArgs extends CommonArgs {
+  spaces: BTSpace[];
+}
+
 interface OnEnteringColonialsEnlistUnitPlacementStateArgs extends CommonArgs {
   units: BTUnit[];
   spaces: BTSpace[];

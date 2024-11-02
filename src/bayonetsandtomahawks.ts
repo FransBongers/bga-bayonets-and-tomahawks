@@ -83,6 +83,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     battleRetreat: BattleRetreatState;
     battleRollsRerolls: BattleRollsRerollsState;
     battleSelectCommander: BattleSelectCommanderState;
+    battleSelectSpace: BattleSelectSpaceState;
     colonialsEnlistUnitPlacement: ColonialsEnlistUnitPlacementState;
     confirmPartialTurn: ConfirmPartialTurnState;
     confirmTurn: ConfirmTurnState;
@@ -165,6 +166,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       battleRetreat: new BattleRetreatState(this),
       battleRollsRerolls: new BattleRollsRerollsState(this),
       battleSelectCommander: new BattleSelectCommanderState(this),
+      battleSelectSpace: new BattleSelectSpaceState(this),
       colonialsEnlistUnitPlacement: new ColonialsEnlistUnitPlacementState(this),
       confirmPartialTurn: new ConfirmPartialTurnState(this),
       confirmTurn: new ConfirmTurnState(this),

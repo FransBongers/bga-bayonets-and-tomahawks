@@ -3,3 +3,10 @@ interface ActionRoundStep {
   stepNumber: number;
   text: string;
 }
+
+type BattleOrder = BattleOrderStep[];
+
+interface BattleOrderStep {
+  numberOfAttackers: number;
+  spaceIds: string[];
+}

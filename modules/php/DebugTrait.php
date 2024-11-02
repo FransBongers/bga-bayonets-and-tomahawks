@@ -42,13 +42,13 @@ trait DebugTrait
 
   function debug_test()
   {
-  
+
     // Globals::setCurrentStepOfRound(SELECT_CARD_TO_PLAY_STEP);
     // Cards::get('Card47')->setLocation(Locations::cardInPlay(INDIAN));
 
     // Units::get('unit_121')->setLocation(LOSSES_BOX_BRITISH);
     // Units::get('unit_7')->setLocation(BAYE_DE_CATARACOUY);
-    // Units::get('unit_48')->setLocation(NUMBER_FOUR);
+    Units::get('unit_41')->setLocation(ALBANY);
     // Units::get('unit_37')->setLocation(LOSSES_BOX_FRENCH);
     // Units::get('unit_3')->setLocation(REMOVED_FROM_PLAY);
     // Units::get('unit_15')->setLocation(WILLS_CREEK);
@@ -60,7 +60,7 @@ trait DebugTrait
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(ALBANY), BRITISH);
 
     // Cards::get('Card25')->insertOnTop(Locations::buildUpDeck(FRENCH));
-    Cards::get('Card07')->insertOnTop(Locations::buildUpDeck(BRITISH));
+    // Cards::get('Card07')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card06')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card06')->insertOnTop(Locations::campaignDeck(BRITISH));
     // Cards::get('Card54')->insertOnTop(Locations::campaignDeck(INDIAN));

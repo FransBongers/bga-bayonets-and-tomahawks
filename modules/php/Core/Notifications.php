@@ -407,6 +407,13 @@ class Notifications
     ]);
   }
 
+  public static function battleOrder($battleOrder)
+  {
+    self::notifyAll('battleOrder', '', [
+      'battleOrder' => $battleOrder,
+    ]);
+  }
+
   public static function battleReroll($player, $oldResult, $newResult, $rerollSource, $commander = null)
   {
     self::notifyAll('battleReroll', clienttranslate('${player_name} rerolls ${tkn_dieResult_old} to ${tkn_dieResult_new}'), [
@@ -1081,11 +1088,12 @@ class Notifications
     ]);
   }
 
-  public static function updateCurrentStepOfRound($round, $step)
+  public static function updateCurrentStepOfRound($round, $step, $battleOrder)
   {
     self::notifyAll("updateCurrentStepOfRound", '', [
       'round' => $round,
       'step' => $step,
+      'battleOrder' => $battleOrder,
     ]);
   }
 

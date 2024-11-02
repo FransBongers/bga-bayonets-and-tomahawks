@@ -26,4 +26,13 @@
     margin: 0px -3px;
     padding-left: 11px;
   }
+
+  .step_tracker_battle_step {
+    font-size: smaller;
+    padding-left: 26px;
+  }
+
+  .step_tracker_battle_step[data-active="true"] {
+    padding-left: 29px;
+  }
 }

@@ -22,7 +22,7 @@ class StepTracker {
   clearInterface() {}
 
   updateInterface(gamedatas: BayonetsAndTomahawksGamedatas) {
-    this.update(gamedatas.currentRound.id, gamedatas.currentRound.step);
+    this.update(gamedatas.currentRound.id, gamedatas.currentRound.step, gamedatas.currentRound.battleOrder);
   }
 
   // ..######..########.########.##.....##.########.
@@ -43,10 +43,15 @@ class StepTracker {
       'beforeend',
       tplStepTracker(gamedatas.currentRound.id)
     );
+
+    // if (gamedatas.currentRound.battleOrder.length > 0) {
+    //   this.addBattleOrder(gamedatas.currentRound.battleOrder);
+    // }
+
     this.currentRound = '';
     this.currentStep = '';
     if (gamedatas.currentRound.step) {
-      this.update(gamedatas.currentRound.id, gamedatas.currentRound.step);
+      this.update(gamedatas.currentRound.id, gamedatas.currentRound.step, gamedatas.currentRound.battleOrder);
     }
   }
 
@@ -74,7 +79,7 @@ class StepTracker {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  public update(round: string, step: string) {
+  public update(round: string, step: string, battleOrder: BattleOrder) {
     if (this.currentRound !== round) {
       // Update title
       const titleNode = document.getElementById('step_stracker_title');
@@ -90,6 +95,7 @@ class StepTracker {
           tplStepTrackerContent(round)
         );
       }
+      this.addBattleOrder(battleOrder);
 
       this.currentRound = round;
     }
@@ -110,5 +116,17 @@ class StepTracker {
     if (newActiveStepNode) {
       newActiveStepNode.setAttribute('data-active', 'true');
     }
+  }
+
+  public addBattleOrder(battleOrder: BattleOrder) {
+    const node = document.getElementById('resolveBattlesStep');
+
+    if (!node) {
+      return;
+    }
+    node.insertAdjacentHTML(
+      'afterend',
+      battleOrder.map((step) => tplBattleOrderStep(this.game, step)).join('')
+    );
   }
 }

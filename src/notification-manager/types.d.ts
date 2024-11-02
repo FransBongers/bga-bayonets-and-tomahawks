@@ -56,6 +56,10 @@ interface NotifBattleStartArgs {
   defenderMarker: BTMarker;
 }
 
+interface NotifBattleOrderArgs {
+  battleOrder: BattleOrder;
+}
+
 interface NotifBattleRemoveMarkerArgs {
   space: BTSpace;
 }
@@ -264,6 +268,7 @@ interface NotifUpdateActionPointsArgs {
 interface NotifUpdateCurrentStepOfRoundArgs {
   round: string;
   step: string;
+  battleOrder: BattleOrderStep[];
 }
 
 interface NotifVagariesOfWarPickUnitsArgs extends NotifWithPlayerArgs {

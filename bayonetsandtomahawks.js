@@ -2540,6 +2540,7 @@ var BayonetsAndTomahawks = (function () {
             battleRetreat: new BattleRetreatState(this),
             battleRollsRerolls: new BattleRollsRerollsState(this),
             battleSelectCommander: new BattleSelectCommanderState(this),
+            battleSelectSpace: new BattleSelectSpaceState(this),
             colonialsEnlistUnitPlacement: new ColonialsEnlistUnitPlacementState(this),
             confirmPartialTurn: new ConfirmPartialTurnState(this),
             confirmTurn: new ConfirmTurnState(this),
@@ -5344,6 +5345,7 @@ var NotificationManager = (function () {
             'moveBattleVictoryMarker',
             'battle',
             'battleCleanup',
+            'battleOrder',
             'battleRemoveMarker',
             'battleReroll',
             'battleReturnCommander',
@@ -5557,6 +5559,16 @@ var NotificationManager = (function () {
                         }
                         return [2];
                 }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_battleOrder = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var battleOrder;
+            return __generator(this, function (_a) {
+                battleOrder = notif.args.battleOrder;
+                this.game.stepTracker.addBattleOrder(battleOrder);
+                return [2];
             });
         });
     };
@@ -6324,10 +6336,10 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_updateCurrentStepOfRound = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, round, step;
+            var _a, round, step, battleOrder;
             return __generator(this, function (_b) {
-                _a = notif.args, round = _a.round, step = _a.step;
-                this.game.stepTracker.update(round, step);
+                _a = notif.args, round = _a.round, step = _a.step, battleOrder = _a.battleOrder;
+                this.game.stepTracker.update(round, step, battleOrder);
                 return [2];
             });
         });
@@ -8348,6 +8360,82 @@ var BattleSelectCommanderState = (function () {
         });
     };
     return BattleSelectCommanderState;
+}());
+var BattleSelectSpaceState = (function () {
+    function BattleSelectSpaceState(game) {
+        this.game = game;
+    }
+    BattleSelectSpaceState.prototype.onEnteringState = function (args) {
+        debug('Entering BattleSelectSpaceState');
+        this.args = args;
+        this.game.tabbedColumn.changeTab('battle');
+        this.updateInterfaceInitialStep();
+    };
+    BattleSelectSpaceState.prototype.onLeavingState = function () {
+        debug('Leaving BattleSelectSpaceState');
+    };
+    BattleSelectSpaceState.prototype.setDescription = function (activePlayerId) { };
+    BattleSelectSpaceState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select the Space for the next Battle'),
+            args: {
+                you: '${you}',
+            },
+        });
+        this.args.spaces
+            .sort(function (a, b) { return (_(a.name) > _(b.name) ? 1 : -1); })
+            .forEach(function (space) {
+            _this.game.addPrimaryActionButton({
+                id: "".concat(space.id, "_btn"),
+                text: _(space.name),
+                callback: function () { return _this.updateInterfaceConfirm({ space: space }); },
+            });
+            _this.game.setLocationSelectable({
+                id: space.id,
+                callback: function () { return _this.updateInterfaceConfirm({ space: space }); },
+            });
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    BattleSelectSpaceState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var space = _a.space;
+        this.game.clearPossible();
+        this.game.setLocationSelected({ id: space.id });
+        this.game.clientUpdatePageTitle({
+            text: _('Select ${spaceName} as Space for the next Battle?'),
+            args: {
+                you: '${you}',
+                spaceName: _(space.name),
+            },
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actBattleSelectSpace',
+                args: {
+                    spaceId: space.id,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    return BattleSelectSpaceState;
 }());
 var ColonialsEnlistUnitPlacementState = (function () {
     function ColonialsEnlistUnitPlacementState(game) {
@@ -12327,7 +12415,7 @@ var StepTracker = (function () {
     }
     StepTracker.prototype.clearInterface = function () { };
     StepTracker.prototype.updateInterface = function (gamedatas) {
-        this.update(gamedatas.currentRound.id, gamedatas.currentRound.step);
+        this.update(gamedatas.currentRound.id, gamedatas.currentRound.step, gamedatas.currentRound.battleOrder);
     };
     StepTracker.prototype.setup = function (_a) {
         var gamedatas = _a.gamedatas;
@@ -12339,10 +12427,10 @@ var StepTracker = (function () {
         this.currentRound = '';
         this.currentStep = '';
         if (gamedatas.currentRound.step) {
-            this.update(gamedatas.currentRound.id, gamedatas.currentRound.step);
+            this.update(gamedatas.currentRound.id, gamedatas.currentRound.step, gamedatas.currentRound.battleOrder);
         }
     };
-    StepTracker.prototype.update = function (round, step) {
+    StepTracker.prototype.update = function (round, step, battleOrder) {
         if (this.currentRound !== round) {
             var titleNode = document.getElementById('step_stracker_title');
             if (titleNode) {
@@ -12353,6 +12441,7 @@ var StepTracker = (function () {
                 contentNode.replaceChildren();
                 contentNode.insertAdjacentHTML('afterbegin', tplStepTrackerContent(round));
             }
+            this.addBattleOrder(battleOrder);
             this.currentRound = round;
         }
         this.changeCurrentStep(step);
@@ -12370,11 +12459,28 @@ var StepTracker = (function () {
             newActiveStepNode.setAttribute('data-active', 'true');
         }
     };
+    StepTracker.prototype.addBattleOrder = function (battleOrder) {
+        var _this = this;
+        var node = document.getElementById('resolveBattlesStep');
+        if (!node) {
+            return;
+        }
+        node.insertAdjacentHTML('afterend', battleOrder.map(function (step) { return tplBattleOrderStep(_this.game, step); }).join(''));
+    };
     return StepTracker;
 }());
-var tplStepTrackerContent = function (currentRound) { return getStepConfig(currentRound)
-    .map(function (roundConfig) { return "\n  <li id=\"".concat(roundConfig.id, "\" data-active=\"false\">").concat(roundConfig.stepNumber, ". ").concat(_(roundConfig.text), "</li>\n"); })
-    .join(''); };
+var tplStepTrackerContent = function (currentRound) {
+    return getStepConfig(currentRound)
+        .map(function (roundConfig) { return "\n  <li id=\"".concat(roundConfig.id, "\" data-active=\"false\">").concat(roundConfig.stepNumber, ". ").concat(_(roundConfig.text), "</li>\n"); })
+        .join('');
+};
+var tplBattleOrderStep = function (game, _a) {
+    var numberOfAttackers = _a.numberOfAttackers, spaceIds = _a.spaceIds;
+    return "<li id=\"battleOrderStep".concat(numberOfAttackers, "\" data-active=\"false\" class=\"step_tracker_battle_step\">").concat(spaceIds
+        .map(function (spaceId) { return _(game.getSpaceStaticData(spaceId).name); })
+        .sort(function (a, b) { return (a > b ? 1 : -1); })
+        .join(', '), "</li>");
+};
 var tplStepTracker = function (currentRound) { return "\n<div id=\"step_tracker\" class='player-board'>\n  <div id=\"step_stracker_title_container\">\n    <span id=\"step_stracker_title\" class=\"bt_title\">".concat(_(getCurrentRoundName(currentRound)), "</span>\n  </div>\n  <ul id=\"step_tracker_content\">\n  ").concat(tplStepTrackerContent(currentRound), "\n  </ul>\n</div>"); };
 var TabbedColumn = (function () {
     function TabbedColumn(game) {

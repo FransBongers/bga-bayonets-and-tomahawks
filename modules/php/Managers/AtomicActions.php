@@ -44,6 +44,7 @@ class AtomicActions
     BATTLE_ROLLS_ROLL_DICE => 'BattleRollsRollDice',
     BATTLE_ROUT => 'BattleRout',
     BATTLE_SELECT_COMMANDER => 'BattleSelectCommander',
+    BATTLE_SELECT_SPACE => 'BattleSelectSpace',
     LOGISTICS_ROUND_END => 'LogisticsRoundEnd',
     COLONIALS_ENLIST_UNIT_PLACEMENT => 'ColonialsEnlistUnitPlacement',
     CONSTRUCTION => 'Construction',

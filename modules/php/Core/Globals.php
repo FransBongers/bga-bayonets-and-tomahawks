@@ -48,6 +48,7 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'noIndianUnitMayBeActivated' => 'bool',
     'winteringRearAdmiralPlayed' => 'bool',
     'highwayUnusableForBritish' => 'str',
+    'battleOrder' => 'obj',
   ];
 
   protected static $table = 'global_variables';
