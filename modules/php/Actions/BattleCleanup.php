@@ -83,6 +83,8 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
 
     $this->updateLuckyCannonballAndPerfectVolleysEventAbilities();
 
+    // TODO: write results to log
+    Globals::setActiveBattleLog([]);
     Notifications::battleCleanup($space, $attackerMarker, $defenderMarker, $battleContinues);
 
     $this->resolveAction(['automatic' => true]);

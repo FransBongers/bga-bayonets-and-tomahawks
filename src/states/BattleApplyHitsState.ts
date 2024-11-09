@@ -17,12 +17,17 @@ class BattleApplyHitsState implements State {
     debug('Leaving BattleApplyHitsState');
   }
 
-  setDescription(activePlayerId: number, args: OnEnteringBattleApplyHitsStateArgs) {
+  setDescription(
+    activePlayerId: number,
+    args: OnEnteringBattleApplyHitsStateArgs
+  ) {
     this.args = args;
     this.game.clientUpdatePageTitle({
-      text: this.args.eliminate ? _('${actplayer} must eliminate a unit') : _('${actplayer} must apply Hit'),
+      text: this.args.eliminate
+        ? _('${actplayer} must eliminate a unit')
+        : _('${actplayer} must apply Hit'),
       args: {
-        actplayer: '${actplayer}'
+        actplayer: '${actplayer}',
       },
       nonActivePlayers: true,
     });
@@ -48,7 +53,9 @@ class BattleApplyHitsState implements State {
     this.game.clearPossible();
 
     this.game.clientUpdatePageTitle({
-      text: this.args.eliminate ? _('${you} must select a unit to eliminate') : _('${you} must select a unit to apply a Hit to'),
+      text: this.args.eliminate
+        ? _('${you} must select a unit to eliminate')
+        : _('${you} must select a unit to apply a Hit to'),
       args: {
         you: '${you}',
       },
@@ -69,9 +76,12 @@ class BattleApplyHitsState implements State {
     this.game.clearPossible();
 
     this.game.setUnitSelected({ id: unit.id });
+    this.game.setUnitSelected({ id: getUnitIdForBattleInfo(unit) });
 
     this.game.clientUpdatePageTitle({
-      text: this.args.eliminate ? _('Eliminate ${unitName}?') : _('Apply Hit to ${unitName}?'),
+      text: this.args.eliminate
+        ? _('Eliminate ${unitName}?')
+        : _('Apply Hit to ${unitName}?'),
       args: {
         unitName: _(
           this.game.gamedatas.staticData.units[unit.counterId].counterText
@@ -114,13 +124,20 @@ class BattleApplyHitsState implements State {
 
   private setUnitsSelectable() {
     this.args.units.forEach((unit) => {
+      const callback = (event: PointerEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+        this.updateInterfaceConfirm({ unit });
+      };
+
       this.game.setUnitSelectable({
         id: unit.id,
-        callback: (event: PointerEvent) => {
-          event.preventDefault();
-          event.stopPropagation();
-          this.updateInterfaceConfirm({ unit });
-        },
+        callback,
+      });
+
+      this.game.setUnitSelectable({
+        id: getUnitIdForBattleInfo(unit),
+        callback,
       });
     });
   }

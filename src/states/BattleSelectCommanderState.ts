@@ -60,6 +60,7 @@ class BattleSelectCommanderState implements State {
     this.game.clearPossible();
 
     this.game.setUnitSelected({ id: unit.id });
+    this.game.setUnitSelected({ id: getUnitIdForBattleInfo(unit) });
 
     this.game.clientUpdatePageTitle({
       text: _('Select ${unitName}?'),
@@ -106,13 +107,19 @@ class BattleSelectCommanderState implements State {
 
   private setUnitsSelectable() {
     this.args.commanders.forEach((unit) => {
+      const callback = (event: PointerEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+        this.updateInterfaceConfirm({ unit });
+      };
+
       this.game.setUnitSelectable({
         id: unit.id,
-        callback: (event: PointerEvent) => {
-          event.preventDefault();
-          event.stopPropagation();
-          this.updateInterfaceConfirm({ unit });
-        },
+        callback,
+      });
+      this.game.setUnitSelectable({
+        id: getUnitIdForBattleInfo(unit),
+        callback,
       });
     });
   }

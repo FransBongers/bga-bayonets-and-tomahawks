@@ -2,10 +2,10 @@
 @use 'sass:map';
 
 .bt_marker {
-  min-height: calc(var(--btMapScale) * 44px);
-  max-height: calc(var(--btMapScale) * 44px);
-  min-width: calc(var(--btMapScale) * 44px);
-  max-width: calc(var(--btMapScale) * 44px);
+  min-height: calc(var(--btMarkerScale) * 44px);
+  max-height: calc(var(--btMarkerScale) * 44px);
+  min-width: calc(var(--btMarkerScale) * 44px);
+  max-width: calc(var(--btMarkerScale) * 44px);
 }
 
 .bt_marker_side {

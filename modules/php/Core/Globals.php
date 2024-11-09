@@ -35,6 +35,7 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'activeBattleDefenderFaction' => 'str',
     'activeBattleHighlandBrigadeHit' => 'bool',
     'activeBattleCoupDeMain' => 'bool',
+    'activeBattleLog' => 'obj',
     'lostAPBritish' => 'obj',
     'lostAPFrench' => 'obj',
     'lostAPIndian' => 'obj',
@@ -186,9 +187,6 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     self::setNoIndianUnitMayBeActivated(false);
     self::setWinteringRearAdmiralPlayed(false);
     self::setHighwayUnusableForBritish('');
-
-    
-    
   }
 
   public static function getUsedEventCount($faction) {

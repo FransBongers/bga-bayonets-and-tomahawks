@@ -54,7 +54,11 @@ class BattleRollsRollDice extends \BayonetsAndTomahawks\Actions\Battle
       $diceResults[] = BTDice::roll();
     }
 
-    Notifications::battleRolls($player, $battleRollsSequenceStep, $diceResults, $unitIds);
+    Notifications::battleRolls($player, $battleRollsSequenceStep, $diceResults, $faction);
+
+    $activeBattleLog = Globals::getActiveBattleLog();
+    $activeBattleLog[$faction]['rolls'][$battleRollsSequenceStep] = $diceResults;
+    $activeBattleLog = Globals::setActiveBattleLog($activeBattleLog);
 
     $diceResultsWithRerollSources = array_map(function ($dieResult) {
       return [

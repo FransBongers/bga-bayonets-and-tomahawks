@@ -28,6 +28,9 @@ class TokenManager extends CardManager<BTToken> {
       if (isCommander) {
         div.setAttribute('data-commander', 'true');
       }
+      if (this.isEliminatedUnitOnBattleInfoTab(token)) {
+        div.setAttribute('data-eliminated', 'true');
+      }
       // if (token.reduced) {
       //   div.setAttribute('data-reduced','true');
       // }
@@ -49,7 +52,10 @@ class TokenManager extends CardManager<BTToken> {
       // div.style.width = "calc(var(--btCardScale) * 250px)";
       // div.style.height = "calc(var(--btCardScale) * 179px)";
       if (token.counterId.startsWith('VOW')) {
-        this.game.tooltipManager.addUnitTooltip({nodeId: token.id, unit: token});
+        this.game.tooltipManager.addUnitTooltip({
+          nodeId: token.id,
+          unit: token,
+        });
       }
     } else if (token.manager === MARKERS) {
       div.classList.add('bt_marker_side');
@@ -77,9 +83,28 @@ class TokenManager extends CardManager<BTToken> {
 
   isCardVisible(token: BTToken) {
     if (token.manager === UNITS) {
+      const data = this.game.getUnitStaticData(token);
+      if (
+        this.isEliminatedUnitOnBattleInfoTab(token) &&
+        !(data.indian || data.type === COMMANDER)
+      ) {
+        return false;
+      }
       return !token.reduced;
     } else if (token.manager === MARKERS) {
       return token.side === 'front';
     }
+  }
+
+  isEliminatedUnitOnBattleInfoTab(token: BTUnit) {
+    const isEliminated =
+      token.id.endsWith('_battle') &&
+      [
+        REMOVED_FROM_PLAY,
+        POOL_FLEETS,
+        LOSSES_BOX_BRITISH,
+        LOSSES_BOX_FRENCH,
+      ].includes(token.location);
+    return isEliminated;
   }
 }

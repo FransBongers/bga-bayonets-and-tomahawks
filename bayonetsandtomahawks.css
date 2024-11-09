@@ -398,6 +398,139 @@ body > .card {
   background-position-y: 80%;
 }
 
+#bt_active_battle_log {
+  margin-bottom: 16px;
+  padding: 8px;
+  --btMarkerScale: 0.636;
+  --btTokenScale: 0.7;
+}
+#bt_active_battle_log .bt_active_battle_title_container {
+  margin: 8px 0px;
+  display: flex;
+  justify-content: center;
+}
+#bt_active_battle_log #bt_active_battle_log_counters_container {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+#bt_active_battle_log #bt_active_battle_log_map_detail {
+  height: 150px;
+  width: calc(var(--rightColumnScale) * 1500px);
+  margin: -16px -8px 0px -8px;
+  background-image: url("img/map.webp");
+  background-repeat: no-repeat;
+  background-size: 1060px 1638.4px;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 4px;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_commander {
+  height: 28px;
+  width: 28px;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_score_counter {
+  min-width: 16px;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_counter_container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_counter_container .bt_counter {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 4px;
+  padding: 2px;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_counter_container .bt_counter .bt_token_side {
+  position: relative;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_faction_banner {
+  display: flex;
+  height: 30px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: ivory;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-bottom: 8px;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_faction_header[data-faction=british] .bt_active_battle_faction_banner {
+  background-color: #B73E1F;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_faction_header[data-faction=british] #bt_active_battle_attacker_battle_victory_marker,
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_faction_header[data-faction=british] #bt_active_battle_defender_battle_victory_marker {
+  background-position-x: 14.2857142857%;
+  background-position-y: 20%;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_faction_header[data-faction=french] .bt_active_battle_faction_banner {
+  background-color: #216295;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_faction_header[data-faction=french] #bt_active_battle_attacker_battle_victory_marker,
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_faction_header[data-faction=french] #bt_active_battle_defender_battle_victory_marker {
+  background-position-x: 28.5714285714%;
+  background-position-y: 20%;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_faction_container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_faction_container #bt_active_battle_sequence_MILITIA_attacker_container,
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_faction_container #bt_active_battle_sequence_MILITIA_defender_container {
+  --btMarkerScale: 0.827;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_faction_container .bt_token[data-eliminated=true] {
+  opacity: 0.6;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_sequence_container {
+  border: 1px solid black;
+  border-radius: 5px;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_sequence_container .bt_active_battle_sequence_title_container {
+  font-weight: bold;
+  padding: 4px;
+  font-size: smaller;
+  border-radius: 4px 4px 0px 0px;
+  color: ivory;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_sequence_container .bt_active_battle_sequence_inner_container {
+  padding: 4px;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_faction_container[data-faction=british] .bt_active_battle_sequence_title_container {
+  background-color: #B73E1F;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_faction_container[data-faction=french] .bt_active_battle_sequence_title_container {
+  background-color: #216295;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_sequence_container[data-has-units=false] {
+  display: none;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_sequence_rolls {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  flex-wrap: wrap;
+  min-height: 37px;
+}
+#bt_active_battle_log .bt_active_battle_log_content_container .bt_active_battle_sequence_rolls .bt_die_result_container {
+  height: calc(var(--btTokenScale) * 52px);
+  width: calc(var(--btTokenScale) * 52px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .bt_battle_info_container {
   width: calc(var(--rightColumnScale) * 1.333333 * 1125px);
   height: calc(var(--rightColumnScale) * 1.333333 * 717px);
@@ -1504,6 +1637,7 @@ body > .card {
   font-weight: bold;
   padding: 4px;
   font-size: small;
+  border-radius: 4px 4px 0px 0px;
 }
 
 .bt_unit_pool_section_title[data-faction=british] {
@@ -3150,10 +3284,10 @@ body > .card {
 }
 
 .bt_marker {
-  min-height: calc(var(--btMapScale) * 44px);
-  max-height: calc(var(--btMapScale) * 44px);
-  min-width: calc(var(--btMapScale) * 44px);
-  max-width: calc(var(--btMapScale) * 44px);
+  min-height: calc(var(--btMarkerScale) * 44px);
+  max-height: calc(var(--btMarkerScale) * 44px);
+  min-width: calc(var(--btMarkerScale) * 44px);
+  max-width: calc(var(--btMarkerScale) * 44px);
 }
 
 .bt_marker_side {

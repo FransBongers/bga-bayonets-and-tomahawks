@@ -235,6 +235,15 @@ const OPEN_SEAS_MARKER_SAIL_BOX = 'openSeasMarkerSailBox';
 const CHEROKEE_CONTROL = 'cherokeeControl';
 const IROQUOIS_CONTROL = 'iroquoisControl';
 
+const ATTACKER = 'attacker';
+const DEFENDER = 'defender';
+const COMMANDER_IN_PLAY = 'commanderInPlay';
+
+const BATTLE_SIDES: Array<'attacker' | 'defender'> = [
+  ATTACKER,
+  DEFENDER,
+];
+
 // const CHEROKEE = 'Cherokee';
 // const IROQUOIS = 'Iroquois';
 

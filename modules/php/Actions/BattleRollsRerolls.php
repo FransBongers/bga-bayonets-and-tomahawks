@@ -54,9 +54,7 @@ class BattleRollsRerolls extends \BayonetsAndTomahawks\Actions\Battle
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreBattleRollsRerolls()
-  {
-  }
+  public function stPreBattleRollsRerolls() {}
 
 
   // ....###....########...######....######.
@@ -175,9 +173,19 @@ class BattleRollsRerolls extends \BayonetsAndTomahawks\Actions\Battle
       Globals::incUsedEventCount($faction, 1);
     }
 
-    Notifications::battleReroll($player, $oldResult, $newResult, $rerollSource, $commander);
+
+    $diceResultsWithRerollSources[$index]['result'] = $newResult;
+    $diceResultsWithRerollSources[$index]['usedRerollSources'][] = $rerollSource;
+
+    $currentDiceResults = array_map(function ($dieResult) {
+      return $dieResult['result'];
+    }, $diceResultsWithRerollSources);
+    // Notifications::battleRollsResultAfterRerolls($currentDiceResults, $battleRollsSequenceStep, $faction);
+
+    Notifications::battleReroll($player, $oldResult, $newResult, $rerollSource, $commander, $currentDiceResults, $battleRollsSequenceStep, $faction);
 
     $placeNewCommander = false;
+    // To check: why set it equal to 3 here?
     $currentCommanderValue = 3;
     if ($rerollSource === COMMANDER && $newResult === MISS) {
       $commanderCasualtyRoll = BTDice::roll();
@@ -189,13 +197,6 @@ class BattleRollsRerolls extends \BayonetsAndTomahawks\Actions\Battle
       }
     }
 
-    $diceResultsWithRerollSources[$index]['result'] = $newResult;
-    $diceResultsWithRerollSources[$index]['usedRerollSources'][] = $rerollSource;
-
-    $currentDiceResults = array_map(function ($dieResult) {
-      return $dieResult['result'];
-    }, $diceResultsWithRerollSources);
-    Notifications::battleRollsResultAfterRerolls($currentDiceResults);
     // Else, apply results
 
     $rerollOptions = $this->getRerollOptions($diceResultsWithRerollSources, $battleRollsSequenceStep, $faction);

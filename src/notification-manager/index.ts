@@ -54,6 +54,8 @@ class NotificationManager {
       'battleRemoveMarker',
       'battleReroll',
       'battleReturnCommander',
+      'battleRolls',
+      // 'battleRollsResultAfterRerolls',
       'battleStart',
       'battleSelectCommander',
       'chooseReaction',
@@ -230,6 +232,7 @@ class NotificationManager {
     this.game.playerManager.updatePlayers({ gamedatas: updatedGamedatas });
     this.game.gameMap.updateInterface(updatedGamedatas);
     this.game.pools.updateInterface(updatedGamedatas);
+    this.game.battleTab.updateInterface(updatedGamedatas);
   }
 
   async notif_refreshUIPrivate(notif: Notif<NotifRefreshUIPrivateArgs>) {
@@ -258,8 +261,12 @@ class NotificationManager {
   async notif_moveBattleVictoryMarker(
     notif: Notif<NotifMoveBattleVictoryMarkerArgs>
   ) {
-    const { marker } = notif.args;
+    const { marker, numberOfPositions, backward } = notif.args;
 
+    this.game.battleTab.incScoreCounter(
+      marker,
+      numberOfPositions * (backward ? -1 : 1)
+    );
     await this.game.gameMap.battleTrack[marker.location].addCard(marker);
   }
 
@@ -274,6 +281,8 @@ class NotificationManager {
   async notif_battleCleanup(notif: Notif<NotifBattleCleanupArgs>) {
     const { attackerMarker, defenderMarker, space, battleContinues } =
       notif.args;
+
+    this.game.battleTab.battleEnd();
 
     await Promise.all([
       this.game.gameMap.battleTrack[attackerMarker.location].addCard(
@@ -293,7 +302,7 @@ class NotificationManager {
   }
 
   async notif_battleOrder(notif: Notif<NotifBattleOrderArgs>) {
-    const {battleOrder} = notif.args;
+    const { battleOrder } = notif.args;
     this.game.stepTracker.addBattleOrder(battleOrder);
   }
 
@@ -308,13 +317,40 @@ class NotificationManager {
 
   async notif_battleReroll(notif: Notif<NotifBattleRerollArgs>) {
     const { commander } = notif.args;
+    const { battleRollsSequenceStep, diceResults, faction } = notif.args;
+    this.game.battleTab.updateDiceResults(
+      battleRollsSequenceStep,
+      diceResults,
+      faction
+    );
     if (commander === null) {
       return;
     }
+    this.game.battleTab.incCommanderRerolls(commander, -1);
     await this.game.gameMap.commanderRerollsTrack[commander.location].addCard(
       commander
     );
   }
+
+  async notif_battleRolls(notif: Notif<NotifBattleRollsArgs>) {
+    const { battleRollsSequenceStep, diceResults, faction } = notif.args;
+    this.game.battleTab.updateDiceResults(
+      battleRollsSequenceStep,
+      diceResults,
+      faction
+    );
+  }
+
+  // async notif_battleRollsResultAfterRerolls(
+  //   notif: Notif<NotifResultAfterRerollsArgs>
+  // ) {
+  // const { battleRollsSequenceStep, diceResults, faction } = notif.args;
+  // this.game.battleTab.updateDiceResults(
+  //   battleRollsSequenceStep,
+  //   diceResults,
+  //   faction
+  // );
+  // }
 
   async notif_battleReturnCommander(
     notif: Notif<NotifBattleReturnCommanderArgs>
@@ -331,13 +367,27 @@ class NotificationManager {
     notif: Notif<NotifBattleSelectCommanderArgs>
   ) {
     const { commander } = notif.args;
-    await this.game.gameMap.commanderRerollsTrack[commander.location].addCard(
-      commander
-    );
+    await Promise.all([
+      this.game.gameMap.commanderRerollsTrack[commander.location].addCard(
+        commander
+      ),
+      this.game.battleTab.setCommanderInPlay({ ...commander }),
+    ]);
   }
 
   async notif_battleStart(notif: Notif<NotifBattleStartArgs>) {
-    const { attackerMarker, defenderMarker } = notif.args;
+    const { attackerMarker, defenderMarker, space, unitsPerFaction } =
+      notif.args;
+    const attacker =
+      attackerMarker.type === BRITISH_BATTLE_MARKER ? BRITISH : FRENCH;
+    const defender =
+      defenderMarker.type === BRITISH_BATTLE_MARKER ? BRITISH : FRENCH;
+    this.game.battleTab.battleStart({
+      attacker,
+      defender,
+      spaceId: space.id,
+      unitsPerFaction,
+    });
     this.game.tabbedColumn.changeTab('battle');
     await Promise.all([
       this.game.gameMap.battleTrack[attackerMarker.location].addCard(
@@ -350,8 +400,8 @@ class NotificationManager {
   }
 
   async notif_chooseReaction(notif: Notif<NotifChooseReactionArgs>) {
-    const {playerId, actionPointId} = notif.args;
-    this.getPlayer({playerId}).setReactionActionPointId(actionPointId);
+    const { playerId, actionPointId } = notif.args;
+    this.getPlayer({ playerId }).setReactionActionPointId(actionPointId);
   }
 
   async notif_constructionFort(notif: Notif<NotifConstructionFortArgs>) {
@@ -416,9 +466,10 @@ class NotificationManager {
 
   async notif_discardCardInPlay(notif: Notif<NotifDiscardCardsInPlayArgs>) {
     const { card } = notif.args;
-    this.game.playerManager.getPlayerForFaction(card.faction as Faction).clearPlayerPanel(card.faction);
+    this.game.playerManager
+      .getPlayerForFaction(card.faction as Faction)
+      .clearPlayerPanel(card.faction);
     await this.game.discard.addCard(card);
-
   }
 
   async notif_drawCardPrivate(notif: Notif<NotifDrawCardPrivateArgs>) {
@@ -437,13 +488,17 @@ class NotificationManager {
   async notif_eliminateUnit(notif: Notif<NotifEliminateUnitArgs>) {
     const { unit } = notif.args;
 
+    const promises: Promise<void | boolean>[] = [
+      this.game.battleTab.eliminateUnit(unit),
+    ];
     if (unit.location.startsWith('lossesBox_')) {
-      await this.game.gameMap.losses[unit.location].addCard(unit);
+      promises.push(this.game.gameMap.losses[unit.location].addCard(unit));
     } else if (unit.location === REMOVED_FROM_PLAY) {
-      await this.game.tokenManager.removeCard(unit);
+      promises.push(this.game.tokenManager.removeCard(unit));
     } else if (unit.location === POOL_FLEETS) {
-      // TODO: move to pool
+      promises.push(this.game.pools.stocks[POOL_FLEETS].addCard(unit));
     }
+    await Promise.all(promises);
   }
 
   async notif_frenchLakeWarships(notif: Notif<NotifFrenchLakeWarshipsArgs>) {
@@ -571,10 +626,13 @@ class NotificationManager {
 
   async notif_placeStackMarker(notif: Notif<NotifPlaceStackMarkerArgs>) {
     const { markers } = notif.args;
-
-    await Promise.all(
-      markers.map((marker) => this.game.gameMap.addMarkerToStack(marker))
+    const promises = markers.map((marker) =>
+      this.game.gameMap.addMarkerToStack(marker)
     );
+    markers.forEach((marker) => {
+      promises.push(this.game.battleTab.addMarker(marker));
+    });
+    await Promise.all(promises);
   }
 
   async notif_placeUnitInLosses(notif: Notif<NotifPlaceUnitInLossesArgs>) {
@@ -604,6 +662,11 @@ class NotificationManager {
   async notif_flipUnit(notif: Notif<NotifReduceUnitArgs>) {
     const { unit } = notif.args;
     this.game.tokenManager.updateCardInformations(unit);
+    if (this.game.battleTab.battleIsActive()) {
+      this.game.tokenManager.updateCardInformations(
+        updateUnitIdForBattleInfo({ ...unit })
+      );
+    }
   }
 
   async notif_drawWieChit(notif: Notif<NotifDrawWieChitArgs>) {
@@ -654,8 +717,12 @@ class NotificationManager {
   ) {
     const { marker, from } = notif.args;
     const [spaceId, faction] = from.split('_');
-    await this.game.gameMap.stacks[spaceId][faction].removeCard(marker);
-    // await this.game.tokenManager.removeCard(marker);
+
+    const promises = [
+      this.game.gameMap.stacks[spaceId][faction].removeCard(marker),
+      this.game.battleTab.removeMarker(marker),
+    ];
+    await Promise.all(promises);
   }
 
   async notif_removeMarkersEndOfActionRound(
@@ -757,9 +824,8 @@ class NotificationManager {
     }
   }
 
-  async notif_updateActionPoints(notif: Notif<NotifUpdateActionPointsArgs>)
-  {
-    const {faction, actionPoints, operation} = notif.args
+  async notif_updateActionPoints(notif: Notif<NotifUpdateActionPointsArgs>) {
+    const { faction, actionPoints, operation } = notif.args;
     const player = this.game.playerManager.getPlayerForFaction(faction);
     player.updateActionPoints(faction, actionPoints, operation);
   }

@@ -9,6 +9,7 @@ class EventWinteringRearAdmiralState implements State {
   onEnteringState(args: OnEnteringEventWinteringRearAdmiralStateArgs) {
     debug('Entering EventWinteringRearAdmiralState');
     this.args = args;
+    this.game.tabbedColumn.changeTab('pools');
     this.updateInterfaceInitialStep();
   }
 

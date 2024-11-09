@@ -2232,6 +2232,13 @@ var COMMANDER_REROLLS_TRACK_DEFENDER_3 = 'commander_rerolls_track_defender_3';
 var OPEN_SEAS_MARKER_SAIL_BOX = 'openSeasMarkerSailBox';
 var CHEROKEE_CONTROL = 'cherokeeControl';
 var IROQUOIS_CONTROL = 'iroquoisControl';
+var ATTACKER = 'attacker';
+var DEFENDER = 'defender';
+var COMMANDER_IN_PLAY = 'commanderInPlay';
+var BATTLE_SIDES = [
+    ATTACKER,
+    DEFENDER,
+];
 var LOSSES_BOX_BRITISH = 'lossesBox_british';
 var LOSSES_BOX_FRENCH = 'lossesBox_french';
 var DISBANDED_COLONIAL_BRIGADES = 'disbandedColonialBrigades';
@@ -2603,7 +2610,7 @@ var BayonetsAndTomahawks = (function () {
         }
         this.notificationManager = new NotificationManager(this);
         this.notificationManager.setupNotifications();
-        this.battleInfo = new BattleInfo(this);
+        this.battleTab = new BattleTab(this);
         this.stepTracker = new StepTracker(this);
         this.tooltipManager.setupTooltips();
         debug('Ending game setup');
@@ -2787,6 +2794,7 @@ var BayonetsAndTomahawks = (function () {
         this.playerManager.clearInterface();
         this.gameMap.clearInterface();
         this.pools.clearInterface();
+        this.battleTab.clearInterface();
     };
     BayonetsAndTomahawks.prototype.clearPossible = function () {
         this.framework().removeActionButtons();
@@ -3007,6 +3015,9 @@ var BayonetsAndTomahawks = (function () {
     };
     BayonetsAndTomahawks.prototype.onScreenWidthChange = function () {
         this.updateLayout();
+        if (this.battleTab) {
+            this.battleTab.updateMapImage();
+        }
     };
     BayonetsAndTomahawks.prototype.format_string_recursive = function (log, args) {
         var _this = this;
@@ -3335,6 +3346,48 @@ var tknActionPointLog = function (faction, actionPointId) {
 };
 var tknUnitLog = function (unit) {
     return "".concat(unit.counterId, ":").concat(unit.reduced ? 'reduced' : 'full');
+};
+var getBattleRollSequenceName = function (stepId) {
+    switch (stepId) {
+        case NON_INDIAN_LIGHT:
+            return _('Non-Indian Light');
+        case INDIAN:
+            return _('Indian');
+        case HIGHLAND_BRIGADES:
+            return _('Highland Brigades');
+        case METROPOLITAN_BRIGADES:
+            return _('Metropolitan Brigades');
+        case NON_METROPOLITAN_BRIGADES:
+            return _('Non-Metropolitan Brigades');
+        case FLEETS:
+            return _('Fleets');
+        case BASTIONS_OR_FORT:
+            return _('Bastion or Fort');
+        case ARTILLERY:
+            return _('Artillery');
+        case MILITIA:
+            return _('Militia');
+        case COMMANDER:
+            return _('Other Commanders');
+        default:
+            return _('');
+    }
+};
+var getBattleSideFromLocation = function (input) {
+    var location = typeof input === 'string' ? input : input.location;
+    if (location.includes(ATTACKER)) {
+        return ATTACKER;
+    }
+    else {
+        return DEFENDER;
+    }
+};
+var getUnitIdForBattleInfo = function (unit) {
+    return "".concat(unit.id, "_battle");
+};
+var updateUnitIdForBattleInfo = function (unit) {
+    unit.id = getUnitIdForBattleInfo(unit);
+    return unit;
 };
 var getBattleOrderTitle = function (step) {
     var _a;
@@ -3990,33 +4043,432 @@ var getBattleInfoDieResultConfig = function (game) { return [
         extraClasses: 'bt_center'
     },
 ]; };
-var BattleInfo = (function () {
-    function BattleInfo(game) {
-        this.stocks = {};
+var BattleTab = (function () {
+    function BattleTab(game) {
+        this.stocks = {
+            attacker: {},
+            defender: {},
+        };
+        this.counters = {
+            score: {
+                attacker: new ebg.counter(),
+                defender: new ebg.counter(),
+            },
+            commanderRerolls: {
+                attacker: new ebg.counter(),
+                defender: new ebg.counter(),
+            },
+        };
         this.game = game;
         var gamedatas = game.gamedatas;
         this.setupBattleInfo({ gamedatas: gamedatas });
     }
-    BattleInfo.prototype.clearInterface = function () {
-        Object.values(this.stocks).forEach(function (stock) { return stock.removeAll(); });
+    BattleTab.prototype.clearInterface = function () {
+        var _this = this;
+        BATTLE_SIDES.forEach(function (side) {
+            Object.values(_this.stocks[side]).forEach(function (stock) { return stock.removeAll(); });
+        });
     };
-    BattleInfo.prototype.updateInterface = function (gamedatas) {
+    BattleTab.prototype.updateInterface = function (gamedatas) {
+        if (gamedatas.activeBattleLog !== null) {
+            this.setupActiveBattle(gamedatas);
+        }
     };
-    BattleInfo.prototype.setupBattleInfo = function (_a) {
+    BattleTab.prototype.setupCounters = function () {
+        var _this = this;
+        BATTLE_SIDES.forEach(function (side) {
+            _this.counters.score[side].create("bt_active_battle_".concat(side, "_score"));
+            _this.counters.commanderRerolls[side].create("bt_active_battle_".concat(side, "_rerolls"));
+        });
+    };
+    BattleTab.prototype.setupStocks = function () {
+        var _this = this;
+        BATTLE_SIDES.forEach(function (side) {
+            __spreadArray(__spreadArray([], BATTLE_ROLL_SEQUENCE, true), [MILITIA, COMMANDER], false).forEach(function (stepId) {
+                _this.stocks[side][stepId] = new LineStock(_this.game.tokenManager, document.getElementById("bt_active_battle_sequence_".concat(stepId, "_").concat(side, "_units")), {
+                    center: false,
+                    gap: '4px',
+                });
+            });
+            _this.stocks[side][COMMANDER_IN_PLAY] = new LineStock(_this.game.tokenManager, document.getElementById("bt_active_battle_".concat(side, "_commander")));
+        });
+    };
+    BattleTab.prototype.setupBattleInfo = function (_a) {
         var gamedatas = _a.gamedatas;
-        document
-            .getElementById('bt_tabbed_column_content_battle')
-            .insertAdjacentHTML('beforeend', tplBattleInfo(this.game));
+        var node = document.getElementById('bt_tabbed_column_content_battle');
+        node.insertAdjacentHTML('beforeend', tplActiveBattleLog(this.game));
+        node.insertAdjacentHTML('beforeend', tplBattleInfo(this.game));
+        this.setupStocks();
+        this.setupCounters();
+        if (gamedatas.activeBattleLog !== null) {
+            this.setupActiveBattle(gamedatas);
+            this.game.tabbedColumn.changeTab('battle');
+        }
+        else {
+            this.updateActiveBattleVisibility(false);
+        }
     };
-    return BattleInfo;
+    BattleTab.prototype.isMilitiaMarker = function (marker) {
+        return [BRITISH_MILITIA_MARKER, FRENCH_MILITIA_MARKER].includes(marker.type);
+    };
+    BattleTab.prototype.addMarker = function (marker) {
+        return __awaiter(this, void 0, void 0, function () {
+            var faction;
+            return __generator(this, function (_a) {
+                if (!this.spaceId || !this.isMilitiaMarker(marker)) {
+                    return [2];
+                }
+                faction = marker.type === BRITISH_MILITIA_MARKER ? BRITISH : FRENCH;
+                this.stocks[this.factionSideMap[faction]][MILITIA].addCard(updateUnitIdForBattleInfo(__assign({}, marker)));
+                return [2];
+            });
+        });
+    };
+    BattleTab.prototype.removeMarker = function (marker) {
+        return __awaiter(this, void 0, void 0, function () {
+            var faction;
+            return __generator(this, function (_a) {
+                if (!this.spaceId || !this.isMilitiaMarker(marker)) {
+                    return [2];
+                }
+                faction = marker.type === BRITISH_MILITIA_MARKER ? BRITISH : FRENCH;
+                this.stocks[this.factionSideMap[faction]][MILITIA].removeCard(updateUnitIdForBattleInfo(__assign({}, marker)));
+                return [2];
+            });
+        });
+    };
+    BattleTab.prototype.incScoreCounter = function (marker, value) {
+        if (marker.location.includes(ATTACKER)) {
+            this.counters.score.attacker.incValue(value);
+        }
+        else if (marker.location.includes(DEFENDER)) {
+            this.counters.score.defender.incValue(value);
+        }
+    };
+    BattleTab.prototype.incCommanderRerolls = function (commander, value) {
+        if (commander.location.includes(ATTACKER)) {
+            this.counters.commanderRerolls.attacker.incValue(value);
+        }
+        else if (commander.location.includes(DEFENDER)) {
+            this.counters.commanderRerolls.defender.incValue(value);
+        }
+    };
+    BattleTab.prototype.resetCounters = function () {
+        var _this = this;
+        BATTLE_SIDES.forEach(function (side) {
+            _this.counters.commanderRerolls[side].setValue(0);
+            _this.counters.score[side].setValue(0);
+        });
+    };
+    BattleTab.prototype.battleIsActive = function () {
+        return !!this.spaceId;
+    };
+    BattleTab.prototype.setCommanderInPlay = function (commander) {
+        return __awaiter(this, void 0, void 0, function () {
+            var side;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        side = getBattleSideFromLocation(commander);
+                        this.setCommanderCounterVisibility(side, true);
+                        this.counters.commanderRerolls[side].toValue(Number(commander.location.split('_')[4]));
+                        return [4, this.stocks[side][COMMANDER_IN_PLAY].addCard(updateUnitIdForBattleInfo(commander))];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    BattleTab.prototype.isEliminated = function (unit) {
+        if ([
+            REMOVED_FROM_PLAY,
+            POOL_FLEETS,
+            LOSSES_BOX_BRITISH,
+            LOSSES_BOX_FRENCH,
+        ].includes(unit.location)) {
+            return true;
+        }
+        return false;
+    };
+    BattleTab.prototype.eliminateUnit = function (unit) {
+        return __awaiter(this, void 0, void 0, function () {
+            var node, side;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.spaceId) {
+                            return [2];
+                        }
+                        node = document.getElementById(getUnitIdForBattleInfo(unit));
+                        console.log(unit.id, node);
+                        if (node) {
+                            node.setAttribute('data-eliminated', 'true');
+                        }
+                        side = this.factionSideMap[unit.faction];
+                        console.timeLog;
+                        if (!(node && this.game.getUnitStaticData(unit).type === COMMANDER)) return [3, 2];
+                        return [4, this.stocks[side][COMMANDER].addCard(updateUnitIdForBattleInfo(__assign({}, unit)))];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [2];
+                }
+            });
+        });
+    };
+    BattleTab.prototype.removeAllDiceResultsAndUnitsFromStocks = function () {
+        var _this = this;
+        BATTLE_SIDES.forEach(function (side) {
+            Object.values(_this.stocks[side]).forEach(function (stock) { return stock.removeAll(); });
+        });
+        BATTLE_ROLL_SEQUENCE.forEach(function (stepId) {
+            BATTLE_SIDES.forEach(function (side) {
+                var diceNode = document.getElementById("bt_active_battle_sequence_".concat(stepId, "_").concat(side, "_rolls"));
+                if (diceNode) {
+                    diceNode.replaceChildren();
+                }
+            });
+        });
+    };
+    BattleTab.prototype.battleEnd = function () {
+        this.updateActiveBattleVisibility(false);
+        this.spaceId = null;
+        this.factionSideMap = null;
+        this.sideFactionMap = null;
+        this.removeAllDiceResultsAndUnitsFromStocks();
+    };
+    BattleTab.prototype.battleStart = function (_a) {
+        var attacker = _a.attacker, defender = _a.defender, spaceId = _a.spaceId, unitsPerFaction = _a.unitsPerFaction, _b = _a.setup, setup = _b === void 0 ? false : _b;
+        this.factionSideMap = {
+            british: attacker === BRITISH ? 'attacker' : 'defender',
+            french: attacker === FRENCH ? 'attacker' : 'defender',
+        };
+        this.sideFactionMap = {
+            attacker: attacker,
+            defender: defender,
+        };
+        this.spaceId = spaceId;
+        this.updateTitle();
+        this.updateMapImage();
+        this.updateSides();
+        this.hideCommanders();
+        this.resetCounters();
+        var unitsPerSide = {
+            attacker: unitsPerFaction[this.sideFactionMap['attacker']],
+            defender: unitsPerFaction[this.sideFactionMap['defender']],
+        };
+        this.addUnits(unitsPerSide);
+        this.updateActiveBattleVisibility(true);
+    };
+    BattleTab.prototype.updateActiveBattleVisibility = function (visible) {
+        var node = document.getElementById('bt_active_battle_log');
+        if (visible) {
+            node.style.display = '';
+        }
+        else {
+            node.style.display = 'none';
+        }
+    };
+    BattleTab.prototype.getUnitsForBattleRollSequenceStep = function (units, stepId) {
+        var _this = this;
+        return units.filter(function (unit) {
+            if (unit.location.startsWith('commander_rerolls_track_')) {
+                return false;
+            }
+            var staticData = _this.game.getUnitStaticData(unit);
+            switch (stepId) {
+                case NON_INDIAN_LIGHT:
+                    return !staticData.indian && staticData.type === LIGHT;
+                case INDIAN:
+                    return staticData.indian;
+                case HIGHLAND_BRIGADES:
+                    return staticData.highland && staticData.type === BRIGADE;
+                case METROPOLITAN_BRIGADES:
+                    return (staticData.type === BRIGADE &&
+                        !staticData.highland &&
+                        staticData.metropolitan);
+                case NON_METROPOLITAN_BRIGADES:
+                    return (staticData.type === BRIGADE &&
+                        !staticData.metropolitan &&
+                        !staticData.highland);
+                case FLEETS:
+                    return staticData.type === FLEET;
+                case BASTIONS_OR_FORT:
+                    return staticData.type === FORT || staticData.type === BASTION;
+                case ARTILLERY:
+                    return staticData.type === ARTILLERY;
+                case COMMANDER:
+                    return staticData.type === COMMANDER;
+                default:
+                    return false;
+            }
+        });
+    };
+    BattleTab.prototype.setupActiveBattle = function (gamedatas) {
+        var _this = this;
+        var activeBattleLog = gamedatas.activeBattleLog;
+        var attacker = activeBattleLog.attacker, defender = activeBattleLog.defender;
+        this.battleStart({
+            attacker: activeBattleLog.attacker,
+            defender: activeBattleLog.defender,
+            spaceId: activeBattleLog.spaceId,
+            unitsPerFaction: {
+                british: activeBattleLog.british.units,
+                french: activeBattleLog.french.units,
+            },
+        });
+        this.placeCommandersInPlay({
+            british: activeBattleLog.british.units,
+            french: activeBattleLog.french.units,
+        });
+        this.setupPlaceMilitia({
+            british: activeBattleLog.british.militia,
+            french: activeBattleLog.french.militia,
+        });
+        [BRITISH_BATTLE_MARKER, FRENCH_BATTLE_MARKER].forEach(function (markerId) {
+            var marker = gamedatas.markers[markerId];
+            var value = Number(marker.location.split('_')[4]);
+            if (marker.location.includes('minus')) {
+                value = value * -1;
+            }
+            _this.counters.score[marker.location.includes(ATTACKER) ? ATTACKER : DEFENDER].setValue(value);
+        });
+        BATTLE_SIDES.forEach(function (side) {
+            Object.entries(activeBattleLog[side === 'attacker' ? attacker : defender].rolls).forEach(function (_a) {
+                var stepId = _a[0], dieResults = _a[1];
+                _this.updateDiceResults(stepId, dieResults, _this.sideFactionMap[side]);
+            });
+        });
+    };
+    BattleTab.prototype.updateTitle = function () {
+        var titleNode = document.getElementById('bt_active_battle_title');
+        titleNode.replaceChildren();
+        titleNode.insertAdjacentHTML('afterbegin', this.game.format_string_recursive(_('Battle in ${tkn_boldText_spaceName}'), {
+            tkn_boldText_spaceName: _(this.game.getSpaceStaticData(this.spaceId).name),
+        }));
+    };
+    BattleTab.prototype.updateSides = function () {
+        var _this = this;
+        BATTLE_SIDES.forEach(function (side) {
+            var bannerNode = document.getElementById("bt_active_battle_".concat(side, "_banner"));
+            bannerNode.setAttribute('data-faction', _this.sideFactionMap[side]);
+            var factionContainerNode = document.getElementById("bt_active_battle_".concat(side, "_faction_container"));
+            factionContainerNode.setAttribute('data-faction', _this.sideFactionMap[side]);
+        });
+    };
+    BattleTab.prototype.setCommanderCounterVisibility = function (side, visible) {
+        var commanderNode = document.getElementById("bt_active_battle_".concat(side, "_commander_container"));
+        if (visible) {
+            commanderNode.style.display = '';
+        }
+        else {
+            commanderNode.style.display = 'none';
+        }
+    };
+    BattleTab.prototype.hideCommanders = function () {
+        var _this = this;
+        BATTLE_SIDES.forEach(function (side) {
+            return _this.setCommanderCounterVisibility(side, false);
+        });
+    };
+    BattleTab.prototype.placeCommandersInPlay = function (unitsPerSide) {
+        var _this = this;
+        BATTLE_SIDES.forEach(function (side) {
+            var commanderInPlay = unitsPerSide[_this.sideFactionMap[side]].find(function (unit) { return unit.location.includes("commander_rerolls_track_".concat(side)); });
+            if (commanderInPlay) {
+                _this.setCommanderCounterVisibility(side, true);
+                _this.stocks[side][COMMANDER_IN_PLAY].addCard(updateUnitIdForBattleInfo(commanderInPlay));
+                _this.counters.commanderRerolls[side].setValue(Number(commanderInPlay.location.split('_')[4]));
+            }
+        });
+    };
+    BattleTab.prototype.setupPlaceMilitia = function (input) {
+        var _this = this;
+        [BRITISH, FRENCH].forEach(function (faction) {
+            var side = _this.factionSideMap[faction];
+            var unitNodeId = "bt_active_battle_sequence_".concat(MILITIA, "_").concat(side, "_container");
+            if (input[faction].length === 0) {
+                _this.setHasUnits(unitNodeId, false);
+                return;
+            }
+            _this.stocks[side][MILITIA].addCards(input[faction].map(updateUnitIdForBattleInfo));
+            _this.setHasUnits(unitNodeId, true);
+        });
+    };
+    BattleTab.prototype.updateMapImage = function () {
+        if (!this.spaceId) {
+            return;
+        }
+        var root = document.documentElement;
+        var rightColumnScale = root.style.getPropertyValue('--rightColumnScale');
+        var staticData = this.game.getSpaceStaticData(this.spaceId);
+        var mapNode = document.getElementById('bt_active_battle_log_map_detail');
+        var offsetX = Number(rightColumnScale) * 750;
+        var offsetY = 75;
+        var positionX = -0.705 * staticData.left + offsetX;
+        var positionY = -0.705 * staticData.top + offsetY;
+        mapNode.style.backgroundPositionX = "".concat(positionX, "px");
+        mapNode.style.backgroundPositionY = "".concat(positionY, "px");
+    };
+    BattleTab.prototype.updateDiceResults = function (stepId, diceResults, faction) {
+        if (!this.spaceId) {
+            return;
+        }
+        var diceRollsNode = document.getElementById("bt_active_battle_sequence_".concat(stepId, "_").concat(this.factionSideMap[faction], "_rolls"));
+        diceRollsNode.replaceChildren();
+        diceRollsNode.insertAdjacentHTML('beforeend', diceResults
+            .map(function (dieResult) { return tplActiveBattleDieResult(dieResult); })
+            .join(''));
+    };
+    BattleTab.prototype.addUnits = function (unitsPerSide) {
+        var _this = this;
+        __spreadArray(__spreadArray([], BATTLE_ROLL_SEQUENCE, true), [COMMANDER], false).forEach(function (stepId) {
+            ['attacker', 'defender'].forEach(function (side) {
+                var unitNodeId = "bt_active_battle_sequence_".concat(stepId, "_").concat(side, "_container");
+                var units = _this.getUnitsForBattleRollSequenceStep(unitsPerSide[side], stepId);
+                if (units.length > 0) {
+                    _this.stocks[side][stepId].addCards(units.map(updateUnitIdForBattleInfo));
+                    _this.setHasUnits(unitNodeId, true);
+                }
+                else {
+                    _this.setHasUnits(unitNodeId, false);
+                }
+            });
+        });
+    };
+    BattleTab.prototype.setHasUnits = function (nodeId, hasUnits) {
+        var unitNode = document.getElementById(nodeId);
+        unitNode.setAttribute('data-has-units', hasUnits ? 'true' : 'false');
+    };
+    return BattleTab;
 }());
+var tplActiveBattleCounters = function (side) { return "\n<div class=\"bt_counter_container\">\n  <div class=\"bt_counter\">\n    <div id=\"bt_active_battle_".concat(side, "_battle_victory_marker\" class=\"bt_log_token bt_marker_side\"></div>\n    <span id=\"bt_active_battle_").concat(side, "_score\" class=\"bt_active_battle_score_counter\"></span>\n  </div>\n  <div id=\"bt_active_battle_").concat(side, "_commander_container\" class=\"bt_counter\">\n    <div id=\"bt_active_battle_").concat(side, "_commander\" class=\"bt_active_battle_commander\"></div>\n    <span id=\"bt_active_battle_").concat(side, "_rerolls\"></span>\n  </div>\n</div>\n"); };
+var tplActiveBattleStep = function (stepId, side) { return "\n<div id=\"bt_active_battle_sequence_".concat(stepId, "_").concat(side, "_container\" class=\"bt_active_battle_sequence_container\">\n  <div class=\"bt_active_battle_sequence_title_container\">\n    <span class=\"bt_active_battle_sequence_name\">").concat(getBattleRollSequenceName(stepId), "</span>\n  </div>\n  <div class=\"bt_active_battle_sequence_inner_container\">\n    <div id=\"bt_active_battle_sequence_").concat(stepId, "_").concat(side, "_units\" class=\"bt_active_battle_sequence_units\">\n    </div>\n    <div id=\"bt_active_battle_sequence_").concat(stepId, "_").concat(side, "_rolls\" class=\"bt_active_battle_sequence_rolls\">\n    </div>\n  </div>\n</div>\n"); };
+var tplActiveBattleDieResult = function (dieResult) { return "\n<div class=\"bt_die_result_container\">\n  ".concat(tplLogDieResult(dieResult), "\n</div>\n"); };
+var tplActiveBattleLog = function (game) { return "\n<div id=\"bt_active_battle_log\">\n  <div id=\"bt_active_battle_log_map_detail\"></div>\n  <div class=\"bt_active_battle_title_container\"><span id=\"bt_active_battle_title\"></span></div>  \n  <div class=\"bt_active_battle_log_content_container\">\n  <div id=\"bt_active_battle_attacker_banner\" class=\"bt_active_battle_faction_header\">\n    <div class=\"bt_active_battle_faction_banner\" data-faction=\"\">\n      ".concat(_('Attacker'), "\n    </div>\n    ").concat(tplActiveBattleCounters(ATTACKER), "\n  </div>\n  <div id=\"bt_active_battle_defender_banner\" class=\"bt_active_battle_faction_header\">\n    <div class=\"bt_active_battle_faction_banner\" data-faction=\"\">\n    ").concat(_('Defender'), "\n    </div>\n    ").concat(tplActiveBattleCounters(DEFENDER), "\n  </div>\n    <div id=\"bt_active_battle_attacker_faction_container\" class=\"bt_active_battle_faction_container\" data-faction=\"british\">\n          ").concat(BATTLE_ROLL_SEQUENCE.map(function (stepId) {
+    return tplActiveBattleStep(stepId, 'attacker');
+}).join(''), "\n      ").concat([MILITIA, COMMANDER]
+    .map(function (stepId) { return tplActiveBattleStep(stepId, 'attacker'); })
+    .join(''), "\n    </div>\n    <div id=\"bt_active_battle_defender_faction_container\" class=\"bt_active_battle_faction_container\" data-faction=\"french\">\n    \n      ").concat(BATTLE_ROLL_SEQUENCE.map(function (stepId) {
+    return tplActiveBattleStep(stepId, 'defender');
+}).join(''), "\n      ").concat([MILITIA, COMMANDER]
+    .map(function (stepId) { return tplActiveBattleStep(stepId, 'defender'); })
+    .join(''), "\n    </div>\n  </div>\n</div>\n"); };
 var tplBattleInfo = function (game) {
     return "<div class=\"bt_battle_info_container\">\n<div class=\"bt_battle_info\">\n<div class=\"bt_grid_cell bt_center\">".concat(_('Unit type'), "</div>\n  <div class=\"bt_grid_cell bt_center\">").concat(tplLogDieResult(HIT_TRIANGLE_CIRCLE), "</div>\n  <div class=\"bt_grid_cell bt_center\">").concat(tplLogDieResult(HIT_SQUARE_CIRCLE), "</div>\n  <div class=\"bt_grid_cell bt_center\">").concat(tplLogDieResult(B_AND_T), "</div>\n  <div class=\"bt_grid_cell bt_center\">").concat(tplLogDieResult(FLAG), "</div>\n  <div class=\"bt_grid_cell bt_center\">").concat(tplLogDieResult(MISS), "</div>\n  <div class=\"bt_grid_cell bt_center\">").concat(_('Unit Hit'), "</div>\n  ").concat(Object.entries(getBattleOrderConfig())
         .map(function (_a) {
         var type = _a[0], config = _a[1];
         return "\n    <div class=\"bt_battle_info_".concat(type, " bt_grid_cell\">\n      <div>").concat(config.title, "</div>\n      <div>\n        ").concat(config.counterIds
-            .map(function (counterId) { return type === MILITIA ? game.format_string_recursive('${tkn_marker}', { tkn_marker: counterId }) :
-            game.format_string_recursive('${tkn_unit}', { tkn_unit: counterId }); })
+            .map(function (counterId) {
+            return type === MILITIA
+                ? game.format_string_recursive('${tkn_marker}', {
+                    tkn_marker: counterId,
+                })
+                : game.format_string_recursive('${tkn_unit}', {
+                    tkn_unit: counterId,
+                });
+        })
             .join(''), "\n      </div>\n    </div>\n    ");
     })
         .join(''), "\n  ").concat(getBattleInfoDieResultConfig(game)
@@ -5349,6 +5801,7 @@ var NotificationManager = (function () {
             'battleRemoveMarker',
             'battleReroll',
             'battleReturnCommander',
+            'battleRolls',
             'battleStart',
             'battleSelectCommander',
             'chooseReaction',
@@ -5478,6 +5931,7 @@ var NotificationManager = (function () {
                 this.game.playerManager.updatePlayers({ gamedatas: updatedGamedatas });
                 this.game.gameMap.updateInterface(updatedGamedatas);
                 this.game.pools.updateInterface(updatedGamedatas);
+                this.game.battleTab.updateInterface(updatedGamedatas);
                 return [2];
             });
         });
@@ -5512,14 +5966,15 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_moveBattleVictoryMarker = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var marker;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a, marker, numberOfPositions, backward;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        marker = notif.args.marker;
+                        _a = notif.args, marker = _a.marker, numberOfPositions = _a.numberOfPositions, backward = _a.backward;
+                        this.game.battleTab.incScoreCounter(marker, numberOfPositions * (backward ? -1 : 1));
                         return [4, this.game.gameMap.battleTrack[marker.location].addCard(marker)];
                     case 1:
-                        _a.sent();
+                        _b.sent();
                         return [2];
                 }
             });
@@ -5545,6 +6000,7 @@ var NotificationManager = (function () {
                 switch (_b.label) {
                     case 0:
                         _a = notif.args, attackerMarker = _a.attackerMarker, defenderMarker = _a.defenderMarker, space = _a.space, battleContinues = _a.battleContinues;
+                        this.game.battleTab.battleEnd();
                         return [4, Promise.all([
                                 this.game.gameMap.battleTrack[attackerMarker.location].addCard(attackerMarker),
                                 this.game.gameMap.battleTrack[defenderMarker.location].addCard(defenderMarker),
@@ -5587,19 +6043,32 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_battleReroll = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var commander;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var commander, _a, battleRollsSequenceStep, diceResults, faction;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         commander = notif.args.commander;
+                        _a = notif.args, battleRollsSequenceStep = _a.battleRollsSequenceStep, diceResults = _a.diceResults, faction = _a.faction;
+                        this.game.battleTab.updateDiceResults(battleRollsSequenceStep, diceResults, faction);
                         if (commander === null) {
                             return [2];
                         }
+                        this.game.battleTab.incCommanderRerolls(commander, -1);
                         return [4, this.game.gameMap.commanderRerollsTrack[commander.location].addCard(commander)];
                     case 1:
-                        _a.sent();
+                        _b.sent();
                         return [2];
                 }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_battleRolls = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, battleRollsSequenceStep, diceResults, faction;
+            return __generator(this, function (_b) {
+                _a = notif.args, battleRollsSequenceStep = _a.battleRollsSequenceStep, diceResults = _a.diceResults, faction = _a.faction;
+                this.game.battleTab.updateDiceResults(battleRollsSequenceStep, diceResults, faction);
+                return [2];
             });
         });
     };
@@ -5628,7 +6097,10 @@ var NotificationManager = (function () {
                 switch (_a.label) {
                     case 0:
                         commander = notif.args.commander;
-                        return [4, this.game.gameMap.commanderRerollsTrack[commander.location].addCard(commander)];
+                        return [4, Promise.all([
+                                this.game.gameMap.commanderRerollsTrack[commander.location].addCard(commander),
+                                this.game.battleTab.setCommanderInPlay(__assign({}, commander)),
+                            ])];
                     case 1:
                         _a.sent();
                         return [2];
@@ -5638,11 +6110,19 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_battleStart = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, attackerMarker, defenderMarker;
+            var _a, attackerMarker, defenderMarker, space, unitsPerFaction, attacker, defender;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = notif.args, attackerMarker = _a.attackerMarker, defenderMarker = _a.defenderMarker;
+                        _a = notif.args, attackerMarker = _a.attackerMarker, defenderMarker = _a.defenderMarker, space = _a.space, unitsPerFaction = _a.unitsPerFaction;
+                        attacker = attackerMarker.type === BRITISH_BATTLE_MARKER ? BRITISH : FRENCH;
+                        defender = defenderMarker.type === BRITISH_BATTLE_MARKER ? BRITISH : FRENCH;
+                        this.game.battleTab.battleStart({
+                            attacker: attacker,
+                            defender: defender,
+                            spaceId: space.id,
+                            unitsPerFaction: unitsPerFaction,
+                        });
                         this.game.tabbedColumn.changeTab('battle');
                         return [4, Promise.all([
                                 this.game.gameMap.battleTrack[attackerMarker.location].addCard(attackerMarker),
@@ -5777,7 +6257,9 @@ var NotificationManager = (function () {
                 switch (_a.label) {
                     case 0:
                         card = notif.args.card;
-                        this.game.playerManager.getPlayerForFaction(card.faction).clearPlayerPanel(card.faction);
+                        this.game.playerManager
+                            .getPlayerForFaction(card.faction)
+                            .clearPlayerPanel(card.faction);
                         return [4, this.game.discard.addCard(card)];
                     case 1:
                         _a.sent();
@@ -5822,27 +6304,27 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_eliminateUnit = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var unit;
+            var unit, promises;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         unit = notif.args.unit;
-                        if (!unit.location.startsWith('lossesBox_')) return [3, 2];
-                        return [4, this.game.gameMap.losses[unit.location].addCard(unit)];
+                        promises = [
+                            this.game.battleTab.eliminateUnit(unit),
+                        ];
+                        if (unit.location.startsWith('lossesBox_')) {
+                            promises.push(this.game.gameMap.losses[unit.location].addCard(unit));
+                        }
+                        else if (unit.location === REMOVED_FROM_PLAY) {
+                            promises.push(this.game.tokenManager.removeCard(unit));
+                        }
+                        else if (unit.location === POOL_FLEETS) {
+                            promises.push(this.game.pools.stocks[POOL_FLEETS].addCard(unit));
+                        }
+                        return [4, Promise.all(promises)];
                     case 1:
                         _a.sent();
-                        return [3, 5];
-                    case 2:
-                        if (!(unit.location === REMOVED_FROM_PLAY)) return [3, 4];
-                        return [4, this.game.tokenManager.removeCard(unit)];
-                    case 3:
-                        _a.sent();
-                        return [3, 5];
-                    case 4:
-                        if (unit.location === POOL_FLEETS) {
-                        }
-                        _a.label = 5;
-                    case 5: return [2];
+                        return [2];
                 }
             });
         });
@@ -6017,13 +6499,19 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_placeStackMarker = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var markers;
+            var markers, promises;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         markers = notif.args.markers;
-                        return [4, Promise.all(markers.map(function (marker) { return _this.game.gameMap.addMarkerToStack(marker); }))];
+                        promises = markers.map(function (marker) {
+                            return _this.game.gameMap.addMarkerToStack(marker);
+                        });
+                        markers.forEach(function (marker) {
+                            promises.push(_this.game.battleTab.addMarker(marker));
+                        });
+                        return [4, Promise.all(promises)];
                     case 1:
                         _a.sent();
                         return [2];
@@ -6076,6 +6564,9 @@ var NotificationManager = (function () {
             return __generator(this, function (_a) {
                 unit = notif.args.unit;
                 this.game.tokenManager.updateCardInformations(unit);
+                if (this.game.battleTab.battleIsActive()) {
+                    this.game.tokenManager.updateCardInformations(updateUnitIdForBattleInfo(__assign({}, unit)));
+                }
                 return [2];
             });
         });
@@ -6154,13 +6645,17 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_removeMarkerFromStack = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, marker, from, _b, spaceId, faction;
+            var _a, marker, from, _b, spaceId, faction, promises;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
                         _a = notif.args, marker = _a.marker, from = _a.from;
                         _b = from.split('_'), spaceId = _b[0], faction = _b[1];
-                        return [4, this.game.gameMap.stacks[spaceId][faction].removeCard(marker)];
+                        promises = [
+                            this.game.gameMap.stacks[spaceId][faction].removeCard(marker),
+                            this.game.battleTab.removeMarker(marker),
+                        ];
+                        return [4, Promise.all(promises)];
                     case 1:
                         _c.sent();
                         return [2];
@@ -7729,9 +8224,11 @@ var BattleApplyHitsState = (function () {
     BattleApplyHitsState.prototype.setDescription = function (activePlayerId, args) {
         this.args = args;
         this.game.clientUpdatePageTitle({
-            text: this.args.eliminate ? _('${actplayer} must eliminate a unit') : _('${actplayer} must apply Hit'),
+            text: this.args.eliminate
+                ? _('${actplayer} must eliminate a unit')
+                : _('${actplayer} must apply Hit'),
             args: {
-                actplayer: '${actplayer}'
+                actplayer: '${actplayer}',
             },
             nonActivePlayers: true,
         });
@@ -7739,7 +8236,9 @@ var BattleApplyHitsState = (function () {
     BattleApplyHitsState.prototype.updateInterfaceInitialStep = function () {
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: this.args.eliminate ? _('${you} must select a unit to eliminate') : _('${you} must select a unit to apply a Hit to'),
+            text: this.args.eliminate
+                ? _('${you} must select a unit to eliminate')
+                : _('${you} must select a unit to apply a Hit to'),
             args: {
                 you: '${you}',
             },
@@ -7757,8 +8256,11 @@ var BattleApplyHitsState = (function () {
         var unit = _a.unit;
         this.game.clearPossible();
         this.game.setUnitSelected({ id: unit.id });
+        this.game.setUnitSelected({ id: getUnitIdForBattleInfo(unit) });
         this.game.clientUpdatePageTitle({
-            text: this.args.eliminate ? _('Eliminate ${unitName}?') : _('Apply Hit to ${unitName}?'),
+            text: this.args.eliminate
+                ? _('Eliminate ${unitName}?')
+                : _('Apply Hit to ${unitName}?'),
             args: {
                 unitName: _(this.game.gamedatas.staticData.units[unit.counterId].counterText),
             },
@@ -7787,13 +8289,18 @@ var BattleApplyHitsState = (function () {
     BattleApplyHitsState.prototype.setUnitsSelectable = function () {
         var _this = this;
         this.args.units.forEach(function (unit) {
+            var callback = function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                _this.updateInterfaceConfirm({ unit: unit });
+            };
             _this.game.setUnitSelectable({
                 id: unit.id,
-                callback: function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    _this.updateInterfaceConfirm({ unit: unit });
-                },
+                callback: callback,
+            });
+            _this.game.setUnitSelectable({
+                id: getUnitIdForBattleInfo(unit),
+                callback: callback,
             });
         });
     };
@@ -8318,6 +8825,7 @@ var BattleSelectCommanderState = (function () {
         var unit = _a.unit;
         this.game.clearPossible();
         this.game.setUnitSelected({ id: unit.id });
+        this.game.setUnitSelected({ id: getUnitIdForBattleInfo(unit) });
         this.game.clientUpdatePageTitle({
             text: _('Select ${unitName}?'),
             args: {
@@ -8349,13 +8857,18 @@ var BattleSelectCommanderState = (function () {
     BattleSelectCommanderState.prototype.setUnitsSelectable = function () {
         var _this = this;
         this.args.commanders.forEach(function (unit) {
+            var callback = function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                _this.updateInterfaceConfirm({ unit: unit });
+            };
             _this.game.setUnitSelectable({
                 id: unit.id,
-                callback: function (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    _this.updateInterfaceConfirm({ unit: unit });
-                },
+                callback: callback,
+            });
+            _this.game.setUnitSelectable({
+                id: getUnitIdForBattleInfo(unit),
+                callback: callback,
             });
         });
     };
@@ -9898,6 +10411,7 @@ var EventWinteringRearAdmiralState = (function () {
     EventWinteringRearAdmiralState.prototype.onEnteringState = function (args) {
         debug('Entering EventWinteringRearAdmiralState');
         this.args = args;
+        this.game.tabbedColumn.changeTab('pools');
         this.updateInterfaceInitialStep();
     };
     EventWinteringRearAdmiralState.prototype.onLeavingState = function () {
@@ -12569,6 +13083,9 @@ var TokenManager = (function (_super) {
             if (isCommander) {
                 div.setAttribute('data-commander', 'true');
             }
+            if (this.isEliminatedUnitOnBattleInfoTab(token)) {
+                div.setAttribute('data-eliminated', 'true');
+            }
         }
         else if (token.manager === MARKERS) {
             div.classList.add('bt_marker');
@@ -12585,7 +13102,10 @@ var TokenManager = (function (_super) {
                 div.setAttribute('data-commander', 'true');
             }
             if (token.counterId.startsWith('VOW')) {
-                this.game.tooltipManager.addUnitTooltip({ nodeId: token.id, unit: token });
+                this.game.tooltipManager.addUnitTooltip({
+                    nodeId: token.id,
+                    unit: token,
+                });
             }
         }
         else if (token.manager === MARKERS) {
@@ -12613,11 +13133,26 @@ var TokenManager = (function (_super) {
     };
     TokenManager.prototype.isCardVisible = function (token) {
         if (token.manager === UNITS) {
+            var data = this.game.getUnitStaticData(token);
+            if (this.isEliminatedUnitOnBattleInfoTab(token) &&
+                !(data.indian || data.type === COMMANDER)) {
+                return false;
+            }
             return !token.reduced;
         }
         else if (token.manager === MARKERS) {
             return token.side === 'front';
         }
+    };
+    TokenManager.prototype.isEliminatedUnitOnBattleInfoTab = function (token) {
+        var isEliminated = token.id.endsWith('_battle') &&
+            [
+                REMOVED_FROM_PLAY,
+                POOL_FLEETS,
+                LOSSES_BOX_BRITISH,
+                LOSSES_BOX_FRENCH,
+            ].includes(token.location);
+        return isEliminated;
     };
     return TokenManager;
 }(CardManager));

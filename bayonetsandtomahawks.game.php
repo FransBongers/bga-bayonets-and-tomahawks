@@ -41,6 +41,7 @@ use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Core\Preferences;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\BTHelpers;
+use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Log;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Players;
@@ -135,8 +136,28 @@ class bayonetsandtomahawks extends Table
     {
         $pId = $pId ?? Players::getCurrentId();
 
+        $activeBattleLog = Globals::getActiveBattleLog();
+
+
+        foreach ([BRITISH, FRENCH] as $faction) {
+            if (isset($activeBattleLog[$faction]['unitIds'])) {
+                $activeBattleLog[$faction]['units'] = Units::getMany($activeBattleLog[$faction]['unitIds'])->toArray();
+            }
+            if (isset($activeBattleLog[$faction]['militiaIds'])) {
+                $activeBattleLog[$faction]['militia'] = Utils::filter(Markers::getMany($activeBattleLog[$faction]['militiaIds'])->toArray(), function ($marker) use ($activeBattleLog) {
+                    return in_array($marker->getLocation(), [Locations::stackMarker($activeBattleLog['spaceId'], BRITISH), Locations::stackMarker($activeBattleLog['spaceId'], FRENCH)]);
+                });
+            }
+        }
+
+        if (!isset($activeBattleLog['spaceId'])) {
+            $activeBattleLog = null;
+        }
+        // $activeBattleLog = null;
+
         $data = [
             'canceledNotifIds' => Log::getCanceledNotifIds(),
+            'activeBattleLog' => $activeBattleLog,
             'cardsInPlay' => Cards::getCardsInPlay(),
             'connections' => Connections::getUiData(),
             'currentRound' => [

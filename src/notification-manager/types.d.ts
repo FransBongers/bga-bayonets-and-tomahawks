@@ -37,6 +37,8 @@ interface NotifAddSpentMarkerToUnitsArgs {
 
 interface NotifMoveBattleVictoryMarkerArgs {
   marker: BTMarker;
+  numberOfPositions: number;
+  backward: boolean;
 }
 
 interface NotifBattleArgs extends NotifWithPlayerArgs {
@@ -51,9 +53,13 @@ interface NotifBattleCleanupArgs {
 }
 
 interface NotifBattleStartArgs {
-  // space: BTSpace;
+  space: BTSpace;
   attackerMarker: BTMarker;
   defenderMarker: BTMarker;
+  unitsPerFaction: {
+    british: BTUnit[];
+    french: BTUnit[];
+  }
 }
 
 interface NotifBattleOrderArgs {
@@ -66,7 +72,18 @@ interface NotifBattleRemoveMarkerArgs {
 
 interface NotifBattleRerollArgs extends NotifWithPlayerArgs {
   commander: BTUnit | null;
+  battleRollsSequenceStep: string;
+  diceResults: string[];
+  faction: BRITISH_FACTION | FRENCH_FACTION;
 }
+
+interface NotifBattleRollsArgs {
+  battleRollsSequenceStep: string;
+  diceResults: string[];
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+}
+
+// type NotifResultAfterRerollsArgs = NotifBattleRollsArgs;
 
 interface NotifBattleReturnCommanderArgs extends NotifWithPlayerArgs {
   commander: BTUnit;
@@ -198,7 +215,6 @@ interface NotifPlaceRaidPointsArgs extends NotifWithPlayerArgs {
 interface NotifDrawWieChitArgs {
   placeChit: boolean;
   faction: BRITISH_FACTION | FRENCH_FACTION;
-  
 }
 
 interface NotifDrawWieChitPrivateArgs {
@@ -235,9 +251,7 @@ interface NotifReturnToPoolArgs {
   unit: BTUnit;
 }
 
-interface NotifReturnWIEChitsToPoolArgs {
- 
-}
+interface NotifReturnWIEChitsToPoolArgs {}
 
 interface NotifRevealCardsInPlayArgs {
   british: BTCard;

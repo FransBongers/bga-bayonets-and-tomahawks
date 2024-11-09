@@ -1,0 +1,321 @@
+@use 'sass:math';
+@use '../base';
+
+// #bt_tabbed_column_content_battle {
+// padding: 8px;
+// }
+
+#bt_active_battle_log {
+  margin-bottom: 16px;
+  padding: 8px;
+  --btMarkerScale: 0.636;
+  --btTokenScale: 0.7;
+
+  .bt_active_battle_title_container {
+    margin: 8px 0px;
+    display: flex;
+    justify-content: center;
+  }
+
+  #bt_active_battle_log_counters_container {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+  }
+
+  #bt_active_battle_log_map_detail {
+    height: 150px;
+    width: calc(var(--rightColumnScale) * 1500px);
+    margin: -16px -8px 0px -8px; 
+    background-image: url('img/map.webp');
+    background-repeat: no-repeat;
+    // 40% of image size
+    background-size: 1060px 1638.4px;
+  }
+
+  .bt_active_battle_log_content_container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 4px;
+
+    .bt_active_battle_commander {
+      height: 28px;
+      width: 28px;
+    }
+
+    .bt_active_battle_score_counter {
+      min-width: 16px;
+    }
+
+    .bt_counter_container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      gap: 16px;
+      margin-bottom: 8px;
+
+      .bt_counter {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 4px;
+        padding: 2px;
+
+        .bt_token_side {
+          position: relative;
+        }
+      }
+    }
+
+
+    .bt_active_battle_faction_banner {
+      display: flex;
+      height: 30px;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: ivory;
+      border: 1px solid black;
+      border-radius: 5px;
+      margin-bottom: 8px;
+    }
+
+    .bt_active_battle_faction_header[data-faction='british'] {
+      .bt_active_battle_faction_banner {
+        background-color: base.$british-color;
+      }
+
+      #bt_active_battle_attacker_battle_victory_marker,
+      #bt_active_battle_defender_battle_victory_marker {
+        background-position-x: 14.2857142857%;
+        background-position-y: 20%;
+      }
+    }
+
+    .bt_active_battle_faction_header[data-faction='french'] {
+      .bt_active_battle_faction_banner {
+        background-color: base.$french-color;
+      }
+
+      #bt_active_battle_attacker_battle_victory_marker,
+      #bt_active_battle_defender_battle_victory_marker {
+        background-position-x: 28.5714285714%;
+        background-position-y: 20%;
+      }
+    }
+
+    .bt_active_battle_faction_container {
+      // display: flex;
+      // flex-direction: column;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+
+      #bt_active_battle_sequence_MILITIA_attacker_container,
+      #bt_active_battle_sequence_MILITIA_defender_container {
+        --btMarkerScale: 0.827;
+      }
+
+      .bt_token[data-eliminated="true"] {
+        opacity: 0.6;
+      }
+    }
+
+    .bt_active_battle_sequence_container {
+      border: 1px solid black;
+      border-radius: 5px;
+
+      .bt_active_battle_sequence_title_container {
+        font-weight: bold;
+        padding: 4px;
+        font-size: smaller;
+        border-radius: 4px 4px 0px 0px;
+        color: ivory;
+      }
+
+      .bt_active_battle_sequence_inner_container {
+        padding: 4px;
+      }
+    }
+
+    .bt_active_battle_faction_container[data-faction='british'] {
+      .bt_active_battle_sequence_title_container {
+        background-color: base.$british-color;
+      }
+    }
+
+    .bt_active_battle_faction_container[data-faction='french'] {
+      .bt_active_battle_sequence_title_container {
+        background-color: base.$french-color;
+      }
+    }
+
+    .bt_active_battle_sequence_container[data-has-units='false'] {
+      display: none;
+    }
+
+    .bt_active_battle_sequence_rolls {
+      display: flex;
+      flex-direction: row;
+      gap: 4px;
+      flex-wrap: wrap;
+      min-height: 37px;
+
+      .bt_die_result_container {
+        height: calc(var(--btTokenScale) * 52px);
+        width: calc(var(--btTokenScale) * 52px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    // .bt_active_battle_sequence_container[data-has-units="false] {
+    //   opacity: 0;
+    // }
+  }
+}
+
+.bt_battle_info_container {
+  width: calc(var(--rightColumnScale) * 1.333333 * 1125px);
+  height: calc(var(--rightColumnScale) * 1.333333 * 717px);
+}
+
+.bt_battle_info {
+  max-width: 1125px;
+  background-color: yellow;
+  min-height: 100px;
+  grid-column: 1 / 3;
+  border-top: 1px solid black;
+  border-right: 1px solid black;
+  background-color: ivory;
+  // box-shadow: 1px 1px 5px #000;
+  scale: calc(var(--rightColumnScale) * 1.33333);
+  transform-origin: top left;
+  width: 1125px;
+  // height: calc(var(--leftColumnScale) * 1.333333 * 717px);
+
+  display: grid;
+  // grid-template-columns: repeat(7, max-content);
+  // grid-template-columns: max-content repeat(3, 1fr) 80px 60px 170px;
+  grid-template-columns: 170px 200px 200px 200px 80px 60px 215px;
+  --btTokenScale: 1;
+
+  .bt_grid_cell {
+    padding: 4px;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+  }
+
+  .bt_center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .bt_align_left {
+    align-items: flex-start;
+  }
+
+  .bt_battle_priority_1 {
+    font-weight: bold;
+  }
+
+  .bt_battle_priority_index {
+    margin-right: 4px;
+  }
+
+  .bt_battle_resolve_die_index {
+    margin-right: 4px;
+  }
+
+  .bt_highland_first {
+    margin-left: 20px;
+    font-style: italic;
+  }
+
+  .bt_battle_info_NON_INDIAN_LIGHT {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+  }
+
+  .bt_battle_info_indian {
+    grid-column: 1 / 2;
+    grid-row: 3 / 4;
+  }
+
+  .bt_battle_info_HIGHLAND_BRIGADES {
+    grid-column: 1 / 2;
+    grid-row: 4 / 5;
+  }
+
+  .bt_battle_info_METROPOLITAN_BRIGADES {
+    grid-column: 1 / 2;
+    grid-row: 5 / 6;
+  }
+
+  .bt_battle_info_NON_METROPOLITAN_BRIGADES {
+    grid-column: 1 / 2;
+    grid-row: 6 / 7;
+  }
+
+  .bt_battle_info_FLEETS {
+    grid-column: 1 / 2;
+    grid-row: 7 / 8;
+  }
+
+  .bt_battle_info_BASTIONS_OR_FORT {
+    grid-column: 1 / 2;
+    grid-row: 8 / 9;
+  }
+
+  .bt_battle_info_artillery {
+    grid-column: 1 / 2;
+    grid-row: 9 / 10;
+  }
+
+  .bt_battle_info_MILITIA {
+    grid-column: 1 / 2;
+    grid-row: 10 / 11;
+  }
+
+  .bt_log_die,
+  .bt_marker_side,
+  .bt_token_side {
+    position: relative;
+    display: inline-block;
+    margin-left: 2px;
+    margin-right: 2px;
+  }
+
+  .bt_token_side {
+    --btTokenScale: 0.85;
+  }
+
+  .bt_marker_side {
+    --btMarkerScale: 0.85;
+    border: 1px solid black;
+  }
+
+  .bt_log_die {
+    --btTokenScale: 0.85;
+  }
+
+  span {
+    .bt_token_side {
+      --btTokenScale: 0.6;
+    }
+
+    .bt_log_die,
+    .bt_marker_side,
+    .bt_token_side {
+      top: -3px;
+      margin-top: 3px;
+      vertical-align: middle;
+    }
+  }
+}

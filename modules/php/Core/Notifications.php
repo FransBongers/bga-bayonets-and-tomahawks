@@ -305,6 +305,7 @@ class Notifications
       'player' => $player,
       'marker' => $marker->jsonSerialize(),
       'numberOfPositions' => $numberOfPositions,
+      'backward' => $backward,
     ]);
   }
 
@@ -351,16 +352,18 @@ class Notifications
     ]);
   }
 
-  public static function battleRolls($player, $battleRollsSequenceStep, $diceResults, $unitIds)
+  public static function battleRolls($player, $battleRollsSequenceStep, $diceResults, $faction)
   {
-    self::message(clienttranslate('${player_name} rolls ${diceResultsLog} with ${battleRollsSequenceStep}'), [
+    self::notifyAll('battleRolls', clienttranslate('${player_name} rolls ${diceResultsLog} with ${battleRollsSequenceStep}'), [
       'player' => $player,
       'diceResultsLog' => self::diceResultsLog($diceResults),
       'battleRollsSequenceStep' => $battleRollsSequenceStep,
+      'diceResults' => $diceResults,
+      'faction' => $faction,
     ]);
   }
 
-  public static function battleRollsResultAfterRerolls($diceResults)
+  public static function battleRollsResultAfterRerolls($diceResults, $battleRollsSequenceStep, $faction)
   {
     // ${tkn_dieResult}
     $diceResultsLog = [];
@@ -371,11 +374,14 @@ class Notifications
       $diceResultsArgs[$key] = $dieResult;
     };
 
-    self::message(clienttranslate('Result after rerolls: ${diceResultsLog}'), [
+    self::notifyAll('battleRollsResultAfterRerolls', clienttranslate('Result after rerolls: ${diceResultsLog}'), [
       'diceResultsLog' => [
         'log' => implode('', $diceResultsLog),
         'args' => $diceResultsArgs,
       ],
+      'battleRollsSequenceStep' => $battleRollsSequenceStep,
+      'diceResults' => $diceResults,
+      'faction' => $faction,
     ]);
   }
 
@@ -386,13 +392,14 @@ class Notifications
     ]);
   }
 
-  public static function battleStart($space, $attackerMarker, $defenderMarker)
+  public static function battleStart($space, $attackerMarker, $defenderMarker, $unitsPerFaction)
   {
     self::notifyAll('battleStart', clienttranslate('Battle in ${tkn_boldText_space}'), [
       'tkn_boldText_space' => $space->getName(),
-      // 'space' => $space,
+      'space' => $space,
       'attackerMarker' => $attackerMarker->jsonSerialize(),
       'defenderMarker' => $defenderMarker->jsonSerialize(),
+      'unitsPerFaction' => $unitsPerFaction,
       'i18n' => ['tkn_boldText_space']
     ]);
   }
@@ -414,14 +421,41 @@ class Notifications
     ]);
   }
 
-  public static function battleReroll($player, $oldResult, $newResult, $rerollSource, $commander = null)
+  public static function battleReroll($player, $oldResult, $newResult, $rerollSource, $commander = null, $diceResults, $battleRollsSequenceStep, $faction)
   {
-    self::notifyAll('battleReroll', clienttranslate('${player_name} rerolls ${tkn_dieResult_old} to ${tkn_dieResult_new}'), [
+    // ${tkn_dieResult}
+    $diceResultsLog = [];
+    $diceResultsArgs = [];
+    foreach ($diceResults as $index => $dieResult) {
+      $key = 'tkn_dieResult_' . $index;
+      $diceResultsLog[] = '${' . $key . '}';
+      $diceResultsArgs[$key] = $dieResult;
+    };
+
+    // self::notifyAll('battleRollsResultAfterRerolls', clienttranslate('Result after rerolls: ${diceResultsLog}'), [
+    //   'diceResultsLog' => [
+    //     'log' => implode('', $diceResultsLog),
+    //     'args' => $diceResultsArgs,
+    //   ],
+    //   'battleRollsSequenceStep' => $battleRollsSequenceStep,
+    //   'diceResults' => $diceResults,
+    //   'faction' => $faction,
+    // ]);
+
+    self::notifyAll('battleReroll', clienttranslate('${player_name} rerolls ${tkn_dieResult_old} to ${tkn_dieResult_new} . Dice results after reroll: ${diceResultsLog}'), [
       'player' => $player,
       'tkn_dieResult_old' => $oldResult,
       'tkn_dieResult_new' => $newResult,
       'rerollSource' => $rerollSource,
       'commander' => $commander === null ? null : $commander->jsonSerialize(),
+      'battleRollsSequenceStep' => $battleRollsSequenceStep,
+      'diceResults' => $diceResults,
+      'faction' => $faction,
+      'diceResultsLog' => [
+        'log' => implode('', $diceResultsLog),
+        'args' => $diceResultsArgs,
+      ],
+      'tkn_newLine' => '',
     ]);
   }
 
@@ -602,9 +636,11 @@ class Notifications
 
   public static function eliminateUnit($player, $unit, $previousLocation)
   {
-    $text = $unit->getLocation() === REMOVED_FROM_PLAY ?
-      clienttranslate('${player_name} removes ${tkn_unit} on ${tkn_boldText_spaceName} from play') :
-      clienttranslate('${player_name} eliminates ${tkn_unit} on ${tkn_boldText_spaceName}');
+    $location = $unit->getLocation();
+    $text = clienttranslate('${player_name} eliminates ${tkn_unit} on ${tkn_boldText_spaceName}');
+    if($location === REMOVED_FROM_PLAY) {
+      clienttranslate('${player_name} removes ${tkn_unit} on ${tkn_boldText_spaceName} from play');
+    }
 
     $spaceName = '';
     if ($previousLocation === Locations::lossesBox(BRITISH)) {
@@ -615,6 +651,8 @@ class Notifications
       $spaceName = clienttranslate('Sail Box');
     } else if ($previousLocation === DISBANDED_COLONIAL_BRIGADES) {
       $spaceName = clienttranslate('Disbanded Colonial Brigades');
+    } else if (Utils::startsWith($previousLocation,'commander_rerolls_track_')) {
+      $spaceName = clienttranslate('Commander Rerolls track');
     } else {
       $spaceName = Spaces::get($previousLocation)->getName();
     }

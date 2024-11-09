@@ -80,6 +80,7 @@ interface BayonetsAndTomahawksGame extends Game {
   _last_tooltip_id: number; // generic
   tooltipsToMap: [tooltipId: number, card_id: string][]; // generic
   animationManager: AnimationManager;
+  battleTab: BattleTab;
   cardsInPlay: CardsInPlay;
   hand: Hand;
   gameMap: GameMap;
@@ -167,7 +168,9 @@ interface BTSpace {
 
 interface BTSpaceStaticData {
   britishBase: boolean;
+  left: number;
   name: string;
+  top: number;
 }
 
 interface BTUnit {
@@ -185,6 +188,7 @@ interface BTUnitStaticData {
   faction: 'british' | 'french';
   colony?: string | null;
   counterText: string;
+  indian: boolean;
   highland: boolean;
   metropolitan: boolean;
   type: string;
@@ -229,8 +233,27 @@ interface BTScenario {
   };
 }
 
+interface BTActiveBattleLogFactionData {
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+  militiaIds: string[];
+  penalties: number;
+  rolls: Record<string, string[]>;
+  unitIds: string[];
+  units: BTUnit[];
+  militia: BTMarker[];
+}
+
+interface BTActiveBattleLog {
+  spaceId: string;
+  attacker: BRITISH_FACTION | FRENCH_FACTION;
+  defender: BRITISH_FACTION | FRENCH_FACTION;
+  british: BTActiveBattleLogFactionData;
+  french: BTActiveBattleLogFactionData;
+}
+
 interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   canceledNotifIds: string[];
+  activeBattleLog: BTActiveBattleLog | null;
   cardsInPlay: {
     british: BTCard | null;
     french: BTCard | null;
@@ -253,6 +276,8 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
     open_seas_marker: BTMarker;
     french_raid_marker: BTMarker;
     british_raid_marker: BTMarker;
+    british_battle_marker: BTMarker;
+    french_battle_marker: BTMarker;
   } & Record<string, BTMarker>;
   playerOrder: number[];
   players: Record<number, BayonetsAndTomahawksPlayerData>;

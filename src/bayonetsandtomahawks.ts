@@ -55,7 +55,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public mobileVersion: boolean = false;
 
   // Game specific
-  public battleInfo: BattleInfo;
+  public battleTab: BattleTab;
   public cardManager: BTCardManager;
   public cardsInPlay: CardsInPlay;
   public discard: VoidStock<BTCard>;
@@ -258,7 +258,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     this.notificationManager = new NotificationManager(this);
     this.notificationManager.setupNotifications();
 
-    this.battleInfo = new BattleInfo(this);
+    this.battleTab = new BattleTab(this);
     this.stepTracker = new StepTracker(this);
 
     this.tooltipManager.setupTooltips();
@@ -594,6 +594,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     this.playerManager.clearInterface();
     this.gameMap.clearInterface();
     this.pools.clearInterface();
+    this.battleTab.clearInterface();
   }
 
   clearPossible() {
@@ -947,6 +948,9 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
    */
   onScreenWidthChange() {
     this.updateLayout();
+    if (this.battleTab) {
+      this.battleTab.updateMapImage();
+    }
   }
 
   /* @Override */

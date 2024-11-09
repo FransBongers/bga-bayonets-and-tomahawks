@@ -8,6 +8,7 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
@@ -51,7 +52,7 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     $parentInfo = $this->ctx->getParent()->getInfo();
     $spaceId = $parentInfo['spaceId'];
     $space = Spaces::get($spaceId);
-    // $units = $space->getUnits();
+
 
     $defendingFaction = $space->getDefender();
     $attackingFaction = Players::otherFaction($defendingFaction);
@@ -65,17 +66,16 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     $this->ctx->getParent()->updateInfo('attacker', $attackingFaction);
     $this->ctx->getParent()->updateInfo('defender', $defendingFaction);
 
-    // $players = Players::getAll()->toArray();
     $playersPerFaction = Players::getPlayersForFactions();
 
-    // $attackingPlayer = $playersPerFaction[$attackingFaction];
-    // $defendingPlayer = $playersPerFaction[$defendingFaction];
+    // TODO: filter units that have already fought in / retreated from a previous battle
+    $unitsPerFaction = $this->getUnitsPerFaction($space);
 
-    $this->placeMarkers($space, $attackingFaction, $defendingFaction);
+    $markers = $this->placeMarkers($attackingFaction, $defendingFaction);
+    Notifications::battleStart($space, $markers[0], $markers[1], $unitsPerFaction);
 
     // Add militia markers
-    $this->placeMilitia($space, $playersPerFaction);
-
+    $militiaPerFaction = $this->placeMilitia($space, $playersPerFaction);
 
 
     // Check combining reduced units
@@ -86,6 +86,26 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     $this->checkWildernessAmbush($space);
     $this->checkCoupDeMain($space);
     $this->checkIndomitableAbbatis($space);
+
+
+
+    $battleLog = [
+      'spaceId' => $spaceId,
+      'attacker' => $attackingFaction,
+      'defender' => $defendingFaction,
+    ];
+
+    foreach ([$attackingFaction, $defendingFaction] as $faction) {
+      $battleLog[$faction] = [
+        'faction' => $faction,
+        'militiaIds' => isset($militiaPerFaction[$faction]) ? BTHelpers::returnIds($militiaPerFaction[$faction]) : [],
+        'penalties' => 0,
+        'rolls' => [],
+        'unitIds' => BTHelpers::returnIds($unitsPerFaction[$faction]),
+      ];
+    }
+
+    Globals::setActiveBattleLog($battleLog);
 
 
     $this->resolveAction(['automatic' => true]);
@@ -99,9 +119,7 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreBattlePreparation()
-  {
-  }
+  public function stPreBattlePreparation() {}
 
 
   // ....###....########...######....######.
@@ -158,10 +176,25 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  // TODO: filter units that have already fought in / retreated from a previous battle
+  private function getUnitsPerFaction($space)
+  {
+    $units = $space->getUnits();
+
+    $unitsPerFaction = [];
+
+    foreach ([BRITISH, FRENCH] as $faction) {
+      $unitsPerFaction[$faction] = Utils::filter($units, function ($unit) use ($faction) {
+        return $unit->getFaction() === $faction;
+      });
+    }
+    return $unitsPerFaction;
+  }
+
   private function checkCoupDeMain($space)
   {
     $coupDeMainInPlay = Cards::isCardInPlay(FRENCH, COUP_DE_MAIN_CARD_ID);
-    if (!$coupDeMainInPlay || ($coupDeMainInPlay && Globals::getUsedEventCount(FRENCH) === 1)) {   
+    if (!$coupDeMainInPlay || ($coupDeMainInPlay && Globals::getUsedEventCount(FRENCH) === 1)) {
       return;
     }
 
@@ -187,7 +220,7 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
   private function checkIndomitableAbbatis($space)
   {
     $indomitableAbbatisInPlay = Cards::isCardInPlay(FRENCH, INDOMITABLE_ABBATIS_CARD_ID);
-    if (!$indomitableAbbatisInPlay || ($indomitableAbbatisInPlay && Globals::getUsedEventCount(FRENCH) === 1)) {   
+    if (!$indomitableAbbatisInPlay || ($indomitableAbbatisInPlay && Globals::getUsedEventCount(FRENCH) === 1)) {
       return;
     }
 
@@ -234,14 +267,14 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
   }
 
 
-  private function placeMarkers($space, $attackingFaction, $defendingFaction)
+  private function placeMarkers($attackingFaction, $defendingFaction)
   {
     $attackerMarker = Markers::get($this->factionBattleMarkerMap[$attackingFaction]);
     $attackerMarker->setLocation(Locations::battleTrack(true, 0));
     $defenderMarker = Markers::get($this->factionBattleMarkerMap[$defendingFaction]);
     $defenderMarker->setLocation(Locations::battleTrack(false, 0));
 
-    Notifications::battleStart($space, $attackerMarker, $defenderMarker);
+    return [$attackerMarker, $defenderMarker];
   }
 
   private function placeMilitia($space, $playersPerFaction)
@@ -253,7 +286,7 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
       $numberOfMilitia--;
     }
     if ($numberOfMilitia <= 0) {
-      return;
+      return [];
     }
 
     $markerLocation = Locations::stackMarker($space->getId(), $militiaFaction);
@@ -266,6 +299,10 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     }
 
     Notifications::placeStackMarker($playersPerFaction[$militiaFaction], $markers, $space);
+
+    return [
+      $militiaFaction => $markers
+    ];
   }
 
   // private function battlePenalties($space, $attackingPlayer, $attackingFaction, $defendingPlayer, $defendingFaction)
