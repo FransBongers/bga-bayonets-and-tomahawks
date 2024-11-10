@@ -166,6 +166,11 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     return $this->type === BRIGADE && $this->colony !== null;
   }
 
+  public function isColonialLight()
+  {
+    return $this->type === LIGHT && $this->colonial;
+  }
+
   public function isLight()
   {
     return $this->type === LIGHT;

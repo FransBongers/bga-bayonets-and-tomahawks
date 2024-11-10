@@ -221,7 +221,12 @@ class VagariesOfWarPickUnits extends \BayonetsAndTomahawks\Actions\LogisticsRoun
         case VOW_PICK_ONE_COLONIAL_LIGHT:
         case VOW_PICK_ONE_COLONIAL_LIGHT_PUT_BACK:
           $options[$counterId] = Units::getInLocation(POOL_BRITISH_COLONIAL_LIGHT)->toArray();
-          // TODO: if not possible pick from losses box, or draw piece from bag
+          if (count($options[$counterId]) === 0) {
+            $options[$counterId] = Utils::filter(Units::getInLocation(Locations::lossesBox(BRITISH))->toArray(), function ($unit) {
+              return $unit->isColonialLight();
+            });
+          }
+          // TODO: if not possible draw piece from bag
           break;
           
       }
