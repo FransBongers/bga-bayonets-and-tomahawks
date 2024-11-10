@@ -53,6 +53,7 @@ class Card extends \BayonetsAndTomahawks\Helpers\DB_Model
       'faction' => $this->faction,
       'initiativeValue' => $this->initiativeValue,
       'years' => $this->years,
+      'event' => $this->event,
     ]);
   }
 

@@ -1583,7 +1583,8 @@ body > .card {
   flex-wrap: wrap;
   --btTokenScale: 1;
   padding: 6px 3px;
-  margin: 8px -3px;
+  margin: 0px -3px;
+  margin-bottom: 8px;
   height: 40px;
   align-items: center;
   justify-content: center;
@@ -1597,6 +1598,15 @@ body > .card {
 }
 .player-board .bt_action_points[data-faction=indian] {
   background-color: #9cb049;
+}
+.player-board .bt_event_title_container {
+  display: flex;
+  justify-content: center;
+  font-style: italic;
+  margin-bottom: 2px;
+  margin-top: 12px;
+  font-size: small;
+  font-weight: bold;
 }
 
 #bt_tabbed_column_content_pools {

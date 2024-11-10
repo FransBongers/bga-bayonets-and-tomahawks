@@ -119,6 +119,11 @@ interface BTStackAction {
 interface BTCard {
   id: string;
   actionPoints: BTActionPoint[];
+  event: {
+    id: string;
+    title: string;
+    arStart: true;
+  }
   faction: string;
   initiativeValue: number;
   location: string;

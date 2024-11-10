@@ -6721,7 +6721,7 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_revealCardsInPlay = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var actionPoints, factions, _i, factions_1, faction;
+            var actionPoints, factions, _i, factions_1, faction, card;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -6732,11 +6732,12 @@ var NotificationManager = (function () {
                     case 1:
                         if (!(_i < factions_1.length)) return [3, 4];
                         faction = factions_1[_i];
+                        card = notif.args[faction];
                         this.game.playerManager
                             .getPlayerForFaction(faction)
-                            .setActionPoints(faction, actionPoints[faction]);
+                            .setCardInfo(faction, actionPoints[faction], card);
                         return [4, this.game.cardsInPlay.addCard({
-                                card: notif.args[faction],
+                                card: card,
                                 faction: faction,
                             })];
                     case 2:
@@ -6951,7 +6952,8 @@ var PlayerManager = (function () {
     };
     PlayerManager.prototype.getPlayerForFaction = function (faction) {
         return this.getPlayers().filter(function (player) {
-            return player.faction === faction || (faction === INDIAN && player.faction === FRENCH);
+            return (player.faction === faction ||
+                (faction === INDIAN && player.faction === FRENCH));
         })[0];
     };
     PlayerManager.prototype.getPlayerIds = function () {
@@ -6960,7 +6962,7 @@ var PlayerManager = (function () {
     PlayerManager.prototype.updatePlayers = function (_a) {
         var gamedatas = _a.gamedatas;
         for (var playerId in gamedatas.players) {
-            this.players[playerId].updatePlayer(gamedatas.players[playerId]);
+            this.players[playerId].updatePlayer(gamedatas);
         }
     };
     PlayerManager.prototype.clearInterface = function () {
@@ -6984,13 +6986,13 @@ var BatPlayer = (function () {
         var gamedatas = game.gamedatas;
         this.setupPlayer({ gamedatas: gamedatas });
     }
-    BatPlayer.prototype.updatePlayer = function (playerGamedatas) {
-        this.updatePlayerPanel({ playerGamedatas: playerGamedatas });
+    BatPlayer.prototype.updatePlayer = function (gamedatas) {
+        this.updatePlayerPanel(gamedatas);
     };
     BatPlayer.prototype.setupPlayer = function (_a) {
         var gamedatas = _a.gamedatas;
         var playerGamedatas = gamedatas.players[this.playerId];
-        this.setupPlayerPanel({ playerGamedatas: playerGamedatas });
+        this.setupPlayerPanel(gamedatas);
         this.setupHand({ playerGamedatas: playerGamedatas });
     };
     BatPlayer.prototype.setupHand = function (_a) {
@@ -6999,23 +7001,22 @@ var BatPlayer = (function () {
             this.game.hand.getStock().addCards(playerGamedatas.hand);
         }
     };
-    BatPlayer.prototype.setupPlayerPanel = function (_a) {
-        var playerGamedatas = _a.playerGamedatas;
+    BatPlayer.prototype.setupPlayerPanel = function (gamedatas) {
         var playerBoardDiv = $('player_board_' + this.playerId);
         playerBoardDiv.insertAdjacentHTML('beforeend', tplPlayerPanel({ playerId: this.playerId, faction: this.faction }));
-        this.updatePlayerPanel({ playerGamedatas: playerGamedatas });
+        this.updatePlayerPanel(gamedatas);
     };
-    BatPlayer.prototype.updatePlayerPanel = function (_a) {
-        var _b;
-        var playerGamedatas = _a.playerGamedatas;
-        if ((_b = this.game.framework().scoreCtrl) === null || _b === void 0 ? void 0 : _b[this.playerId]) {
+    BatPlayer.prototype.updatePlayerPanel = function (gamedatas) {
+        var _a;
+        var playerGamedatas = gamedatas.players[this.playerId];
+        if ((_a = this.game.framework().scoreCtrl) === null || _a === void 0 ? void 0 : _a[this.playerId]) {
             this.game
                 .framework()
                 .scoreCtrl[this.playerId].setValue(Number(playerGamedatas.score));
         }
-        this.setActionPoints(this.faction, playerGamedatas.actionPoints[this.faction]);
+        this.setCardInfo(this.faction, playerGamedatas.actionPoints[this.faction], gamedatas.cardsInPlay[this.faction]);
         if (this.faction === FRENCH) {
-            this.setActionPoints(INDIAN, playerGamedatas.actionPoints[INDIAN]);
+            this.setCardInfo(INDIAN, playerGamedatas.actionPoints[INDIAN], gamedatas.cardsInPlay[INDIAN]);
         }
         if (playerGamedatas.actionPoints.reactionActionPointId) {
             this.setReactionActionPointId(playerGamedatas.actionPoints.reactionActionPointId);
@@ -7036,13 +7037,25 @@ var BatPlayer = (function () {
     BatPlayer.prototype.getPlayerId = function () {
         return this.playerId;
     };
-    BatPlayer.prototype.setActionPoints = function (faction, actionPoints) {
+    BatPlayer.prototype.setCardInfo = function (faction, actionPoints, card) {
         var _this = this;
         var playerPanelNode = document.getElementById("".concat(faction, "_action_points"));
         actionPoints.forEach(function (_a) {
             var id = _a.id;
             playerPanelNode.insertAdjacentHTML('beforeend', tplLogTokenActionPoint(_this.faction, id));
         });
+        if (!card) {
+            return;
+        }
+        this.game.tooltipManager.addCardTooltip({
+            nodeId: "bt_card_info_container_".concat(faction),
+            cardId: card.id,
+        });
+        if (!card.event) {
+            return;
+        }
+        var playerPanelEventNode = document.getElementById("".concat(faction, "_event_title"));
+        playerPanelEventNode.replaceChildren(card.event.title);
     };
     BatPlayer.prototype.updateActionPoints = function (faction, actionPoints, operation) {
         actionPoints.forEach(function (actionPoint) {
@@ -7066,6 +7079,11 @@ var BatPlayer = (function () {
         if (playerPanelNode) {
             playerPanelNode.replaceChildren();
         }
+        var playerPanelEventNode = document.getElementById("".concat(faction, "_event_title"));
+        if (playerPanelEventNode) {
+            playerPanelEventNode.replaceChildren();
+        }
+        this.game.tooltipManager.removeTooltip("bt_card_info_container_".concat(faction));
     };
     BatPlayer.prototype.setReactionActionPointId = function (actionPointId) {
         var playerPanelNode = document.getElementById("".concat(this.faction, "_action_points"));
@@ -7079,11 +7097,12 @@ var BatPlayer = (function () {
     };
     return BatPlayer;
 }());
+var tplCardInfoContainer = function (faction) { return "\n<div id=\"bt_card_info_container_".concat(faction, "\">\n    <div class=\"bt_event_title_container\">\n      <span id=\"").concat(faction, "_event_title\"></span>\n    </div>\n    <div id=\"").concat(faction, "_action_points\" class=\"bt_action_points\" data-faction=\"").concat(faction, "\"></div>\n</div>\n"); };
 var tplPlayerPanel = function (_a) {
     var playerId = _a.playerId, faction = _a.faction;
     return "\n  <div id=\"bt_player_panel_".concat(playerId, "\" class=\"bt_player_panel\">\n    ").concat(faction === 'french'
-        ? "<div id=\"indian_action_points\" class=\"bt_action_points\" data-faction=\"indian\"></div>"
-        : '', "\n    <div id=\"").concat(faction, "_action_points\" class=\"bt_action_points\" data-faction=\"").concat(faction, "\">\n    </div>\n  </div>");
+        ? tplCardInfoContainer(INDIAN)
+        : '', "\n    ").concat(tplCardInfoContainer(faction), "\n  </div>");
 };
 var getPoolConfig = function () { return [
     {

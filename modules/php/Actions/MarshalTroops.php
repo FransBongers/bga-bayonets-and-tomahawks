@@ -264,7 +264,7 @@ class MarshalTroops extends \BayonetsAndTomahawks\Actions\UnitMovement
         if ($unit->isIndian() && Globals::getNoIndianUnitMayBeActivated()) {
           return false;
         }
-        return !$unit->isSpent() && !$unit->isFort() && $connection->canBeUsedByUnit($unit, true);
+        return !$unit->isSpent() && !$unit->isFort() && !$unit->isBastion() && $connection->canBeUsedByUnit($unit, true);
       });
       $remainingLimit = $connection->getRemainingLimit($playerFaction);
 

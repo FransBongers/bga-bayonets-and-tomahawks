@@ -191,8 +191,7 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
     // Check if battle is decided by one stack not having any units left
     if ($attackerUnitCount === 0) {
       // defender wins, no need to check of number of defenders units left
-      Notifications::battleNoUnitsLeft($attackerPlayer);
-      Notifications::battleWinner($defenderPlayer, $space);
+      Notifications::battleWinner($defenderPlayer, $space, true, 0, 0);
       return [
         'winner' => [
           'player' => $defenderPlayer,
@@ -208,8 +207,7 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
       ];
     } else if ($defenderUnitCount === 0 && $attackerUnitCount > 0) {
       // attacker wins
-      Notifications::battleNoUnitsLeft($defenderPlayer);
-      Notifications::battleWinner($attackerPlayer, $space);
+      Notifications::battleWinner($attackerPlayer, $space, true, 0, 0);
       return [
         'loser' => [
           'player' => $defenderPlayer,
@@ -232,7 +230,7 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
 
     if ($attackerPosition > $defenderPosition) {
       // Attacker wins
-      Notifications::battleWinner($attackerPlayer, $space);
+      Notifications::battleWinner($attackerPlayer, $space, false, $attackerPosition, $defenderPosition);
       $routMarkerCondition = $attackerPosition - $defenderPosition >= 3;
       // TODO add data for this.
       // Store in global?
@@ -254,7 +252,7 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
       ];
     } else {
       // defender wins
-      Notifications::battleWinner($defenderPlayer, $space);
+      Notifications::battleWinner($defenderPlayer, $space, false, $defenderPosition, $attackerPosition);
       return [
         'winner' => [
           'player' => $defenderPlayer,

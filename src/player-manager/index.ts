@@ -39,7 +39,10 @@ class PlayerManager {
 
   getPlayerForFaction(faction: Faction) {
     return this.getPlayers().filter((player) => {
-      return player.faction === faction || (faction === INDIAN && player.faction === FRENCH);
+      return (
+        player.faction === faction ||
+        (faction === INDIAN && player.faction === FRENCH)
+      );
     })[0];
   }
 
@@ -49,7 +52,7 @@ class PlayerManager {
 
   updatePlayers({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
     for (const playerId in gamedatas.players) {
-      this.players[playerId].updatePlayer(gamedatas.players[playerId]);
+      this.players[playerId].updatePlayer(gamedatas);
     }
   }
 

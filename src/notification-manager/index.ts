@@ -770,12 +770,14 @@ class NotificationManager {
     const { actionPoints } = notif.args;
 
     const factions: Faction[] = [BRITISH, FRENCH, INDIAN];
+    
     for (let faction of factions) {
+      const card = notif.args[faction];
       this.game.playerManager
         .getPlayerForFaction(faction)
-        .setActionPoints(faction, actionPoints[faction]);
+        .setCardInfo(faction, actionPoints[faction], card);
       await this.game.cardsInPlay.addCard({
-        card: notif.args[faction],
+        card,
         faction,
       });
     }

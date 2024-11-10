@@ -9,7 +9,6 @@
 class BatPlayer {
   protected game: BayonetsAndTomahawksGame;
   protected playerColor: string;
-  // private playerHexColor: string;
   protected playerId: number;
   private playerName: string;
   public faction: BRITISH_FACTION | FRENCH_FACTION;
@@ -23,7 +22,6 @@ class BatPlayer {
     game: BayonetsAndTomahawksGame;
     player: BayonetsAndTomahawksPlayerData;
   }) {
-    // console.log("Player", player);
     this.game = game;
     const playerId = player.id;
     this.playerId = Number(playerId);
@@ -31,12 +29,7 @@ class BatPlayer {
     this.playerName = player.name;
     this.playerColor = player.color;
     this.faction = player.faction;
-    // this.playerHexColor = player.hexColor;
     const gamedatas = game.gamedatas;
-
-    // if (this.playerId === this.game.getPlayerId()) {
-    //   dojo.place(tplPlayerHand({ playerId: this.playerId, playerName: this.playerName }), 'pp_player_tableaus', 1);
-    // }
 
     this.setupPlayer({ gamedatas });
   }
@@ -49,15 +42,15 @@ class BatPlayer {
   // .##....##.##..........##....##.....##.##.......
   // ..######..########....##.....#######..##.......
 
-  updatePlayer(playerGamedatas: BayonetsAndTomahawksPlayerData) {
-    this.updatePlayerPanel({ playerGamedatas });
+  updatePlayer(gamedatas: BayonetsAndTomahawksGamedatas) {
+    this.updatePlayerPanel(gamedatas);
   }
 
   // Setup functions
   setupPlayer({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
     const playerGamedatas = gamedatas.players[this.playerId];
 
-    this.setupPlayerPanel({ playerGamedatas });
+    this.setupPlayerPanel(gamedatas);
     this.setupHand({ playerGamedatas });
   }
 
@@ -72,42 +65,35 @@ class BatPlayer {
     }
   }
 
-  setupPlayerPanel({
-    playerGamedatas,
-  }: {
-    playerGamedatas: BayonetsAndTomahawksPlayerData;
-  }) {
+  setupPlayerPanel(gamedatas: BayonetsAndTomahawksGamedatas) {
     const playerBoardDiv: HTMLElement = $('player_board_' + this.playerId);
     playerBoardDiv.insertAdjacentHTML(
       'beforeend',
       tplPlayerPanel({ playerId: this.playerId, faction: this.faction })
     );
 
-    this.updatePlayerPanel({ playerGamedatas });
+    this.updatePlayerPanel(gamedatas);
   }
 
-  updatePlayerPanel({
-    playerGamedatas,
-  }: {
-    playerGamedatas: BayonetsAndTomahawksPlayerData;
-  }) {
+  updatePlayerPanel(gamedatas: BayonetsAndTomahawksGamedatas) {
+    const playerGamedatas = gamedatas.players[this.playerId];
+
     if (this.game.framework().scoreCtrl?.[this.playerId]) {
       this.game
         .framework()
         .scoreCtrl[this.playerId].setValue(Number(playerGamedatas.score));
     }
 
-    this.setActionPoints(
-      this.faction,
-      playerGamedatas.actionPoints[this.faction]
-    );
+    this.setCardInfo(this.faction, playerGamedatas.actionPoints[this.faction], gamedatas.cardsInPlay[this.faction]);
 
     if (this.faction === FRENCH) {
-      this.setActionPoints(INDIAN, playerGamedatas.actionPoints[INDIAN]);
+      this.setCardInfo(INDIAN, playerGamedatas.actionPoints[INDIAN], gamedatas.cardsInPlay[INDIAN]);
     }
 
     if (playerGamedatas.actionPoints.reactionActionPointId) {
-      this.setReactionActionPointId(playerGamedatas.actionPoints.reactionActionPointId);
+      this.setReactionActionPointId(
+        playerGamedatas.actionPoints.reactionActionPointId
+      );
     }
   }
 
@@ -138,10 +124,6 @@ class BatPlayer {
     return this.playerColor;
   }
 
-  // getHexColor(): string {
-  //   return this.playerHexColor;
-  // }
-
   getName(): string {
     return this.playerName;
   }
@@ -158,7 +140,11 @@ class BatPlayer {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  public setActionPoints(faction: Faction, actionPoints: BTActionPoint[]) {
+  public setCardInfo(
+    faction: Faction,
+    actionPoints: BTActionPoint[],
+    card: BTCard | null
+  ) {
     const playerPanelNode = document.getElementById(`${faction}_action_points`);
 
     actionPoints.forEach(({ id }) => {
@@ -167,23 +153,52 @@ class BatPlayer {
         tplLogTokenActionPoint(this.faction, id)
       );
     });
+
+    if (!card) {
+      return;
+    }
+
+    this.game.tooltipManager.addCardTooltip({
+      nodeId: `bt_card_info_container_${faction}`,
+      cardId: card.id,
+    });
+
+    if (!card.event) {
+      return;
+    }
+
+    const playerPanelEventNode = document.getElementById(
+      `${faction}_event_title`
+    );
+    playerPanelEventNode.replaceChildren(card.event.title);
   }
 
-  public updateActionPoints(faction: Faction, actionPoints: string[], operation: string) {
+  public updateActionPoints(
+    faction: Faction,
+    actionPoints: string[],
+    operation: string
+  ) {
     actionPoints.forEach((actionPoint) => {
-      const playerPanelNode = document.getElementById(`${faction}_action_points`);
+      const playerPanelNode = document.getElementById(
+        `${faction}_action_points`
+      );
       if (operation === ADD_AP) {
-        playerPanelNode.insertAdjacentHTML('beforeend', tplLogTokenActionPoint(faction, actionPoint))
+        playerPanelNode.insertAdjacentHTML(
+          'beforeend',
+          tplLogTokenActionPoint(faction, actionPoint)
+        );
       } else if (operation === REMOVE_AP) {
         for (let i = 0; i < playerPanelNode.children.length; i++) {
           const node = playerPanelNode.children.item(i);
-          if (node.children.item(0).getAttribute('data-ap-id') === actionPoint) {
+          if (
+            node.children.item(0).getAttribute('data-ap-id') === actionPoint
+          ) {
             node.remove();
             break;
           }
-        }    
+        }
       }
-    })
+    });
   }
 
   public clearPlayerPanel(faction: string) {
@@ -191,17 +206,26 @@ class BatPlayer {
     if (playerPanelNode) {
       playerPanelNode.replaceChildren();
     }
+    const playerPanelEventNode = document.getElementById(
+      `${faction}_event_title`
+    );
+    if (playerPanelEventNode) {
+      playerPanelEventNode.replaceChildren();
+    }
+    this.game.tooltipManager.removeTooltip(`bt_card_info_container_${faction}`);
   }
 
   public setReactionActionPointId(actionPointId: string) {
-    const playerPanelNode = document.getElementById(`${this.faction}_action_points`);
+    const playerPanelNode = document.getElementById(
+      `${this.faction}_action_points`
+    );
     for (let i = 0; i < playerPanelNode.children.length; i++) {
       const node = playerPanelNode.children.item(i);
       if (node.children.item(0).getAttribute('data-ap-id') === actionPointId) {
         node.children.item(0).setAttribute('data-reaction', 'true');
         break;
       }
-    }  
+    }
   }
 
   // ....###.....######..########.####..#######..##....##..######.

@@ -337,13 +337,7 @@ class Notifications
     ]);
   }
 
-  public static function battleNoUnitsLeft($player)
-  {
-    self::message(clienttranslate('${player_name} has no units left'), [
-      'player' => $player
-    ]);
-  }
-
+  
   public static function battleMilitiaRoll($player, $diceResults)
   {
     self::message(clienttranslate('${player_name} rolls ${diceResultsLog} with their remaining Militia'), [
@@ -480,12 +474,20 @@ class Notifications
     ]);
   }
 
-  public static function battleWinner($player, $space)
+  public static function battleWinner($player, $space, $noEnemyUnitsLeft, $winnerResult, $loserResult)
   {
-    self::message(clienttranslate('${player_name} wins the Battle in ${tkn_boldText_spaceName}'), [
+    $text = clienttranslate('${player_name} wins the Battle in ${tkn_boldText_spaceName} with a final result of ${tkn_boldText_winnerResult} vs ${tkn_boldText_loserResult}');
+    if ($noEnemyUnitsLeft) {
+      $text = clienttranslate('${player_name} wins the Battle in ${tkn_boldText_spaceName} because there are no enemy units left');
+    }
+
+
+    self::message($text, [
       'player' => $player,
       'tkn_boldText_spaceName' => $space->getName(),
-      'i18n' => ['tkn_boldText_spaceName']
+      'tkn_boldText_winnerResult' => $winnerResult,
+      'tkn_boldText_loserResult' => $loserResult,
+      'i18n' => ['tkn_boldText_spaceName', 'tkn_boldText_winnerResult', 'tkn_boldText_loserResult']
     ]);
   }
 
@@ -638,7 +640,7 @@ class Notifications
   {
     $location = $unit->getLocation();
     $text = clienttranslate('${player_name} eliminates ${tkn_unit} on ${tkn_boldText_spaceName}');
-    if($location === REMOVED_FROM_PLAY) {
+    if ($location === REMOVED_FROM_PLAY) {
       clienttranslate('${player_name} removes ${tkn_unit} on ${tkn_boldText_spaceName} from play');
     }
 
@@ -651,7 +653,7 @@ class Notifications
       $spaceName = clienttranslate('Sail Box');
     } else if ($previousLocation === DISBANDED_COLONIAL_BRIGADES) {
       $spaceName = clienttranslate('Disbanded Colonial Brigades');
-    } else if (Utils::startsWith($previousLocation,'commander_rerolls_track_')) {
+    } else if (Utils::startsWith($previousLocation, 'commander_rerolls_track_')) {
       $spaceName = clienttranslate('Commander Rerolls track');
     } else {
       $spaceName = Spaces::get($previousLocation)->getName();
