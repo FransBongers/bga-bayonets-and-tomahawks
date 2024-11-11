@@ -201,6 +201,7 @@ class GameMap {
       };
       // });
     });
+    this.stacks['Halifax'][FRENCH].unitsPerRow = 3;
 
     this.stacks[SAIL_BOX] = {
       [BRITISH]: new UnitStack(

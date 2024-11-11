@@ -10,7 +10,7 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
-use BayonetsAndTomahawks\Managers\Markers;
+use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Models\Player;
@@ -48,7 +48,17 @@ class BattleRolls extends \BayonetsAndTomahawks\Actions\Battle
 
     $space = Spaces::get($spaceId);
 
-    $units = $space->getUnits();
+    $units = [];
+
+    // Get units from the BATTLE_PREPARATION of this battle
+    $battlePreparationNode = $this->ctx->getParent()->getResolvedActions([BATTLE_PREPARATION]);
+    $resArgs = $battlePreparationNode[0]->getActionResolutionArgs();
+    if (isset($resArgs['unitIds'])) {
+      $units = Units::getMany($resArgs['unitIds'])->toArray();
+    } else {
+      // TODO [2024-11-30]: at some points remove this. Only necessary to keep running tables from breaking
+      $units = $space->getUnits();
+    }
 
     // Defender / attacker in reverse order here because we insertAsBrother and want
     // defender to go last

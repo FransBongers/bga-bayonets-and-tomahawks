@@ -5100,6 +5100,7 @@ var GameMap = (function () {
                 }, FRENCH),
                 _a);
         });
+        this.stacks['Halifax'][FRENCH].unitsPerRow = 3;
         this.stacks[SAIL_BOX] = (_c = {},
             _c[BRITISH] = new UnitStack(this.game.tokenManager, document.getElementById("".concat(SAIL_BOX, "_british_stack")), {
                 sort: sortFunction('stackOrder'),

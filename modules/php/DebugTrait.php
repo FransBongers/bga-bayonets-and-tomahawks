@@ -42,15 +42,27 @@ trait DebugTrait
 
   function debug_test()
   {
-    
-    Notifications::log('activeBattleLog', Globals::getActiveBattleLog());
+    $resolvedBattlePreparation = Engine::getResolvedActions([BATTLE_PREPARATION]);
+
+    $unitIdsThatAlreadyFought = [];
+
+    foreach ($resolvedBattlePreparation as $node) {
+      $resArgs = $node->getActionResolutionArgs();
+      if (isset($resArgs['unitIds'])) {
+        $unitIdsThatAlreadyFought = array_merge($unitIdsThatAlreadyFought, $resArgs['unitIds']);
+      }
+    }
+    Notifications::log('units that already fought', $unitIdsThatAlreadyFought);
+
+
+    // Notifications::log('activeBattleLog', Globals::getActiveBattleLog());
     // Globals::setCurrentStepOfRound(SELECT_CARD_TO_PLAY_STEP);
     // Cards::get('Card47')->setLocation(Locations::cardInPlay(INDIAN));
 
     // Units::get('unit_121')->setLocation(LOSSES_BOX_BRITISH);
     // Units::get('unit_7')->setLocation(BAYE_DE_CATARACOUY);
     // Units::get('unit_44')->setLocation(TICONDEROGA);
-    // Units::get('unit_37')->setLocation(LOSSES_BOX_FRENCH);
+    // Units::get('unit_45')->setLocation(HALIFAX);
     // Units::get('unit_3')->setLocation(REMOVED_FROM_PLAY);
     // Units::get('unit_15')->setLocation(WILLS_CREEK);
     // Units::get('unit_38')->setLocation(WILLS_CREEK);

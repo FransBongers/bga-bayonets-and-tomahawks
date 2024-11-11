@@ -5,7 +5,7 @@ class UnitStack extends ManualPositionStock<BTToken> {
   private hovering: boolean = false;
   private faction: 'british' | 'french';
   private isOpen: boolean = false;
-  private unitsPerRow: number = 5;
+  public unitsPerRow: number = 5;
 
   /**
    * @param manager the card manager

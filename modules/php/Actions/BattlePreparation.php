@@ -108,7 +108,10 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     Globals::setActiveBattleLog($battleLog);
 
 
-    $this->resolveAction(['automatic' => true]);
+    $this->resolveAction([
+      'automatic' => true,
+      'unitIds' => BTHelpers::returnIds(array_merge($unitsPerFaction[BRITISH], $unitsPerFaction[FRENCH])),
+    ]);
   }
 
   // .########..########..########.......###.....######..########.####..#######..##....##
@@ -179,13 +182,25 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
   // TODO: filter units that have already fought in / retreated from a previous battle
   private function getUnitsPerFaction($space)
   {
+
+    $resolvedBattlePreparation = Engine::getResolvedActions([BATTLE_PREPARATION]);
+
+    $unitIdsThatAlreadyFought = [];
+
+    foreach ($resolvedBattlePreparation as $node) {
+      $resArgs = $node->getActionResolutionArgs();
+      if (isset($resArgs['unitIds'])) {
+        $unitIdsThatAlreadyFought = array_merge($unitIdsThatAlreadyFought, $resArgs['unitIds']);
+      }
+    }
+
     $units = $space->getUnits();
 
     $unitsPerFaction = [];
 
     foreach ([BRITISH, FRENCH] as $faction) {
-      $unitsPerFaction[$faction] = Utils::filter($units, function ($unit) use ($faction) {
-        return $unit->getFaction() === $faction;
+      $unitsPerFaction[$faction] = Utils::filter($units, function ($unit) use ($faction, $unitIdsThatAlreadyFought) {
+        return $unit->getFaction() === $faction && !in_array($unit->getId(), $unitIdsThatAlreadyFought);
       });
     }
     return $unitsPerFaction;
