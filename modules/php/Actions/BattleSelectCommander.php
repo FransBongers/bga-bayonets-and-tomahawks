@@ -65,7 +65,8 @@ class BattleSelectCommander extends \BayonetsAndTomahawks\Actions\Battle
 
   public function argsBattleSelectCommander()
   {
-    $space = Spaces::get($this->ctx->getParent()->getInfo()['spaceId']);
+    $spaceId = isset($info['spaceId']) ? $info['spaceId'] : Globals::getActiveBattleSpaceId();
+    $space =  Spaces::get($spaceId);
     $player = self::getPlayer();
 
     $units = $space->getUnits();

@@ -177,6 +177,7 @@ class Battle extends \BayonetsAndTomahawks\Models\AtomicAction
             'playerId' => $player->getId(),
             'action' => BATTLE_SELECT_COMMANDER,
             'maxRating' => $maxRating,
+            'spaceId' => $space->getId(),
           ])
         );
       }

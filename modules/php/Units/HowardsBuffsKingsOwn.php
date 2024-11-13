@@ -9,7 +9,7 @@ class HowardsBuffsKingsOwn extends \BayonetsAndTomahawks\Models\Brigade
     $this->counterId = HOWARDS_BUFFS_KINGS_OWN;
     $this->counterText = clienttranslate("Howard's Buffs & King's Own");
     $this->faction = BRITISH;
-    $this->highland = true;
+    $this->highland = false;
     $this->metropolitan = true;
   }
 }

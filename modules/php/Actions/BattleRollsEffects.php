@@ -269,21 +269,32 @@ class BattleRollsEffects extends \BayonetsAndTomahawks\Actions\Battle
       if ($newPosition <= 0) {
         continue;
       }
-      $unitsToTakeHit = Utils::filter($enemyBrigades, function ($unit) {
-        return $unit->isMetropolitanBrigade();
-      });
-      if (count($unitsToTakeHit) === 0) {
-        // All remaining brigades are non-metropolitan
-        $unitsToTakeHit = $enemyBrigades;
-      }
-      if (count($unitsToTakeHit) === 1) {
-        $hitResult = $unitsToTakeHit[0]->applyHit();
+      $unitsThatCanTakeHit = $this->getEnemyUnitsThatCanTakeHit($enemyBrigades, METROPOLITAN_BRIGADES);
+
+
+      if (count($unitsThatCanTakeHit) === 1) {
+        $hitResult = $unitsThatCanTakeHit[0]->applyHit();
         $enemyBrigades = $this->updateEnemyUnits($enemyBrigades, $hitResult);
+        continue;
+      }
+
+      // More than one unit, first check for reduces units.
+      $reducedEnemyUnits = Utils::filter($unitsThatCanTakeHit, function ($unit) {
+        return $unit->isReduced();
+      });
+      $numberOfReducedUnits = count($reducedEnemyUnits);
+      if ($numberOfReducedUnits === 0) {
+        // No reduced units but more than one that can take a hit
+        $possibleUnitsToApplyHitTo = BTHelpers::returnIds($unitsThatCanTakeHit);
+        break;
+      } else if (count($reducedEnemyUnits) === 1) {
+        $hitResult = $reducedEnemyUnits[0]->applyHit();
+        $enemyBrigades = $this->updateEnemyUnits($enemyBrigades, $hitResult);
+        continue;
       } else {
-        // More than one unit, enemy must make choice
-        $possibleUnitsToApplyHitTo = array_map(function ($unit) {
-          return $unit->getId();
-        }, $unitsToTakeHit);
+        // Multiple reduced units, opponent must make choice
+        $possibleUnitsToApplyHitTo = BTHelpers::returnIds($reducedEnemyUnits);
+        break;
       }
     }
 
