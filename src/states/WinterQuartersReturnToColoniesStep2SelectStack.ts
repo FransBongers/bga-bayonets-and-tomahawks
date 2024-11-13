@@ -45,10 +45,9 @@ class WinterQuartersReturnToColoniesStep2SelectStackState implements State {
     this.game.clearPossible();
 
     this.game.clientUpdatePageTitle({
-      text: _('${you} must select a stack to move (${number} remaining)'),
+      text: _('${you} must select a stack to move'),
       args: {
         you: '${you}',
-        number: Object.keys(this.args.options).length,
       },
     });
 
@@ -162,7 +161,7 @@ class WinterQuartersReturnToColoniesStep2SelectStackState implements State {
         text: _('Leave ${unitsLog} on ${originSpaceName}?'),
         args: {
           originSpaceName: _(origin.name),
-          unitsLog: createUnitsLog(this.unitsThatRemain)
+          unitsLog: createUnitsLog(this.unitsThatRemain),
         },
       });
     } else {
@@ -247,23 +246,29 @@ class WinterQuartersReturnToColoniesStep2SelectStackState implements State {
   }
 
   private setStacksSelectable() {
-    Object.entries(this.args.options).forEach(([spaceId, option]) =>
+    Object.entries(this.args.options).forEach(([spaceId, option]) => {
+      const callback = () => {
+        this.selectedOption = option;
+        if (
+          option.mayRemain.maxTotal === null ||
+          (option.mayRemain.maxTotal !== null && option.mayRemain.maxTotal > 0)
+        ) {
+          this.updateInterfaceSelectUnits();
+        } else {
+          this.updateInterfaceSelectDestination();
+        }
+      };
+
       this.game.setLocationSelectable({
         id: `${spaceId}_${this.args.faction}_stack`,
-        callback: () => {
-          this.selectedOption = option;
-          if (
-            option.mayRemain.maxTotal === null ||
-            (option.mayRemain.maxTotal !== null &&
-              option.mayRemain.maxTotal > 0)
-          ) {
-            this.updateInterfaceSelectUnits();
-          } else {
-            this.updateInterfaceSelectDestination();
-          }
-        },
-      })
-    );
+        callback,
+      });
+      this.game.addPrimaryActionButton({
+        id: `${spaceId}_btn`,
+        text: _(option.space.name),
+        callback,
+      });
+    });
   }
 
   private setUnitsSelectable(unitsThatCanBeSelected: BTUnit[]) {

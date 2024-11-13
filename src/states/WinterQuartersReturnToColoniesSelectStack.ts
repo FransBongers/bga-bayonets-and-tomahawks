@@ -7,7 +7,9 @@ class WinterQuartersReturnToColoniesSelectStackState implements State {
     this.game = game;
   }
 
-  onEnteringState(args: OnEnteringWinterQuartersReturnToColoniesSelectStackStateArgs) {
+  onEnteringState(
+    args: OnEnteringWinterQuartersReturnToColoniesSelectStackStateArgs
+  ) {
     debug('Entering WinterQuartersReturnToColoniesSelectStackState');
     this.args = args;
     this.selectedUnits = [];
@@ -41,10 +43,9 @@ class WinterQuartersReturnToColoniesSelectStackState implements State {
     this.game.clearPossible();
 
     this.game.clientUpdatePageTitle({
-      text: _('${you} must select a stack to move (${number} remaining)'),
+      text: _('${you} must select a stack to move'),
       args: {
         you: '${you}',
-        number: Object.keys(this.args.options).length
       },
     });
 
@@ -83,18 +84,16 @@ class WinterQuartersReturnToColoniesSelectStackState implements State {
       faction: this.args.faction,
     });
 
-    destinations.forEach(
-      ([destinationId, destinationOption]) => {
-        this.game.setLocationSelectable({
-          id: destinationId,
-          callback: () =>
-            this.updateInterfaceConfirm({
-              origin: option.space,
-              destination: destinationOption,
-            }),
-        });
-      }
-    );
+    destinations.forEach(([destinationId, destinationOption]) => {
+      this.game.setLocationSelectable({
+        id: destinationId,
+        callback: () =>
+          this.updateInterfaceConfirm({
+            origin: option.space,
+            destination: destinationOption,
+          }),
+      });
+    });
 
     this.game.addCancelButton();
   }
@@ -154,9 +153,16 @@ class WinterQuartersReturnToColoniesSelectStackState implements State {
 
   private setStacksSelectable() {
     Object.entries(this.args.options).forEach(([spaceId, option]) => {
+      const callback = () => this.updateInterfaceSelectDestination({ option });
+
       this.game.setLocationSelectable({
         id: `${spaceId}_${this.args.faction}_stack`,
-        callback: () => this.updateInterfaceSelectDestination({ option }),
+        callback,
+      });
+      this.game.addPrimaryActionButton({
+        id: `${spaceId}_btn`,
+        text: _(option.space.name),
+        callback,
       });
     });
   }

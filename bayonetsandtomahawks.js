@@ -12478,10 +12478,9 @@ var WinterQuartersReturnToColoniesSelectStackState = (function () {
     WinterQuartersReturnToColoniesSelectStackState.prototype.updateInterfaceInitialStep = function () {
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _('${you} must select a stack to move (${number} remaining)'),
+            text: _('${you} must select a stack to move'),
             args: {
                 you: '${you}',
-                number: Object.keys(this.args.options).length
             },
         });
         this.setStacksSelectable();
@@ -12567,9 +12566,15 @@ var WinterQuartersReturnToColoniesSelectStackState = (function () {
         var _this = this;
         Object.entries(this.args.options).forEach(function (_a) {
             var spaceId = _a[0], option = _a[1];
+            var callback = function () { return _this.updateInterfaceSelectDestination({ option: option }); };
             _this.game.setLocationSelectable({
                 id: "".concat(spaceId, "_").concat(_this.args.faction, "_stack"),
-                callback: function () { return _this.updateInterfaceSelectDestination({ option: option }); },
+                callback: callback,
+            });
+            _this.game.addPrimaryActionButton({
+                id: "".concat(spaceId, "_btn"),
+                text: _(option.space.name),
+                callback: callback,
             });
         });
     };
@@ -12595,10 +12600,9 @@ var WinterQuartersReturnToColoniesStep2SelectStackState = (function () {
     WinterQuartersReturnToColoniesStep2SelectStackState.prototype.updateInterfaceInitialStep = function () {
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _('${you} must select a stack to move (${number} remaining)'),
+            text: _('${you} must select a stack to move'),
             args: {
                 you: '${you}',
-                number: Object.keys(this.args.options).length,
             },
         });
         this.setStacksSelectable();
@@ -12689,7 +12693,7 @@ var WinterQuartersReturnToColoniesStep2SelectStackState = (function () {
                 text: _('Leave ${unitsLog} on ${originSpaceName}?'),
                 args: {
                     originSpaceName: _(origin.name),
-                    unitsLog: createUnitsLog(this.unitsThatRemain)
+                    unitsLog: createUnitsLog(this.unitsThatRemain),
                 },
             });
         }
@@ -12750,19 +12754,24 @@ var WinterQuartersReturnToColoniesStep2SelectStackState = (function () {
         var _this = this;
         Object.entries(this.args.options).forEach(function (_a) {
             var spaceId = _a[0], option = _a[1];
-            return _this.game.setLocationSelectable({
+            var callback = function () {
+                _this.selectedOption = option;
+                if (option.mayRemain.maxTotal === null ||
+                    (option.mayRemain.maxTotal !== null && option.mayRemain.maxTotal > 0)) {
+                    _this.updateInterfaceSelectUnits();
+                }
+                else {
+                    _this.updateInterfaceSelectDestination();
+                }
+            };
+            _this.game.setLocationSelectable({
                 id: "".concat(spaceId, "_").concat(_this.args.faction, "_stack"),
-                callback: function () {
-                    _this.selectedOption = option;
-                    if (option.mayRemain.maxTotal === null ||
-                        (option.mayRemain.maxTotal !== null &&
-                            option.mayRemain.maxTotal > 0)) {
-                        _this.updateInterfaceSelectUnits();
-                    }
-                    else {
-                        _this.updateInterfaceSelectDestination();
-                    }
-                },
+                callback: callback,
+            });
+            _this.game.addPrimaryActionButton({
+                id: "".concat(spaceId, "_btn"),
+                text: _(option.space.name),
+                callback: callback,
             });
         });
     };

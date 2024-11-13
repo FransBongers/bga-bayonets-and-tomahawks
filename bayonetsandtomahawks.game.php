@@ -396,8 +396,12 @@ class bayonetsandtomahawks extends Table
         //        {
         //            // ! important ! Use DBPREFIX_<table_name> for all tables
         //
-        //            $sql = "ALTER TABLE DBPREFIX_xxxxxxx ....";
-        //            self::applyDbUpgradeToAllDB( $sql );
+        // $sql = 'ALTER TABLE `DBPREFIX_connections` ADD `british_road_used` TINYINT(1) NOT NULL DEFAULT 0';
+        // self::applyDbUpgradeToAllDB($sql);
+        // $sql = 'ALTER TABLE `DBPREFIX_connections` ADD `french_road_used` TINYINT(1) NOT NULL DEFAULT 0';
+        // self::applyDbUpgradeToAllDB($sql);
+                //    $sql = "ALTER TABLE DBPREFIX_xxxxxxx ....";
+                //    self::applyDbUpgradeToAllDB( $sql );
         //        }
         //        if( $from_version <= 1405061421 )
         //        {
