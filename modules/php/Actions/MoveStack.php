@@ -157,6 +157,12 @@ class MoveStack extends \BayonetsAndTomahawks\Actions\UnitMovement
       }));
       $connection->incLimitUsed($playerFaction, $connectionLimitIncrease);
     }
+    // Update artillery on road limit
+    if ($connection !== null && $connection->isRoad() && Utils::array_some($units, function ($unit) {
+      return $unit->isArtillery();
+    })) {
+      $connection->setRoadUsedByArtillery($playerFaction);
+    }
 
     Notifications::moveStack($player, $units, $movedMarkers, $origin, $destination, $connection, false, $destinationId === SAIL_BOX || $originId === SAIL_BOX);
 

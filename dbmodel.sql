@@ -39,6 +39,8 @@ CREATE TABLE IF NOT EXISTS `connections` (
   `connection_state` int(10) DEFAULT 0,
   `british_limit` int(10) DEFAULT 0,
   `french_limit` int(10) DEFAULT 0,
+  `british_road_used` tinyint(1) NOT NULL DEFAULT 0,
+  `french_road_used` tinyint(1) NOT NULL DEFAULT 0,
   `road` int(10) DEFAULT 0,
   -- `extra_data` JSON NULL,
   PRIMARY KEY (`connection_id`)

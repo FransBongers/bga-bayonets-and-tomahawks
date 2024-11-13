@@ -81,7 +81,11 @@ class MovementState implements State {
         text: usesForcedMarch ? _('Move with Forced March') : _('Move'),
         callback: () => this.performMoveAction(),
         extraClasses:
-          this.selectedUnits.length > 0 && this.destination !== null
+          this.selectedUnits.length > 0 &&
+          this.destination !== null &&
+          this.getValidDestinationsForSelectedUnits().some(
+            (option) => option.space.id === this.destination.id
+          )
             ? ''
             : DISABLED,
       });
@@ -269,15 +273,13 @@ class MovementState implements State {
     );
   }
 
-  private setDestinationsSelectable(moveOnDestinationClick: boolean) {
-    // Not possible to leave commanders behind without other units
-    if (
-      this.args.unitsThatCannotMoveCount === 0 &&
-      this.onlyCommandersUnselected()
-    ) {
-      return;
-    }
+  private unitOfTypeSelected(unitType: string) {
+    return this.selectedUnits.some(
+      (unit) => this.game.getUnitStaticData(unit).type === unitType
+    );
+  }
 
+  private getValidDestinationsForSelectedUnits() {
     const numberOfUnitsForConnectionLimit = this.selectedUnits.filter(
       (unit) => {
         const staticData = this.game.getUnitStaticData(unit);
@@ -294,17 +296,15 @@ class MovementState implements State {
         (unit) => this.game.getUnitStaticData(unit).type === ARTILLERY
       ).length > 1;
 
-    const requiresCoastal = this.selectedUnits.some(
-      (unit) => this.game.getUnitStaticData(unit).type === FLEET
-    );
+    const requiresCoastal = this.unitOfTypeSelected(FLEET);
 
     const onlyCommandersSelected =
-      this.selectedUnits.some(
-        (unit) => this.game.getUnitStaticData(unit).type === COMMANDER
-      ) &&
+      this.unitOfTypeSelected(COMMANDER) &&
       !this.selectedUnits.some(
         (unit) => this.game.getUnitStaticData(unit).type !== COMMANDER
       );
+
+    const artillerySelected = this.unitOfTypeSelected(ARTILLERY);
 
     const validDestinations = this.args.adjacent.filter(
       ({ connection, space, requiredToMove, hasEnemyUnits }) => {
@@ -346,10 +346,27 @@ class MovementState implements State {
         if (requiredToMove > numberOfUnitsForConnectionLimit) {
           return false;
         }
+        if (artillerySelected && this.artilleryHasMovedOnRoad(connection)) {
+          return false;
+        }
 
         return true;
       }
     );
+
+    return validDestinations;
+  }
+
+  private setDestinationsSelectable(moveOnDestinationClick: boolean) {
+    // Not possible to leave commanders behind without other units
+    if (
+      this.args.unitsThatCannotMoveCount === 0 &&
+      this.onlyCommandersUnselected()
+    ) {
+      return;
+    }
+
+    const validDestinations = this.getValidDestinationsForSelectedUnits();
 
     validDestinations.forEach(({ space }) => {
       this.game.setLocationSelectable({
@@ -384,6 +401,18 @@ class MovementState implements State {
 
     const maxLimit = this.getMaxLimit(connection.type);
     return maxLimit - usedLimit;
+  }
+
+  private artilleryHasMovedOnRoad(connection: BTConnection) {
+    if (connection.type !== ROAD) {
+      return false;
+    }
+
+    const artilleryMoved =
+      this.args.faction === BRITISH
+        ? connection.britishRoadUsed
+        : connection.frenchRoadUsed;
+    return artilleryMoved > 0;
   }
 
   private getMaxLimit(connectionType: string) {

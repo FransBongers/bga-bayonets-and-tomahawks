@@ -30,6 +30,8 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
     'state' => ['connection_state', 'int'],
     'britishLimit' => ['british_limit', 'int'],
     'frenchLimit' => ['french_limit', 'int'],
+    'britishRoadUsed' => ['british_road_used', 'int'], 
+    'frenchRoadUsed' => ['french_road_used', 'int'],
     'road' => ['road', 'int'],
     // 'extraData' => ['extra_data', 'obj'],
   ];
@@ -99,6 +101,14 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
     // $this->setLimitUsed($faction, $current + $increase);
   }
 
+  public function setRoadUsedByArtillery($faction) {
+    if ($faction === BRITISH) {
+      return $this->setBritishRoadUsed(1);
+    } else {
+      return $this->setFrenchRoadUsed(1);
+    }
+  }
+
   public function isCoastalConnection()
   {
     return $this->coastal;
@@ -111,6 +121,11 @@ class Connection extends \BayonetsAndTomahawks\Helpers\DB_Model
 
   public function isPathOfIndianNation($nation) {
     return $this->indianNationPath === $nation;
+  }
+
+  public function isRoad()
+  {
+    return $this->getType() === ROAD;
   }
 
   public function canBeUsedByUnit($unit, $ignoreLimit = false)

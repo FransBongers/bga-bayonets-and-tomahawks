@@ -242,6 +242,33 @@ class Notifications
     ];
   }
 
+  public static function getBattleRollSequenceName($battleRollsSequenceStep) {
+    switch ($battleRollsSequenceStep) {
+      case NON_INDIAN_LIGHT:
+        return clienttranslate('Non-Indian Light');
+      case INDIAN:
+        return clienttranslate('Indian');
+      case HIGHLAND_BRIGADES:
+        return clienttranslate('Highland Brigades');
+      case METROPOLITAN_BRIGADES:
+        return clienttranslate('Metropolitan Brigades');
+      case NON_METROPOLITAN_BRIGADES:
+        return clienttranslate('Non-Metropolitan Brigades');
+      case FLEETS:
+        return clienttranslate('Fleets');
+      case BASTIONS_OR_FORT:
+        return clienttranslate('Bastion or Fort');
+      case ARTILLERY:
+        return clienttranslate('Artillery');
+      case MILITIA:
+        return clienttranslate('Militia');
+      case COMMANDER:
+        return clienttranslate('Commanders');
+      default:
+        return '';
+    }
+  }
+
   // ..######......###....##.....##.########
   // .##....##....##.##...###...###.##......
   // .##.........##...##..####.####.##......
@@ -340,20 +367,24 @@ class Notifications
   
   public static function battleMilitiaRoll($player, $diceResults)
   {
-    self::message(clienttranslate('${player_name} rolls ${diceResultsLog} with their remaining Militia'), [
+    self::message(clienttranslate('${player_name} rolls ${diceResultsLog} with their remaining ${tkn_boldText_militia}'), [
       'player' => $player,
       'diceResultsLog' => self::diceResultsLog($diceResults),
+      'tkn_boldText_militia' => clienttranslate('Militia'),
+      'i18n' => ['tkn_boldText_militia'],
     ]);
   }
 
   public static function battleRolls($player, $battleRollsSequenceStep, $diceResults, $faction)
   {
-    self::notifyAll('battleRolls', clienttranslate('${player_name} rolls ${diceResultsLog} with ${battleRollsSequenceStep}'), [
+    self::notifyAll('battleRolls', clienttranslate('${player_name} rolls ${diceResultsLog} with ${tkn_boldText_sequenceName}'), [
       'player' => $player,
       'diceResultsLog' => self::diceResultsLog($diceResults),
+      'tkn_boldText_sequenceName' => self::getBattleRollSequenceName($battleRollsSequenceStep),
       'battleRollsSequenceStep' => $battleRollsSequenceStep,
       'diceResults' => $diceResults,
       'faction' => $faction,
+      'i18n' => ['tkn_boldText_sequenceName']
     ]);
   }
 

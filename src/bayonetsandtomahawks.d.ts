@@ -135,7 +135,9 @@ interface BTConnection {
   id: string;
   type: string;
   britishLimit: number;
+  britishRoadUsed: number;
   frenchLimit: number;
+  frenchRoadUsed: number;
   road: number;
 }
 

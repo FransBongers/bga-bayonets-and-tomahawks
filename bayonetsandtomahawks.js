@@ -11096,7 +11096,9 @@ var MovementState = (function () {
                 id: 'move_btn',
                 text: usesForcedMarch ? _('Move with Forced March') : _('Move'),
                 callback: function () { return _this.performMoveAction(); },
-                extraClasses: this.selectedUnits.length > 0 && this.destination !== null
+                extraClasses: this.selectedUnits.length > 0 &&
+                    this.destination !== null &&
+                    this.getValidDestinationsForSelectedUnits().some(function (option) { return option.space.id === _this.destination.id; })
                     ? ''
                     : DISABLED,
             });
@@ -11228,21 +11230,22 @@ var MovementState = (function () {
         return (this.unselectedUnits.length > 0 &&
             unselectedCommanders.length === this.unselectedUnits.length);
     };
-    MovementState.prototype.setDestinationsSelectable = function (moveOnDestinationClick) {
+    MovementState.prototype.unitOfTypeSelected = function (unitType) {
         var _this = this;
-        if (this.args.unitsThatCannotMoveCount === 0 &&
-            this.onlyCommandersUnselected()) {
-            return;
-        }
+        return this.selectedUnits.some(function (unit) { return _this.game.getUnitStaticData(unit).type === unitType; });
+    };
+    MovementState.prototype.getValidDestinationsForSelectedUnits = function () {
+        var _this = this;
         var numberOfUnitsForConnectionLimit = this.selectedUnits.filter(function (unit) {
             var staticData = _this.game.getUnitStaticData(unit);
             return ![COMMANDER, FLEET].includes(staticData.type);
         }).length;
         var canUsePath = !this.selectedUnits.some(function (unit) { return ![LIGHT, FLEET].includes(_this.game.getUnitStaticData(unit).type); });
         var requiresHighway = this.selectedUnits.filter(function (unit) { return _this.game.getUnitStaticData(unit).type === ARTILLERY; }).length > 1;
-        var requiresCoastal = this.selectedUnits.some(function (unit) { return _this.game.getUnitStaticData(unit).type === FLEET; });
-        var onlyCommandersSelected = this.selectedUnits.some(function (unit) { return _this.game.getUnitStaticData(unit).type === COMMANDER; }) &&
+        var requiresCoastal = this.unitOfTypeSelected(FLEET);
+        var onlyCommandersSelected = this.unitOfTypeSelected(COMMANDER) &&
             !this.selectedUnits.some(function (unit) { return _this.game.getUnitStaticData(unit).type !== COMMANDER; });
+        var artillerySelected = this.unitOfTypeSelected(ARTILLERY);
         var validDestinations = this.args.adjacent.filter(function (_a) {
             var connection = _a.connection, space = _a.space, requiredToMove = _a.requiredToMove, hasEnemyUnits = _a.hasEnemyUnits;
             if (onlyCommandersSelected &&
@@ -11271,8 +11274,20 @@ var MovementState = (function () {
             if (requiredToMove > numberOfUnitsForConnectionLimit) {
                 return false;
             }
+            if (artillerySelected && _this.artilleryHasMovedOnRoad(connection)) {
+                return false;
+            }
             return true;
         });
+        return validDestinations;
+    };
+    MovementState.prototype.setDestinationsSelectable = function (moveOnDestinationClick) {
+        var _this = this;
+        if (this.args.unitsThatCannotMoveCount === 0 &&
+            this.onlyCommandersUnselected()) {
+            return;
+        }
+        var validDestinations = this.getValidDestinationsForSelectedUnits();
         validDestinations.forEach(function (_a) {
             var space = _a.space;
             _this.game.setLocationSelectable({
@@ -11303,6 +11318,15 @@ var MovementState = (function () {
             : connection.frenchLimit;
         var maxLimit = this.getMaxLimit(connection.type);
         return maxLimit - usedLimit;
+    };
+    MovementState.prototype.artilleryHasMovedOnRoad = function (connection) {
+        if (connection.type !== ROAD) {
+            return false;
+        }
+        var artilleryMoved = this.args.faction === BRITISH
+            ? connection.britishRoadUsed
+            : connection.frenchRoadUsed;
+        return artilleryMoved > 0;
     };
     MovementState.prototype.getMaxLimit = function (connectionType) {
         switch (connectionType) {

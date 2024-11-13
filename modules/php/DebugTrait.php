@@ -33,7 +33,7 @@ use Locale;
 
 trait DebugTrait
 {
-  
+
   function debug_getUnit($unitId)
   {
     Notifications::log('unit', Units::get($unitId));
@@ -42,17 +42,8 @@ trait DebugTrait
 
   function debug_test()
   {
-    $resolvedBattlePreparation = Engine::getResolvedActions([BATTLE_PREPARATION]);
-
-    $unitIdsThatAlreadyFought = [];
-
-    foreach ($resolvedBattlePreparation as $node) {
-      $resArgs = $node->getActionResolutionArgs();
-      if (isset($resArgs['unitIds'])) {
-        $unitIdsThatAlreadyFought = array_merge($unitIdsThatAlreadyFought, $resArgs['unitIds']);
-      }
-    }
-    Notifications::log('units that already fought', $unitIdsThatAlreadyFought);
+    Notifications::log('connection', Connections::get(CHIGNECTOU_MIRAMICHY));
+    
 
 
     // Notifications::log('activeBattleLog', Globals::getActiveBattleLog());
