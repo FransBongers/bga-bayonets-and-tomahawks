@@ -44,7 +44,7 @@ trait DebugTrait
   {
     // Notifications::log('connection', Connections::get(CHIGNECTOU_MIRAMICHY));
     
-    // Notifications::log('activeBattleLog', Globals::getActiveBattleLog());
+    Notifications::log('gameOptionFactions', Globals::getGameOptionFactions());
     // Globals::setCurrentStepOfRound(SELECT_CARD_TO_PLAY_STEP);
     // Cards::get('Card47')->setLocation(Locations::cardInPlay(INDIAN));
 

@@ -20,5 +20,39 @@
         "nobeginner": true
       }
     }
+  },
+  "101": {
+    "name": "Factions",
+    "values": {
+      "0": {
+        "name": "Random factions"
+      },
+      "1": {
+        "name": "Table admin plays the British",
+        "tmdisplay": "Table admin plays the British"
+      },
+      "2": {
+        "name": "Table admin plays the French",
+        "tmdisplay": "Table admin plays the French"
+      }
+    },
+    "startcondition": {
+      "1": [
+        {
+          "type": "otheroption",
+          "id": 201,
+          "value": 1,
+          "message": "Table admin plays the British available only in friendly mode"
+        }
+      ],
+      "2": [
+        {
+          "type": "otheroption",
+          "id": 201,
+          "value": 1,
+          "message": "Table admin plays the French available only in friendly mode"
+        }
+      ]
+    }
   }
 }

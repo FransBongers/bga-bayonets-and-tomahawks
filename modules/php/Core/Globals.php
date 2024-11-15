@@ -44,12 +44,13 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'controlIroquois' => 'str',
     'placedConstructionMarkers' => 'obj',
     'usedEventBritish' => 'int',
-    'usedEventFrench' => 'int', 
+    'usedEventFrench' => 'int',
     'usedEventIndian' => 'int',
     'noIndianUnitMayBeActivated' => 'bool',
     'winteringRearAdmiralPlayed' => 'bool',
     'highwayUnusableForBritish' => 'str',
     'battleOrder' => 'obj',
+    'gameOptionFactions' => 'int'
   ];
 
   protected static $table = 'global_variables';
@@ -70,10 +71,12 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     $tmp = self::$log;
     self::$log = false;
 
-    foreach (self::DB()
-      ->select(['value', 'name'])
-      ->get()
-      as $name => $variable) {
+    foreach (
+      self::DB()
+        ->select(['value', 'name'])
+        ->get()
+      as $name => $variable
+    ) {
       if (\array_key_exists($name, self::$variables)) {
         self::$data[$name] = $variable;
       }
@@ -173,7 +176,6 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
    */
   public static function setupNewGame($players, $options)
   {
-    // Game options
     self::setAddedAPFrench([]);
     self::setLostAPBritish([]);
     self::setLostAPFrench([]);
@@ -187,9 +189,13 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     self::setNoIndianUnitMayBeActivated(false);
     self::setWinteringRearAdmiralPlayed(false);
     self::setHighwayUnusableForBritish('');
+
+    // Game options
+    self::setGameOptionFactions($options[\BayonetsAndTomahawks\OPTION_FACTIONS]);
   }
 
-  public static function getUsedEventCount($faction) {
+  public static function getUsedEventCount($faction)
+  {
     if ($faction === BRITISH) {
       return self::getUsedEventBritish();
     } else if ($faction === FRENCH) {
@@ -200,7 +206,8 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     return null;
   }
 
-  public static function setUsedEventCount($faction, $value) {
+  public static function setUsedEventCount($faction, $value)
+  {
     if ($faction === BRITISH) {
       return self::setUsedEventBritish($value);
     } else if ($faction === FRENCH) {
@@ -211,7 +218,8 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     return null;
   }
 
-  public static function incUsedEventCount($faction, $increase) {
+  public static function incUsedEventCount($faction, $increase)
+  {
     if ($faction === BRITISH) {
       return self::incUsedEventBritish($increase);
     } else if ($faction === FRENCH) {

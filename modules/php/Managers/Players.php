@@ -10,6 +10,9 @@ use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\PlayersExtra;
 
+use const BayonetsAndTomahawks\OPTION_FACTIONS_TABLE_ADMIN_BRITISH;
+use const BayonetsAndTomahawks\OPTION_FACTIONS_TABLE_ADMIN_FRENCH;
+
 /*
  * Players manager : allows to easily access players ...
  *  a player is an instance of Player class
@@ -40,8 +43,29 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
     ]);
 
     $values = [];
+
+    $factionsOption = Globals::getGameOptionFactions();
+    $thereIsATableAdmin = Utils::array_some(array_values($players), function ($player) {
+      return isset($player['player_is_admin']) && intval($player['player_is_admin']) === 1;
+    });
+
     foreach ($players as $playerId => $player) {
-      $color = array_shift($colors);
+      $color = null;
+      if ($factionsOption > 0 && $thereIsATableAdmin) {
+        $playerIsTableAdmin = isset($player['player_is_admin']) && intval($player['player_is_admin']) === 1;
+        if ($playerIsTableAdmin && $factionsOption === OPTION_FACTIONS_TABLE_ADMIN_BRITISH) {
+          $color = $colors[0];
+        } else if (!$playerIsTableAdmin && $factionsOption === OPTION_FACTIONS_TABLE_ADMIN_BRITISH) {
+          $color = $colors[1];
+        } else if ($playerIsTableAdmin && $factionsOption === OPTION_FACTIONS_TABLE_ADMIN_FRENCH) {
+          $color = $colors[1];
+        } else if (!$playerIsTableAdmin && $factionsOption === OPTION_FACTIONS_TABLE_ADMIN_FRENCH) {
+          $color = $colors[0];
+        }
+      } else {
+        $color = array_shift($colors);
+      }
+      
       $values[] = [$playerId, $color, $player['player_canal'], $player['player_name'], $player['player_avatar'], 0];
     }
 
@@ -49,7 +73,6 @@ class Players extends \BayonetsAndTomahawks\Helpers\DB_Manager
 
     // Game::get()->reattributeColorsBasedOnPreferences($players, $gameInfos['player_colors']);
     Game::get()->reloadPlayersBasicInfos();
-    // PlayersExtra::setupNewGame();
   }
 
   public static function getActiveId()
