@@ -161,6 +161,7 @@ class GameMap {
         document.getElementById(LOSSES_BOX_BRITISH),
         {
           center: false,
+          gap: '0px',
         }
       ),
       [LOSSES_BOX_FRENCH]: new LineStock<BTToken>(
@@ -168,6 +169,7 @@ class GameMap {
         document.getElementById(LOSSES_BOX_FRENCH),
         {
           center: false,
+          gap: '0px',
         }
       ),
       [DISBANDED_COLONIAL_BRIGADES]: new LineStock<BTToken>(
@@ -175,6 +177,7 @@ class GameMap {
         document.getElementById(DISBANDED_COLONIAL_BRIGADES),
         {
           center: false,
+          gap: '0px',
         }
       ),
     };

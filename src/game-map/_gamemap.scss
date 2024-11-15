@@ -23,13 +23,13 @@
     }
   }
 
-  #eye_button[data-units-visible="true"] {
+  #eye_button[data-units-visible='true'] {
     #bt_eye_off_button {
       display: none;
     }
   }
 
-  #eye_button[data-units-visible="false"] {
+  #eye_button[data-units-visible='false'] {
     #bt_eye_on_button {
       display: none;
     }
@@ -331,29 +331,33 @@
   position: absolute;
   // background-color: yellow;
   // opacity: 0.5;
-  width: calc(var(--btMapScale) * 131px);
-  height: calc(var(--btMapScale) * 318px);
+  width: calc(var(--btMapScale) * 120px);
+  height: calc(var(--btMapScale) * 300px);
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, calc(var(--btMapScale) * 52px));
+  grid-template-rows: repeat(auto-fit, minmax(calc(var(--btMapScale) * 15px), max-content));
+  grid-gap: calc(var(--btMapScale) * 4px) !important;
 }
 
 #lossesBox_french {
-  top: calc(var(--btMapScale) * 551px);
-  left: calc(var(--btMapScale) * 30px);
+  top: calc(var(--btMapScale) * 553px);
+  left: calc(var(--btMapScale) * 40px);
 }
 
 #lossesBox_british {
-  top: calc(var(--btMapScale) * 1312px);
-  left: calc(var(--btMapScale) * 1338px);
+  top: calc(var(--btMapScale) * 1314px);
+  left: calc(var(--btMapScale) * 1350px);
 }
 
 #disbandedColonialBrigades {
-  top: calc(var(--btMapScale) * 1649px);
-  left: calc(var(--btMapScale) * 1339px);
-  height: calc(var(--btMapScale) * 182px);
+  top: calc(var(--btMapScale) * 1651px);
+  left: calc(var(--btMapScale) * 1350px);
+  height: calc(var(--btMapScale) * 170px);
   // background-color: yellow;
   // opacity: 0.5;
 }
 
-#bt_game_map[data-units-visible="false"] {
+#bt_game_map[data-units-visible='false'] {
   .bt_marker,
   .bt_marker_side,
   .bt_token {
