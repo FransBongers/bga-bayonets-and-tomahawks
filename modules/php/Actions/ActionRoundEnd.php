@@ -148,9 +148,7 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreActionRoundEnd()
-  {
-  }
+  public function stPreActionRoundEnd() {}
 
 
   // ....###....########...######....######.
@@ -247,12 +245,8 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
 
     // Friendly colony homespaces
     foreach ($spaces as $spaceId => $space) {
-      $isColonyHomeSpace = $space->getColony() !== null && $space->getHomeSpace() !== null;
-      if (!$isColonyHomeSpace) {
-        continue;
-      }
       foreach ([BRITISH, FRENCH] as $faction) {
-        if ($space->getControl() === $faction) {
+        if ($space->getControl() === $faction && $space->getHomeSpace() === $faction && $space->getColony() !== null) {
           $supplySources[$faction][] = $spaceId;
         }
       }
