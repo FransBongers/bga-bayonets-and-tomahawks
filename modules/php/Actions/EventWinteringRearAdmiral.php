@@ -11,6 +11,7 @@ use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
@@ -128,7 +129,16 @@ class EventWinteringRearAdmiral extends \BayonetsAndTomahawks\Actions\Battle
     $unit->setLocation($space->getId());
     Globals::setWinteringRearAdmiralPlayed(true);
     
-    Notifications::placeUnits(self::getPlayer(), [$unit], $space, BRITISH);
+    $player = self::getPlayer();
+
+    Notifications::placeUnits($player, [$unit], $space, BRITISH);
+    
+    $markers = Markers::getInLocation(Locations::stackMarker($space->getId(), BRITISH))->toArray();
+    foreach($markers as $marker) {
+      if (in_array($marker->getType(), [ROUT_MARKER, OUT_OF_SUPPLY_MARKER])) {
+        $marker->remove($player);
+      }
+    }
 
     $this->resolveAction($args);
   }

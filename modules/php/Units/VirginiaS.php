@@ -10,5 +10,6 @@ class VirginiaS extends \BayonetsAndTomahawks\Models\Brigade
     $this->counterId = VIRGINIA_S;
     $this->counterText = clienttranslate('Virginia & S.');
     $this->faction = BRITISH;
+    $this->stackOrder = 6;
   }
 }

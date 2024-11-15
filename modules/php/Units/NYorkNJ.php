@@ -10,5 +10,6 @@ class NYorkNJ extends \BayonetsAndTomahawks\Models\Brigade
     $this->counterId = NYORK_NJ;
     $this->counterText = clienttranslate('N.York & N.J.');
     $this->faction = BRITISH;
+    $this->stackOrder = 4;
   }
 }

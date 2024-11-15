@@ -7,7 +7,7 @@ class Artillery extends AbstractUnit
   {
     $this->type = ARTILLERY;
     parent::__construct($row);
-    $this->stackOrder = 3;
+    $this->stackOrder = 7;
     $this->mpLimit = 2;
     $this->connectionTypeAllowed = [ROAD, HIGHWAY];
   }

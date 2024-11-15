@@ -10,5 +10,6 @@ class NewEngland extends \BayonetsAndTomahawks\Models\Brigade
     $this->counterId = NEW_ENGLAND;
     $this->counterText = clienttranslate('New England');
     $this->faction = BRITISH;
+    $this->stackOrder = 3;
   }
 }

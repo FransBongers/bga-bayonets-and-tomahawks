@@ -54,9 +54,7 @@ class FleetsArriveUnitPlacement extends \BayonetsAndTomahawks\Actions\LogisticsR
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreFleetsArriveUnitPlacement()
-  {
-  }
+  public function stPreFleetsArriveUnitPlacement() {}
 
 
   // ....###....########...######....######.
@@ -258,6 +256,7 @@ class FleetsArriveUnitPlacement extends \BayonetsAndTomahawks\Actions\LogisticsR
   private function placeUnits($unitsPerSpace, $player, $faction)
   {
     $unitsPerSpace = array_values($unitsPerSpace);
+    $markers = Markers::getAll()->toArray();
 
     usort($unitsPerSpace, function ($a, $b) {
       return $a['space']->getBattlePriority() - $b['space']->getBattlePriority();
@@ -271,6 +270,12 @@ class FleetsArriveUnitPlacement extends \BayonetsAndTomahawks\Actions\LogisticsR
       }, $units), $space->getId());
 
       Notifications::placeUnits($player, $units, $space, $faction);
+      $markers = Utils::filter($markers, function ($marker) use ($space) {
+        return in_array($marker->getType(), [OUT_OF_SUPPLY_MARKER, ROUT_MARKER]) && Utils::startsWith($marker->getLocation(), $space->getId());
+      });
+      foreach ($markers as $marker) {
+        $marker->remove($player);
+      }
     }
   }
 }

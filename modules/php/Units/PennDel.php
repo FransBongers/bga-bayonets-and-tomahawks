@@ -10,5 +10,6 @@ class PennDel extends \BayonetsAndTomahawks\Models\Brigade
     $this->counterId = PENN_DEL;
     $this->counterText = clienttranslate('Penn. & Del.');
     $this->faction = BRITISH;
+    $this->stackOrder = 5;
   }
 }
