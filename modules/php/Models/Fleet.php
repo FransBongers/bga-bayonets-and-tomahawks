@@ -2,7 +2,7 @@
 namespace BayonetsAndTomahawks\Models;
 
 use BayonetsAndTomahawks\Core\Notifications;
-use BayonetsAndTomahawks\Helpers\Locations;
+use BayonetsAndTomahawks\Helpers\GameMap;
 
 class Fleet extends AbstractUnit
 {
@@ -21,6 +21,7 @@ class Fleet extends AbstractUnit
     $this->setReduced(0);
     $this->setLocation(POOL_FLEETS);
     Notifications::eliminateUnit($player, $this, $previousLocation);
+    GameMap::lastEliminatedUnitCheck($player, $previousLocation, $this->getFaction());
   }
 
   public function removeFromPool()

@@ -3605,6 +3605,13 @@ body > .card {
   display: flex;
   align-items: center;
 }
+.scenario_modal #scenario_modal_content .bt_scenario_info_reinforcements .bt_year_container {
+  display: flex;
+  justify-content: center;
+}
+.scenario_modal #scenario_modal_content .bt_scenario_info_reinforcements .bt_year_container .bt_section_title {
+  font-size: small;
+}
 .scenario_modal #scenario_modal_content .bt_scenario_info_reinforcements[data-duration="2"] {
   grid-template-columns: max-content max-content max-content;
 }

@@ -42,7 +42,7 @@ trait DebugTrait
 
   function debug_test()
   {
-    Notifications::log('connection', Connections::get(CHIGNECTOU_MIRAMICHY));
+    // Notifications::log('connection', Connections::get(CHIGNECTOU_MIRAMICHY));
     
 
 
@@ -54,7 +54,9 @@ trait DebugTrait
     // Units::get('unit_7')->setLocation(BAYE_DE_CATARACOUY);
     // Units::get('unit_44')->setLocation(TICONDEROGA);
     // Units::get('unit_45')->setLocation(HALIFAX);
-    // Units::get('unit_3')->setLocation(REMOVED_FROM_PLAY);
+    // Units::get('unit_3')->setLocation(LOSSES_BOX_FRENCH);
+    // Units::get('unit_4')->setLocation(REMOVED_FROM_PLAY);
+    // Units::get('unit_5')->setLocation(REMOVED_FROM_PLAY);
     // Units::get('unit_15')->setLocation(WILLS_CREEK);
     // Units::get('unit_38')->setLocation(WILLS_CREEK);
     // Units::get('unit_92')->setSpent(0);

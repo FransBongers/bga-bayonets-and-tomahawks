@@ -136,6 +136,15 @@
         align-items: center;
       }
 
+      .bt_year_container {
+        display: flex;
+        justify-content: center;
+
+        .bt_section_title {
+          font-size: small;
+        }
+      }
+
     }
 
     .bt_scenario_info_reinforcements[data-duration="2"] {

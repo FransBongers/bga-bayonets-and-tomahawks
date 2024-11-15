@@ -7358,7 +7358,12 @@ var tplScenarioModalContent = function (game, scenario) {
         : game.format_string_recursive(_('${tkn_boldText_duration} ${number} years'), {
             tkn_boldText_duration: _('Duration:'),
             number: scenario.duration,
-        }), "</span>\n  </div>\n  <div class=\"bt_scenario_info_faction\">\n      ").concat(tplScenarioInfoFactions(game, scenario), "\n  </div>\n  <div>\n    <div style=\"margin-top: 8px;\">\n      <span class=\"bt_section_title\">").concat(_('Reinforcements:'), "</span>\n      <div class=\"bt_scenario_info_reinforcements\" data-duration=\"").concat(scenario.duration, "\">\n        <div class=\"bt_reinforcement_type\">\n          <span>").concat(_('Fleets'), "</span>\n        </div>\n        ").concat(Object.entries(scenario.reinforcements)
+        }), "</span>\n  </div>\n  <div class=\"bt_scenario_info_faction\">\n      ").concat(tplScenarioInfoFactions(game, scenario), "\n  </div>\n  <div>\n    <div style=\"margin-top: 8px;\">\n      <span class=\"bt_section_title\">").concat(_('Reinforcements:'), "</span>\n      <div class=\"bt_scenario_info_reinforcements\" data-duration=\"").concat(scenario.duration, "\">\n        <div></div>\n          ").concat(Object.entries(scenario.reinforcements)
+        .map(function (_a) {
+        var year = _a[0], _reinforcements = _a[1];
+        return "<div class=\"bt_year_container\"><span class=\"bt_section_title\">".concat(year, "</span></div>");
+    })
+        .join(''), "\n        <div class=\"bt_reinforcement_type\">\n          <span>").concat(_('Fleets'), "</span>\n        </div>\n        ").concat(Object.entries(scenario.reinforcements)
         .map(function (_a) {
         var _year = _a[0], reinforcements = _a[1];
         return "\n          <div class=\"bt_reinforcement_year\" data-type=\"fleets\"><span>".concat(reinforcements.poolFleets, "</span></div>  \n          ");

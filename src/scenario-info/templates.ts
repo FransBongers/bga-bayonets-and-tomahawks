@@ -107,6 +107,10 @@ const tplScenarioModalContent = (
       <div class="bt_scenario_info_reinforcements" data-duration="${
         scenario.duration
       }">
+        <div></div>
+          ${Object.entries(scenario.reinforcements)
+            .map(([year, _reinforcements]) => `<div class="bt_year_container"><span class="bt_section_title">${year}</span></div>`)
+            .join('')}
         <div class="bt_reinforcement_type">
           <span>${_('Fleets')}</span>
         </div>
@@ -150,67 +154,3 @@ const tplScenarioModalContent = (
   </div>
 </div>`;
 };
-
-// ${tplVictoryTrackDisplay('french1')}
-// ${tplVictoryTrackDisplay('british1')}
-
-// const tplPlayerPrefenceSelectRow = ({
-//   setting,
-//   currentValue,
-//   visible = true,
-// }: {
-//   setting: PlayerPreferenceSelectConfig;
-//   currentValue: string;
-//   visible: boolean;
-// }) => {
-//   let values = setting.options
-//     .map(
-//       (option) =>
-//         `<option value='${option.value}' ${
-//           option.value === currentValue ? 'selected="selected"' : ""
-//         }>${_(option.label)}</option>`
-//     )
-//     .join("");
-
-//   return `
-//     <div id="setting_row_${setting.id}" class="player_preference_row"${!visible ? ` style="display: none;"` : ''}>
-//       <div class="player_preference_row_label">${_(setting.label)}</div>
-//       <div class="player_preference_row_value">
-//         <select id="setting_${
-//           setting.id
-//         }" class="" style="display: block;">
-//         ${values}
-//         </select>
-//       </div>
-//     </div>
-//   `;
-// };
-
-// const tplSettingsModalTabContent = ({ id }: { id: string; }) => `
-//   <div id="settings_modal_tab_content_${id}" style="display: none;"></div>`;
-
-// const tplSettingsModalTab = ({ id, name }: { id: string; name: string }) => `
-//   <div id="settings_modal_tab_${id}" class="settings_modal_tab">
-//     <span>${_(name)}</span>
-//   </div>`;
-
-// const tplSettingsModalContent = ({tabs}: {tabs: {id: string; name: string;}[]}) => {
-//   return `<div id="setting_modal_content">
-//     <div class="settings_modal_tabs">
-//   ${tabs
-//     .map(({id, name}) => tplSettingsModalTab({ id, name }))
-//     .join("")}
-//     </div>
-//   </div>`;
-// };
-
-// const tplPlayerPrefenceSliderRow = ({label, id, visible = true}: {label: string; id: string; visible?: boolean}) => {
-//   return `
-//   <div id="setting_row_${id}" class="player_preference_row"${!visible ? ` style="display: none;"` : ''}>
-//     <div class="player_preference_row_label">${_(label)}</div>
-//     <div class="player_preference_row_value slider">
-//       <div id="setting_${id}"></div>
-//     </div>
-//   </div>
-//   `;
-// };
