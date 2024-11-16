@@ -54,9 +54,6 @@ trait DebugTrait
 
   function debug_test()
   {
-    // $sql = 'ALTER TABLE `DBPREFIX_spaces` ADD `units_start_of_turn` VARCHAR(10) NOT NULL DEFAULT "none"';
-    // self::applyDbUpgradeToAllDB($sql);
-
 
     // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), ROUT_MARKER, Spaces::get(BOSTON), BRITISH);
     // Globals::setCurrentStepOfRound(SELECT_CARD_TO_PLAY_STEP);

@@ -137,6 +137,16 @@ class bayonetsandtomahawks extends Table
     */
     public function getAllDatas($pId = null)
     {
+        $sql = "SELECT * FROM spaces limit 1";
+        $data = self::getCollectionFromDb( $sql );
+        $needsUpdate = !isset(array_values($data)[0]['units_start_of_turn']);
+
+        if ($needsUpdate) {
+            $sql = 'ALTER TABLE `DBPREFIX_spaces` ADD `units_start_of_turn` VARCHAR(10) NOT NULL DEFAULT "none"';
+            self::applyDbUpgradeToAllDB($sql);
+        }
+
+
         $pId = $pId ?? Players::getCurrentId();
 
         $activeBattleLog = Globals::getActiveBattleLog();
@@ -184,6 +194,7 @@ class bayonetsandtomahawks extends Table
             'spaces' => Spaces::getUiData(),
             'units' => Units::getUiData(),
             'highwayUnusableForBritish' => Globals::getHighwayUnusableForBritish(),
+            'needsUpdate' => $needsUpdate,
         ];
 
         return $data;
@@ -419,10 +430,9 @@ class bayonetsandtomahawks extends Table
             self::applyDbUpgradeToAllDB($sql);
         }
 
-        if ($from_version <= 2411152208) {
-            $sql = 'ALTER TABLE `DBPREFIX_spaces` ADD `units_start_of_turn` VARCHAR(10) NOT NULL DEFAULT "none"';
-            self::applyDbUpgradeToAllDB($sql);
-        }
-
+        // if ($from_version <= 2411152208) {
+        //     $sql = 'ALTER TABLE `DBPREFIX_spaces` ADD `units_start_of_turn` VARCHAR(10) NOT NULL DEFAULT "none"';
+        //     self::applyDbUpgradeToAllDB($sql);
+        // }
     }
 }
