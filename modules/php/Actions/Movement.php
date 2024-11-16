@@ -128,6 +128,7 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
       'faction' => $playerFaction,
       'isArmyMovement' => $isArmyMovement,
       'units' => $units,
+      'unitsThatCannotMove' => $unitsThatCannotMove,
       'unitsThatCannotMoveCount' => count($unitsThatCannotMove),
       'previouslyMovedUnitIds' => $this->getUnitsPreviouslyMovedUnits(),
       'requiredUnitIds' => $requiredUnitIds,

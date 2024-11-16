@@ -170,6 +170,7 @@ interface OnEnteringMovementStateArgs extends CommonArgs {
   forcedMarchAvailable: boolean;
   roughSeasActive: boolean;
   resolvedMoves: number;
+  unitsThatCannotMove: BTUnit[];
   unitsThatCannotMoveCount: number;
   previouslyMovedUnitIds: string[];
 }

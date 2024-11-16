@@ -273,6 +273,12 @@ class MovementState implements State {
     );
   }
 
+  private getSelectedUnitsOfType(unitType: string) {
+    return this.selectedUnits.filter(
+      (unit) => this.game.getUnitStaticData(unit).type === unitType
+    );
+  }
+
   private unitOfTypeSelected(unitType: string) {
     return this.selectedUnits.some(
       (unit) => this.game.getUnitStaticData(unit).type === unitType
@@ -280,6 +286,15 @@ class MovementState implements State {
   }
 
   private getValidDestinationsForSelectedUnits() {
+    // Not possible to select destination if more than one commanders has been selected
+    // Can Happen when using select all
+    if (
+      [LIGHT_AP, LIGHT_AP_2X].includes(this.args.source) &&
+      this.getSelectedUnitsOfType(COMMANDER).length > 1
+    ) {
+      return [];
+    }
+
     const numberOfUnitsForConnectionLimit = this.selectedUnits.filter(
       (unit) => {
         const staticData = this.game.getUnitStaticData(unit);
@@ -357,12 +372,21 @@ class MovementState implements State {
     return validDestinations;
   }
 
+  private selectedUnitsWillLeaveLoneCommander(): boolean {
+    if (this.unselectedUnits.length > 0 && !this.onlyCommandersUnselected()) {
+      return false;
+    }
+    const commandersThatCannotMove = this.args.unitsThatCannotMove.filter(
+      (unit) => this.game.getUnitStaticData(unit).type === COMMANDER
+    );
+    return (
+      commandersThatCannotMove.length > 0 && commandersThatCannotMove.length === this.args.unitsThatCannotMove.length
+    );
+  }
+
   private setDestinationsSelectable(moveOnDestinationClick: boolean) {
     // Not possible to leave commanders behind without other units
-    if (
-      this.args.unitsThatCannotMoveCount === 0 &&
-      this.onlyCommandersUnselected()
-    ) {
+    if (this.selectedUnitsWillLeaveLoneCommander()) {
       return;
     }
 

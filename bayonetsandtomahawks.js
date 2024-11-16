@@ -5081,12 +5081,15 @@ var GameMap = (function () {
         this.losses = (_b = {},
             _b[LOSSES_BOX_BRITISH] = new LineStock(this.game.tokenManager, document.getElementById(LOSSES_BOX_BRITISH), {
                 center: false,
+                gap: '0px',
             }),
             _b[LOSSES_BOX_FRENCH] = new LineStock(this.game.tokenManager, document.getElementById(LOSSES_BOX_FRENCH), {
                 center: false,
+                gap: '0px',
             }),
             _b[DISBANDED_COLONIAL_BRIGADES] = new LineStock(this.game.tokenManager, document.getElementById(DISBANDED_COLONIAL_BRIGADES), {
                 center: false,
+                gap: '0px',
             }),
             _b);
         gamedatas.spaces.forEach(function (space) {
@@ -11235,12 +11238,20 @@ var MovementState = (function () {
         return (this.unselectedUnits.length > 0 &&
             unselectedCommanders.length === this.unselectedUnits.length);
     };
+    MovementState.prototype.getSelectedUnitsOfType = function (unitType) {
+        var _this = this;
+        return this.selectedUnits.filter(function (unit) { return _this.game.getUnitStaticData(unit).type === unitType; });
+    };
     MovementState.prototype.unitOfTypeSelected = function (unitType) {
         var _this = this;
         return this.selectedUnits.some(function (unit) { return _this.game.getUnitStaticData(unit).type === unitType; });
     };
     MovementState.prototype.getValidDestinationsForSelectedUnits = function () {
         var _this = this;
+        if ([LIGHT_AP, LIGHT_AP_2X].includes(this.args.source) &&
+            this.getSelectedUnitsOfType(COMMANDER).length > 1) {
+            return [];
+        }
         var numberOfUnitsForConnectionLimit = this.selectedUnits.filter(function (unit) {
             var staticData = _this.game.getUnitStaticData(unit);
             return ![COMMANDER, FLEET].includes(staticData.type);
@@ -11286,10 +11297,17 @@ var MovementState = (function () {
         });
         return validDestinations;
     };
+    MovementState.prototype.selectedUnitsWillLeaveLoneCommander = function () {
+        var _this = this;
+        if (this.unselectedUnits.length > 0 && !this.onlyCommandersUnselected()) {
+            return false;
+        }
+        var commandersThatCannotMove = this.args.unitsThatCannotMove.filter(function (unit) { return _this.game.getUnitStaticData(unit).type === COMMANDER; });
+        return (commandersThatCannotMove.length > 0 && commandersThatCannotMove.length === this.args.unitsThatCannotMove.length);
+    };
     MovementState.prototype.setDestinationsSelectable = function (moveOnDestinationClick) {
         var _this = this;
-        if (this.args.unitsThatCannotMoveCount === 0 &&
-            this.onlyCommandersUnselected()) {
+        if (this.selectedUnitsWillLeaveLoneCommander()) {
             return;
         }
         var validDestinations = this.getValidDestinationsForSelectedUnits();
