@@ -80,6 +80,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     battleCombineReducedUnits: BattleCombineReducedUnitsState;
     battleFortElimination: BattleFortEliminationState;
     battleMoveFleet: BattleMoveFleetState;
+    battleOverwhelmDuringRetreat: BattleOverwhelmDuringRetreatState;
     battleRetreat: BattleRetreatState;
     battleRollsRerolls: BattleRollsRerollsState;
     battleSelectCommander: BattleSelectCommanderState;
@@ -163,6 +164,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
       battleCombineReducedUnits: new BattleCombineReducedUnitsState(this),
       battleFortElimination: new BattleFortEliminationState(this),
       battleMoveFleet: new BattleMoveFleetState(this),
+      battleOverwhelmDuringRetreat: new BattleOverwhelmDuringRetreatState(this),
       battleRetreat: new BattleRetreatState(this),
       battleRollsRerolls: new BattleRollsRerollsState(this),
       battleSelectCommander: new BattleSelectCommanderState(this),

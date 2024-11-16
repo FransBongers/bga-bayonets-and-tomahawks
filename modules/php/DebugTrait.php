@@ -55,6 +55,10 @@ trait DebugTrait
   function debug_test()
   {
 
+    Spaces::get(ISLE_AUX_NOIX)->setControl(BRITISH);
+    // Units::moveAllInLocation(MIRAMICHY, LAKE_GEORGE);
+    // Units::moveAllInLocation(NEW_YORK, ISLE_AUX_NOIX);
+
     // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), ROUT_MARKER, Spaces::get(BOSTON), BRITISH);
     // Globals::setCurrentStepOfRound(SELECT_CARD_TO_PLAY_STEP);
     // Cards::get('Card47')->setLocation(Locations::cardInPlay(INDIAN));

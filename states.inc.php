@@ -785,6 +785,16 @@ $machinestates = array(
         'transitions' => [],
     ],
 
+    ST_BATTLE_OVERWHELM_DURING_RETREAT => [
+        'name' => 'battleOverwhelmDuringRetreat',
+        'description' => clienttranslate('${actplayer} must select units to eliminate'),
+        'descriptionmyturn' => clienttranslate('${you}'),
+        'type' => 'activeplayer',
+        'args' => 'argsAtomicAction',
+        'action' => 'stAtomicAction',
+        'possibleactions' => ['actBattleOverwhelmDuringRetreat', 'actPassOptionalAction', 'actRestart'],
+    ],
+
     ST_BATTLE_OUTCOME => [
         'name' => 'battleOutcome',
         'description' => '',

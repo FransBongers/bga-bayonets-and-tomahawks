@@ -59,6 +59,13 @@ interface OnEnteringBattleMoveFleetStateArgs extends CommonArgs {
   destinationIds: string[];
 }
 
+interface OnEnteringBattleOverwhelmDuringRetreatStateArgs extends CommonArgs {
+  enemyFaction: BRITISH_FACTION | FRENCH_FACTION;
+  units: BTUnit[];
+  numberOfUnitsToEliminate: number;
+  space: BTSpace;
+}
+
 interface OnEnteringBattleRetreatStateArgs extends CommonArgs {
   retreatOptions: BTSpace[];
 }

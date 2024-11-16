@@ -124,10 +124,13 @@ class BTHelpers extends \APP_DbObject
 
     // 1. Friendly Coastal Home Space
     $friendlyCoastalHomeSpaces = Utils::filter($coastalSpacesFreeOfEnemyUnits, function ($space) use ($faction) {
-      return $space->getHomeSpace() !== null && $space->getControl() === $faction;
+      return $space->getHomeSpace() === $faction;
     });
     if (count($friendlyCoastalHomeSpaces) > 0) {
-      return self::returnSpaceIds($friendlyCoastalHomeSpaces);
+      return [
+        'spaceIds' => self::returnSpaceIds($friendlyCoastalHomeSpaces),
+        'overwhelmDuringRetreat' => false,
+      ];
     }
 
     // Get coastal spaces of friendly sea zones
@@ -143,7 +146,10 @@ class BTHelpers extends \APP_DbObject
       return $space->getControl() === $faction;
     });
     if (count($friendlyCoastalSpaceOfFriendlySZ) > 0) {
-      return self::returnSpaceIds($friendlyCoastalSpaceOfFriendlySZ);
+      return [
+        'spaceIds' => self::returnSpaceIds($friendlyCoastalSpaceOfFriendlySZ),
+        'overwhelmDuringRetreat' => false,
+      ];
     }
 
     // 3, Wilderness Coastal Space of friendly SZ
@@ -151,11 +157,17 @@ class BTHelpers extends \APP_DbObject
       return $space->getControl() === NEUTRAL;
     });
     if (count($wildernessCoastalSpaceOfFriendlySZ) > 0) {
-      return self::returnSpaceIds($wildernessCoastalSpaceOfFriendlySZ);
+      return [
+        'spaceIds' => self::returnSpaceIds($wildernessCoastalSpaceOfFriendlySZ),
+        'overwhelmDuringRetreat' => false,
+      ];
     }
 
     // Return to Sail Box
-    return [SAIL_BOX];
+    return [
+      'spaceIds' => [SAIL_BOX],
+      'overwhelmDuringRetreat' => false,
+    ];
   }
 
   public static function updateStepTracker($newStep)

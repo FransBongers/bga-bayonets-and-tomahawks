@@ -216,7 +216,7 @@ class WinterQuartersReturnToColoniesStep2SelectStack extends \BayonetsAndTomahaw
       return BTHelpers::returnSpaceIds($destinations);
     }
 
-    return BTHelpers::getSpacesBasedOnFleetRetreatPriorities($faction);
+    return BTHelpers::getSpacesBasedOnFleetRetreatPriorities($faction)['spaceIds'];
   }
 
   public function getOptions()

@@ -148,6 +148,17 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     return array_keys($this->adjacentSpaces);
   }
 
+  public function getMilitiaForFaction($faction) {
+    if ($this->getHomeSpace() !== $faction) {
+      return 0;
+    }
+    $militia = $this->getMilitia();
+    if ($militia > 0 && $this->getControl() !== $faction) {
+      return $militia - 1;
+    }
+    return $militia;
+  }
+
   public function getUnits($faction = null)
   {
     $units = Units::getInLocation($this->id)->toArray();

@@ -65,7 +65,8 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
       'playerId' => $loserPlayerId,
       'faction' => $loserFaction,
       'spaceId' => $space->getId(),
-      'isAttacker' => $loser['isAttacker']
+      'isAttacker' => $loser['isAttacker'],
+      'isRouted' => $loser['isRouted'],
     ]));
 
     if ($loser['isRouted']) {

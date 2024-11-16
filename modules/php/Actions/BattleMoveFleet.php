@@ -147,7 +147,7 @@ class BattleMoveFleet extends \BayonetsAndTomahawks\Actions\Battle
       return $unit->isFleet();
     });
 
-    $destinationIds = BTHelpers::getSpacesBasedOnFleetRetreatPriorities($faction);
+    $destinationIds = BTHelpers::getSpacesBasedOnFleetRetreatPriorities($faction)['spaceIds'];
 
     return [
       'units' => $fleets,

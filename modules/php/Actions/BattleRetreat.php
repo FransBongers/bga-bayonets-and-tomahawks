@@ -163,13 +163,16 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
       return $unit->getId();
     }, $units);
 
+    $overwhelmDuringRetreat = isset($info['overwhelmDuringRetreat']) ? $info['overwhelmDuringRetreat'] : false;
 
-    // $markers = Markers::getInLocation(Locations::stackMarker($fromSpace->getId(), $faction))->toArray();
-    // Markers::move(array_map(function ($marker) {
-    //   return $marker->getId();
-    // }, $markers), Locations::stackMarker($space->getId(), $faction));
+    if ($overwhelmDuringRetreat) {
+      $this->ctx->insertAsBrother(Engine::buildTree([
+        'action' => BATTLE_OVERWHELM_DURING_RETREAT,
+        'playerId' => Players::getOther($playerId)->getId(),
+        'spaceId' => $toSpaceId,
+      ]));
+    }
 
-    // Notifications::moveStack(self::getPlayer(), $units, $markers, $fromSpace, $space, null, true);
     $this->ctx->insertAsBrother(Engine::buildTree([
       'action' => MOVE_STACK,
       'playerId' => $playerId,

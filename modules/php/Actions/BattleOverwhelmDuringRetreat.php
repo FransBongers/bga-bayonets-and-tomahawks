@@ -9,21 +9,20 @@ use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\BTHelpers;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
-use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Markers;
-use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Units;
-use BayonetsAndTomahawks\Models\Marker;
+use BayonetsAndTomahawks\Managers\Players;
+use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Models\Player;
-use BayonetsAndTomahawks\Scenario;
 
-class WinterQuartersMoveStackOnSailBox extends \BayonetsAndTomahawks\Models\AtomicAction
+class BattleOverwhelmDuringRetreat extends \BayonetsAndTomahawks\Actions\Battle
 {
   public function getState()
   {
-    return ST_WINTER_QUARTERS_MOVE_STACK_ON_SAIL_BOX;
+    return ST_BATTLE_OVERWHELM_DURING_RETREAT;
   }
 
   // ..######..########....###....########.########
@@ -42,24 +41,7 @@ class WinterQuartersMoveStackOnSailBox extends \BayonetsAndTomahawks\Models\Atom
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stWinterQuartersMoveStackOnSailBox()
-  {
-    $stateArgs = $this->argsWinterQuartersMoveStackOnSailBox();
-
-    if (count($stateArgs['spaceIds']) > 1) {
-      return;
-    }
-
-    if (count($stateArgs['spaceIds']) === 1 && $stateArgs['spaceIds'][0] === SAIL_BOX) {
-      Notifications::message(clienttranslate('${player_name} cannot move their stack from the Sail Box'), [
-        'player' => self::getPlayer(),
-      ]);
-      $this->resolveAction(['automatic' => true]);
-    } else if (count($stateArgs['spaceIds']) === 1) {
-      $this->moveStackFromSailBox($stateArgs['spaceIds'][0]);
-      $this->resolveAction(['automatic' => true]);
-    }
-  }
+  public function stBattleOverwhelmDuringRetreat() {}
 
   // .########..########..########.......###.....######..########.####..#######..##....##
   // .##.....##.##.....##.##............##.##...##....##....##.....##..##.....##.###...##
@@ -69,7 +51,7 @@ class WinterQuartersMoveStackOnSailBox extends \BayonetsAndTomahawks\Models\Atom
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreWinterQuartersMoveStackOnSailBox() {}
+  public function stPreBattleOverwhelmDuringRetreat() {}
 
 
   // ....###....########...######....######.
@@ -80,24 +62,13 @@ class WinterQuartersMoveStackOnSailBox extends \BayonetsAndTomahawks\Models\Atom
   // .##.....##.##....##..##....##..##....##
   // .##.....##.##.....##..######....######.
 
-  public function argsWinterQuartersMoveStackOnSailBox()
+  public function argsBattleOverwhelmDuringRetreat()
   {
-    $player = self::getPlayer();
-    $faction = $player->getFaction();
-
-    $spaceIds = array_map(function ($space) {
-      return $space->getId();
-    }, Utils::filter(Spaces::getControlledBy($faction), function ($space) use ($faction) {
-      return $space->getHomeSpace() === $faction && $space->isCoastal() && $space->getControl() === $faction;
-    }));
-
-    if (count($spaceIds) === 0) {
-      $spaceIds = BTHelpers::getSpacesBasedOnFleetRetreatPriorities($faction)['spaceIds'];
-    }
-
-    return [
-      'spaceIds' => $spaceIds,
-    ];
+    $options = $this->getOptions();
+    $options['units'] = $options['enemyUnits'];
+    unset($options['enemyUnits']);
+    unset($options['friendlyUnits']);
+    return $options;
   }
 
   //  .########..##..........###....##....##.########.########.
@@ -116,27 +87,48 @@ class WinterQuartersMoveStackOnSailBox extends \BayonetsAndTomahawks\Models\Atom
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function actPassWinterQuartersMoveStackOnSailBox()
+  public function actPassBattleOverwhelmDuringRetreat()
   {
     $player = self::getPlayer();
     Engine::resolve(PASS);
   }
 
-  public function actWinterQuartersMoveStackOnSailBox($args)
+  public function actBattleOverwhelmDuringRetreat($args)
   {
-    self::checkAction('actWinterQuartersMoveStackOnSailBox');
-    $spaceId = $args['spaceId'];
+    self::checkAction('actBattleOverwhelmDuringRetreat');
 
-    $validSpace = Utils::array_some($this->argsWinterQuartersMoveStackOnSailBox()['spaceIds'], function ($possibleSpaceId) use ($spaceId) {
-      return $spaceId === $possibleSpaceId;
-    });
+    $unitIds = $args['unitIds'];
 
-    if (!$validSpace) {
-      throw new \feException("ERROR 074");
+    $options = $this->getOptions();
+
+    $player = self::getPlayer();
+
+    foreach ($unitIds as $unitId) {
+      $unit = Utils::array_find($options['enemyUnits'], function ($optionUnit) use ($unitId) {
+        return $optionUnit->getId() === $unitId;
+      });
+      if ($unit === null) {
+        throw new \feException("ERROR 099");
+      }
+      $unit->eliminate($player);
     }
 
-    $this->moveStackFromSailBox($spaceId);
+    foreach ($options['friendlyUnits'] as $friendlyUnit) {
+      $friendlyUnit->eliminate($player);
+    }
 
+    $space = $options['space'];
+
+    if ($space->getBattle() === 1) {
+      $space->setBattle(0);
+      $space->setDefender(null);
+      Notifications::battleRemoveMarker($player, $space);
+    }
+
+    if ($space->getControl() === $options['faction']) {
+      GameMap::updateControl(Players::getOther($player->getId()), $space);
+    }
+    
 
     $this->resolveAction($args);
   }
@@ -149,24 +141,39 @@ class WinterQuartersMoveStackOnSailBox extends \BayonetsAndTomahawks\Models\Atom
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-
-  private function moveStackFromSailBox($spaceId)
+  private function getOptions()
   {
+    $info = $this->ctx->getInfo();
+    $spaceId = $info['spaceId'];
+    $player = self::getPlayer();
     $space = Spaces::get($spaceId);
 
-    $player = self::getPlayer();
-    $faction = $player->getFaction();
-    $units = Utils::filter(Units::getInLocation(SAIL_BOX)->toArray(), function ($unit) use ($faction) {
-      return $unit->getFaction() === $faction;
-    });
+    $playerFaction = $player->getFaction();
 
-    $unitIds = array_map(function ($unit) {
-      return $unit->getId();
-    }, $units);
+    $units = $space->getUnits();
 
-    Units::move($unitIds, $spaceId);
-    $markers = Markers::getInLocation(Locations::stackMarker(SAIL_BOX, $faction))->toArray();
+    $friendlyUnits = [];
+    $enemyUnits = [];
 
-    Notifications::moveStackFromSailBox($player, $units, $markers, $space, $faction);
+    foreach ($units as $unit) {
+      if ($unit->isCommander()) {
+        continue;
+      }
+      if ($unit->getFaction() === $playerFaction) {
+        $friendlyUnits[] = $unit;
+      } else {
+        $enemyUnits[] = $unit;
+      }
+    }
+    $friendlyUnitCount = count($friendlyUnits) + $space->getMilitiaForFaction($playerFaction);
+
+    return [
+      'enemyUnits' => $enemyUnits,
+      'friendlyUnits' => $friendlyUnits,
+      'faction' => $playerFaction,
+      'numberOfUnitsToEliminate' => min($friendlyUnitCount, count($enemyUnits)),
+      'space' => $space,
+      'enemyFaction' => BTHelpers::getOtherFaction($playerFaction),
+    ];
   }
 }

@@ -2544,6 +2544,7 @@ var BayonetsAndTomahawks = (function () {
             battleCombineReducedUnits: new BattleCombineReducedUnitsState(this),
             battleFortElimination: new BattleFortEliminationState(this),
             battleMoveFleet: new BattleMoveFleetState(this),
+            battleOverwhelmDuringRetreat: new BattleOverwhelmDuringRetreatState(this),
             battleRetreat: new BattleRetreatState(this),
             battleRollsRerolls: new BattleRollsRerollsState(this),
             battleSelectCommander: new BattleSelectCommanderState(this),
@@ -8977,6 +8978,104 @@ var BattleSelectSpaceState = (function () {
         this.game.addCancelButton();
     };
     return BattleSelectSpaceState;
+}());
+var BattleOverwhelmDuringRetreatState = (function () {
+    function BattleOverwhelmDuringRetreatState(game) {
+        this.selectedUnits = [];
+        this.game = game;
+    }
+    BattleOverwhelmDuringRetreatState.prototype.onEnteringState = function (args) {
+        debug('Entering BattleOverwhelmDuringRetreatState');
+        this.args = args;
+        this.selectedUnits = [];
+        this.updateInterfaceInitialStep(true);
+    };
+    BattleOverwhelmDuringRetreatState.prototype.onLeavingState = function () {
+        debug('Leaving BattleOverwhelmDuringRetreatState');
+    };
+    BattleOverwhelmDuringRetreatState.prototype.setDescription = function (activePlayerId) { };
+    BattleOverwhelmDuringRetreatState.prototype.updateInterfaceInitialStep = function (firstStep) {
+        if (firstStep === void 0) { firstStep = false; }
+        this.game.clearPossible();
+        if (this.selectedUnits.length === this.args.numberOfUnitsToEliminate) {
+            this.updateInterfaceConfirm();
+            return;
+        }
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select units to eliminate from ${spaceName} (${number} remaining)'),
+            args: {
+                you: '${you}',
+                number: this.args.numberOfUnitsToEliminate - this.selectedUnits.length,
+                spaceName: this.args.space.name,
+            },
+        });
+        var stack = this.game.gameMap.stacks[this.args.space.id][this.args.enemyFaction];
+        stack.open();
+        this.setUnitsSelectable();
+        this.setUnitsSelected();
+        if (firstStep || this.selectedUnits.length === 0) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
+        }
+        else {
+            this.game.addCancelButton();
+        }
+    };
+    BattleOverwhelmDuringRetreatState.prototype.updateInterfaceConfirm = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.setUnitsSelected();
+        this.game.clientUpdatePageTitle({
+            text: _('Eliminate selected units?'),
+            args: {},
+        });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actBattleOverwhelmDuringRetreat',
+                args: {
+                    unitIds: _this.selectedUnits.map(function (unit) { return unit.id; }),
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    BattleOverwhelmDuringRetreatState.prototype.setUnitsSelectable = function () {
+        var _this = this;
+        this.args.units.forEach(function (unit) {
+            _this.game.setUnitSelectable({
+                id: unit.id,
+                callback: function () {
+                    if (_this.selectedUnits.some(function (selectedUnit) { return selectedUnit.id === unit.id; })) {
+                        _this.selectedUnits = _this.selectedUnits.filter(function (selectedUnit) { return selectedUnit.id !== unit.id; });
+                    }
+                    else {
+                        _this.selectedUnits.push(unit);
+                    }
+                    _this.updateInterfaceInitialStep();
+                },
+            });
+        });
+    };
+    BattleOverwhelmDuringRetreatState.prototype.setUnitsSelected = function () {
+        var _this = this;
+        this.selectedUnits.forEach(function (unit) {
+            return _this.game.setUnitSelected({ id: unit.id });
+        });
+    };
+    return BattleOverwhelmDuringRetreatState;
 }());
 var ColonialsEnlistUnitPlacementState = (function () {
     function ColonialsEnlistUnitPlacementState(game) {

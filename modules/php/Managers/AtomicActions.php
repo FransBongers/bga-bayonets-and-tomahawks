@@ -32,6 +32,7 @@ class AtomicActions
     BATTLE_FORT_ELIMINATION => 'BattleFortElimination',
     BATTLE_MILITIA_ROLLS => 'BattleMilitiaRolls',
     BATTLE_MOVE_FLEET => 'BattleMoveFleet',
+    BATTLE_OVERWHELM_DURING_RETREAT => 'BattleOverwhelmDuringRetreat',
     BATTLE_OUTCOME => 'BattleOutcome',
     BATTLE_PENALTIES => 'BattlePenalties',
     BATTLE_PRE_SELECT_COMMANDER => 'BattlePreSelectCommander',

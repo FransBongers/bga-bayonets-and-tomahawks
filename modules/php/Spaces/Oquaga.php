@@ -31,7 +31,7 @@ class Oquaga extends \BayonetsAndTomahawks\Models\Space
   {
     $control = Globals::getControlIroquois();
     if ($control === NEUTRAL) {
-      return INDIAN;
+      return NEUTRAL;
     } else {
       return $control;
     }

@@ -64,7 +64,8 @@ class MovementOverwhelmCheck extends \BayonetsAndTomahawks\Actions\UnitMovement
         'playerId' => Players::getOther($player->getId())->getId(),
         'faction' => BTHelpers::getOtherFaction($player->getFaction()),
         'spaceId' => $spaceId,
-        'isAttacker' => false
+        'isAttacker' => false,
+        'isRouted' => false,
       ]));
     }
 

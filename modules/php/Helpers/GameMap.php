@@ -121,41 +121,34 @@ class GameMap extends \APP_DbObject
     });
   }
 
+  // public static function requiredForOutnumber($space, $faction, $unitsOnSpace)
+  // {
+  //   $enemyUnits = Utils::filter($unitsOnSpace, function ($unit) use ($faction) {
+  //     return $unit->getFaction() !== $faction && !$unit->isCommander();
+  //   });
+  // }
+
   /**
    * Returns minimum number of units required to overwhelm enemy
    * - returns 1000 if not possible to overwhelm
    */
   public static function requiredForOverwhelm($space, $faction, $unitsOnSpace)
   {
-    // Enemy has Bastion
-    if ($faction === BRITISH && $space->hasBastion()) {
-      return [
-        'requiredForOverwhelm' => 1000,
-        'hasEnemyUnits' => true,
-      ];
-    };
+    $friendlyUnits = Utils::filter($unitsOnSpace, function ($unit) use ($faction) {
+      return $unit->getFaction() === $faction && !$unit->isCommander();
+    });
 
     $enemyUnits = Utils::filter($unitsOnSpace, function ($unit) use ($faction) {
       return $unit->getFaction() !== $faction && !$unit->isCommander();
-    });
-
-    if (Utils::array_some($enemyUnits, function ($unit) {
-      return $unit->isFort();
-    })) {
-      return [
-        'requiredForOverwhelm' => 1000,
-        'hasEnemyUnits' => true,
-      ];
-    }
-
-    $friendlyUnits = Utils::filter($unitsOnSpace, function ($unit) use ($faction) {
-      return $unit->getFaction() === $faction && !$unit->isCommander();
     });
 
     $enemyUnitCount = count($enemyUnits);
     $friendlyUnitCount = count($friendlyUnits);
 
     $militia = $space->getMilitia();
+    if ($militia > 0 && $space->getControl() !== $space->getHomeSpace()) {
+      $militia = $militia - 1;
+    }
 
     if ($militia > 0 && $space->getHomeSpace() === $faction) {
       $friendlyUnitCount += $militia;
@@ -163,11 +156,36 @@ class GameMap extends \APP_DbObject
       $enemyUnitCount += $militia;
     }
 
+    // Enemy has Bastion
+    if ($faction === BRITISH && $space->hasBastion()) {
+      return [
+        'requiredForOverwhelm' => 1000,
+        'hasEnemyUnits' => true,
+        'enemyUnitCount' => $enemyUnitCount,
+        'friendlyUnitCount' => $friendlyUnitCount,
+      ];
+    };
+
+    if (Utils::array_some($enemyUnits, function ($unit) {
+      return $unit->isFort();
+    })) {
+      return [
+        'requiredForOverwhelm' => 1000,
+        'hasEnemyUnits' => true,
+        'enemyUnitCount' => $enemyUnitCount,
+        'friendlyUnitCount' => $friendlyUnitCount,
+      ];
+    }
+
+
+
     $minimumRequired = $enemyUnitCount * 3 + 1 - $friendlyUnitCount;
 
     return [
       'requiredForOverwhelm' => max($minimumRequired, 0),
       'hasEnemyUnits' => $enemyUnitCount > 0,
+      'enemyUnitCount' => $enemyUnitCount,
+      'friendlyUnitCount' => $friendlyUnitCount,
     ];
   }
 
@@ -195,11 +213,18 @@ class GameMap extends \APP_DbObject
     }
 
     $enemyHasBastion = $faction === BRITISH && $space->hasBastion();
-    $militia = $space->getHomeSpace() !== $faction ? $space->getMilitia() : 0;
-    $numberOfEnemyUnits = count($enemyUnits) + $militia;
+
+    $militia = $space->getMilitia();
+    if ($militia > 0 && $space->getControl() !== $space->getHomeSpace()) {
+      $militia = $militia - 1;
+    }
+    $enemyMilitia = $space->getHomeSpace() !== $faction ? $militia : 0;
+    $playerMilitia = $space->getHomeSpace() === $faction ? $militia : 0;
+    $numberOfEnemyUnits = count($enemyUnits) +  $enemyMilitia;
+    $numberOfPlayerUnits = count($playerUnits) + $playerMilitia;
 
     $hasEnemyUnits = $numberOfEnemyUnits > 0;
-    $outnumbers = $hasEnemyUnits && count($playerUnits) / $numberOfEnemyUnits > 3;
+    $outnumbers = $hasEnemyUnits && $numberOfPlayerUnits / $numberOfEnemyUnits > 3;
 
     return [
       'hasEnemyUnits' => $hasEnemyUnits,
@@ -299,7 +324,7 @@ class GameMap extends \APP_DbObject
   {
     $unitsPerSpace = array_values($unitsPerSpace);
     $markers = Markers::getAll()->toArray();
-    
+
     usort($unitsPerSpace, function ($a, $b) {
       return $a['space']->getBattlePriority() - $b['space']->getBattlePriority();
     });

@@ -49,6 +49,8 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     $faction = $info['faction'];
     $spaceId = $info['spaceId'];
     $isAttacker = $info['isAttacker'];
+    // TODO [2024-12-16]: remove isset check. Only here to not break running games
+    $isRouted =  isset($info['isRouted']) ? $info['isRouted'] : true;
 
     $space = Spaces::get($spaceId);
     $units = Utils::filter($space->getUnits($faction), function ($unit) {
@@ -60,9 +62,9 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
       return;
     }
 
-    $retreatOptions = $this->getRetreatOptions($spaceId, $faction, $isAttacker);
+    $retreatOptions = $this->getRetreatOptions($spaceId, $faction, $isAttacker, $isRouted);
 
-    if (count($retreatOptions) > 0) {
+    if (count($retreatOptions['spaceIds']) > 0) {
       $this->insertRetreatAction($retreatOptions);
       $this->resolveAction(['automatic' => true]);
       return;
@@ -81,9 +83,9 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
       }
     }
 
-    $retreatOptions = $this->getRetreatOptions($spaceId, $faction, $isAttacker);
+    $retreatOptions = $this->getRetreatOptions($spaceId, $faction, $isAttacker, $isRouted);
 
-    if (count($retreatOptions) > 0) {
+    if (count($retreatOptions['spaceIds']) > 0) {
       $this->insertRetreatAction($retreatOptions);
       $this->resolveAction(['automatic' => true]);
       return;
@@ -115,14 +117,8 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
 
   public function argsBattleRetreatCheckOptions()
   {
-    // $info = $this->ctx->getInfo();
-    // $faction = $info['faction'];
-    // $spaceId = $info['spaceId'];
-    // $isAttacker = $info['isAttacker'];
 
-    return [
-      // 'retreatOptions' => $this->getRetreatOptions($spaceId, $faction, $isAttacker),
-    ];
+    return [];
   }
 
   //  .########..##..........###....##....##.########.########.
@@ -151,39 +147,6 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
   {
     self::checkAction('actBattleRetreatCheckOptions');
 
-    // $spaceId = $args['spaceId'];
-
-    // $info = $this->ctx->getInfo();
-    // $faction = $info['faction'];
-    // $isAttacker = $info['isAttacker'];
-
-
-    // $options = $this->getRetreatOptions($spaceId, $faction, $isAttacker);
-
-    // $space = Utils::array_find($options, function ($space) use ($spaceId) {
-    //   return $space->getId() === $spaceId;
-    // });
-
-    // if ($space === null) {
-    //   throw new \feException("ERROR 013");
-    // }
-
-    // $info = $this->ctx->getInfo();
-    // $faction = $info['faction'];
-    // $fromSpace = Spaces::get($info['spaceId']);
-
-    // $units = $fromSpace->getUnits($faction);
-
-    // Units::move(array_map(function ($unit) {
-    //   return $unit->getId();
-    // }, $units), $spaceId);
-
-    // $markers = Markers::getInLocation(Locations::stackMarker($fromSpace->getId(), $faction))->toArray();
-    // Markers::move(array_map(function ($marker) {
-    //   return $marker->getId();
-    // }, $markers), Locations::stackMarker($space->getId(), $faction));
-
-    // Notifications::moveStack(self::getPlayer(), $units, $markers, $fromSpace, $space, null, true);
 
     $this->resolveAction($args);
   }
@@ -224,7 +187,8 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
       'faction' => $info['faction'],
       'spaceId' => $info['spaceId'],
       'isAttacker' => $info['isAttacker'],
-      'retreatOptionIds' => $retreatOptions
+      'retreatOptionIds' => $retreatOptions['spaceIds'],
+      'overwhelmDuringRetreat' => $retreatOptions['overwhelmDuringRetreat'],
     ]));
   }
 
@@ -237,7 +201,7 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     });
   }
 
-  public function getRetreatOptions($spaceId, $faction, $isAttacker)
+  public function getRetreatOptions($spaceId, $faction, $isAttacker, $isRouted)
   {
     $space = Spaces::get($spaceId);
     $otherFaction = BTHelpers::getOtherFaction($faction);
@@ -265,7 +229,7 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
         return in_array($data['space']->getId(), $spaceIdsAttackersEnteredFrom);
       });
 
-      // Space may not have enemey units
+      // Space may not have enemy units
       $optionsFriendlyStackEnteredFrom = Utils::filter($optionsFriendlyStackEnteredFrom, function ($option) use ($otherFaction) {
         $enemyUnits = $option['space']->getUnits($otherFaction);
         return count($enemyUnits) === 0;
@@ -274,9 +238,13 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
       $optionsFriendlyStackEnteredFrom = $this->filterConnectionRestrictions($optionsFriendlyStackEnteredFrom, $attackerUnits);
 
       if (count($optionsFriendlyStackEnteredFrom) > 0) {
-        return array_map(function ($data) {
+        $spaceIds = array_map(function ($data) {
           return $data['space']->getId();
         }, $optionsFriendlyStackEnteredFrom);
+        return [
+          'spaceIds' => $spaceIds,
+          'overwhelmDuringRetreat' => false,
+        ];
       }
     }
 
@@ -288,11 +256,11 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
 
     $possibleRetreatOptions = $this->filterConnectionRestrictions($possibleRetreatOptions, $isAttacker ? $attackerUnits : $defenderUnits);
 
-    return $this->getSpacesBasedOnAdjacentSpaceRetreatPriorities($possibleRetreatOptions, $faction);
+    return $this->getSpacesBasedOnAdjacentSpaceRetreatPriorities($possibleRetreatOptions, $faction,  $isRouted, $space);
   }
 
 
-  private function getSpacesBasedOnAdjacentSpaceRetreatPriorities($adjacentConnectionsAndSpaces, $faction)
+  private function getSpacesBasedOnAdjacentSpaceRetreatPriorities($adjacentConnectionsAndSpaces, $faction,  $isRouted, $spaceOfBattle)
   {
     $spaces = array_map(function ($adjacent) {
       return $adjacent['space'];
@@ -305,11 +273,14 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
 
     // 1. Friendly Home Space without enemy units
     $homeSpaces = Utils::filter($spacesWithoutEnemyUnits, function ($space) use ($faction) {
-      return $space->getHomeSpace() !== null && $space->getControl() === $faction;
+      return $space->getHomeSpace() === $faction;
     });
 
     if (count($homeSpaces) > 0) {
-      return BTHelpers::returnSpaceIds($homeSpaces);
+      return [
+        'spaceIds' => BTHelpers::returnSpaceIds($homeSpaces),
+        'overwhelmDuringRetreat' => false,
+      ];
     }
 
     // 2. Friendly space without enemy units
@@ -318,7 +289,10 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     });
 
     if (count($friendlySpaces) > 0) {
-      return BTHelpers::returnSpaceIds($friendlySpaces);
+      return [
+        'spaceIds' => BTHelpers::returnSpaceIds($friendlySpaces),
+        'overwhelmDuringRetreat' => false,
+      ];
     }
 
     // 3. A Wilderness Space or friednly Indian Nation Village
@@ -327,7 +301,10 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     });
 
     if (count($wildernessSpaces) > 0) {
-      return BTHelpers::returnSpaceIds($wildernessSpaces);
+      return [
+        'spaceIds' => BTHelpers::returnSpaceIds($wildernessSpaces),
+        'overwhelmDuringRetreat' => false,
+      ];
     }
 
     // 4. An enemy-controlled space or enemy Indian Nation Village without enemy units or Militia
@@ -336,11 +313,108 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     });
 
     if (count($enemyControlledSpace) > 0) {
-      return BTHelpers::returnSpaceIds($enemyControlledSpace);
+      return [
+        'spaceIds' => BTHelpers::returnSpaceIds($enemyControlledSpace),
+        'overwhelmDuringRetreat' => false,
+      ];
     }
 
-    // 5. TODO:
+    // 5. 
+    if (!$isRouted) {
+      $step5AResult = $this->getStep5RetreatPriorities($spaces, $faction, $spaceOfBattle);
+      if (count($step5AResult['spaceIds']) > 0) {
+        return $step5AResult;
+      }
+    }
 
-    return [];
+    return [
+      'spaceIds' => [],
+      'overwhelmDuringRetreat' => false,
+    ];
+  }
+
+  private function getStep5RetreatPriorities($spaces, $faction, $spaceOfBattle)
+  {
+    $friendlyUnitCount = count(Utils::filter($spaceOfBattle->getUnits($faction), function ($unit) {
+      return !$unit->isCommander();
+    }));
+
+    // 5A An enemy space with the fewest enemy units and Militia
+    $spacesThatCanBeOverwhelmed = [];
+    foreach ($spaces as $space) {
+      $unitsOnSpace = $space->getUnits();
+      $requiredForOverwhelm = GameMap::requiredForOverwhelm($space, $faction, $unitsOnSpace);
+      if ($requiredForOverwhelm['hasEnemyUnits'] && $friendlyUnitCount >= $requiredForOverwhelm['requiredForOverwhelm']) {
+        $spacesThatCanBeOverwhelmed[] = [
+          'space' => $space,
+          'enemyUnits' => Utils::filter($unitsOnSpace, function ($unit) use ($faction) {
+            return $unit->getFaction() !== $faction;
+          }),
+        ];
+      }
+    }
+
+    if (count($spacesThatCanBeOverwhelmed) > 0) {
+      usort($spacesThatCanBeOverwhelmed, function ($a, $b) {
+        return count($a['enemyUnits']) - count($b['enemyUnits']);
+      });
+      $fewestEnemyUnitCount = count($spacesThatCanBeOverwhelmed[0]['enemyUnits']);
+      $spacesThatCanBeOverwhelmed = Utils::filter($spacesThatCanBeOverwhelmed, function ($data) use ($fewestEnemyUnitCount) {
+        return count($data['enemyUnits']) === $fewestEnemyUnitCount;
+      });
+
+      return [
+        'spaceIds' => array_map(function ($data) {
+          return $data['space']->getId();
+        }, $spacesThatCanBeOverwhelmed),
+        'overwhelmDuringRetreat' => true,
+      ];
+    }
+
+    // 5A.2 Neutral Indian Nation Villages
+    $villagesOfNeutralIndianNation = Utils::filter($spaces, function ($space) {
+      return in_array($space->getIndianVillage(), [CHEROKEE, IROQUOIS]) && $space->getDefaultControl() === NEUTRAL;
+    });
+
+    if (count($villagesOfNeutralIndianNation) > 0) {
+      return [
+        'spaceIds' => BTHelpers::returnIds($villagesOfNeutralIndianNation),
+        'overwhelmDuringRetreat' => true,
+      ];
+    }
+
+    // 5B Unresolved Battle space with fewest enemy units and Militia combined
+    $spacesWithUnresolvedBattle = [];
+    foreach ($spaces as $space) {
+      if ($space->getBattle() === 0) {
+        continue;
+      }
+      $unitsOnSpace = $space->getUnits();
+      $enemyUnits = Utils::filter($unitsOnSpace, function ($unit) use ($faction) {
+        return !$unit->isCommander() && $unit->getFaction() !== $faction;
+      }) + $space->getMilitiaForFaction(BTHelpers::getOtherFaction($faction));
+
+      $spacesWithUnresolvedBattle[] = [
+        'space' => $space,
+        'enemyUnits' => $enemyUnits,
+      ];
+    }
+
+    if (count($spacesWithUnresolvedBattle) > 0) {
+      usort($spacesWithUnresolvedBattle, function ($a, $b) {
+        return count($a['enemyUnits']) - count($b['enemyUnits']);
+      });
+      $fewestEnemyUnitCount = count($spacesWithUnresolvedBattle[0]['enemyUnits']);
+      $spacesWithUnresolvedBattle = Utils::filter($spacesWithUnresolvedBattle, function ($data) use ($fewestEnemyUnitCount) {
+        return count($data['enemyUnits']) === $fewestEnemyUnitCount;
+      });
+
+      return [
+        'spaceIds' => array_map(function ($data) {
+          return $data['space']->getId();
+        }, $spacesWithUnresolvedBattle),
+        'overwhelmDuringRetreat' => false,
+      ];
+    }
   }
 }
