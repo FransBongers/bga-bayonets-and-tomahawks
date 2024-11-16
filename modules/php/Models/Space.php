@@ -21,8 +21,10 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   protected $battle = 0;
   protected $control = null;
   protected $controlStartOfTurn = null;
+  protected $defender = null;
   protected $fortConstruction;
   protected $raided = null;
+  protected $unitsStartOfTurn = null;
   
   protected $attributes = [
     'id' => ['space_id', 'int'],
@@ -34,6 +36,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
     'location' => ['space_location', 'str'],
     'state' => ['space_state', 'int'],
     'raided' => ['raided', 'str'],
+    'unitsStartOfTurn' => ['units_start_of_turn', 'str'], // Faction that had units on space at start of turn
     // 'extraData' => ['extra_data', 'obj'],
   ];
 
@@ -95,6 +98,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
       'control' => $this->control,
       'controlStartOfTurn' => $this->controlStartOfTurn,
       'defaultControl' => $this->getDefaultControl(),
+      'defender' => $this->defender,
       'fortConstruction' => $this->fortConstruction === 1,
       'homeSpace' => $this->homeSpace,
       'name' => $this->name,
@@ -102,6 +106,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
       'victorySpace' => $this->victorySpace,
       'top' => $this->top,
       'left' => $this->left,
+      // 'unitsStartOfTurn' => $this->unitsStartOfTurn,
     ];
   }
 

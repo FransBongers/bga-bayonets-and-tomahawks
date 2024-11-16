@@ -14,7 +14,7 @@ use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Scenarios;
-use BayonetsAndTomahawks\Models\Marker;
+use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Models\Player;
 use BayonetsAndTomahawks\Scenario;
 
@@ -66,6 +66,7 @@ class WinterQuartersRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     Markers::move(ROUND_MARKER, ACTION_ROUND_1);
     Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), ACTION_ROUND_1);
     Notifications::moveYearMarker(Markers::get(YEAR_MARKER), $yearMarkerLocation);
+    Spaces::setStartOfTurnUnits();
 
     $this->resolveAction(['automatic' => true]);
   }

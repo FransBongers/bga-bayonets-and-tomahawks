@@ -39,11 +39,25 @@ trait DebugTrait
     Notifications::log('unit', Units::get($unitId));
   }
 
+  function debug_checkRetreatOptions()
+  {
+    $spaceId = ALBANY;
+    $faction = BRITISH;
+    $space = Spaces::get($spaceId);
+    $isAttacker = $faction !== $space->getDefender();
+
+    $action = AtomicActions::get(BATTLE_RETREAT_CHECK_OPTIONS);
+    $retreatOptions = $action->getRetreatOptions($spaceId, $faction, $isAttacker);
+    Notifications::log('isAttacker', $isAttacker);
+    Notifications::log('retreatOptions', $retreatOptions);
+  }
 
   function debug_test()
   {
-    // Notifications::log('connection', Connections::get(CHIGNECTOU_MIRAMICHY));
-    
+    // $sql = 'ALTER TABLE `DBPREFIX_spaces` ADD `units_start_of_turn` VARCHAR(10) NOT NULL DEFAULT "none"';
+    // self::applyDbUpgradeToAllDB($sql);
+
+
     // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), ROUT_MARKER, Spaces::get(BOSTON), BRITISH);
     // Globals::setCurrentStepOfRound(SELECT_CARD_TO_PLAY_STEP);
     // Cards::get('Card47')->setLocation(Locations::cardInPlay(INDIAN));
@@ -64,7 +78,7 @@ trait DebugTrait
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(ALBANY), BRITISH);
 
     // Cards::get('Card25')->insertOnTop(Locations::buildUpDeck(FRENCH));
-    Cards::get('Card18')->insertOnTop(Locations::buildUpDeck(BRITISH));
+    // Cards::get('Card18')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card06')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card06')->insertOnTop(Locations::campaignDeck(BRITISH));
     // Cards::get('Card54')->insertOnTop(Locations::campaignDeck(INDIAN));

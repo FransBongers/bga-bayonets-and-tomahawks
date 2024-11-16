@@ -122,6 +122,9 @@ class bayonetsandtomahawks extends Table
         Markers::setupNewGame();
         WarInEuropeChits::setupNewGame();
 
+        Spaces::setStartOfTurnControl();
+        Spaces::setStartOfTurnUnits();
+
         $this->setGameStateInitialValue('logging', false);
 
         $this->activeNextPlayer();
@@ -415,5 +418,11 @@ class bayonetsandtomahawks extends Table
             $sql = 'ALTER TABLE `DBPREFIX_connections` ADD `french_road_used` TINYINT(1) NOT NULL DEFAULT 0';
             self::applyDbUpgradeToAllDB($sql);
         }
+
+        if ($from_version <= 2411152208) {
+            $sql = 'ALTER TABLE `DBPREFIX_spaces` ADD `units_start_of_turn` VARCHAR(10) NOT NULL DEFAULT "none"';
+            self::applyDbUpgradeToAllDB($sql);
+        }
+
     }
 }

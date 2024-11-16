@@ -12,7 +12,7 @@ class Commander extends AbstractUnit
   {
     $this->type = COMMANDER;
     parent::__construct($row);
-    $this->stackOrder = 9;
+    $this->stackOrder = 8;
     $this->mpLimit = 2;
     $this->connectionTypeAllowed = [ROAD, HIGHWAY];
   }

@@ -246,7 +246,7 @@ class BattleTab {
       Object.values(this.stocks[side]).forEach((stock) => stock.removeAll());
     });
 
-    BATTLE_ROLL_SEQUENCE.forEach((stepId) => {
+    [...BATTLE_ROLL_SEQUENCE, MILITIA].forEach((stepId) => {
       BATTLE_SIDES.forEach((side) => {
         const diceNode = document.getElementById(
           `bt_active_battle_sequence_${stepId}_${side}_rolls`

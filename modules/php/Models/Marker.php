@@ -25,7 +25,7 @@ class Marker extends \BayonetsAndTomahawks\Helpers\DB_Model implements \JsonSeri
   protected $location = null;
   protected $state = null;
   protected $side = null;
-  protected $stackOrder = 6;
+  protected $stackOrder = 11;
 
   public function jsonSerialize()
   {

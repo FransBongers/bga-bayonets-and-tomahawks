@@ -12,7 +12,7 @@ use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Markers;
-use BayonetsAndTomahawks\Managers\Scenarios;
+use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
@@ -53,6 +53,7 @@ class LogisticsRoundEnd extends \BayonetsAndTomahawks\Actions\LogisticsRounds
       Markers::move(ROUND_MARKER, ACTION_ROUND_4);
       Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), ACTION_ROUND_4);
     }
+    Spaces::setStartOfTurnUnits();
 
     $this->resolveAction(['automatic' => true]);
   }

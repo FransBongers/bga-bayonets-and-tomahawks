@@ -127,6 +127,7 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     Globals::setLostAPIndian([]);
     Globals::setPlacedConstructionMarkers([]);
     Spaces::setStartOfTurnControl();
+    Spaces::setStartOfTurnUnits();
     Globals::setUsedEventBritish(0);
     Globals::setUsedEventFrench(0);
     Globals::setUsedEventIndian(0);

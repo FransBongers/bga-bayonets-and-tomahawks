@@ -48,6 +48,8 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     $info = $this->ctx->getInfo();
     $faction = $info['faction'];
     $spaceId = $info['spaceId'];
+    $isAttacker = $info['isAttacker'];
+
     $space = Spaces::get($spaceId);
     $units = Utils::filter($space->getUnits($faction), function ($unit) {
       return !$unit->isFort();
@@ -58,7 +60,7 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
       return;
     }
 
-    $retreatOptions = $this->getRetreatOptions();
+    $retreatOptions = $this->getRetreatOptions($spaceId, $faction, $isAttacker);
 
     if (count($retreatOptions) > 0) {
       $this->insertRetreatAction($retreatOptions);
@@ -79,7 +81,7 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
       }
     }
 
-    $retreatOptions = $this->getRetreatOptions();
+    $retreatOptions = $this->getRetreatOptions($spaceId, $faction, $isAttacker);
 
     if (count($retreatOptions) > 0) {
       $this->insertRetreatAction($retreatOptions);
@@ -102,16 +104,6 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     $this->resolveAction(['automatic' => true]);
   }
 
-  // .########..########..########.......###.....######..########.####..#######..##....##
-  // .##.....##.##.....##.##............##.##...##....##....##.....##..##.....##.###...##
-  // .##.....##.##.....##.##...........##...##..##..........##.....##..##.....##.####..##
-  // .########..########..######......##.....##.##..........##.....##..##.....##.##.##.##
-  // .##........##...##...##..........#########.##..........##.....##..##.....##.##..####
-  // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
-  // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
-
-  public function stPreBattleRetreatCheckOptions() {}
-
 
   // ....###....########...######....######.
   // ...##.##...##.....##.##....##..##....##
@@ -123,10 +115,13 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
 
   public function argsBattleRetreatCheckOptions()
   {
-    $info = $this->ctx->getInfo();
+    // $info = $this->ctx->getInfo();
+    // $faction = $info['faction'];
+    // $spaceId = $info['spaceId'];
+    // $isAttacker = $info['isAttacker'];
 
     return [
-      'retreatOptions' => $this->getRetreatOptions(),
+      // 'retreatOptions' => $this->getRetreatOptions($spaceId, $faction, $isAttacker),
     ];
   }
 
@@ -156,34 +151,39 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
   {
     self::checkAction('actBattleRetreatCheckOptions');
 
-    $spaceId = $args['spaceId'];
+    // $spaceId = $args['spaceId'];
 
-    $options = $this->getRetreatOptions();
+    // $info = $this->ctx->getInfo();
+    // $faction = $info['faction'];
+    // $isAttacker = $info['isAttacker'];
 
-    $space = Utils::array_find($options, function ($space) use ($spaceId) {
-      return $space->getId() === $spaceId;
-    });
 
-    if ($space === null) {
-      throw new \feException("ERROR 013");
-    }
+    // $options = $this->getRetreatOptions($spaceId, $faction, $isAttacker);
 
-    $info = $this->ctx->getInfo();
-    $faction = $info['faction'];
-    $fromSpace = Spaces::get($info['spaceId']);
+    // $space = Utils::array_find($options, function ($space) use ($spaceId) {
+    //   return $space->getId() === $spaceId;
+    // });
 
-    $units = $fromSpace->getUnits($faction);
+    // if ($space === null) {
+    //   throw new \feException("ERROR 013");
+    // }
 
-    Units::move(array_map(function ($unit) {
-      return $unit->getId();
-    }, $units), $spaceId);
+    // $info = $this->ctx->getInfo();
+    // $faction = $info['faction'];
+    // $fromSpace = Spaces::get($info['spaceId']);
 
-    $markers = Markers::getInLocation(Locations::stackMarker($fromSpace->getId(), $faction))->toArray();
-    Markers::move(array_map(function ($marker) {
-      return $marker->getId();
-    }, $markers), Locations::stackMarker($space->getId(), $faction));
+    // $units = $fromSpace->getUnits($faction);
 
-    Notifications::moveStack(self::getPlayer(), $units, $markers, $fromSpace, $space, null, true);
+    // Units::move(array_map(function ($unit) {
+    //   return $unit->getId();
+    // }, $units), $spaceId);
+
+    // $markers = Markers::getInLocation(Locations::stackMarker($fromSpace->getId(), $faction))->toArray();
+    // Markers::move(array_map(function ($marker) {
+    //   return $marker->getId();
+    // }, $markers), Locations::stackMarker($space->getId(), $faction));
+
+    // Notifications::moveStack(self::getPlayer(), $units, $markers, $fromSpace, $space, null, true);
 
     $this->resolveAction($args);
   }
@@ -237,17 +237,13 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     });
   }
 
-  private function getRetreatOptions()
+  public function getRetreatOptions($spaceId, $faction, $isAttacker)
   {
-    $info = $this->ctx->getInfo();
-    $faction = $info['faction'];
-    $spaceId = $info['spaceId'];
-    $isAttacker = $info['isAttacker'];
-
     $space = Spaces::get($spaceId);
+    $otherFaction = BTHelpers::getOtherFaction($faction);
 
-    $attackerUnits = $isAttacker ? $space->getUnits($faction) : $space->getUnits(Players::otherFaction($faction));
-    $defenderUnits = !$isAttacker ? $space->getUnits($faction) : $space->getUnits(Players::otherFaction($faction));
+    $attackerUnits = $isAttacker ? $space->getUnits($faction) : $space->getUnits($otherFaction);
+    $defenderUnits = !$isAttacker ? $space->getUnits($faction) : $space->getUnits($otherFaction);
     $spaceIdsAttackersEnteredFrom = array_map(function ($unit) {
       return $unit->getPreviousLocation();
     }, $attackerUnits);
@@ -268,6 +264,13 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
       $optionsFriendlyStackEnteredFrom = Utils::filter($adjacentConnectionsAndSpaces, function ($data) use ($spaceIdsAttackersEnteredFrom) {
         return in_array($data['space']->getId(), $spaceIdsAttackersEnteredFrom);
       });
+
+      // Space may not have enemey units
+      $optionsFriendlyStackEnteredFrom = Utils::filter($optionsFriendlyStackEnteredFrom, function ($option) use ($otherFaction) {
+        $enemyUnits = $option['space']->getUnits($otherFaction);
+        return count($enemyUnits) === 0;
+      });
+
       $optionsFriendlyStackEnteredFrom = $this->filterConnectionRestrictions($optionsFriendlyStackEnteredFrom, $attackerUnits);
 
       if (count($optionsFriendlyStackEnteredFrom) > 0) {
@@ -278,7 +281,6 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
     }
 
     // Adjacent Space priorties
-
     // If defender filter spaces an enemy stack entered the battle space from this AR
     $possibleRetreatOptions = Utils::filter($adjacentConnectionsAndSpaces, function ($data) use ($spaceIdsAttackersEnteredFrom, $isAttacker) {
       return $isAttacker || !in_array($data['space']->getId(), $spaceIdsAttackersEnteredFrom);

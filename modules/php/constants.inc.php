@@ -418,6 +418,9 @@ const FRENCH = 'french';
 const INDIAN = 'indian';
 const NEUTRAL = 'neutral';
 
+const NONE = 'none';
+const BOTH = 'both';
+
 /**
  * Tokens / markers
  * TODO: rename these to yearMarker, etc..

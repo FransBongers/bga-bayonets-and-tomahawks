@@ -8,7 +8,7 @@ class Light extends AbstractUnit
   {
     $this->type = LIGHT;
     parent::__construct($row);
-    $this->stackOrder = 8;
+    $this->stackOrder = 9;
     $this->mpLimit = 3;
     $this->connectionTypeAllowed = [ROAD, HIGHWAY, PATH];
   }

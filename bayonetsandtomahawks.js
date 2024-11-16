@@ -4222,7 +4222,7 @@ var BattleTab = (function () {
         BATTLE_SIDES.forEach(function (side) {
             Object.values(_this.stocks[side]).forEach(function (stock) { return stock.removeAll(); });
         });
-        BATTLE_ROLL_SEQUENCE.forEach(function (stepId) {
+        __spreadArray(__spreadArray([], BATTLE_ROLL_SEQUENCE, true), [MILITIA], false).forEach(function (stepId) {
             BATTLE_SIDES.forEach(function (side) {
                 var diceNode = document.getElementById("bt_active_battle_sequence_".concat(stepId, "_").concat(side, "_rolls"));
                 if (diceNode) {

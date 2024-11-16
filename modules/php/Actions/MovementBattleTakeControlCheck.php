@@ -75,6 +75,18 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  private function determineDefender($space, $playerFaction)
+  {
+    $unitsStartOfTurn = $space->getUnitsStartOfTurn();
+    if (in_array($unitsStartOfTurn, [BRITISH, FRENCH])) {
+      return $unitsStartOfTurn;
+    } else if ($space->getMilitia() > 0) {
+      return $space->getHomeSpace(); 
+    } else {
+      return BTHelpers::getOtherFaction($playerFaction);
+    }
+  }
+
   /**
    * Battle occurs if 
    * - at this point there are still enemy units excluding militia
@@ -94,10 +106,9 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
 
     if ($battleOccurs && $space->getBattle() === 0) {
       $space->setBattle(1);
-
-      // TODO: check defender / attacker
-      $space->setDefender(Players::otherFaction($playerFaction));
-      Notifications::battle($player, $space);
+      $defender = $this->determineDefender($space, $playerFaction);
+      $space->setDefender($defender);
+      Notifications::battle($player, $space, $playerFaction !== $defender);
     } else if (!$battleOccurs && $space->getBattle() === 1) {
       $space->setBattle(0);
       $space->setDefender(null);

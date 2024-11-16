@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS `spaces` (
   `battle` int(10) DEFAULT 0,
   `control` VARCHAR(10) NOT NULL,
   `control_start_of_turn` VARCHAR(10) NOT NULL,
+  `units_start_of_turn` VARCHAR(10) NOT NULL DEFAULT "none",
   `defender` VARCHAR(10),
   `fort_construction` int(10) DEFAULT 0,
   `raided` VARCHAR(10),

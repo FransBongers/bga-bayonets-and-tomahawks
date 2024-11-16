@@ -23,6 +23,7 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
     'control_start_of_turn',
     'fort_construction',
     'raided',
+    'units_start_of_turn',
     // 'extra_data'
   ];
   protected static $autoremovePrefix = false;
@@ -66,6 +67,37 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
     self::DB()->update(['control_start_of_turn' => NEUTRAL])->where('control', '=', NEUTRAL)->run();
   }
 
+  public static function setStartOfTurnUnits()
+  {
+    $units = Units::getAll()->toArray();
+    
+    $spaceIdUnitsAtStartOfTurnMap = [];
+    foreach (SPACES as $spaceId) {
+      $unit = Utils::array_find($units, function ($unit) use ($spaceId) {
+        return $unit->getLocation() === $spaceId;
+      });
+
+      $spaceIdUnitsAtStartOfTurnMap[$spaceId] = $unit === null ? NONE : $unit->getFaction();
+    }
+    foreach (Spaces::get([LOUISBOURG, QUEBEC]) as $spaceId => $space) {
+      $unitsOnBastionSpace = $space->getUnits();
+      if (count($unitsOnBastionSpace) === 0) {
+        $spaceIdUnitsAtStartOfTurnMap[$spaceId] = NONE;
+      } else if (Utils::array_some($unitsOnBastionSpace, function ($unit) {
+        return $unit->getFaction() === BRITISH;
+      }) && Utils::array_some($unitsOnBastionSpace, function ($unit) {
+        return $unit->getFaction() === FRENCH;
+      })) {
+        $spaceIdUnitsAtStartOfTurnMap[$spaceId] = BOTH;
+      } else {
+        $spaceIdUnitsAtStartOfTurnMap[$spaceId] = $unitsOnBastionSpace[0]->getFaction();
+      }
+    }
+    foreach($spaceIdUnitsAtStartOfTurnMap as $spaceId => $control) {
+      self::DB()->update(['units_start_of_turn' => $control])->where('space_id', '=', $spaceId)->run();
+    }
+  }
+
   public static function removeAllRaidedMarkers()
   {
     self::DB()->update(['raided' => null])->whereNotNull('raided')->run();
@@ -100,6 +132,7 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
         'battle' => 0,
         'control' => $space->getDefaultControl(), // Use homeSpace data?
         'control_start_of_turn' => $space->getDefaultControl(), // Use homeSpace data?
+        'units_start_of_turn' => NONE,
         'defender' => null,
         'fort_construction' => 0,
         'location' => 'default',
@@ -118,6 +151,7 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
         'battle' => 0,
         'control' => NEUTRAL,
         'control_start_of_turn' => NEUTRAL,
+        'units_start_of_turn' => NONE,
         'defender' => null,
         'fort_construction' => 0,
         'location' => 'default',
@@ -130,27 +164,28 @@ class Spaces extends \BayonetsAndTomahawks\Helpers\Pieces
     self::create($spaces, null);
   }
 
-  public static function setupBoxes()
-  {
-    $spaces = [];
+  // public static function setupBoxes()
+  // {
+  //   $spaces = [];
 
-    foreach (BOXES as $spaceId) {
-      $data = [
-        'id' => $spaceId,
-        'battle' => 0,
-        'control' => NEUTRAL,
-        'control_start_of_turn' => NEUTRAL,
-        'defender' => null,
-        'fort_construction' => 0,
-        'location' => 'default',
-        'raided' => null,
-      ];
+  //   foreach (BOXES as $spaceId) {
+  //     $data = [
+  //       'id' => $spaceId,
+  //       'battle' => 0,
+  //       'control' => NEUTRAL,
+  //       'control_start_of_turn' => NEUTRAL,
+  //       'units_start_of_turn' => NONE,
+  //       'defender' => null,
+  //       'fort_construction' => 0,
+  //       'location' => 'default',
+  //       'raided' => null,
+  //     ];
 
-      $spaces[$spaceId] = $data;
-    }
+  //     $spaces[$spaceId] = $data;
+  //   }
 
-    self::create($spaces, null);
-  }
+  //   self::create($spaces, null);
+  // }
 
   public static function getUiData()
   {

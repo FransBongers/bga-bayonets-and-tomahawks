@@ -242,7 +242,8 @@ class Notifications
     ];
   }
 
-  public static function getBattleRollSequenceName($battleRollsSequenceStep) {
+  public static function getBattleRollSequenceName($battleRollsSequenceStep)
+  {
     switch ($battleRollsSequenceStep) {
       case NON_INDIAN_LIGHT:
         return clienttranslate('Non-Indian Light');
@@ -336,9 +337,10 @@ class Notifications
     ]);
   }
 
-  public static function battle($player, $space)
+  public static function battle($player, $space, $isAttacker)
   {
-    self::notifyAll('battle', clienttranslate('${player_name} attacks ${tkn_boldText_space}'), [
+    $text = $isAttacker ? clienttranslate('${player_name} attacks ${tkn_boldText_space}') : clienttranslate('${player_name} defends ${tkn_boldText_space}');
+    self::notifyAll('battle', $text, [
       'player' => $player,
       'tkn_boldText_space' => $space->getName(),
       'space' => $space,
@@ -364,13 +366,16 @@ class Notifications
     ]);
   }
 
-  
+
   public static function battleMilitiaRoll($player, $diceResults)
   {
-    self::message(clienttranslate('${player_name} rolls ${diceResultsLog} with their remaining ${tkn_boldText_militia}'), [
+    self::notifyAll('battleRolls', clienttranslate('${player_name} rolls ${diceResultsLog} with their remaining ${tkn_boldText_militia}'), [
       'player' => $player,
       'diceResultsLog' => self::diceResultsLog($diceResults),
       'tkn_boldText_militia' => clienttranslate('Militia'),
+      'battleRollsSequenceStep' => MILITIA,
+      'diceResults' => $diceResults,
+      'faction' => $player->getFaction(),
       'i18n' => ['tkn_boldText_militia'],
     ]);
   }
