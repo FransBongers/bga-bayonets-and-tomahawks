@@ -89,7 +89,6 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
 
     $stateArgs = $this->argsActionRoundChooseReaction();
 
-    // TODO: store which AP from card
     $actionPoint = Utils::array_find($stateArgs['actionPoints'], function ($ap) use ($actionPointId) {
       return $actionPointId === $ap['id'];
     });
@@ -100,10 +99,6 @@ class ActionRoundChooseReaction extends \BayonetsAndTomahawks\Models\AtomicActio
 
     $player = self::getPlayer();
     Notifications::chooseReaction($player, $actionPointId);
-    // Notifications::message(clienttranslate('${player_name} holds ${tkn_actionPoint} for Reaction'), [
-    //   'player' => $player,
-    //   'tkn_actionPoint' => $player->getFaction() . ':' . $actionPointId,
-    // ]);
 
     Globals::setReactionActionPointId($actionPointId);
     Stats::incReaction($player->getId(), 1);

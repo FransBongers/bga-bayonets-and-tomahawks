@@ -51,7 +51,6 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     Notifications::discardCardsInPlayMessage();
 
     foreach ($cardsInPlay as $faction => $card) {
-      // TODO: remove indian card
       if ($card !== null && $card->getId() === 'Card45') {
         $card->removeFromPlay();
       } else if ($card !== null) {
@@ -73,8 +72,6 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     $this->performRally($stacksAndSupplySources);
 
     // 5 Advance Round marker and begin next Round (7.1)
-    // TODO: end of year check here?
-
     $currentActionRound = Globals::getActionRound();
     $nextActionRound = null;
     switch ($currentActionRound) {
@@ -112,7 +109,6 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
         $nextActionRound = ACTION_ROUND_4;
         break;
       case WINTER_QUARTERS:
-        // TODO: check how to handle this?
         $nextActionRound = ACTION_ROUND_1;
         break;
     }

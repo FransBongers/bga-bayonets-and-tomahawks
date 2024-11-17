@@ -136,17 +136,6 @@ class MoveStack extends \BayonetsAndTomahawks\Actions\UnitMovement
       }
     }
 
-    // /**
-    //  * TODO: check what needs to be done with these markers.
-    //  * They are only moved during retreat anyway?
-    //  */
-    // $otherMarkers = Utils::filter($originMarkers, function ($marker) {
-    //   return !in_array($marker->getType(), [OUT_OF_SUPPLY_MARKER, ROUT_MARKER]);
-    // });
-    // foreach($otherMarkers as $marker) {
-    //   $marker->setLocation(Locations::stackMarker($destinationId, $playerFaction));
-    //   $movedMarkers[] = $marker;
-    // }
 
     Units::move($unitIds, $destinationId, null, $originId);
 

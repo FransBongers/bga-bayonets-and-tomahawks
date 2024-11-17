@@ -245,7 +245,6 @@ class VagariesOfWarPickUnits extends \BayonetsAndTomahawks\Actions\LogisticsRoun
               return $unit->isColonialLight();
             });
           }
-          // TODO: if not possible draw piece from bag
           break;
       }
     }

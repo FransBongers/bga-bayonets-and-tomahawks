@@ -79,7 +79,6 @@ class BattleRout extends \BayonetsAndTomahawks\Actions\Battle
         'eliminate' => true,
       ]));
     }
-    // REPLACE frienly fort
 
     $this->resolveAction(['automatic' => true]);
   }

@@ -388,7 +388,6 @@ class Movement extends \BayonetsAndTomahawks\Actions\UnitMovement
 
     $roughSeasActive = Cards::isCardInPlay(FRENCH, ROUGH_SEAS_CARD_ID);
 
-    // TODO: filter units that are locked in battle?
     $unitsThatCanMove = Utils::filter($units, function ($unit) use ($adjacent, $ignoreAlreadyMovedCheck, $currentNumberOfMoves, $mpMultiplier, $source, $forcedMarchAvailable, $roughSeasActive) {
       if ($roughSeasActive && $unit->isFleet()) {
         return false;

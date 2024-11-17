@@ -68,7 +68,6 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
 
     $playersPerFaction = Players::getPlayersForFactions();
 
-    // TODO: filter units that have already fought in / retreated from a previous battle
     $unitsPerFaction = $this->getUnitsPerFaction($space);
 
     $markers = $this->placeMarkers($attackingFaction, $defendingFaction);
@@ -179,7 +178,6 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
-  // TODO: filter units that have already fought in / retreated from a previous battle
   private function getUnitsPerFaction($space)
   {
 

@@ -30,12 +30,6 @@ trait TurnTrait
 
   function stSetupYear()
   {
-    // $year = Globals::getYear();
-    // $year += 1;
-    // Globals::setYear($year);
-    // Globals::setActionRound(ACTION_ROUND_1);
-    // TODO: move tokens?
-
     // TODO: check how we should handle giving extra time
     $players = Players::getAll();
     foreach ($players as $player) {

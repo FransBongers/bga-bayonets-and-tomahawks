@@ -425,7 +425,6 @@ const BOTH = 'both';
 
 /**
  * Tokens / markers
- * TODO: rename these to yearMarker, etc..
  */
 const YEAR_MARKER = 'year_marker';
 const ROUND_MARKER = 'round_marker';
