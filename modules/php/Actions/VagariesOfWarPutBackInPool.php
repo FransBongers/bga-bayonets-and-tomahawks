@@ -52,8 +52,23 @@ class VagariesOfWarPutBackInPool extends \BayonetsAndTomahawks\Actions\Logistics
       return $token->isVagariesOfWarToken();
     });
 
+    usort($vagariesOfWarTokens, function ($a, $b) {
+      return $a->getStackOrder() - $b->getStackOrder();
+    });
+
     foreach ($vagariesOfWarTokens as $token) {
-      $token->returnToPool($pool);
+      if ($token->isReduced()) {
+        $token->setReduced(0);
+      }
+      if (
+        $token->getCounterId() === VOW_PICK_ONE_COLONIAL_LIGHT_PUT_BACK &&
+        Units::countInLocation(POOL_BRITISH_COLONIAL_LIGHT) === 0 &&
+        Units::countInLocation(POOL_BRITISH_COLONIAL_VOW) === 0
+      ) {
+        $token->removeFromPlay();
+      } else {
+        $token->returnToPool($pool);
+      }
     }
 
     $this->resolveAction(['automatic' => true], true);
@@ -67,9 +82,7 @@ class VagariesOfWarPutBackInPool extends \BayonetsAndTomahawks\Actions\Logistics
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreVagariesOfWarPutBackInPool()
-  {
-  }
+  public function stPreVagariesOfWarPutBackInPool() {}
 
 
   // ....###....########...######....######.

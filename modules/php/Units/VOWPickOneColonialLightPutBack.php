@@ -10,5 +10,7 @@ class VOWPickOneColonialLightPutBack extends \BayonetsAndTomahawks\Models\Vagari
     $this->counterText = clienttranslate('Pick 1 Colonial Light unit');
     $this->faction = BRITISH;
     $this->putTokenBackInPool = true;
+    // Last so it is resolved last when returning VoW tokens back to the pool
+    $this->stackOrder = 100;
   }
 }

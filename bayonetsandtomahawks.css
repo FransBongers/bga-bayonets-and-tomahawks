@@ -2716,6 +2716,13 @@ body > .card {
   background-size: 1200% 1100%;
 }
 
+.bt_token_side[data-counter-id=VOWPickOneColonialLightPutBack_reduced] {
+  background-position-x: 36.3636363636%;
+  background-position-y: 100%;
+  background-image: url("img/unit_tokens_bri.webp");
+  background-size: 1200% 1100%;
+}
+
 .bt_token_side[data-counter-id=CanonniersBombardiers_reduced] {
   background-position-x: 0%;
   background-position-y: 0%;

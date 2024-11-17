@@ -6847,11 +6847,12 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_vagariesOfWarPickUnits = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, units, location;
+            var _a, units, location, vowToken;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _a = notif.args, units = _a.units, location = _a.location;
+                        _a = notif.args, units = _a.units, location = _a.location, vowToken = _a.vowToken;
+                        this.game.tokenManager.updateCardInformations(vowToken);
                         return [4, this.game.pools.stocks[location].addCards(units)];
                     case 1:
                         _b.sent();
@@ -10882,6 +10883,7 @@ var VagariesOfWarPickUnitsState = (function () {
         var _a;
         this.selectedUnitIds = [];
         this.selectedVoWToken = null;
+        this.autoSelectedToken = false;
         this.vowTokenNumberOfUnitsMap = (_a = {},
             _a[VOW_PICK_ONE_ARTILLERY_FRENCH] = 1,
             _a[VOW_PICK_TWO_ARTILLERY_BRITISH] = 2,
@@ -10896,6 +10898,7 @@ var VagariesOfWarPickUnitsState = (function () {
         this.args = args;
         this.selectedUnitIds = [];
         this.selectedVoWToken = null;
+        this.autoSelectedToken = false;
         this.game.tabbedColumn.changeTab('pools');
         this.updateInterfaceInitialStep();
     };
@@ -10903,11 +10906,20 @@ var VagariesOfWarPickUnitsState = (function () {
         debug('Leaving VagariesOfWarPickUnitsState');
     };
     VagariesOfWarPickUnitsState.prototype.setDescription = function (activePlayerId) { };
+    VagariesOfWarPickUnitsState.prototype.updateInterfaceNextStep = function () {
+        if (this.args.options[this.selectedVoWToken].length === 0) {
+            this.updateInterfaceConfirmDrawAdditionalPiece();
+        }
+        else {
+            this.updateInterfaceSelectUnits();
+        }
+    };
     VagariesOfWarPickUnitsState.prototype.updateInterfaceInitialStep = function () {
         var _this = this;
         if (Object.keys(this.args.options).length === 1) {
             this.selectedVoWToken = Object.keys(this.args.options)[0];
-            this.updateInterfaceSelectUnits();
+            this.autoSelectedToken = true;
+            this.updateInterfaceNextStep();
             return;
         }
         this.game.clearPossible();
@@ -10925,7 +10937,7 @@ var VagariesOfWarPickUnitsState = (function () {
                 }),
                 callback: function () {
                     _this.selectedVoWToken = counterId;
-                    _this.updateInterfaceSelectUnits();
+                    _this.updateInterfaceNextStep();
                 },
             });
         });
@@ -10934,9 +10946,44 @@ var VagariesOfWarPickUnitsState = (function () {
         });
         this.game.addUndoButtons(this.args);
     };
+    VagariesOfWarPickUnitsState.prototype.updateInterfaceConfirmDrawAdditionalPiece = function () {
+        var _this = this;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} may draw one additional Vagaries of War token for ${tkn_unit}: not possible to pick units'),
+            args: {
+                you: '${you}',
+                tkn_unit: this.selectedVoWToken,
+            },
+        });
+        this.game.addPrimaryActionButton({
+            id: 'draw_btn',
+            text: _('Draw VoW token'),
+            callback: function () {
+                _this.game.clearPossible();
+                _this.game.takeAction({
+                    action: 'actVagariesOfWarPickUnits',
+                    args: {
+                        vowTokenId: _this.selectedVoWToken,
+                        selectedUnitIds: [],
+                        drawToken: true,
+                    },
+                });
+            },
+        });
+        if (this.autoSelectedToken) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
+        }
+        else {
+            this.game.addCancelButton();
+        }
+    };
     VagariesOfWarPickUnitsState.prototype.updateInterfaceSelectUnits = function () {
         var _this = this;
-        var numberOfUnitsToSelect = this.vowTokenNumberOfUnitsMap[this.selectedVoWToken];
+        var numberOfUnitsToSelect = Math.min(this.vowTokenNumberOfUnitsMap[this.selectedVoWToken], this.args.options[this.selectedVoWToken].length);
         if (this.selectedUnitIds.length === numberOfUnitsToSelect) {
             this.updateInterfaceConfirm();
             return;
@@ -10965,7 +11012,15 @@ var VagariesOfWarPickUnitsState = (function () {
                 },
             });
         });
-        this.game.addCancelButton();
+        if (this.autoSelectedToken) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
+        }
+        else {
+            this.game.addCancelButton();
+        }
     };
     VagariesOfWarPickUnitsState.prototype.updateInterfaceConfirm = function () {
         var _this = this;

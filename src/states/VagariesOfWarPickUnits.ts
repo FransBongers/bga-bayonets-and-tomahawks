@@ -3,6 +3,7 @@ class VagariesOfWarPickUnitsState implements State {
   private args: OnEnteringVagariesOfWarPickUnitsStateArgs;
   private selectedUnitIds: string[] = [];
   private selectedVoWToken: string = null;
+  private autoSelectedToken = false;
 
   private vowTokenNumberOfUnitsMap = {
     [VOW_PICK_ONE_ARTILLERY_FRENCH]: 1,
@@ -21,6 +22,7 @@ class VagariesOfWarPickUnitsState implements State {
     this.args = args;
     this.selectedUnitIds = [];
     this.selectedVoWToken = null;
+    this.autoSelectedToken = false;
     this.game.tabbedColumn.changeTab('pools');
     this.updateInterfaceInitialStep();
   }
@@ -47,10 +49,19 @@ class VagariesOfWarPickUnitsState implements State {
   // .##....##....##....##.......##........##....##
   // ..######.....##....########.##.........######.
 
+  private updateInterfaceNextStep() {
+    if (this.args.options[this.selectedVoWToken].length === 0) {
+      this.updateInterfaceConfirmDrawAdditionalPiece();
+    } else {
+      this.updateInterfaceSelectUnits();
+    }
+  }
+
   private updateInterfaceInitialStep() {
     if (Object.keys(this.args.options).length === 1) {
       this.selectedVoWToken = Object.keys(this.args.options)[0];
-      this.updateInterfaceSelectUnits();
+      this.autoSelectedToken = true;
+      this.updateInterfaceNextStep();
       return;
     }
 
@@ -71,7 +82,7 @@ class VagariesOfWarPickUnitsState implements State {
         }),
         callback: () => {
           this.selectedVoWToken = counterId;
-          this.updateInterfaceSelectUnits();
+          this.updateInterfaceNextStep();
         },
       });
     });
@@ -82,9 +93,49 @@ class VagariesOfWarPickUnitsState implements State {
     this.game.addUndoButtons(this.args);
   }
 
+  private updateInterfaceConfirmDrawAdditionalPiece() {
+    this.game.clearPossible();
+    this.game.clientUpdatePageTitle({
+      text: _(
+        '${you} may draw one additional Vagaries of War token for ${tkn_unit}: not possible to pick units'
+      ),
+      args: {
+        you: '${you}',
+        tkn_unit: this.selectedVoWToken,
+      },
+    });
+
+    this.game.addPrimaryActionButton({
+      id: 'draw_btn',
+      text: _('Draw VoW token'),
+      callback: () => {
+        this.game.clearPossible();
+        this.game.takeAction({
+          action: 'actVagariesOfWarPickUnits',
+          args: {
+            vowTokenId: this.selectedVoWToken,
+            selectedUnitIds: [],
+            drawToken: true,
+          },
+        });
+      },
+    });
+
+    if (this.autoSelectedToken) {
+      this.game.addPassButton({
+        optionalAction: this.args.optionalAction,
+      });
+      this.game.addUndoButtons(this.args);
+    } else {
+      this.game.addCancelButton();
+    }
+  }
+
   private updateInterfaceSelectUnits() {
-    const numberOfUnitsToSelect =
-      this.vowTokenNumberOfUnitsMap[this.selectedVoWToken];
+    const numberOfUnitsToSelect = Math.min(
+      this.vowTokenNumberOfUnitsMap[this.selectedVoWToken],
+      this.args.options[this.selectedVoWToken].length
+    );
 
     if (this.selectedUnitIds.length === numberOfUnitsToSelect) {
       this.updateInterfaceConfirm();
@@ -93,7 +144,9 @@ class VagariesOfWarPickUnitsState implements State {
     this.game.clearPossible();
 
     this.game.clientUpdatePageTitle({
-      text: _('${you} must select a unit for ${tkn_unit} (${number} remaining)'),
+      text: _(
+        '${you} must select a unit for ${tkn_unit} (${number} remaining)'
+      ),
       args: {
         you: '${you}',
         tkn_unit: this.selectedVoWToken,
@@ -118,7 +171,14 @@ class VagariesOfWarPickUnitsState implements State {
       })
     );
 
-    this.game.addCancelButton();
+    if (this.autoSelectedToken) {
+      this.game.addPassButton({
+        optionalAction: this.args.optionalAction,
+      });
+      this.game.addUndoButtons(this.args);
+    } else {
+      this.game.addCancelButton();
+    }
   }
 
   private updateInterfaceConfirm() {
@@ -168,7 +228,6 @@ class VagariesOfWarPickUnitsState implements State {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
-
 
   //  ..######..##.......####..######..##....##
   //  .##....##.##........##..##....##.##...##.

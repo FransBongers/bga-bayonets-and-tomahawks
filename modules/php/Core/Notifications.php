@@ -714,7 +714,7 @@ class Notifications
     ]);
   }
 
-  public static function drawnReinforcements($player, $units, $location)
+  public static function drawnReinforcements($player, $units, $location, $additionalDraw)
   {
     $textMap = [
       REINFORCEMENTS_FLEETS => clienttranslate('${player_name} draws Fleets: ${unitsLog}'),
@@ -722,8 +722,9 @@ class Notifications
       REINFORCEMENTS_FRENCH => clienttranslate('${player_name} draws French reinforcements: ${unitsLog}'),
       REINFORCEMENTS_COLONIAL => clienttranslate('${player_name} draws Colonial reinforcements: ${unitsLog}')
     ];
+    $text = !$additionalDraw ? $textMap[$location] : clienttranslate('${player_name} draws ${unitsLog}');
 
-    self::notifyAll("drawnReinforcements", $textMap[$location], [
+    self::notifyAll("drawnReinforcements", $text, [
       'player' => $player,
       'units' => $units,
       'location' => $location,
@@ -1173,12 +1174,13 @@ class Notifications
     ]);
   }
 
-  public static function vagariesOfWarPickUnits($player, $counterId, $units, $location)
+  public static function vagariesOfWarPickUnits($player, $vowToken, $units, $location)
   {
     self::notifyAll("vagariesOfWarPickUnits", clienttranslate('${player_name} uses ${tkn_unit_vowToken} to pick ${unitsLog}'), [
       'player' => $player,
       'unitsLog' => self::getUnitsLog($units),
-      'tkn_unit_vowToken' => $counterId,
+      'tkn_unit_vowToken' => $vowToken->getCounterId(),
+      'vowToken' => $vowToken,
       'units' => $units,
       'location' => $location,
     ]);

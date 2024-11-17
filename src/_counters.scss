@@ -221,6 +221,14 @@ $british-units: (
   }
 }
 
+.bt_token_side[data-counter-id=VOWPickOneColonialLightPutBack_reduced] {
+  background-position-x: math.div(((125 - 1) % 12 * 100%), 11);
+  background-position-y: math.div(math.floor(calc((125 - 1) / 12)) * 100%, 10);
+  background-image: url('img/unit_tokens_bri.webp');
+  background-size: 1200% 1100%;
+}
+
+
 $french-units: (
   1: 'CanonniersBombardiers_reduced',
   2: 'CanonniersBombardiers',

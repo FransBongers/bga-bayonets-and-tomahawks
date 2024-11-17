@@ -842,8 +842,10 @@ class NotificationManager {
   async notif_vagariesOfWarPickUnits(
     notif: Notif<NotifVagariesOfWarPickUnitsArgs>
   ) {
-    const { units, location } = notif.args;
+    const { units, location, vowToken } = notif.args;
+    this.game.tokenManager.updateCardInformations(vowToken)
     await this.game.pools.stocks[location].addCards(units);
+
   }
 
   async notif_winterQuartersAddUnitsToPools(

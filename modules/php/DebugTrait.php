@@ -59,7 +59,7 @@ trait DebugTrait
     // Units::moveAllInLocation(MIRAMICHY, BEVERLEY);
     // Units::moveAllInLocation(LE_DETROIT, BEVERLEY);
     // Units::moveAllInLocation(BOSTON, WINCHESTER);
-    // Units::moveAllInLocation(NEW_YORK, WINCHESTER);
+    // Units::moveAllInLocation(POOL_BRITISH_LIGHT, REMOVED_FROM_PLAY);
     // Units::moveAllInLocation(NEW_LONDON, WINCHESTER);
     // Units::moveAllInLocation(NEW_YORK, ISLE_AUX_NOIX);
 
@@ -67,10 +67,10 @@ trait DebugTrait
     // Globals::setCurrentStepOfRound(SELECT_CARD_TO_PLAY_STEP);
     // Cards::get('Card47')->setLocation(Locations::cardInPlay(INDIAN));
 
-    // Units::get('unit_121')->setLocation(LOSSES_BOX_BRITISH);
+    // Units::get('unit_95')->setLocation(REMOVED_FROM_PLAY);
     // Units::get('unit_7')->setLocation(BAYE_DE_CATARACOUY);
     // Units::get('unit_44')->setLocation(TICONDEROGA);
-    // Units::get('unit_45')->setLocation(HALIFAX);
+    // Units::get('unit_92')->setLocation(HALIFAX);
     // Units::get('unit_3')->setLocation(LOSSES_BOX_FRENCH);
     // Units::get('unit_4')->setLocation(REMOVED_FROM_PLAY);
     // Units::get('unit_5')->setLocation(REMOVED_FROM_PLAY);

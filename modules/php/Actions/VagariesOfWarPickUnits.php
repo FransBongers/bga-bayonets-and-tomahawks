@@ -10,6 +10,7 @@ use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\AtomicActions;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Scenarios;
@@ -63,9 +64,7 @@ class VagariesOfWarPickUnits extends \BayonetsAndTomahawks\Actions\LogisticsRoun
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreVagariesOfWarPickUnits()
-  {
-  }
+  public function stPreVagariesOfWarPickUnits() {}
 
 
   // ....###....########...######....######.
@@ -114,6 +113,7 @@ class VagariesOfWarPickUnits extends \BayonetsAndTomahawks\Actions\LogisticsRoun
 
     $counterId = $args['vowTokenId'];
     $selectedUnitIds = $args['selectedUnitIds'];
+    $drawToken = isset($args['drawToken']) ? $args['drawToken'] : false;
 
     $vagariesOfWarTokens = $this->getVagariesOfWarTokens();
     $options = $this->getOptions($vagariesOfWarTokens);
@@ -124,11 +124,9 @@ class VagariesOfWarPickUnits extends \BayonetsAndTomahawks\Actions\LogisticsRoun
 
     $units = $options[$counterId];
 
-    $selectedUnitIds = array_unique($selectedUnitIds);
-
-    if (count($selectedUnitIds) !== $this->vowTokenNumberOfUnitsMap[$counterId]) {
-      throw new \feException("ERROR 017");
-    }
+    $info = $this->ctx->getInfo();
+    $pool = $info['pool'];
+    $player = self::getPlayer();
 
     $vowToken = Utils::array_find($vagariesOfWarTokens, function ($token) use ($counterId) {
       return $token->getCounterId() === $counterId;
@@ -138,26 +136,47 @@ class VagariesOfWarPickUnits extends \BayonetsAndTomahawks\Actions\LogisticsRoun
       throw new \feException("ERROR 018");
     }
 
-    $selectedUnits = Utils::filter($units, function ($unit) use ($selectedUnitIds) {
-      return in_array($unit->getId(), $selectedUnitIds);
-    });
+    // Pick units
+    if (count($units) > 0) {
+      $selectedUnitIds = array_unique($selectedUnitIds);
 
-    if (count($selectedUnits) !== count($selectedUnitIds)) {
-      throw new \feException("ERROR 019");
+      $requiredNumberToSelect = min($this->vowTokenNumberOfUnitsMap[$counterId], count($units));
+
+      if (count($selectedUnitIds) !== $requiredNumberToSelect) {
+        throw new \feException("ERROR 017");
+      }
+  
+      $selectedUnits = Utils::filter($units, function ($unit) use ($selectedUnitIds) {
+        return in_array($unit->getId(), $selectedUnitIds);
+      });
+  
+      if (count($selectedUnits) !== count($selectedUnitIds)) {
+        throw new \feException("ERROR 019");
+      }
+  
+      $location = $this->poolReinforcementsMap[$pool];
+  
+      Units::move($selectedUnitIds, $location);
+
+      if ($vowToken->getPutTokenBackInPool()) {
+        // $vowToken->returnToPool($pool);
+        $vowToken->setReduced(1);
+      }
+  
+      Notifications::vagariesOfWarPickUnits($player, $vowToken, $selectedUnits, $location);
+    } else if (count($units) === 0) {
+      // No units to pick, draw additional token
+      if(!$drawToken) {
+        throw new \feException("ERROR 100");
+      }
+      Notifications::message(clienttranslate('${player_name} uses ${tkn_unit_vowToken} draw one additional VoW token'),[
+        'player' => $player,
+        'tkn_unit_vowToken' => $vowToken->getCounterId(),
+      ]);
+      AtomicActions::get(DRAW_REINFORCEMENTS)->drawReinforcement($player, $pool, 1, true);
     }
 
-    $player = self::getPlayer();
-
-    $info = $this->ctx->getInfo();
-    $pool = $info['pool'];
-    $location = $this->poolReinforcementsMap[$pool];
-
-    Units::move($selectedUnitIds, $location);
-
-    Notifications::vagariesOfWarPickUnits($player, $counterId, $selectedUnits, $location);
-    if ($vowToken->getPutTokenBackInPool()) {
-      $vowToken->returnToPool($pool);
-    } else {
+    if (!$vowToken->getPutTokenBackInPool()) {
       $vowToken->removeFromPlay();
     }
 
@@ -187,7 +206,7 @@ class VagariesOfWarPickUnits extends \BayonetsAndTomahawks\Actions\LogisticsRoun
     $picked = Units::getInLocation($this->poolReinforcementsMap[$pool])->toArray();
 
     $vagariesOfWarTokens = Utils::filter($picked, function ($unit) {
-      return $unit->isVagariesOfWarToken();
+      return $unit->isVagariesOfWarToken() && !$unit->isReduced();
     });
     return $vagariesOfWarTokens;
   }
@@ -228,7 +247,6 @@ class VagariesOfWarPickUnits extends \BayonetsAndTomahawks\Actions\LogisticsRoun
           }
           // TODO: if not possible draw piece from bag
           break;
-          
       }
     }
 

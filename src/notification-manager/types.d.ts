@@ -288,6 +288,7 @@ interface NotifUpdateCurrentStepOfRoundArgs {
 interface NotifVagariesOfWarPickUnitsArgs extends NotifWithPlayerArgs {
   units: BTUnit[];
   location: string;
+  vowToken: BTUnit;
 }
 
 interface NotifWinterQuartersDisbandColonialBrigadesArgs {
