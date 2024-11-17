@@ -297,7 +297,8 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
 
     // 3. A Wilderness Space or friednly Indian Nation Village
     $wildernessSpaces = Utils::filter($spacesWithoutEnemyUnits, function ($space) use ($faction) {
-      return $space->getControl() === NEUTRAL || ($space->getControl() === $faction && in_array($space->getIndianVillage(), [CHEROKEE, IROQUOIS]));
+      $isIndianNationVillage = in_array($space->getIndianVillage(), [CHEROKEE, IROQUOIS]);
+      return ($space->getControl() === NEUTRAL && !$isIndianNationVillage) || ($space->getControl() === $faction && $isIndianNationVillage);
     });
 
     if (count($wildernessSpaces) > 0) {
@@ -321,9 +322,9 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
 
     // 5. 
     if (!$isRouted) {
-      $step5AResult = $this->getStep5RetreatPriorities($spaces, $faction, $spaceOfBattle);
-      if (count($step5AResult['spaceIds']) > 0) {
-        return $step5AResult;
+      $step5Result = $this->getStep5RetreatPriorities($spaces, $faction, $spaceOfBattle);
+      if (isset($step5Result['spaceIds']) && count($step5Result['spaceIds']) > 0) {
+        return $step5Result;
       }
     }
 
@@ -373,10 +374,11 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
 
     // 5A.2 Neutral Indian Nation Villages
     $villagesOfNeutralIndianNation = Utils::filter($spaces, function ($space) {
-      return in_array($space->getIndianVillage(), [CHEROKEE, IROQUOIS]) && $space->getDefaultControl() === NEUTRAL;
+      return in_array($space->getIndianVillage(), [CHEROKEE, IROQUOIS]) && $space->getDefaultControl() === INDIAN;
     });
 
-    if (count($villagesOfNeutralIndianNation) > 0) {
+    // Stack needs to be able to overwhelm unit of Neutral Indian Nation
+    if ($friendlyUnitCount > 3 && count($villagesOfNeutralIndianNation) > 0) {
       return [
         'spaceIds' => BTHelpers::returnIds($villagesOfNeutralIndianNation),
         'overwhelmDuringRetreat' => true,
@@ -416,5 +418,10 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
         'overwhelmDuringRetreat' => false,
       ];
     }
+
+    return [
+      'spaceIds' => [],
+      'overwhelmDuringRetreat' => false,
+    ];
   }
 }

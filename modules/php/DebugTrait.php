@@ -41,13 +41,13 @@ trait DebugTrait
 
   function debug_checkRetreatOptions()
   {
-    $spaceId = ALBANY;
-    $faction = BRITISH;
+    $spaceId = BEVERLEY;
+    $faction = FRENCH;
     $space = Spaces::get($spaceId);
     $isAttacker = $faction !== $space->getDefender();
 
     $action = AtomicActions::get(BATTLE_RETREAT_CHECK_OPTIONS);
-    $retreatOptions = $action->getRetreatOptions($spaceId, $faction, $isAttacker);
+    $retreatOptions = $action->getRetreatOptions($spaceId, $faction, $isAttacker, false);
     Notifications::log('isAttacker', $isAttacker);
     Notifications::log('retreatOptions', $retreatOptions);
   }
@@ -55,8 +55,12 @@ trait DebugTrait
   function debug_test()
   {
 
-    Spaces::get(ISLE_AUX_NOIX)->setControl(BRITISH);
-    // Units::moveAllInLocation(MIRAMICHY, LAKE_GEORGE);
+    // Spaces::get(BEVERLEY)->setControl(FRENCH);
+    // Units::moveAllInLocation(MIRAMICHY, BEVERLEY);
+    // Units::moveAllInLocation(LE_DETROIT, BEVERLEY);
+    // Units::moveAllInLocation(BOSTON, WINCHESTER);
+    // Units::moveAllInLocation(NEW_YORK, WINCHESTER);
+    // Units::moveAllInLocation(NEW_LONDON, WINCHESTER);
     // Units::moveAllInLocation(NEW_YORK, ISLE_AUX_NOIX);
 
     // GameMap::placeMarkerOnStack(Players::getPlayerForFaction(BRITISH), ROUT_MARKER, Spaces::get(BOSTON), BRITISH);

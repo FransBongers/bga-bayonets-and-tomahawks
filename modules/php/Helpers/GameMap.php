@@ -121,13 +121,6 @@ class GameMap extends \APP_DbObject
     });
   }
 
-  // public static function requiredForOutnumber($space, $faction, $unitsOnSpace)
-  // {
-  //   $enemyUnits = Utils::filter($unitsOnSpace, function ($unit) use ($faction) {
-  //     return $unit->getFaction() !== $faction && !$unit->isCommander();
-  //   });
-  // }
-
   /**
    * Returns minimum number of units required to overwhelm enemy
    * - returns 1000 if not possible to overwhelm

@@ -537,7 +537,7 @@ $machinestates = array(
 
     ST_RAID_SELECT_TARGET => [
         'name' => 'raidSelectTarget',
-        'description' => clienttranslate('${actplayer} must select a Space to RaidSelectTarget'),
+        'description' => clienttranslate('${actplayer} must select a Space to Raid'),
         'descriptionmyturn' => clienttranslate('${you}'),
         'type' => 'activeplayer',
         'args' => 'argsAtomicAction',

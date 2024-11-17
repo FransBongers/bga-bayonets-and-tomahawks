@@ -27,7 +27,9 @@ class Kahnistioh extends \BayonetsAndTomahawks\Models\Space
   {
     $control = Globals::getControlIroquois();
     if ($control === NEUTRAL) {
-      return NEUTRAL;
+      // Indian because we need to make a distinction between
+      // neutral wilderness spaces and neutral Indian Nation spaces
+      return INDIAN;
     } else {
       return $control;
     }

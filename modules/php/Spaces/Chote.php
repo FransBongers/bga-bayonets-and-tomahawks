@@ -27,7 +27,7 @@ class Chote extends \BayonetsAndTomahawks\Models\Space
   {
     $control = Globals::getControlCherokee();
     if ($control === NEUTRAL) {
-      return NEUTRAL;
+      return INDIAN;
     } else {
       return $control;
     }

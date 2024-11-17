@@ -137,45 +137,6 @@
   }
 }
 
-// .bt_road {
-//   min-height: calc(var(--btMarkerScale) * 44px);
-//   max-height: calc(var(--btMarkerScale) * 44px);
-//   min-width: calc(var(--btMarkerScale) * 44px);
-//   max-width: calc(var(--btMarkerScale) * 44px);
-//   background-image: url('img/markers_2.webp');
-//   background-size: 800% 600%;
-//   box-sizing: border-box;
-//   border: calc(var(--btMapScale) * 1px) solid black;
-//   border-radius: 5%;
-// }
-
-// .bt_road[data-road='none'] {
-//   display: none;
-//   background-image: none;
-// }
-
-// .bt_road.bt_selectable {
-//   display: initial;
-//   box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) base.$selectable-color !important;
-//   cursor: pointer;
-// }
-
-// .bt_road.bt_selected,
-// .bt_road.bt_selectable:hover {
-//   display: initial;
-//   box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) base.$selected-color !important;
-//   cursor: pointer;
-// }
-
-// .bt_road[data-road='construction'] {
-//   background-position-x: math.div(5, 7) * 100%;
-//   background-position-y: math.div(0, 5) * 100%;
-// }
-
-// .bt_road[data-road='road'] {
-//   background-position-x: math.div(2, 7) * 100%;
-//   background-position-y: math.div(3, 5) * 100%;
-// }
 
 .bt_space {
   position: absolute !important;
