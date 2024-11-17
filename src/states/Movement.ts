@@ -373,8 +373,12 @@ class MovementState implements State {
   }
 
   private selectedUnitsWillLeaveLoneCommander(): boolean {
-    if (this.unselectedUnits.length > 0 && !this.onlyCommandersUnselected()) {
+    const onlyCommandersUnselected = this.onlyCommandersUnselected();
+    if (!onlyCommandersUnselected) {
       return false;
+    }
+    if (this.args.unitsThatCannotMoveCount === 0 && onlyCommandersUnselected) {
+      return true;
     }
     const commandersThatCannotMove = this.args.unitsThatCannotMove.filter(
       (unit) => this.game.getUnitStaticData(unit).type === COMMANDER

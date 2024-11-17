@@ -11561,8 +11561,12 @@ var MovementState = (function () {
     };
     MovementState.prototype.selectedUnitsWillLeaveLoneCommander = function () {
         var _this = this;
-        if (this.unselectedUnits.length > 0 && !this.onlyCommandersUnselected()) {
+        var onlyCommandersUnselected = this.onlyCommandersUnselected();
+        if (!onlyCommandersUnselected) {
             return false;
+        }
+        if (this.args.unitsThatCannotMoveCount === 0 && onlyCommandersUnselected) {
+            return true;
         }
         var commandersThatCannotMove = this.args.unitsThatCannotMove.filter(function (unit) { return _this.game.getUnitStaticData(unit).type === COMMANDER; });
         return (commandersThatCannotMove.length > 0 && commandersThatCannotMove.length === this.args.unitsThatCannotMove.length);
