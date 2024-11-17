@@ -8,6 +8,7 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Markers;
@@ -46,11 +47,15 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
 
     $outcome = $this->determineOutcome($space);
 
+    $this->checkIndianDesertion($space, $outcome['winner']);
+
     $loser = $outcome['loser'];
     $loserPlayerId = $loser['player']->getId();
     $loserFaction = $loser['faction'];
 
-    if (Utils::array_find($space->getUnits($loserFaction), function ($unit) {return $unit->isFort();}) !== null) {
+    if (Utils::array_find($space->getUnits($loserFaction), function ($unit) {
+      return $unit->isFort();
+    }) !== null) {
       $this->ctx->insertAsBrother(new LeafNode([
         'action' => BATTLE_FORT_ELIMINATION,
         'playerId' => $loserPlayerId,
@@ -98,9 +103,7 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreBattleOutcome()
-  {
-  }
+  public function stPreBattleOutcome() {}
 
 
   // ....###....########...######....######.
@@ -157,6 +160,37 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
 
+  private function checkIndianDesertion($space, $winner)
+  {
+    $isAttacker = $winner['isAttacker'];
+    if (!$isAttacker) {
+      return;
+    }
+    $faction = $winner['faction'];
+    $player = $winner['player'];
+    $enemyFaction = BTHelpers::getOtherFaction($faction);
+
+    $units = $space->getUnits();
+    if (!($space->isSettledSpace($enemyFaction) || Utils::array_some($units, function ($unit) use ($enemyFaction) {
+      return $unit->isFort() && $unit->getFaction() === $enemyFaction;
+    }))) {
+      return;
+    }
+
+    $indianUnits = Utils::filter($units, function ($unit) use ($faction) {
+      return $unit->isIndian() && $unit->getFaction() === $faction;
+    });
+    if (count($indianUnits) === 0) {
+      return;
+    }
+    shuffle($indianUnits);
+    Notifications::message(clienttranslate('${tkn_boldText_indianDesertion} triggers'), [
+      'tkn_boldText_indianDesertion' => clienttranslate('Indian Desertion'),
+      'i18n' => ['tkn_boldText_indianDesertion']
+    ]);
+    $indianUnits[0]->eliminate($player);
+  }
+
   private function determineOutcome($space)
   {
 
@@ -185,7 +219,7 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
     // To check: can attacking side have militia in the battle?
     $attackerMilitia = count(Markers::getOfTypeInLocation($militiaCounterMap[$attackerFaction], Locations::stackMarker($spaceId, $attackerFaction)));
     $defenderMilitia = count(Markers::getOfTypeInLocation($militiaCounterMap[$defenderFaction], Locations::stackMarker($spaceId, $defenderFaction)));
-    
+
     $attackerUnitCount = count($attackersUnits) + $attackerMilitia;
     $defenderUnitCount = count($defendersUnits) + $defenderMilitia;
 
