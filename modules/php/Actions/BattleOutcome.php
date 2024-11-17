@@ -9,6 +9,7 @@ use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
 use BayonetsAndTomahawks\Helpers\BTHelpers;
+use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Markers;
@@ -47,11 +48,14 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
 
     $outcome = $this->determineOutcome($space);
 
+    $this->returnCommanders();
     $this->checkIndianDesertion($space, $outcome['winner']);
 
     $loser = $outcome['loser'];
     $loserPlayerId = $loser['player']->getId();
     $loserFaction = $loser['faction'];
+
+
 
     if (Utils::array_find($space->getUnits($loserFaction), function ($unit) {
       return $unit->isFort();
@@ -80,6 +84,7 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
         'playerId' => $loserPlayerId,
         'faction' => $loserFaction,
         'spaceId' => $space->getId(),
+        'eliminateNonLightUnits' => isset($loser['eliminateNonLightUnits']) ? $loser['eliminateNonLightUnits'] : false,
       ]));
     }
 
@@ -159,6 +164,24 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  private function returnCommanders()
+  {
+    // Return commanders to their stacks
+    $commanders = $this->getCommandersOnRerollsTrack();
+    $spaceId = Globals::getActiveBattleSpaceId();
+
+    foreach ($commanders as $faction => $unit) {
+      if ($unit === null) {
+        continue;
+      }
+      $unit->setLocation($spaceId);
+      $player = Players::getPlayerForFaction($faction);
+
+      Notifications::battleReturnCommander($player, $unit, $spaceId);
+      GameMap::lastEliminatedUnitCheck($player, $spaceId, $faction);
+    }
+  }
 
   private function checkIndianDesertion($space, $winner)
   {
@@ -269,15 +292,15 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
       $routMarkerCondition = $attackerPosition - $defenderPosition >= 3;
       // TODO add data for this.
       // Store in global?
-      $lastBastionOrFortressEliminated = false;
+      $lastBastionEliminated = Globals::getActiveBattleLastBastionEliminated();
 
       return [
         'loser' => [
           'player' => $defenderPlayer,
           'faction' => $defenderFaction,
           'isAttacker' => false,
-          'isRouted' => $routMarkerCondition || $lastBastionOrFortressEliminated,
-          'eliminateNonLightUnits' => $lastBastionOrFortressEliminated,
+          'isRouted' => $routMarkerCondition || $lastBastionEliminated,
+          'eliminateNonLightUnits' => $routMarkerCondition && $lastBastionEliminated,
         ],
         'winner' => [
           'player' => $attackerPlayer,

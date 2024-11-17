@@ -54,11 +54,12 @@ trait DebugTrait
 
   function debug_test()
   {
+    Notifications::log('lastBation',Globals::getActiveBattleLastBastionEliminated());
 
     // Spaces::get(BEVERLEY)->setControl(FRENCH);
     // Units::moveAllInLocation(MIRAMICHY, BEVERLEY);
-    Units::moveAllInLocation(KAHNISTIOH, LOSSES_BOX_FRENCH);
-    Units::moveAllInLocation(CHOTE, LOSSES_BOX_FRENCH);
+    // Units::moveAllInLocation(QUEBEC, LOUISBOURG);
+    // Units::moveAllInLocation(CHOTE, LOSSES_BOX_FRENCH);
     // Units::moveAllInLocation(BOSTON, WINCHESTER);
     // Units::moveAllInLocation(POOL_BRITISH_LIGHT, REMOVED_FROM_PLAY);
     // Units::moveAllInLocation(NEW_LONDON, WINCHESTER);

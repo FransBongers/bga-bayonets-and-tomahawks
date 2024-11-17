@@ -43,8 +43,6 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
 
   public function stBattleRetreatCheckOptions()
   {
-    $this->returnCommanders();
-
     $info = $this->ctx->getInfo();
     $faction = $info['faction'];
     $spaceId = $info['spaceId'];
@@ -158,24 +156,6 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
-
-  private function returnCommanders()
-  {
-    // Return commanders to their stacks
-    $commanders = $this->getCommandersOnRerollsTrack();
-    $spaceId = Globals::getActiveBattleSpaceId();
-
-    foreach ($commanders as $faction => $unit) {
-      if ($unit === null) {
-        continue;
-      }
-      $unit->setLocation($spaceId);
-      $player = Players::getPlayerForFaction($faction);
-
-      Notifications::battleReturnCommander($player, $unit, $spaceId);
-      GameMap::lastEliminatedUnitCheck($player, $spaceId, $faction);
-    }
-  }
 
   private function insertRetreatAction($retreatOptions)
   {

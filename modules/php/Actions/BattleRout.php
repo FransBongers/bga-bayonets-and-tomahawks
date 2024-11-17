@@ -47,8 +47,13 @@ class BattleRout extends \BayonetsAndTomahawks\Actions\Battle
     $faction = $info['faction'];
     $spaceId = $info['spaceId'];
     $space = Spaces::get($spaceId);
+    $eliminateNonLightUnits = $info['eliminateNonLightUnits'];
 
     Notifications::battleRout($faction);
+
+    if ($eliminateNonLightUnits) {
+      $this->eliminateAllNonLightUnits($player, $space, $faction);
+    }
 
     $units = $space->getUnits($faction);
 
@@ -149,6 +154,18 @@ class BattleRout extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  private function eliminateAllNonLightUnits($player, $space, $faction)
+  {
+    Notifications::message(clienttranslate('All non-Light units are eliminated'),[]);
+    $units = $space->getUnits($faction);
+    $nonLightUnits = Utils::filter(($units), function ($unit) {
+      return !$unit->isLight();
+    });
+    foreach($nonLightUnits as $unit) {
+      $unit->eliminate($player);
+    }
+  }
 
   private function getUnitsToEliminate($units, $faction)
   {

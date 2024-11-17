@@ -2,8 +2,11 @@
 
 namespace BayonetsAndTomahawks\Models;
 
+use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Notifications;
 use BayonetsAndTomahawks\Helpers\GameMap;
+use BayonetsAndTomahawks\Helpers\Utils;
+use BayonetsAndTomahawks\Managers\Spaces;
 
 class BastionModel extends AbstractUnit
 {
@@ -22,5 +25,14 @@ class BastionModel extends AbstractUnit
     $this->setLocation(REMOVED_FROM_PLAY);
     Notifications::eliminateUnit($player, $this, $previousLocation);
     GameMap::lastEliminatedUnitCheck($player, $previousLocationForCheck, $this->getFaction());
+
+    $units = Spaces::get($previousLocationForCheck)->getUnits();
+
+    $hasAnotherBastion = Utils::array_some($units, function ($unit) {
+      return $unit->isBastion();
+    });
+    if (!$hasAnotherBastion) {
+      Globals::setActiveBattleLastBastionEliminated(true);
+    };
   }
 }

@@ -62,6 +62,7 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
     Globals::setActiveBattleDefenderFaction($defendingFaction);
     Globals::setActiveBattleHighlandBrigadeHit(false);
     Globals::setActiveBattleCoupDeMain(false);
+    Globals::setActiveBattleLastBastionEliminated(false);
 
     $this->ctx->getParent()->updateInfo('attacker', $attackingFaction);
     $this->ctx->getParent()->updateInfo('defender', $defendingFaction);
