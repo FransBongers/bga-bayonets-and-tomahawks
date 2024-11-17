@@ -47,10 +47,11 @@ class EventDelayedSuppliesFromFrance extends \BayonetsAndTomahawks\Models\Atomic
     $indianCard = Cards::getInLocation(Locations::cardInPlay(INDIAN))->toArray()[0];
     $frenchCard = Cards::getInLocation(Locations::cardInPlay(FRENCH))->toArray()[0];
 
+    $frenchAP = array_merge($frenchCard->getActionPoints(), Globals::getAddedAPFrench());
 
     return [
       'indianAP' => $indianCard->getActionPoints(),
-      'frenchAP' => $frenchCard->getActionPoints(),
+      'frenchAP' => $frenchAP,
       // 'indianCard' => $indianCard,
       // 'frenchCard' => $frenchCard,
     ];
