@@ -57,7 +57,8 @@ trait DebugTrait
 
     // Spaces::get(BEVERLEY)->setControl(FRENCH);
     // Units::moveAllInLocation(MIRAMICHY, BEVERLEY);
-    // Units::moveAllInLocation(LE_DETROIT, BEVERLEY);
+    Units::moveAllInLocation(KAHNISTIOH, LOSSES_BOX_FRENCH);
+    Units::moveAllInLocation(CHOTE, LOSSES_BOX_FRENCH);
     // Units::moveAllInLocation(BOSTON, WINCHESTER);
     // Units::moveAllInLocation(POOL_BRITISH_LIGHT, REMOVED_FROM_PLAY);
     // Units::moveAllInLocation(NEW_LONDON, WINCHESTER);
@@ -71,9 +72,9 @@ trait DebugTrait
     // Units::get('unit_7')->setLocation(BAYE_DE_CATARACOUY);
     // Units::get('unit_44')->setLocation(TICONDEROGA);
     // Units::get('unit_92')->setLocation(HALIFAX);
-    // Units::get('unit_3')->setLocation(LOSSES_BOX_FRENCH);
+    // Units::get('unit_58')->setLocation(BEVERLEY);
     // Units::get('unit_4')->setLocation(REMOVED_FROM_PLAY);
-    // Units::get('unit_5')->setLocation(REMOVED_FROM_PLAY);
+    // Units::get('unit_68')->setLocation(REMOVED_FROM_PLAY);
     // Units::get('unit_15')->setLocation(WILLS_CREEK);
     // Units::get('unit_38')->setLocation(WILLS_CREEK);
     // Units::get('unit_92')->setSpent(0);
@@ -83,10 +84,10 @@ trait DebugTrait
     // GameMap::placeMarkerOnStack(Players::get(), ROUT_MARKER, Spaces::get(ALBANY), BRITISH);
 
     // Cards::get('Card25')->insertOnTop(Locations::buildUpDeck(FRENCH));
-    Cards::get('Card06')->insertOnTop(Locations::buildUpDeck(BRITISH));
+    // Cards::get('Card06')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card06')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card06')->insertOnTop(Locations::campaignDeck(BRITISH));
-    Cards::get('Card54')->insertOnTop(Locations::campaignDeck(INDIAN));
+    // Cards::get('Card51')->insertOnTop(Locations::campaignDeck(INDIAN));
 
   }
 

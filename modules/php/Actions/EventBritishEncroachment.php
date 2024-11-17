@@ -8,6 +8,7 @@ use BayonetsAndTomahawks\Core\Engine;
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
 use BayonetsAndTomahawks\Core\Globals;
 use BayonetsAndTomahawks\Core\Stats;
+use BayonetsAndTomahawks\Helpers\BTHelpers;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Units;
@@ -31,9 +32,7 @@ class EventBritishEncroachment extends \BayonetsAndTomahawks\Models\AtomicAction
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreEventBritishEncroachment()
-  {
-  }
+  public function stPreEventBritishEncroachment() {}
 
   // ..######..########....###....########.########
   // .##....##....##......##.##......##....##......
@@ -74,6 +73,8 @@ class EventBritishEncroachment extends \BayonetsAndTomahawks\Models\AtomicAction
       'unitsLog' => Notifications::getUnitsLog($picked),
     ]);
 
+    $indianNationUnits = [];
+
     // TODO: Iroquois and Cherokee
     foreach ($picked as $unit) {
       $villages = Utils::filter(Spaces::getMany($unit->getVillages())->toArray(), function ($space) {
@@ -90,6 +91,7 @@ class EventBritishEncroachment extends \BayonetsAndTomahawks\Models\AtomicAction
         ]);
       } else if ($count > 1) {
         // TODO: insert extra state to pick village?
+        $indianNationUnits[] = $unit;
       } else {
         $space = $villages[0];
         $unit->setLocation($space->getId());
@@ -99,6 +101,14 @@ class EventBritishEncroachment extends \BayonetsAndTomahawks\Models\AtomicAction
           Notifications::loseControl(Players::getPlayerForFaction(BRITISH), $space);
         }
       }
+    }
+
+    if (count($indianNationUnits) > 0) {
+      $this->ctx->insertAsBrother(Engine::buildTree([
+        'action' => EVENT_PLACE_INDIAN_NATION_UNITS,
+        'playerId' => $player->getId(),
+        'unitIds' => BTHelpers::returnIds($indianNationUnits),
+      ]));
     }
 
     $this->resolveAction(['automatic' => true], true);

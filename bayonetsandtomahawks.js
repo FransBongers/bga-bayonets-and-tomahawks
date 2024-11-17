@@ -2560,6 +2560,7 @@ var BayonetsAndTomahawks = (function () {
             eventFrenchLakeWarships: new EventFrenchLakeWarshipsState(this),
             eventHesitantBritishGeneral: new EventHesitantBritishGeneralState(this),
             eventPennsylvaniasPeacePromises: new EventPennsylvaniasPeacePromisesState(this),
+            eventPlaceIndianNationUnits: new EventPlaceIndianNationUnitsState(this),
             eventRoundUpMenAndEquipment: new EventRoundUpMenAndEquipmentState(this),
             eventSmallpoxInfectedBlankets: new EventSmallpoxInfectedBlanketsState(this),
             eventStagedLacrosseGame: new EventStagedLacrosseGameState(this),
@@ -10157,6 +10158,113 @@ var EventPennsylvaniasPeacePromisesState = (function () {
         });
     };
     return EventPennsylvaniasPeacePromisesState;
+}());
+var EventPlaceIndianNationUnitsState = (function () {
+    function EventPlaceIndianNationUnitsState(game) {
+        this.autoSelectedUnit = false;
+        this.game = game;
+    }
+    EventPlaceIndianNationUnitsState.prototype.onEnteringState = function (args) {
+        debug('Entering EventPlaceIndianNationUnitsState');
+        this.args = args;
+        this.autoSelectedUnit = false;
+        this.updateInterfaceInitialStep();
+    };
+    EventPlaceIndianNationUnitsState.prototype.onLeavingState = function () {
+        debug('Leaving EventPlaceIndianNationUnitsState');
+    };
+    EventPlaceIndianNationUnitsState.prototype.setDescription = function (activePlayerId) { };
+    EventPlaceIndianNationUnitsState.prototype.updateInterfaceInitialStep = function () {
+        var _this = this;
+        if (Object.keys(this.args.options).length === 1) {
+            var _a = Object.values(this.args.options)[0], unit = _a.unit, spaces = _a.spaces;
+            this.autoSelectedUnit = true;
+            this.updateInterfaceSelectSpace({ unit: unit, spaces: spaces });
+            return;
+        }
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select a unit to place'),
+            args: {
+                you: '${you}',
+            },
+        });
+        Object.entries(this.args.options).forEach(function (_a) {
+            var unitId = _a[0], data = _a[1];
+            return _this.game.setUnitSelectable({
+                id: unitId,
+                callback: function () { return _this.updateInterfaceSelectSpace(data); },
+            });
+        });
+        this.game.addPassButton({
+            optionalAction: this.args.optionalAction,
+        });
+        this.game.addUndoButtons(this.args);
+    };
+    EventPlaceIndianNationUnitsState.prototype.updateInterfaceSelectSpace = function (_a) {
+        var _this = this;
+        var unit = _a.unit, spaces = _a.spaces;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('${you} must select Space to place ${tkn_unit}'),
+            args: {
+                you: '${you}',
+                tkn_unit: unit.counterId,
+            },
+        });
+        this.game.setUnitSelected({ id: unit.id });
+        spaces.forEach(function (space) {
+            return _this.game.setLocationSelectable({
+                id: space.id,
+                callback: function () { return _this.updateInterfaceConfirm({ unit: unit, space: space }); },
+            });
+        });
+        if (this.autoSelectedUnit) {
+            this.game.addPassButton({
+                optionalAction: this.args.optionalAction,
+            });
+            this.game.addUndoButtons(this.args);
+        }
+        else {
+            this.game.addCancelButton();
+        }
+    };
+    EventPlaceIndianNationUnitsState.prototype.updateInterfaceConfirm = function (_a) {
+        var _this = this;
+        var space = _a.space, unit = _a.unit;
+        this.game.clearPossible();
+        this.game.clientUpdatePageTitle({
+            text: _('Place ${tkn_unit} on ${spaceName}?'),
+            args: {
+                tkn_unit: unit.counterId,
+                spaceName: _(space.name),
+            },
+        });
+        this.game.setLocationSelected({ id: space.id });
+        this.game.setUnitSelected({ id: unit.id });
+        var callback = function () {
+            _this.game.clearPossible();
+            _this.game.takeAction({
+                action: 'actEventPlaceIndianNationUnits',
+                args: {
+                    unitId: unit.id,
+                    spaceId: space.id,
+                },
+            });
+        };
+        if (this.game.settings.get({
+            id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
+        }) === PREF_ENABLED) {
+            callback();
+        }
+        else {
+            this.game.addConfirmButton({
+                callback: callback,
+            });
+        }
+        this.game.addCancelButton();
+    };
+    return EventPlaceIndianNationUnitsState;
 }());
 var EventRoundUpMenAndEquipmentState = (function () {
     function EventRoundUpMenAndEquipmentState(game) {

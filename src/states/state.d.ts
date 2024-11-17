@@ -240,6 +240,13 @@ interface EventPennsylvaniasPeacePromisesStateArgs extends CommonArgs {
   units: BTUnit[];
 }
 
+interface OnEnteringEventPlaceIndianNationUnitsStateArgs extends CommonArgs {
+  options: Record<string, {
+    unit: BTUnit;
+    spaces: BTSpace[];
+  }>;
+}
+
 interface EventRoundUpMenAndEquipmentStateArgs extends CommonArgs {
   options: {
     reduced: BTUnit[];

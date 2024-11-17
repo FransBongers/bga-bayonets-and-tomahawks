@@ -59,6 +59,7 @@ class AtomicActions
     EVENT_FRENCH_LAKE_WARSHIPS => 'EventFrenchLakeWarships',
     EVENT_HESITANT_BRITISH_GENERAL => 'EventHesitantBritishGeneral',
     EVENT_PENNSYLVANIAS_PEACE_PROMISES => 'EventPennsylvaniasPeacePromises',
+    EVENT_PLACE_INDIAN_NATION_UNITS => 'EventPlaceIndianNationUnits',
     EVENT_ROUND_UP_MEN_AND_EQUIPMENT => 'EventRoundUpMenAndEquipment',
     EVENT_SMALLPOX_EPIDEMIC => 'EventSmallpoxEpidemic',
     EVENT_SMALLPOX_INFECTED_BLANKETS => 'EventSmallpoxInfectedBlankets',
