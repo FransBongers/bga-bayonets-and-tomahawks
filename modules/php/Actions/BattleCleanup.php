@@ -12,6 +12,7 @@ use BayonetsAndTomahawks\Helpers\GameMap;
 use BayonetsAndTomahawks\Helpers\Locations;
 use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Cards;
+use BayonetsAndTomahawks\Managers\CustomLogManager;
 use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
@@ -82,6 +83,10 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
     $this->updateControl($space, $winningFaction, $playersPerFaction, $battleContinues);
 
     $this->updateLuckyCannonballAndPerfectVolleysEventAbilities();
+
+    // $activeBattleLog = Globals::getActiveBattleLog();
+
+    // CustomLogManager::addRecord(CUSTOM_LOG_BATTLE_RESULT, $activeBattleLog);
 
     // TODO: write results to log
     Globals::setActiveBattleLog([]);

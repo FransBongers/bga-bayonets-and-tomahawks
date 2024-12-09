@@ -151,7 +151,7 @@ class EventRoundUpMenAndEquipment extends \BayonetsAndTomahawks\Models\AtomicAct
   {
     $units = Units::getAll()->toArray();
     $reducedBritishUnits = Utils::filter($units, function ($unit) {
-      return $unit->getFaction() === BRITISH && $unit->isReduced() && !$unit->isFort();
+      return $unit->getFaction() === BRITISH && $unit->isReduced() && !$unit->isFort() && $unit->getLocation() !== DISBANDED_COLONIAL_BRIGADES;
     });
 
     $unitsInLossesBox = Utils::filter($units, function ($unit) {

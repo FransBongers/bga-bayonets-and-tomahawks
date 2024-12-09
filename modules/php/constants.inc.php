@@ -32,6 +32,12 @@ const AFTER_FINISHING_ACTION = 'afterFinishing';
 const REMOVE_AP = 'REMOVE_AP';
 const ADD_AP = 'ADD_AP';
 
+
+/**
+ * Custom log types
+ */
+const CUSTOM_LOG_BATTLE_RESULT = 'battleResult';
+
 /**
  * State ids / names
  */

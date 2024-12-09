@@ -9,7 +9,7 @@
     display: flex;
     justify-content: center;
     padding: 6px;
-    width: 40px;
+    width: 35px;
 
     svg {
       cursor: pointer;
@@ -87,10 +87,6 @@
     max-height: 60vh;
 
     .bt_victory_track_display {
-      // margin: 8px;
-      // background-color: yellow;
-      // width: 176px;
-      // height: 34px;
       background-image: url('img/map.webp');
       // background-position: -325px -16px;
       background-size: calc(0.7 * 1500px) calc(0.7 * 2318px);

@@ -662,7 +662,7 @@ body > .card {
 
 .bt_card_container.bt_selectable > .card-sides > .card-side {
   cursor: pointer;
-  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) #ffff00 !important;
+  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) white !important;
 }
 
 .bt_card_container.bt_selectable:hover > .card-sides > .card-side,
@@ -1058,7 +1058,7 @@ body > .card {
 }
 .bt_connection .bt_marker_side.bt_selectable {
   display: initial;
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #ffff00 !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) white !important;
   cursor: pointer;
 }
 .bt_connection .bt_marker_side.bt_selected,
@@ -1105,7 +1105,7 @@ body > .card {
 }
 
 .bt_space.bt_selectable {
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #ffff00 !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) white !important;
   cursor: pointer;
 }
 
@@ -1169,7 +1169,7 @@ body > .card {
 .bt_marker.bt_selectable > .card-sides > .card-side,
 .bt_token.bt_selectable > .card-sides > .card-side {
   cursor: pointer;
-  filter: drop-shadow(2px 0px 0px #ffff00) drop-shadow(-2px 0px 0px #ffff00) drop-shadow(0px 2px 0px #ffff00) drop-shadow(0px -2px 0px #ffff00);
+  filter: drop-shadow(2px 0px 0px white) drop-shadow(-2px 0px 0px white) drop-shadow(0px 2px 0px white) drop-shadow(0px -2px 0px white);
 }
 
 .bt_marker.bt_selectable:hover > .card-sides > .card-side,
@@ -1181,7 +1181,7 @@ body > .card {
 }
 
 .bt_stack.bt_selectable {
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #ffff00 !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) white !important;
   cursor: pointer;
 }
 
@@ -1330,6 +1330,108 @@ body > .card {
   width: 100%;
   align-items: center;
   margin: 8px 0;
+}
+
+#information_button {
+  border-radius: 50%;
+  background-color: transparent;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#information_button .information_modal_icon {
+  width: 40px;
+  height: 40px;
+}
+#information_button:hover .information_modal_icon {
+  width: 48px;
+  height: 48px;
+  fill: white;
+}
+
+#popin_information_modal_underlay {
+  background-color: #000 !important;
+}
+
+.information_modal {
+  background-color: white;
+  background-size: cover;
+  border-radius: 8px;
+  box-shadow: rgb(0, 0, 0) 1px 1px 5px;
+  border: 1px solid black;
+  max-width: 1200px;
+  min-width: 640px;
+}
+.information_modal .information_modal_closeicon {
+  background-color: #a47a77;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  font-size: 90%;
+  color: white !important;
+  border: 1px solid #dfbda8;
+  cursor: pointer;
+}
+.information_modal .information_modal_closeicon:hover {
+  text-decoration: none;
+  color: #ccc !important;
+  transform: scale(1.1);
+}
+.information_modal .information_modal_closeicon i {
+  margin-top: -2px;
+}
+.information_modal h2 {
+  text-align: center;
+  font-size: large;
+  font-weight: bold;
+  margin: 0px;
+  padding: 7px 0px;
+  border-bottom: 1px solid black;
+}
+.information_modal #information_modal_content {
+  min-height: 200px;
+}
+.information_modal #information_modal_content .information_modal_tabs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+.information_modal #information_modal_content .information_modal_tabs .information_modal_tab {
+  flex-grow: 1;
+  width: 20%;
+  background-color: rgba(30, 20, 17, 0.5);
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.information_modal #information_modal_content .information_modal_tabs .information_modal_tab span {
+  font-weight: bold;
+  font-size: large;
+  text-align: center;
+}
+.information_modal #information_modal_content .information_modal_tabs .information_modal_tab[data-state=selected] {
+  background-color: transparent;
+  border-bottom: none;
+  cursor: auto;
+}
+.information_modal #information_modal_content .information_modal_tab:first-child {
+  border-left: none !important;
+}
+.information_modal #information_modal_content .information_modal_tab:last-child {
+  border-right: none;
 }
 
 /* ------- UNDO TURN ------- */
@@ -3511,7 +3613,7 @@ body > .card {
   display: flex;
   justify-content: center;
   padding: 6px;
-  width: 40px;
+  width: 35px;
 }
 #scenario_info #clipboard_button svg {
   cursor: pointer;
@@ -3587,7 +3689,7 @@ body > .card {
 .scenario_modal #scenario_modal_content .bt_victory_track_display .bt_victory_track_display_marker {
   --btMarkerScale: 0.77;
   border: 1px solid black;
-  box-shadow: 0px 0px 0px 2px #ffff00 !important;
+  box-shadow: 0px 0px 0px 2px white !important;
   position: relative;
 }
 .scenario_modal #scenario_modal_content .bt_section_title {
@@ -3852,7 +3954,7 @@ body > .card {
 }
 #bt_tabbed_column .bt_tabbed_column_tab {
   flex-grow: 1;
-  width: 25%;
+  width: 33.3333%;
   cursor: pointer;
   display: flex;
   flex-direction: row;

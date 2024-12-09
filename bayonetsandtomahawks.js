@@ -5688,6 +5688,92 @@ var InfoPanel = (function () {
     return InfoPanel;
 }());
 var tplInfoPanel = function (scenarioName) { return "\n<div class='player-board' id=\"info_panel\">\n  <div id=\"info_panel_scenario\">\n    <span>".concat(_(scenarioName), "</span>\n  </div>\n  <div id=\"info_panel_buttons\">\n\n  </div>\n</div>"); };
+var getActionsConfig = function () { return []; };
+var InformationModal = (function () {
+    function InformationModal(game) {
+        this.selectedTab = 'actions';
+        this.tabs = {
+            actions: {
+                text: _('Actions'),
+            },
+            gameMap: {
+                text: _('Game Map'),
+            },
+        };
+        this.game = game;
+        var gamedatas = game.gamedatas;
+        this.setup({ gamedatas: gamedatas });
+    }
+    InformationModal.prototype.clearInterface = function () { };
+    InformationModal.prototype.updateInterface = function (_a) {
+        var gamedatas = _a.gamedatas;
+    };
+    InformationModal.prototype.addButton = function (_a) {
+        var gamedatas = _a.gamedatas;
+        var configPanel = document.getElementById('info_panel_buttons');
+        if (configPanel) {
+            configPanel.insertAdjacentHTML('beforeend', tplInformationButton());
+        }
+    };
+    InformationModal.prototype.setupModal = function (_a) {
+        var gamedatas = _a.gamedatas;
+        this.modal = new Modal("information_modal", {
+            class: 'information_modal',
+            closeIcon: 'fa-times',
+            contents: tplInformationModalContent({
+                tabs: this.tabs,
+                game: this.game,
+            }),
+            closeAction: 'hide',
+            verticalAlign: 'flex-start',
+            breakpoint: 740,
+        });
+    };
+    InformationModal.prototype.setup = function (_a) {
+        var _this = this;
+        var gamedatas = _a.gamedatas;
+        this.addButton({ gamedatas: gamedatas });
+        this.setupModal({ gamedatas: gamedatas });
+        this.changeTab({ id: this.selectedTab });
+        Object.keys(this.tabs).forEach(function (id) {
+            dojo.connect($("information_modal_tab_".concat(id)), 'onclick', function () {
+                return _this.changeTab({ id: id });
+            });
+        });
+        dojo.connect($("information_button"), 'onclick', function () { return _this.modal.show(); });
+    };
+    InformationModal.prototype.changeTab = function (_a) {
+        var id = _a.id;
+        var currentTab = document.getElementById("information_modal_tab_".concat(this.selectedTab));
+        var currentTabContent = document.getElementById("bt_".concat(this.selectedTab));
+        currentTab.removeAttribute('data-state');
+        if (currentTabContent) {
+            currentTabContent.style.display = 'none';
+        }
+        this.selectedTab = id;
+        var tab = document.getElementById("information_modal_tab_".concat(id));
+        var tabContent = document.getElementById("bt_".concat(this.selectedTab));
+        tab.setAttribute('data-state', 'selected');
+        if (tabContent) {
+            tabContent.style.display = '';
+        }
+    };
+    return InformationModal;
+}());
+var tplInformationButton = function () { return "<button id=\"information_button\" type=\"button\" class=\"information_modal_button\">\n<div class=\"information_modal_icon\">\n  <svg width=\"100%\" height=\"100%\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z\" /></svg>\n</div>\n</button>"; };
+var tplInfoModalTab = function (_a) {
+    var id = _a.id, text = _a.text;
+    return "\n  <div id=\"information_modal_tab_".concat(id, "\" class=\"information_modal_tab\">\n    <span>").concat(_(text), "</span>\n  </div>");
+};
+var tplInformationModalContent = function (_a) {
+    var tabs = _a.tabs, game = _a.game;
+    return "\n  <div id=\"information_modal_content\">\n    <div class=\"information_modal_tabs\">\n      ".concat(Object.entries(tabs)
+        .map(function (_a) {
+        var id = _a[0], info = _a[1];
+        return tplInfoModalTab({ id: id, text: info.text });
+    })
+        .join(''), "\n    </div>\n    <div id=\"bt_actions\" style=\"display: none;\">\n      \n    </div>\n    <div id=\"bt_gameMap\" style=\"display: none;\">\n      \n    </div>\n  </div>");
+};
 var LOG_TOKEN_BOLD_TEXT = 'boldText';
 var LOG_TOKEN_BOLD_ITALIC_TEXT = 'boldItalicText';
 var LOG_TOKEN_ITALIC_TEXT = 'italicText';
@@ -13350,9 +13436,6 @@ var TabbedColumn = (function () {
             },
             pools: {
                 text: _('Pools'),
-            },
-            playerAid: {
-                text: _('Player aid'),
             },
         };
         this.game = game;

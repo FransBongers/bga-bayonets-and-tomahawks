@@ -2,7 +2,6 @@
 
 .dijitTooltipContainer {
   padding: 8px !important;
-  // background-color: yellow !important;
 }
 
 .bt_card_tooltip {
@@ -14,7 +13,7 @@
   width: 440px;
   min-height: 372px;
   --btCardScale: 1.5;
-  // background-color: purple;
+
   .bt_card {
     min-width: calc(var(--btCardScale)* 250px);
     min-height: calc(var(--btCardScale)* 179px);

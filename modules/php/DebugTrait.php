@@ -11,6 +11,7 @@ use BayonetsAndTomahawks\Managers\ActionPoints;
 use BayonetsAndTomahawks\Managers\AtomicActions;
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Connections;
+use BayonetsAndTomahawks\Managers\CustomLogManager;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Scenarios;
 use BayonetsAndTomahawks\Managers\Spaces;
@@ -54,7 +55,15 @@ trait DebugTrait
 
   function debug_test()
   {
-    Notifications::log('lastBation',Globals::getActiveBattleLastBastionEliminated());
+    // CustomLogManager::addRecord('battle', [
+    //   'attacker' => BRITISH,
+    //   'defender' => FRENCH,
+    //   'winner' => INDIAN
+    // ]);
+
+    // Notifications::log('ar',Globals::getActionRound());
+    // Notifications::log('year',Globals::getYear());
+    Notifications::log('customLogManager',CustomLogManager::getAll()->toArray());
 
     // Spaces::get(BEVERLEY)->setControl(FRENCH);
     // Units::moveAllInLocation(MIRAMICHY, BEVERLEY);
