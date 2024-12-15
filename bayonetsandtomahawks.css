@@ -1219,7 +1219,7 @@ body > .card {
 #bt_game_map[data-units-visible=false] .bt_marker,
 #bt_game_map[data-units-visible=false] .bt_marker_side,
 #bt_game_map[data-units-visible=false] .bt_token {
-  opacity: 0;
+  display: none;
 }
 
 #floating_hand_wrapper {

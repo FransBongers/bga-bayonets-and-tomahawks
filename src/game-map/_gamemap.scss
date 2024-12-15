@@ -252,6 +252,24 @@
     drop-shadow(0px -2px 0px base.$selected-color);
 }
 
+// .bt_token.bt_selectable::before {
+//   position: absolute;
+//   content: '';
+//   background-color: yellow;
+//   left: calc(var(--btTokenScale)* -4px);
+//   top: calc(var(--btTokenScale)* -4px);
+//   height: calc(var(--btTokenScale)* 60px);
+//   width: calc(var(--btTokenScale)* 60px);
+//   border-radius: calc(var(--btTokenScale)* 2px);
+//   // cursor: pointer;
+//   // filter: drop-shadow(2px 0px 0px base.$selectable-color)
+//   //   drop-shadow(-2px 0px 0px base.$selectable-color)
+//   //   drop-shadow(0px 2px 0px base.$selectable-color)
+//   //   drop-shadow(0px -2px 0px base.$selectable-color);
+//   // box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px)
+//   //   base.$selectable-color !important;
+// }
+
 .bt_stack.bt_selectable {
   box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) base.$selectable-color !important;
   cursor: pointer;
@@ -292,6 +310,6 @@
   .bt_marker,
   .bt_marker_side,
   .bt_token {
-    opacity: 0;
+    display: none;
   }
 }
