@@ -5106,6 +5106,8 @@ var GameMap = (function () {
                 _a);
         });
         this.stacks['Halifax'][FRENCH].unitsPerRow = 3;
+        this.stacks['Quebec'][FRENCH].setBottomOffset(52);
+        this.stacks['Louisbourg'][FRENCH].setBottomOffset(52);
         this.stacks[SAIL_BOX] = (_c = {},
             _c[BRITISH] = new UnitStack(this.game.tokenManager, document.getElementById("".concat(SAIL_BOX, "_british_stack")), {
                 sort: sortFunction('stackOrder'),
@@ -13680,7 +13682,8 @@ var UnitStack = (function (_super) {
         _this.element = element;
         _this.hovering = false;
         _this.isOpen = false;
-        _this.unitsPerRow = 5;
+        _this.unitsPerRow = 4;
+        _this.bottomOffset = 0;
         _this.element.classList.add('bt_stack');
         _this.faction = faction;
         _this.element.addEventListener('mouseover', function () { return _this.onMouseOver(); });
@@ -13734,8 +13737,9 @@ var UnitStack = (function (_super) {
             var unitDiv = stock.getCardElement(card);
             var row = Math.floor(index / _this.unitsPerRow);
             var column = index % _this.unitsPerRow;
-            var offset = expanded ? 52 : 8;
-            unitDiv.style.top = "calc(var(--btTokenScale) * ".concat(expanded ? row * offset * -1 : index * -8, "px)");
+            var offset = expanded ? 52 : 2;
+            var bottomOffset = expanded && column !== 0 ? _this.bottomOffset : 0;
+            unitDiv.style.top = "calc(var(--btTokenScale) * ".concat(expanded ? row * offset * -1 + bottomOffset : index * -4, "px)");
             var left = expanded ? column * offset : index * offset;
             if (_this.faction === FRENCH) {
                 left = left * -1;
@@ -13745,6 +13749,12 @@ var UnitStack = (function (_super) {
         if (!expanded) {
             this.element.removeAttribute('data-expanded');
         }
+    };
+    UnitStack.prototype.setBottomOffset = function (value) {
+        this.bottomOffset = value * -1;
+    };
+    UnitStack.prototype.setUnitsPerRow = function (value) {
+        this.unitsPerRow = value;
     };
     return UnitStack;
 }(ManualPositionStock));

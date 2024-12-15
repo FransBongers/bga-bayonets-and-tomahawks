@@ -5,7 +5,8 @@ class UnitStack extends ManualPositionStock<BTToken> {
   private hovering: boolean = false;
   private faction: 'british' | 'french';
   private isOpen: boolean = false;
-  public unitsPerRow: number = 5;
+  public unitsPerRow: number = 4;
+  public bottomOffset: number = 0;
 
   /**
    * @param manager the card manager
@@ -178,10 +179,12 @@ class UnitStack extends ManualPositionStock<BTToken> {
       const row = Math.floor(index / this.unitsPerRow);
       const column = index % this.unitsPerRow;
 
-      const offset = expanded ? 52 : 8;
+      const offset = expanded ? 52 : 2;
+
+      const bottomOffset = expanded && column !== 0 ? this.bottomOffset : 0;
 
       unitDiv.style.top = `calc(var(--btTokenScale) * ${
-        expanded ? row * offset * -1 : index * -8
+        expanded ? row * offset * -1 + bottomOffset : index * -4
       }px)`;
 
       let left: number = expanded ? column * offset : index * offset;
@@ -196,5 +199,15 @@ class UnitStack extends ManualPositionStock<BTToken> {
     }
     // console.log('card',lastCard);
     // console.log('cards',cards);
+  }
+
+  // Bottom offset when expanded. Used for Louisbourg / Quebec
+  public setBottomOffset(value: number) {
+    this.bottomOffset = value * -1;
+  }
+
+  // Units per row when a stack is expanded
+  public setUnitsPerRow(value: number) {
+    this.unitsPerRow = value;
   }
 }

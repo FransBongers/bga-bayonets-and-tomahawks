@@ -662,7 +662,7 @@ body > .card {
 
 .bt_card_container.bt_selectable > .card-sides > .card-side {
   cursor: pointer;
-  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) white !important;
+  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) yellow !important;
 }
 
 .bt_card_container.bt_selectable:hover > .card-sides > .card-side,
@@ -1058,7 +1058,7 @@ body > .card {
 }
 .bt_connection .bt_marker_side.bt_selectable {
   display: initial;
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) white !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) yellow !important;
   cursor: pointer;
 }
 .bt_connection .bt_marker_side.bt_selected,
@@ -1105,7 +1105,7 @@ body > .card {
 }
 
 .bt_space.bt_selectable {
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) white !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) yellow !important;
   cursor: pointer;
 }
 
@@ -1169,7 +1169,7 @@ body > .card {
 .bt_marker.bt_selectable > .card-sides > .card-side,
 .bt_token.bt_selectable > .card-sides > .card-side {
   cursor: pointer;
-  filter: drop-shadow(2px 0px 0px white) drop-shadow(-2px 0px 0px white) drop-shadow(0px 2px 0px white) drop-shadow(0px -2px 0px white);
+  filter: drop-shadow(2px 0px 0px yellow) drop-shadow(-2px 0px 0px yellow) drop-shadow(0px 2px 0px yellow) drop-shadow(0px -2px 0px yellow);
 }
 
 .bt_marker.bt_selectable:hover > .card-sides > .card-side,
@@ -1181,7 +1181,7 @@ body > .card {
 }
 
 .bt_stack.bt_selectable {
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) white !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) yellow !important;
   cursor: pointer;
 }
 
@@ -3689,7 +3689,7 @@ body > .card {
 .scenario_modal #scenario_modal_content .bt_victory_track_display .bt_victory_track_display_marker {
   --btMarkerScale: 0.77;
   border: 1px solid black;
-  box-shadow: 0px 0px 0px 2px white !important;
+  box-shadow: 0px 0px 0px 2px yellow !important;
   position: relative;
 }
 .scenario_modal #scenario_modal_content .bt_section_title {

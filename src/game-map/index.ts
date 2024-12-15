@@ -205,6 +205,8 @@ class GameMap {
       // });
     });
     this.stacks['Halifax'][FRENCH].unitsPerRow = 3;
+    this.stacks['Quebec'][FRENCH].setBottomOffset(52);
+    this.stacks['Louisbourg'][FRENCH].setBottomOffset(52);
 
     this.stacks[SAIL_BOX] = {
       [BRITISH]: new UnitStack(
