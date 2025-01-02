@@ -5423,7 +5423,7 @@ var GameMap = (function () {
                 switch (_a.label) {
                     case 0:
                         splitLocation = marker.location.split('_');
-                        return [4, this.stacks[splitLocation[0]][splitLocation[1]].addCard(marker)];
+                        return [4, this.stacks[splitLocation[0]][splitLocation[1]].addUnit(marker)];
                     case 1:
                         _a.sent();
                         return [2];
@@ -7987,14 +7987,7 @@ var ActionRoundActionPhaseState = (function () {
     ActionRoundActionPhaseState.prototype.setDescription = function (activePlayerId) { };
     ActionRoundActionPhaseState.prototype.updateInterfaceInitialStep = function () {
         this.game.clearPossible();
-        this.game.clientUpdatePageTitle({
-            text: this.args.isIndianActions
-                ? _('${you} may use the Indian card for actions')
-                : _('${you} may perform actions'),
-            args: {
-                you: '${you}',
-            },
-        });
+        this.updatePageTitle();
         this.addActionButtons();
         this.game.addPassButton({
             optionalAction: this.args.optionalAction,
@@ -8032,6 +8025,21 @@ var ActionRoundActionPhaseState = (function () {
             });
         }
         this.game.addCancelButton();
+    };
+    ActionRoundActionPhaseState.prototype.updatePageTitle = function () {
+        var text = _('${you} may perform actions');
+        if (this.args.isIndianActions) {
+            text = _('${you} may use the Indian card for actions');
+        }
+        if (this.args.availableActionPoints.length === 0) {
+            text = _('${you} have no available Action Points and must pass');
+        }
+        this.game.clientUpdatePageTitle({
+            text: text,
+            args: {
+                you: '${you}',
+            },
+        });
     };
     ActionRoundActionPhaseState.prototype.addActionButtons = function () {
         var _this = this;

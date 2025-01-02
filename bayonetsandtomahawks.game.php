@@ -359,24 +359,25 @@ class bayonetsandtomahawks extends Table
 
     public function zombieTurn($state, $activePlayer)
     {
-        $stateName = $state['name'];
-        if ($state['type'] == 'activeplayer') {
-            if ($stateName == 'confirmTurn') {
-                $this->actConfirmTurn(true);
-            } else if ($stateName == 'confirmPartialTurn') {
-                $this->actConfirmPartialTurn(true);
-            }
-            // Clear all node of player
-            else if (Engine::getNextUnresolved() != null) {
-                Engine::clearZombieNodes($activePlayer);
-                Engine::proceed();
-            } else {
-                // TODO: check if we need this
-                $this->gamestate->nextState('zombiePass');
-            }
-        } else if ($state['type'] == 'multipleactiveplayer') {
-            $this->gamestate->setPlayerNonMultiactive($activePlayer, 'zombiePass');
-        }
+        $this->gamestate->jumpToState(ST_END_GAME);
+        // $stateName = $state['name'];
+        // if ($state['type'] == 'activeplayer') {
+        //     if ($stateName == 'confirmTurn') {
+        //         $this->actConfirmTurn(true);
+        //     } else if ($stateName == 'confirmPartialTurn') {
+        //         $this->actConfirmPartialTurn(true);
+        //     }
+        //     // Clear all node of player
+        //     else if (Engine::getNextUnresolved() != null) {
+        //         Engine::clearZombieNodes($activePlayer);
+        //         Engine::proceed();
+        //     } else {
+        //         // TODO: check if we need this
+        //         $this->gamestate->nextState('zombiePass');
+        //     }
+        // } else if ($state['type'] == 'multipleactiveplayer') {
+        //     $this->gamestate->setPlayerNonMultiactive($activePlayer, 'zombiePass');
+        // }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////:

@@ -39,14 +39,7 @@ class ActionRoundActionPhaseState implements State {
 
     // this.game.setCardSelected({ id: this.args.card.id });
 
-    this.game.clientUpdatePageTitle({
-      text: this.args.isIndianActions
-        ? _('${you} may use the Indian card for actions')
-        : _('${you} may perform actions'),
-      args: {
-        you: '${you}',
-      },
-    });
+    this.updatePageTitle();
 
     this.addActionButtons();
 
@@ -102,6 +95,23 @@ class ActionRoundActionPhaseState implements State {
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  private updatePageTitle() {
+    let text = _('${you} may perform actions');
+    if (this.args.isIndianActions) {
+      text = _('${you} may use the Indian card for actions');
+    }
+    if (this.args.availableActionPoints.length === 0) {
+      text = _('${you} have no available Action Points and must pass');
+    }
+
+    this.game.clientUpdatePageTitle({
+      text,
+      args: {
+        you: '${you}',
+      },
+    });
+  }
 
   private addActionButtons() {
     const faction = this.args.isIndianActions ? INDIAN : this.args.faction;

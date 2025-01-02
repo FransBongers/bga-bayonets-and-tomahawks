@@ -63,7 +63,7 @@ trait DebugTrait
 
     // Notifications::log('ar',Globals::getActionRound());
     // Notifications::log('year',Globals::getYear());
-    Notifications::log('customLogManager',CustomLogManager::getAll()->toArray());
+    // Notifications::log('customLogManager',CustomLogManager::getAll()->toArray());
 
     // Spaces::get(BEVERLEY)->setControl(FRENCH);
     // Units::moveAllInLocation(MIRAMICHY, BEVERLEY);
@@ -97,7 +97,7 @@ trait DebugTrait
     // Cards::get('Card06')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card06')->insertOnTop(Locations::campaignDeck(FRENCH));
     // Cards::get('Card06')->insertOnTop(Locations::campaignDeck(BRITISH));
-    // Cards::get('Card51')->insertOnTop(Locations::campaignDeck(INDIAN));
+    Cards::get('Card54')->insertOnTop(Locations::campaignDeck(INDIAN));
 
   }
 

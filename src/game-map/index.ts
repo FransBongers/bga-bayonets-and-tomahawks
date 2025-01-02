@@ -9,7 +9,7 @@
 class GameMap {
   protected game: BayonetsAndTomahawksGame;
 
-  private scrollmap;
+  private scrollmap: ScrollmapWithZoomNS.ScrollmapWithZoom;
   public stacks: Record<
     string,
     {
@@ -640,7 +640,7 @@ class GameMap {
 
   public async addMarkerToStack(marker: BTMarker) {
     const splitLocation = marker.location.split('_');
-    await this.stacks[splitLocation[0]][splitLocation[1]].addCard(marker);
+    await this.stacks[splitLocation[0]][splitLocation[1]].addUnit(marker);
   }
 
   public addMarkerToSpace({
