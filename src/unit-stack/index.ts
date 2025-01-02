@@ -179,12 +179,12 @@ class UnitStack extends ManualPositionStock<BTToken> {
       const row = Math.floor(index / this.unitsPerRow);
       const column = index % this.unitsPerRow;
 
-      const offset = expanded ? 52 : 2;
+      const offset = expanded ? 52 : 3;
 
       const bottomOffset = expanded && column !== 0 ? this.bottomOffset : 0;
 
       unitDiv.style.top = `calc(var(--btTokenScale) * ${
-        expanded ? row * offset * -1 + bottomOffset : index * -4
+        expanded ? row * offset * -1 + bottomOffset : index * -6
       }px)`;
 
       let left: number = expanded ? column * offset : index * offset;

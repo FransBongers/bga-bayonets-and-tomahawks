@@ -48,7 +48,7 @@ class Connection {
     const { top, left, id } =
       this.game.gamedatas.staticData.connections[this.connection.id];
     document
-      .getElementById('bt_game_map')
+      .getElementById('map_scrollable_oversurface')
       .insertAdjacentHTML('afterbegin', tplConnection({ id, top, left }));
 
     this.limits.british.create(`${id}_britishLimit_counter`);

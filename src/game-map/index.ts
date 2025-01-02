@@ -8,6 +8,8 @@
 
 class GameMap {
   protected game: BayonetsAndTomahawksGame;
+
+  private scrollmap;
   public stacks: Record<
     string,
     {
@@ -537,6 +539,20 @@ class GameMap {
     document
       .getElementById('play_area_container')
       .insertAdjacentHTML('afterbegin', tplGameMap({ gamedatas }));
+
+    this.scrollmap = new ebg.scrollmapWithZoom(); // Scrollable area
+    this.scrollmap.zoom = 0.8;
+    // Number(
+    //   document.documentElement.style.getPropertyValue('--leftColumnScale')
+    // );
+
+    this.scrollmap.create(
+      $('map_container'),
+      $('map_scrollable'),
+      $('map_surface'),
+      $('map_scrollable_oversurface')
+    );
+
     this.setupUnitsAndSpaces({ gamedatas });
     this.setupMarkers({ gamedatas });
     this.setupConnections({ gamedatas });
@@ -545,7 +561,9 @@ class GameMap {
     const configPanel = document.getElementById('info_panel_buttons');
     if (configPanel) {
       configPanel.insertAdjacentHTML('afterbegin', tplUnitVisibilityButton());
-      dojo.connect($(`bt_unit_visibility_info`), 'onclick', () => this.handleUnitVisibilityChange());
+      dojo.connect($(`bt_unit_visibility_info`), 'onclick', () =>
+        this.handleUnitVisibilityChange()
+      );
     }
     // tplUnitVisibilityButton
   }
@@ -658,7 +676,7 @@ class GameMap {
 
   private handleUnitVisibilityChange() {
     const buttonNode = document.getElementById('eye_button');
-    const gameMapNode = document.getElementById('bt_game_map');
+    const gameMapNode = document.getElementById('map_scrollable_oversurface');
     if (!(buttonNode && gameMapNode)) {
       return;
     }

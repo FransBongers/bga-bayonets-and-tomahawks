@@ -175,46 +175,103 @@ const tplGameMap = ({
   const { spaces } = gamedatas;
 
   return `
-  <div id="bt_left_column">
-  <div id="bt_game_map" data-units-visible="true">
-    ${tplMarkerSpace({
-      id: OPEN_SEAS_MARKER_SAIL_BOX,
-      top: 77.5,
-      left: 1374.5,
-    })}
-    ${tplLossesBox()}
-    ${tplSpaces({ spaces })}
-    ${tplVictoryPointsTrack()}
-    ${tplBattleTrack()}
-    ${tplBattleMarkersPool()}
-    ${tplCommanderTrack()}
-    ${tplRaidTrack()}
-    ${tplYearTrack()}
-    ${tplActionRoundTrack()}
-    ${tplMarkerSpace({
-      id: `${CHEROKEE_CONTROL}_markers`,
-      top: 2120,
-      left: 863.5,
-    })}
-    ${tplMarkerSpace({
-      id: `${IROQUOIS_CONTROL}_markers`,
-      top: 1711.5,
-      left: 585.5,
-    })}
-    ${tplSailBox()}
-    ${tplMarkerSpace({
-      id: `wieChitPlaceholder_french`,
-      top: 24.5,
-      left: 108.5,
-    })}
-    ${tplMarkerSpace({
-      id: `wieChitPlaceholder_british`,
-      top: 24.5,
-      left: 1074.5,
-    })}    
-  </div>
-  </div>`;
+    <div id="bt_left_column">
+      <div id="map_container">
+        <div id="map_scrollable" data-units-visible="true">
+        </div>
+          <div id="map_surface">
+            
+          </div>
+          <div id="map_scrollable_oversurface">
+            ${tplMarkerSpace({
+              id: OPEN_SEAS_MARKER_SAIL_BOX,
+              top: 77.5,
+              left: 1374.5,
+            })}
+            ${tplLossesBox()}
+            ${tplSpaces({ spaces })}
+            ${tplVictoryPointsTrack()}
+            ${tplBattleTrack()}
+            ${tplBattleMarkersPool()}
+            ${tplCommanderTrack()}
+            ${tplRaidTrack()}
+            ${tplYearTrack()}
+            ${tplActionRoundTrack()}
+            ${tplMarkerSpace({
+              id: `${CHEROKEE_CONTROL}_markers`,
+              top: 2120,
+              left: 863.5,
+            })}
+            ${tplMarkerSpace({
+              id: `${IROQUOIS_CONTROL}_markers`,
+              top: 1711.5,
+              left: 585.5,
+            })}
+            ${tplSailBox()}
+            ${tplMarkerSpace({
+              id: `wieChitPlaceholder_french`,
+              top: 24.5,
+              left: 108.5,
+            })}
+            ${tplMarkerSpace({
+              id: `wieChitPlaceholder_british`,
+              top: 24.5,
+              left: 1074.5,
+            })}
+          </div>
+      </div>
+    </div>`;
 };
+
+// const tplGameMap = ({
+//   gamedatas,
+// }: {
+//   gamedatas: BayonetsAndTomahawksGamedatas;
+// }) => {
+//   const { spaces } = gamedatas;
+
+//   return `
+//   <div id="bt_left_column">
+//   <div id="bt_game_map" data-units-visible="true">
+//     ${tplMarkerSpace({
+//       id: OPEN_SEAS_MARKER_SAIL_BOX,
+//       top: 77.5,
+//       left: 1374.5,
+//     })}
+//     ${tplLossesBox()}
+//     ${tplSpaces({ spaces })}
+//     ${tplVictoryPointsTrack()}
+//     ${tplBattleTrack()}
+//     ${tplBattleMarkersPool()}
+//     ${tplCommanderTrack()}
+//     ${tplRaidTrack()}
+//     ${tplYearTrack()}
+//     ${tplActionRoundTrack()}
+//     ${tplMarkerSpace({
+//       id: `${CHEROKEE_CONTROL}_markers`,
+//       top: 2120,
+//       left: 863.5,
+//     })}
+//     ${tplMarkerSpace({
+//       id: `${IROQUOIS_CONTROL}_markers`,
+//       top: 1711.5,
+//       left: 585.5,
+//     })}
+//     ${tplSailBox()}
+//     ${tplMarkerSpace({
+//       id: `wieChitPlaceholder_french`,
+//       top: 24.5,
+//       left: 108.5,
+//     })}
+//     ${tplMarkerSpace({
+//       id: `wieChitPlaceholder_british`,
+//       top: 24.5,
+//       left: 1074.5,
+//     })}
+//   </div>
+//   </div>`;
+// };
+
 // <div class="bt_marker_test" data-marker-type="victory_point"></div>
 
 // <i class="fa-regular fa-magnifying-glass-plus"></i>

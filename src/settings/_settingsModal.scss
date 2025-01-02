@@ -1,4 +1,4 @@
-#show_settings {
+#show_settings_menu {
   height: 40px;
   width: 50px;
   display: flex;
@@ -16,7 +16,7 @@
   }
 }
 
-#show_settings {
+#show_settings_menu {
   .fa-primary {
       transform-origin: 216px 255px;
       transition: transform 1s;

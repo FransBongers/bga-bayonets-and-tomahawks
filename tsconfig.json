@@ -14,6 +14,7 @@
     "modules/js/modal/modal.d.ts",
     "modules/js/zone/index.ts",
     "modules/js/zone/types.d.ts",
+    "modules/js/scrollmap/scrollmapWithZoom.d.ts",
     "node_modules/bga-animations/src/animations.ts",
     "node_modules/bga-animations/src/animations/attach-with-animation.ts",
     "node_modules/bga-animations/src/animations/cumulated-animations.ts",

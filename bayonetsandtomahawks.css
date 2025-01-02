@@ -984,6 +984,12 @@ body > .card {
   border-radius: calc(var(--btCardScale) * 5px);
 }
 
+#map_container {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+}
+
 #bt_unit_visibility_info {
   align-items: center;
   display: flex;
@@ -1009,17 +1015,22 @@ body > .card {
   display: none;
 }
 
-#bt_game_map {
+#map_scrollable,
+#map_scrollable_oversurface {
+  --leftColumnScale: 1;
+  height: calc(var(--leftColumnScale) * 2318px);
+  width: calc(var(--leftColumnScale) * 1500px);
+  --btMapScale: var(--leftColumnScale);
+  --btMarkerScale: var(--leftColumnScale);
+  --btTokenScale: var(--leftColumnScale);
+}
+
+#map_scrollable {
   background-image: url("img/map.webp");
-  background-size: calc(var(--leftColumnScale) * var(--mapSizeMultiplier) * 1500px) calc(var(--leftColumnScale) * var(--mapSizeMultiplier) * 2318px);
+  background-size: calc(var(--leftColumnScale) * 1500px) calc(var(--leftColumnScale) * 2318px);
   background-repeat: no-repeat;
   position: relative;
-  height: calc(var(--leftColumnScale) * var(--mapSizeMultiplier) * 2318px);
-  width: calc(var(--leftColumnScale) * var(--mapSizeMultiplier) * 1500px);
   box-shadow: 1px 1px 5px #000;
-  --btMapScale: var(--leftColumnScale) * var(--mapSizeMultiplier);
-  --btMarkerScale: var(--leftColumnScale) * var(--mapSizeMultiplier);
-  --btTokenScale: var(--leftColumnScale) * var(--mapSizeMultiplier);
 }
 
 #battle_markers_pool {
@@ -1216,9 +1227,9 @@ body > .card {
   height: calc(var(--btMapScale) * 170px);
 }
 
-#bt_game_map[data-units-visible=false] .bt_marker,
-#bt_game_map[data-units-visible=false] .bt_marker_side,
-#bt_game_map[data-units-visible=false] .bt_token {
+#map_scrollable_oversurface[data-units-visible=false] .bt_marker,
+#map_scrollable_oversurface[data-units-visible=false] .bt_marker_side,
+#map_scrollable_oversurface[data-units-visible=false] .bt_token {
   display: none;
 }
 
@@ -1543,7 +1554,7 @@ body > .card {
   border: 1px solid black;
 }
 #customActions .bt_token_side {
-  --btTokenScale: 0.8;
+  --btTokenScale: 1.5;
   position: relative;
   top: -2px;
   margin-top: 2px;
@@ -1555,7 +1566,7 @@ body > .card {
 }
 #pagemaintitletext .bt_token_side,
 #gameaction_status .bt_token_side {
-  --btTokenScale: 0.8;
+  --btTokenScale: 1;
   position: relative;
   display: inline-block;
   top: -3px;
@@ -3772,7 +3783,7 @@ body > .card {
   color: white;
 }
 
-#show_settings {
+#show_settings_menu {
   height: 40px;
   width: 50px;
   display: flex;
@@ -3780,19 +3791,19 @@ body > .card {
   align-items: center;
   cursor: pointer;
 }
-#show_settings:hover {
+#show_settings_menu:hover {
   color: grey;
 }
-#show_settings svg {
+#show_settings_menu svg {
   width: auto;
   height: 40px;
 }
 
-#show_settings .fa-primary {
+#show_settings_menu .fa-primary {
   transform-origin: 216px 255px;
   transition: transform 1s;
 }
-#show_settings:hover .fa-primary {
+#show_settings_menu:hover .fa-primary {
   transform: rotate(180deg);
 }
 
@@ -4439,7 +4450,7 @@ html {
 }
 
 #page-title {
-  min-height: 50px;
+  min-height: 55px;
   display: flex;
   justify-content: center;
   align-items: center;

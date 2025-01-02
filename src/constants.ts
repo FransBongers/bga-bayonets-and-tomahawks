@@ -33,7 +33,7 @@ const PREF_CARD_INFO_IN_TOOLTIP = 'cardInfoInTooltip';
 const PREF_CARD_SIZE_IN_LOG = 'cardSizeInLog';
 const PREF_DISABLED = 'disabled';
 const PREF_ENABLED = 'enabled';
-const PREF_SINGLE_COLUMN_MAP_SIZE = 'singleColumnMapSize';
+// const PREF_SINGLE_COLUMN_MAP_SIZE = 'singleColumnMapSize';
 
 /**
  * Factions / control

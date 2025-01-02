@@ -2076,7 +2076,6 @@ var PREF_CARD_INFO_IN_TOOLTIP = 'cardInfoInTooltip';
 var PREF_CARD_SIZE_IN_LOG = 'cardSizeInLog';
 var PREF_DISABLED = 'disabled';
 var PREF_ENABLED = 'enabled';
-var PREF_SINGLE_COLUMN_MAP_SIZE = 'singleColumnMapSize';
 var BRITISH = 'british';
 var FRENCH = 'french';
 var INDIAN = 'indian';
@@ -2502,6 +2501,7 @@ define([
     'dojox/fx/ext-dojo/complex',
     'ebg/core/gamegui',
     'ebg/counter',
+    g_gamethemeurl + 'modules/js/scrollmap/scrollmapWithZoom.js',
 ], function (dojo, declare, noUiSliderDefined) {
     if (noUiSliderDefined) {
         noUiSlider = noUiSliderDefined;
@@ -2979,7 +2979,6 @@ var BayonetsAndTomahawks = (function () {
             var LEFT_SIZE = (proportions[0] * WIDTH) / 100;
             var leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
             ROOT.style.setProperty('--leftColumnScale', "".concat(leftColumnScale));
-            ROOT.style.setProperty('--mapSizeMultiplier', '1');
             var RIGHT_SIZE = (proportions[1] * WIDTH) / 100;
             var rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
             ROOT.style.setProperty('--rightColumnScale', "".concat(rightColumnScale));
@@ -2989,7 +2988,6 @@ var BayonetsAndTomahawks = (function () {
             var LEFT_SIZE = WIDTH;
             var leftColumnScale = LEFT_SIZE / LEFT_COLUMN;
             ROOT.style.setProperty('--leftColumnScale', "".concat(leftColumnScale));
-            ROOT.style.setProperty('--mapSizeMultiplier', "".concat(Number(this.settings.get({ id: PREF_SINGLE_COLUMN_MAP_SIZE })) / 100));
             var RIGHT_SIZE = WIDTH;
             var rightColumnScale = RIGHT_SIZE / RIGHT_COLUMN;
             ROOT.style.setProperty('--rightColumnScale', "".concat(rightColumnScale));
@@ -4940,7 +4938,7 @@ var Connection = (function () {
     Connection.prototype.setup = function (connection) {
         var _a = this.game.gamedatas.staticData.connections[this.connection.id], top = _a.top, left = _a.left, id = _a.id;
         document
-            .getElementById('bt_game_map')
+            .getElementById('map_scrollable_oversurface')
             .insertAdjacentHTML('afterbegin', tplConnection({ id: id, top: top, left: left }));
         this.limits.british.create("".concat(id, "_britishLimit_counter"));
         this.limits.french.create("".concat(id, "_frenchLimit_counter"));
@@ -5342,6 +5340,9 @@ var GameMap = (function () {
         document
             .getElementById('play_area_container')
             .insertAdjacentHTML('afterbegin', tplGameMap({ gamedatas: gamedatas }));
+        this.scrollmap = new ebg.scrollmapWithZoom();
+        this.scrollmap.zoom = 0.8;
+        this.scrollmap.create($('map_container'), $('map_scrollable'), $('map_surface'), $('map_scrollable_oversurface'));
         this.setupUnitsAndSpaces({ gamedatas: gamedatas });
         this.setupMarkers({ gamedatas: gamedatas });
         this.setupConnections({ gamedatas: gamedatas });
@@ -5349,7 +5350,9 @@ var GameMap = (function () {
         var configPanel = document.getElementById('info_panel_buttons');
         if (configPanel) {
             configPanel.insertAdjacentHTML('afterbegin', tplUnitVisibilityButton());
-            dojo.connect($("bt_unit_visibility_info"), 'onclick', function () { return _this.handleUnitVisibilityChange(); });
+            dojo.connect($("bt_unit_visibility_info"), 'onclick', function () {
+                return _this.handleUnitVisibilityChange();
+            });
         }
     };
     GameMap.prototype.moveRoundMarker = function (_a) {
@@ -5446,7 +5449,7 @@ var GameMap = (function () {
     };
     GameMap.prototype.handleUnitVisibilityChange = function () {
         var buttonNode = document.getElementById('eye_button');
-        var gameMapNode = document.getElementById('bt_game_map');
+        var gameMapNode = document.getElementById('map_scrollable_oversurface');
         if (!(buttonNode && gameMapNode)) {
             return;
         }
@@ -5562,27 +5565,27 @@ var tplSailBox = function () { return "\n  <div id=\"sailBox\">\n    <div id=\""
 var tplGameMap = function (_a) {
     var gamedatas = _a.gamedatas;
     var spaces = gamedatas.spaces;
-    return "\n  <div id=\"bt_left_column\">\n  <div id=\"bt_game_map\" data-units-visible=\"true\">\n    ".concat(tplMarkerSpace({
+    return "\n    <div id=\"bt_left_column\">\n      <div id=\"map_container\">\n        <div id=\"map_scrollable\" data-units-visible=\"true\">\n        </div>\n          <div id=\"map_surface\">\n            \n          </div>\n          <div id=\"map_scrollable_oversurface\">\n            ".concat(tplMarkerSpace({
         id: OPEN_SEAS_MARKER_SAIL_BOX,
         top: 77.5,
         left: 1374.5,
-    }), "\n    ").concat(tplLossesBox(), "\n    ").concat(tplSpaces({ spaces: spaces }), "\n    ").concat(tplVictoryPointsTrack(), "\n    ").concat(tplBattleTrack(), "\n    ").concat(tplBattleMarkersPool(), "\n    ").concat(tplCommanderTrack(), "\n    ").concat(tplRaidTrack(), "\n    ").concat(tplYearTrack(), "\n    ").concat(tplActionRoundTrack(), "\n    ").concat(tplMarkerSpace({
+    }), "\n            ").concat(tplLossesBox(), "\n            ").concat(tplSpaces({ spaces: spaces }), "\n            ").concat(tplVictoryPointsTrack(), "\n            ").concat(tplBattleTrack(), "\n            ").concat(tplBattleMarkersPool(), "\n            ").concat(tplCommanderTrack(), "\n            ").concat(tplRaidTrack(), "\n            ").concat(tplYearTrack(), "\n            ").concat(tplActionRoundTrack(), "\n            ").concat(tplMarkerSpace({
         id: "".concat(CHEROKEE_CONTROL, "_markers"),
         top: 2120,
         left: 863.5,
-    }), "\n    ").concat(tplMarkerSpace({
+    }), "\n            ").concat(tplMarkerSpace({
         id: "".concat(IROQUOIS_CONTROL, "_markers"),
         top: 1711.5,
         left: 585.5,
-    }), "\n    ").concat(tplSailBox(), "\n    ").concat(tplMarkerSpace({
+    }), "\n            ").concat(tplSailBox(), "\n            ").concat(tplMarkerSpace({
         id: "wieChitPlaceholder_french",
         top: 24.5,
         left: 108.5,
-    }), "\n    ").concat(tplMarkerSpace({
+    }), "\n            ").concat(tplMarkerSpace({
         id: "wieChitPlaceholder_british",
         top: 24.5,
         left: 1074.5,
-    }), "    \n  </div>\n  </div>");
+    }), "\n          </div>\n      </div>\n    </div>");
 };
 var Hand = (function () {
     function Hand(game) {
@@ -7488,7 +7491,7 @@ var getSettingsConfig = function () {
                     twoColumnsLayout: {
                         id: "twoColumnsLayout",
                         onChangeInSetup: true,
-                        defaultValue: "disabled",
+                        defaultValue: "enabled",
                         label: _("Two column layout"),
                         type: "select",
                         options: [
@@ -7521,25 +7524,6 @@ var getSettingsConfig = function () {
                         },
                         type: "slider",
                     }
-                },
-                _a[PREF_SINGLE_COLUMN_MAP_SIZE] = {
-                    id: PREF_SINGLE_COLUMN_MAP_SIZE,
-                    onChangeInSetup: true,
-                    label: _("Map size"),
-                    defaultValue: 100,
-                    visibleCondition: {
-                        id: "twoColumnsLayout",
-                        values: [DISABLED],
-                    },
-                    sliderConfig: {
-                        step: 5,
-                        padding: 0,
-                        range: {
-                            min: 30,
-                            max: 100,
-                        },
-                    },
-                    type: "slider",
                 },
                 _a[PREF_CARD_SIZE_IN_LOG] = {
                     id: PREF_CARD_SIZE_IN_LOG,
@@ -7682,11 +7666,12 @@ var Settings = (function () {
     Settings.prototype.setup = function (_a) {
         var _this = this;
         var gamedatas = _a.gamedatas;
+        console.log('setup settings');
         this.addButton({ gamedatas: gamedatas });
         this.setupModal({ gamedatas: gamedatas });
         this.setupModalContent();
         this.changeTab({ id: this.selectedTab });
-        dojo.connect($("show_settings"), 'onclick', function () { return _this.open(); });
+        dojo.connect($("show_settings_menu"), 'onclick', function () { return _this.open(); });
         this.tabs.forEach(function (_a) {
             var id = _a.id;
             dojo.connect($("settings_modal_tab_".concat(id)), 'onclick', function () {
@@ -7862,7 +7847,7 @@ var Settings = (function () {
     return Settings;
 }());
 var tplSettingsButton = function () {
-    return "<div id=\"show_settings\">\n  <svg  xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 640 512\">\n    <g>\n      <path class=\"fa-secondary\" fill=\"currentColor\" d=\"M638.41 387a12.34 12.34 0 0 0-12.2-10.3h-16.5a86.33 86.33 0 0 0-15.9-27.4L602 335a12.42 12.42 0 0 0-2.8-15.7 110.5 110.5 0 0 0-32.1-18.6 12.36 12.36 0 0 0-15.1 5.4l-8.2 14.3a88.86 88.86 0 0 0-31.7 0l-8.2-14.3a12.36 12.36 0 0 0-15.1-5.4 111.83 111.83 0 0 0-32.1 18.6 12.3 12.3 0 0 0-2.8 15.7l8.2 14.3a86.33 86.33 0 0 0-15.9 27.4h-16.5a12.43 12.43 0 0 0-12.2 10.4 112.66 112.66 0 0 0 0 37.1 12.34 12.34 0 0 0 12.2 10.3h16.5a86.33 86.33 0 0 0 15.9 27.4l-8.2 14.3a12.42 12.42 0 0 0 2.8 15.7 110.5 110.5 0 0 0 32.1 18.6 12.36 12.36 0 0 0 15.1-5.4l8.2-14.3a88.86 88.86 0 0 0 31.7 0l8.2 14.3a12.36 12.36 0 0 0 15.1 5.4 111.83 111.83 0 0 0 32.1-18.6 12.3 12.3 0 0 0 2.8-15.7l-8.2-14.3a86.33 86.33 0 0 0 15.9-27.4h16.5a12.43 12.43 0 0 0 12.2-10.4 112.66 112.66 0 0 0 .01-37.1zm-136.8 44.9c-29.6-38.5 14.3-82.4 52.8-52.8 29.59 38.49-14.3 82.39-52.8 52.79zm136.8-343.8a12.34 12.34 0 0 0-12.2-10.3h-16.5a86.33 86.33 0 0 0-15.9-27.4l8.2-14.3a12.42 12.42 0 0 0-2.8-15.7 110.5 110.5 0 0 0-32.1-18.6A12.36 12.36 0 0 0 552 7.19l-8.2 14.3a88.86 88.86 0 0 0-31.7 0l-8.2-14.3a12.36 12.36 0 0 0-15.1-5.4 111.83 111.83 0 0 0-32.1 18.6 12.3 12.3 0 0 0-2.8 15.7l8.2 14.3a86.33 86.33 0 0 0-15.9 27.4h-16.5a12.43 12.43 0 0 0-12.2 10.4 112.66 112.66 0 0 0 0 37.1 12.34 12.34 0 0 0 12.2 10.3h16.5a86.33 86.33 0 0 0 15.9 27.4l-8.2 14.3a12.42 12.42 0 0 0 2.8 15.7 110.5 110.5 0 0 0 32.1 18.6 12.36 12.36 0 0 0 15.1-5.4l8.2-14.3a88.86 88.86 0 0 0 31.7 0l8.2 14.3a12.36 12.36 0 0 0 15.1 5.4 111.83 111.83 0 0 0 32.1-18.6 12.3 12.3 0 0 0 2.8-15.7l-8.2-14.3a86.33 86.33 0 0 0 15.9-27.4h16.5a12.43 12.43 0 0 0 12.2-10.4 112.66 112.66 0 0 0 .01-37.1zm-136.8 45c-29.6-38.5 14.3-82.5 52.8-52.8 29.59 38.49-14.3 82.39-52.8 52.79z\" opacity=\"0.4\"></path>\n      <path class=\"fa-primary\" fill=\"currentColor\" d=\"M420 303.79L386.31 287a173.78 173.78 0 0 0 0-63.5l33.7-16.8c10.1-5.9 14-18.2 10-29.1-8.9-24.2-25.9-46.4-42.1-65.8a23.93 23.93 0 0 0-30.3-5.3l-29.1 16.8a173.66 173.66 0 0 0-54.9-31.7V58a24 24 0 0 0-20-23.6 228.06 228.06 0 0 0-76 .1A23.82 23.82 0 0 0 158 58v33.7a171.78 171.78 0 0 0-54.9 31.7L74 106.59a23.91 23.91 0 0 0-30.3 5.3c-16.2 19.4-33.3 41.6-42.2 65.8a23.84 23.84 0 0 0 10.5 29l33.3 16.9a173.24 173.24 0 0 0 0 63.4L12 303.79a24.13 24.13 0 0 0-10.5 29.1c8.9 24.1 26 46.3 42.2 65.7a23.93 23.93 0 0 0 30.3 5.3l29.1-16.7a173.66 173.66 0 0 0 54.9 31.7v33.6a24 24 0 0 0 20 23.6 224.88 224.88 0 0 0 75.9 0 23.93 23.93 0 0 0 19.7-23.6v-33.6a171.78 171.78 0 0 0 54.9-31.7l29.1 16.8a23.91 23.91 0 0 0 30.3-5.3c16.2-19.4 33.7-41.6 42.6-65.8a24 24 0 0 0-10.5-29.1zm-151.3 4.3c-77 59.2-164.9-28.7-105.7-105.7 77-59.2 164.91 28.7 105.71 105.7z\"></path>\n    </g>\n  </svg>\n</div>";
+    return "<div id=\"show_settings_menu\">\n  <svg  xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 640 512\">\n    <g>\n      <path class=\"fa-secondary\" fill=\"currentColor\" d=\"M638.41 387a12.34 12.34 0 0 0-12.2-10.3h-16.5a86.33 86.33 0 0 0-15.9-27.4L602 335a12.42 12.42 0 0 0-2.8-15.7 110.5 110.5 0 0 0-32.1-18.6 12.36 12.36 0 0 0-15.1 5.4l-8.2 14.3a88.86 88.86 0 0 0-31.7 0l-8.2-14.3a12.36 12.36 0 0 0-15.1-5.4 111.83 111.83 0 0 0-32.1 18.6 12.3 12.3 0 0 0-2.8 15.7l8.2 14.3a86.33 86.33 0 0 0-15.9 27.4h-16.5a12.43 12.43 0 0 0-12.2 10.4 112.66 112.66 0 0 0 0 37.1 12.34 12.34 0 0 0 12.2 10.3h16.5a86.33 86.33 0 0 0 15.9 27.4l-8.2 14.3a12.42 12.42 0 0 0 2.8 15.7 110.5 110.5 0 0 0 32.1 18.6 12.36 12.36 0 0 0 15.1-5.4l8.2-14.3a88.86 88.86 0 0 0 31.7 0l8.2 14.3a12.36 12.36 0 0 0 15.1 5.4 111.83 111.83 0 0 0 32.1-18.6 12.3 12.3 0 0 0 2.8-15.7l-8.2-14.3a86.33 86.33 0 0 0 15.9-27.4h16.5a12.43 12.43 0 0 0 12.2-10.4 112.66 112.66 0 0 0 .01-37.1zm-136.8 44.9c-29.6-38.5 14.3-82.4 52.8-52.8 29.59 38.49-14.3 82.39-52.8 52.79zm136.8-343.8a12.34 12.34 0 0 0-12.2-10.3h-16.5a86.33 86.33 0 0 0-15.9-27.4l8.2-14.3a12.42 12.42 0 0 0-2.8-15.7 110.5 110.5 0 0 0-32.1-18.6A12.36 12.36 0 0 0 552 7.19l-8.2 14.3a88.86 88.86 0 0 0-31.7 0l-8.2-14.3a12.36 12.36 0 0 0-15.1-5.4 111.83 111.83 0 0 0-32.1 18.6 12.3 12.3 0 0 0-2.8 15.7l8.2 14.3a86.33 86.33 0 0 0-15.9 27.4h-16.5a12.43 12.43 0 0 0-12.2 10.4 112.66 112.66 0 0 0 0 37.1 12.34 12.34 0 0 0 12.2 10.3h16.5a86.33 86.33 0 0 0 15.9 27.4l-8.2 14.3a12.42 12.42 0 0 0 2.8 15.7 110.5 110.5 0 0 0 32.1 18.6 12.36 12.36 0 0 0 15.1-5.4l8.2-14.3a88.86 88.86 0 0 0 31.7 0l8.2 14.3a12.36 12.36 0 0 0 15.1 5.4 111.83 111.83 0 0 0 32.1-18.6 12.3 12.3 0 0 0 2.8-15.7l-8.2-14.3a86.33 86.33 0 0 0 15.9-27.4h16.5a12.43 12.43 0 0 0 12.2-10.4 112.66 112.66 0 0 0 .01-37.1zm-136.8 45c-29.6-38.5 14.3-82.5 52.8-52.8 29.59 38.49-14.3 82.39-52.8 52.79z\" opacity=\"0.4\"></path>\n      <path class=\"fa-primary\" fill=\"currentColor\" d=\"M420 303.79L386.31 287a173.78 173.78 0 0 0 0-63.5l33.7-16.8c10.1-5.9 14-18.2 10-29.1-8.9-24.2-25.9-46.4-42.1-65.8a23.93 23.93 0 0 0-30.3-5.3l-29.1 16.8a173.66 173.66 0 0 0-54.9-31.7V58a24 24 0 0 0-20-23.6 228.06 228.06 0 0 0-76 .1A23.82 23.82 0 0 0 158 58v33.7a171.78 171.78 0 0 0-54.9 31.7L74 106.59a23.91 23.91 0 0 0-30.3 5.3c-16.2 19.4-33.3 41.6-42.2 65.8a23.84 23.84 0 0 0 10.5 29l33.3 16.9a173.24 173.24 0 0 0 0 63.4L12 303.79a24.13 24.13 0 0 0-10.5 29.1c8.9 24.1 26 46.3 42.2 65.7a23.93 23.93 0 0 0 30.3 5.3l29.1-16.7a173.66 173.66 0 0 0 54.9 31.7v33.6a24 24 0 0 0 20 23.6 224.88 224.88 0 0 0 75.9 0 23.93 23.93 0 0 0 19.7-23.6v-33.6a171.78 171.78 0 0 0 54.9-31.7l29.1 16.8a23.91 23.91 0 0 0 30.3-5.3c16.2-19.4 33.7-41.6 42.6-65.8a24 24 0 0 0-10.5-29.1zm-151.3 4.3c-77 59.2-164.9-28.7-105.7-105.7 77-59.2 164.91 28.7 105.71 105.7z\"></path>\n    </g>\n  </svg>\n</div>";
 };
 var tplPlayerPrefenceSelectRow = function (_a) {
     var setting = _a.setting, currentValue = _a.currentValue, _b = _a.visible, visible = _b === void 0 ? true : _b;
@@ -13737,9 +13722,9 @@ var UnitStack = (function (_super) {
             var unitDiv = stock.getCardElement(card);
             var row = Math.floor(index / _this.unitsPerRow);
             var column = index % _this.unitsPerRow;
-            var offset = expanded ? 52 : 2;
+            var offset = expanded ? 52 : 3;
             var bottomOffset = expanded && column !== 0 ? _this.bottomOffset : 0;
-            unitDiv.style.top = "calc(var(--btTokenScale) * ".concat(expanded ? row * offset * -1 + bottomOffset : index * -4, "px)");
+            unitDiv.style.top = "calc(var(--btTokenScale) * ".concat(expanded ? row * offset * -1 + bottomOffset : index * -6, "px)");
             var left = expanded ? column * offset : index * offset;
             if (_this.faction === FRENCH) {
                 left = left * -1;

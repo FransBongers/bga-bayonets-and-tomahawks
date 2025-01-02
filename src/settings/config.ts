@@ -48,7 +48,7 @@ const getSettingsConfig = (): Record<string, PlayerPreferenceTab> => ({
       twoColumnsLayout: {
         id: "twoColumnsLayout",
         onChangeInSetup: true,
-        defaultValue: "disabled",
+        defaultValue: "enabled",
         label: _("Two column layout"),
         type: "select",
         options: [
@@ -81,25 +81,25 @@ const getSettingsConfig = (): Record<string, PlayerPreferenceTab> => ({
         },
         type: "slider",
       },
-      [PREF_SINGLE_COLUMN_MAP_SIZE]: {
-        id: PREF_SINGLE_COLUMN_MAP_SIZE,
-        onChangeInSetup: true,
-        label: _("Map size"),
-        defaultValue: 100,
-        visibleCondition: {
-          id: "twoColumnsLayout",
-          values: [DISABLED],
-        },
-        sliderConfig: {
-          step: 5,
-          padding: 0,
-          range: {
-            min: 30,
-            max: 100,
-          },
-        },
-        type: "slider",
-      },
+      // [PREF_SINGLE_COLUMN_MAP_SIZE]: {
+      //   id: PREF_SINGLE_COLUMN_MAP_SIZE,
+      //   onChangeInSetup: true,
+      //   label: _("Map size"),
+      //   defaultValue: 100,
+      //   visibleCondition: {
+      //     id: "twoColumnsLayout",
+      //     values: [DISABLED],
+      //   },
+      //   sliderConfig: {
+      //     step: 5,
+      //     padding: 0,
+      //     range: {
+      //       min: 30,
+      //       max: 100,
+      //     },
+      //   },
+      //   type: "slider",
+      // },
       [PREF_CARD_SIZE_IN_LOG]: {
         id: PREF_CARD_SIZE_IN_LOG,
         onChangeInSetup: true,

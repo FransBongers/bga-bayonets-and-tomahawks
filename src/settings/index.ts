@@ -80,12 +80,13 @@ class Settings {
 
   // Setup functions
   setup({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
+    console.log('setup settings');
     this.addButton({ gamedatas });
     this.setupModal({ gamedatas });
     this.setupModalContent();
     this.changeTab({ id: this.selectedTab });
 
-    dojo.connect($(`show_settings`), 'onclick', () => this.open());
+    dojo.connect($(`show_settings_menu`), 'onclick', () => this.open());
     this.tabs.forEach(({ id }) => {
       dojo.connect($(`settings_modal_tab_${id}`), 'onclick', () =>
         this.changeTab({ id })

@@ -6,6 +6,7 @@ define([
   'dojox/fx/ext-dojo/complex',
   'ebg/core/gamegui',
   'ebg/counter',
+  g_gamethemeurl + 'modules/js/scrollmap/scrollmapWithZoom.js',
   // g_gamethemeurl + "modules/js/bga-animations.js",
 ], function (dojo, declare, noUiSliderDefined) {
   if (noUiSliderDefined) {

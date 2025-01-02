@@ -2,6 +2,12 @@
 @use 'sass:map';
 @use '../base';
 
+#map_container {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+}
+
 #bt_unit_visibility_info {
   align-items: center;
   display: flex;
@@ -36,25 +42,26 @@
   }
 }
 
-#bt_game_map {
+#map_scrollable,
+#map_scrollable_oversurface {
+  --leftColumnScale: 1;
+  height: calc(var(--leftColumnScale) * 2318px);
+  width: calc(var(--leftColumnScale) * 1500px);
+  --btMapScale: var(--leftColumnScale);
+  --btMarkerScale: var(--leftColumnScale);
+  --btTokenScale: var(--leftColumnScale);
+}
+
+#map_scrollable {
   background-image: url('img/map.webp');
-  // background-size: 1500px 2318px;
+
   background-size: calc(
-      var(--leftColumnScale) * var(--mapSizeMultiplier) * 1500px
+      var(--leftColumnScale) * 1500px
     )
-    calc(var(--leftColumnScale) * var(--mapSizeMultiplier) * 2318px);
+    calc(var(--leftColumnScale) * 2318px);
   background-repeat: no-repeat;
   position: relative;
-  // height: 2318px;
-  // width: 1500px;
-  height: calc(var(--leftColumnScale) * var(--mapSizeMultiplier) * 2318px);
-  width: calc(var(--leftColumnScale) * var(--mapSizeMultiplier) * 1500px);
-  // box-shadow: rgb(0 0 0) 2px 2px 8px;
   box-shadow: 1px 1px 5px #000;
-  // transform-origin: top left;
-  --btMapScale: var(--leftColumnScale) * var(--mapSizeMultiplier);
-  --btMarkerScale: var(--leftColumnScale) * var(--mapSizeMultiplier);
-  --btTokenScale: var(--leftColumnScale) * var(--mapSizeMultiplier);
 }
 
 #battle_markers_pool {
@@ -306,7 +313,7 @@
   height: calc(var(--btMapScale) * 170px);
 }
 
-#bt_game_map[data-units-visible='false'] {
+#map_scrollable_oversurface[data-units-visible='false'] {
   .bt_marker,
   .bt_marker_side,
   .bt_token {
