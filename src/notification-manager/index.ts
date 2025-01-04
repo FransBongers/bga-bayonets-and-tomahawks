@@ -188,6 +188,7 @@ class NotificationManager {
     if (element) {
       element.setAttribute('data-spent', 'true');
     }
+    this.game.setUnitSpent({ id: unit.id });
   }
 
   // .##....##..#######..########.####.########..######.
@@ -597,10 +598,7 @@ class NotificationManager {
     }
 
     if (unit.spent === 1) {
-      const element = document.getElementById(`spent_marker_${unit.id}`);
-      if (element) {
-        element.setAttribute('data-spent', 'true');
-      }
+      this.setUnitSpent(unit);
     }
   }
 
@@ -736,6 +734,7 @@ class NotificationManager {
         element.setAttribute('data-spent', 'false');
       }
     });
+    dojo.query(`.${BT_SPENT}`).removeClass(BT_SPENT);
     this.game.gameMap.resetConnectionLimits();
     // TODO: markers
     await Promise.all(
@@ -843,9 +842,8 @@ class NotificationManager {
     notif: Notif<NotifVagariesOfWarPickUnitsArgs>
   ) {
     const { units, location, vowToken } = notif.args;
-    this.game.tokenManager.updateCardInformations(vowToken)
+    this.game.tokenManager.updateCardInformations(vowToken);
     await this.game.pools.stocks[location].addCards(units);
-
   }
 
   async notif_winterQuartersAddUnitsToPools(

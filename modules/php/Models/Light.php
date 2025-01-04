@@ -11,5 +11,6 @@ class Light extends AbstractUnit
     $this->stackOrder = 9;
     $this->mpLimit = 3;
     $this->connectionTypeAllowed = [ROAD, HIGHWAY, PATH];
+    $this->shape = TRIANGLE;
   }
 }

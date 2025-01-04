@@ -8,6 +8,7 @@ const ENABLED = 'enabled';
 const DISABLED = 'disabled';
 const BT_SELECTABLE = 'bt_selectable';
 const BT_SELECTED = 'bt_selected';
+const BT_SPENT = 'bt_spent';
 
 /**
  * Card locations
@@ -33,6 +34,9 @@ const PREF_CARD_INFO_IN_TOOLTIP = 'cardInfoInTooltip';
 const PREF_CARD_SIZE_IN_LOG = 'cardSizeInLog';
 const PREF_DISABLED = 'disabled';
 const PREF_ENABLED = 'enabled';
+const PREF_SELECTABLE_COLOR = 'selectableColor';
+const PREF_SELECTED_COLOR = 'selectedColor';
+const PREF_SPENT_COLOR = 'spentColor';
 // const PREF_SINGLE_COLUMN_MAP_SIZE = 'singleColumnMapSize';
 
 /**

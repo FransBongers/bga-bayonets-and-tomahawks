@@ -1,6 +1,8 @@
 interface PlayerPreferenceOption {
   label: string;
   value: string;
+  backgroundColor?: string;
+  textColor?: string;
 }
 
 interface PlayerPreferenceConfigBase {
@@ -16,7 +18,7 @@ interface PlayerPreferenceConfigBase {
 interface PlayerPreferenceSelectConfig extends PlayerPreferenceConfigBase {
   defaultValue: string;
   options: PlayerPreferenceOption[];
-  type: "select";
+  type: 'select';
 }
 
 interface PlayerPreferenceSliderConfig extends PlayerPreferenceConfigBase {
@@ -29,7 +31,7 @@ interface PlayerPreferenceSliderConfig extends PlayerPreferenceConfigBase {
       max: number;
     };
   };
-  type: "slider";
+  type: 'slider';
 }
 
 type PlayerPreferenceConfig =
@@ -41,34 +43,56 @@ interface PlayerPreferenceTab {
   config: Record<string, PlayerPreferenceConfig>;
 }
 
+const supportedColorHexColorMap: Record<SupportedColor, string> = {
+  black: '#000000',
+  blue: '#0000ff',
+  green: '#008000',
+  orange: '#ffa500',
+  purple: '#800080',
+  red: '#ff0000',
+  white: '#ffffff',
+  yellow: '#ffff00',
+};
+
+const supportedColorBackgroundPositionMap: Record<SupportedColor, string> = {
+  black: `0%`,
+  blue: `${100 / 7}%`,
+  green: `${200 / 7}%`,
+  orange: `${300 / 7}%`,
+  purple: `${400 / 7}%`,
+  red: `${500 / 7}%`,
+  white: `${600 / 7}%`,
+  yellow: `100%`,
+};
+
 const getSettingsConfig = (): Record<string, PlayerPreferenceTab> => ({
   layout: {
-    id: "layout",
+    id: 'layout',
     config: {
       twoColumnsLayout: {
-        id: "twoColumnsLayout",
+        id: 'twoColumnsLayout',
         onChangeInSetup: true,
-        defaultValue: "enabled",
-        label: _("Two column layout"),
-        type: "select",
+        defaultValue: 'disabled',
+        label: _('Two column layout'),
+        type: 'select',
         options: [
           {
-            label: _("Enabled"),
-            value: "enabled",
+            label: _('Enabled'),
+            value: 'enabled',
           },
           {
-            label: _("Disabled (single column)"),
-            value: "disabled",
+            label: _('Disabled (single column)'),
+            value: 'disabled',
           },
         ],
       },
       columnSizes: {
-        id: "columnSizes",
+        id: 'columnSizes',
         onChangeInSetup: true,
-        label: _("Column sizes"),
+        label: _('Column sizes'),
         defaultValue: 50,
         visibleCondition: {
-          id: "twoColumnsLayout",
+          id: 'twoColumnsLayout',
           values: [PREF_ENABLED],
         },
         sliderConfig: {
@@ -79,7 +103,7 @@ const getSettingsConfig = (): Record<string, PlayerPreferenceTab> => ({
             max: 70,
           },
         },
-        type: "slider",
+        type: 'slider',
       },
       // [PREF_SINGLE_COLUMN_MAP_SIZE]: {
       //   id: PREF_SINGLE_COLUMN_MAP_SIZE,
@@ -103,7 +127,7 @@ const getSettingsConfig = (): Record<string, PlayerPreferenceTab> => ({
       [PREF_CARD_SIZE_IN_LOG]: {
         id: PREF_CARD_SIZE_IN_LOG,
         onChangeInSetup: true,
-        label: _("Size of cards in log"),
+        label: _('Size of cards in log'),
         defaultValue: 0,
         sliderConfig: {
           step: 5,
@@ -113,7 +137,7 @@ const getSettingsConfig = (): Record<string, PlayerPreferenceTab> => ({
             max: 90,
           },
         },
-        type: "slider",
+        type: 'slider',
       },
       [PREF_CARD_INFO_IN_TOOLTIP]: {
         id: PREF_CARD_INFO_IN_TOOLTIP,
@@ -134,22 +158,162 @@ const getSettingsConfig = (): Record<string, PlayerPreferenceTab> => ({
       },
     },
   },
+  colors: {
+    id: 'colors',
+    config: {
+      [PREF_SELECTABLE_COLOR]: {
+        id: PREF_SELECTABLE_COLOR,
+        onChangeInSetup: true,
+        defaultValue: 'yellow',
+        label: _('Selectable color'),
+        type: 'select',
+        options: [
+          {
+            label: _('Black'),
+            value: 'black',
+            backgroundColor: supportedColorHexColorMap.black,
+            textColor: 'white',
+          },
+          {
+            label: _('Blue'),
+            value: 'blue',
+            backgroundColor: supportedColorHexColorMap.blue,
+          },
+          {
+            label: _('Green'),
+            value: 'green',
+            backgroundColor: supportedColorHexColorMap.green,
+          },
+          {
+            label: _('Orange'),
+            value: 'orange',
+            backgroundColor: supportedColorHexColorMap.orange,
+          },
+          {
+            label: _('Purple'),
+            value: 'purple',
+            backgroundColor: supportedColorHexColorMap.purple,
+          },
+          {
+            label: _('Red'),
+            value: 'red',
+            backgroundColor: supportedColorHexColorMap.red,
+          },
+          {
+            label: _('White'),
+            value: 'white',
+          },
+          {
+            label: _('Yellow'),
+            value: 'yellow',
+            backgroundColor: supportedColorHexColorMap.yellow,
+          },
+        ],
+      },
+      [PREF_SELECTED_COLOR]: {
+        id: PREF_SELECTED_COLOR,
+        onChangeInSetup: true,
+        defaultValue: 'blue',
+        label: _('Selected color'),
+        type: 'select',
+        options: [
+          {
+            label: _('Black'),
+            value: 'black',
+          },
+          {
+            label: _('Blue'),
+            value: 'blue',
+          },
+          {
+            label: _('Green'),
+            value: 'green',
+          },
+          {
+            label: _('Orange'),
+            value: 'orange',
+          },
+          {
+            label: _('Purple'),
+            value: 'purple',
+          },
+          {
+            label: _('Red'),
+            value: 'red',
+          },
+          {
+            label: _('White'),
+            value: 'white',
+          },
+          {
+            label: _('Yellow'),
+            value: 'yellow',
+          },
+        ],
+      },
+      [PREF_SPENT_COLOR]: {
+        id: PREF_SPENT_COLOR,
+        onChangeInSetup: true,
+        defaultValue: 'none',
+        label: _('Spent color'),
+        type: 'select',
+        options: [
+          {
+            label: _('Black'),
+            value: 'black',
+          },
+          {
+            label: _('Blue'),
+            value: 'blue',
+          },
+          {
+            label: _('Green'),
+            value: 'green',
+          },
+          {
+            label: _('Orange'),
+            value: 'orange',
+          },
+          {
+            label: _('Purple'),
+            value: 'purple',
+          },
+          {
+            label: _('Red'),
+            value: 'red',
+          },
+          {
+            label: _('White'),
+            value: 'white',
+          },
+          {
+            label: _('Yellow'),
+            value: 'yellow',
+          },
+          {
+            label: _('None (show marker)'),
+            value: 'none',
+          },
+        ],
+      },
+    },
+  },
   gameplay: {
-    id: "gameplay",
+    id: 'gameplay',
     config: {
       [PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY]: {
         id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
         onChangeInSetup: false,
         defaultValue: DISABLED,
-        label: _("Confirm end of turn and player switch only"),
-        type: "select",
+        label: _('Confirm end of turn and player switch only'),
+        type: 'select',
         options: [
           {
-            label: _("Enabled"),
+            label: _('Enabled'),
             value: PREF_ENABLED,
           },
           {
-            label: _("Disabled (confirm every move)"),
+            label: _('Disabled (confirm every move)'),
             value: PREF_DISABLED,
           },
         ],
@@ -158,15 +322,15 @@ const getSettingsConfig = (): Record<string, PlayerPreferenceTab> => ({
         id: PREF_SHOW_ANIMATIONS,
         onChangeInSetup: false,
         defaultValue: PREF_ENABLED,
-        label: _("Show animations"),
-        type: "select",
+        label: _('Show animations'),
+        type: 'select',
         options: [
           {
-            label: _("Enabled"),
+            label: _('Enabled'),
             value: PREF_ENABLED,
           },
           {
-            label: _("Disabled"),
+            label: _('Disabled'),
             value: PREF_DISABLED,
           },
         ],
@@ -174,7 +338,7 @@ const getSettingsConfig = (): Record<string, PlayerPreferenceTab> => ({
       [PREF_ANIMATION_SPEED]: {
         id: PREF_ANIMATION_SPEED,
         onChangeInSetup: false,
-        label: _("Animation speed"),
+        label: _('Animation speed'),
         defaultValue: 1600,
         visibleCondition: {
           id: PREF_SHOW_ANIMATIONS,
@@ -188,7 +352,7 @@ const getSettingsConfig = (): Record<string, PlayerPreferenceTab> => ({
             max: 2000,
           },
         },
-        type: "slider",
+        type: 'slider',
       },
     },
   },

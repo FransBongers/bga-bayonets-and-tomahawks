@@ -791,6 +791,14 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     node.classList.add(BT_SELECTED);
   }
 
+  setUnitSpent({ id }: { id: string }) {
+    const node = $(id);
+    if (node === null) {
+      return;
+    }
+    node.classList.add(BT_SPENT);
+  }
+
   // .########...#######..####.##.......########.########.
   // .##.....##.##.....##..##..##.......##.......##.....##
   // .##.....##.##.....##..##..##.......##.......##.....##

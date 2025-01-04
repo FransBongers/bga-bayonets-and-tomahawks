@@ -10,5 +10,6 @@ class VOWFrenchNavyLossedPutBack extends \BayonetsAndTomahawks\Models\VagariesOf
     $this->counterText = clienttranslate('French Navy Losses');
     $this->faction = FRENCH;
     $this->putTokenBackInPool = true;
+    $this->shape = CIRCLE;
   }
 }

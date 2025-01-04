@@ -53,11 +53,9 @@
 }
 
 #map_scrollable {
-  background-image: url('img/map.webp');
+  background-image: url('img/map.jpg');
 
-  background-size: calc(
-      var(--leftColumnScale) * 1500px
-    )
+  background-size: calc(var(--leftColumnScale) * 1500px)
     calc(var(--leftColumnScale) * 2318px);
   background-repeat: no-repeat;
   position: relative;
@@ -142,7 +140,6 @@
   }
 }
 
-
 .bt_space {
   position: absolute !important;
   border-radius: 50%;
@@ -220,7 +217,7 @@
 
 .bt_token {
   .bt_spent_marker {
-    background-image: url('img/markers_2.webp');
+    background-image: url('img/markers.jpg');
     background-size: 800% 600%;
     background-position-x: math.div(7, 7) * 100%;
     background-position-y: math.div(3, 5) * 100%;
@@ -235,47 +232,90 @@
   }
 }
 
-.bt_marker.bt_selectable > .card-sides > .card-side,
-.bt_token.bt_selectable > .card-sides > .card-side {
+html[data-show-spent-markers='false'] {
+  .bt_spent_marker {
+    display: none;
+  }
+}
+
+.bt_token.bt_spent > .card-sides {
+  background-image: url('img/backgrounds_tokens.png');
+  background-size: 400% 800%;
+  background-position-y: var(--spentColorPosition);
+  height: calc(var(--btTokenScale)* 52px);
+  width: calc(var(--btTokenScale)* 52px);
+}
+
+html[data-show-spent-markers='true'] {
+  .bt_token.bt_spent > .card-sides {
+    background-image: none;
+  }
+}
+
+.bt_token.bt_selected > .card-sides,
+.bt_token.bt_selectable > .card-sides {
   cursor: pointer;
-  filter: drop-shadow(2px 0px 0px base.$selectable-color)
-    drop-shadow(-2px 0px 0px base.$selectable-color)
-    drop-shadow(0px 2px 0px base.$selectable-color)
-    drop-shadow(0px -2px 0px base.$selectable-color);
-  // box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px)
-  //   base.$selectable-color !important;
+  background-image: url('img/backgrounds_tokens.png') !important;
+  background-size: 400% 800%;
+  height: calc(var(--btTokenScale)* 52px);
+  width: calc(var(--btTokenScale)* 52px);
+}
+
+.bt_token[data-commander='true'].bt_spent > .card-sides,
+.bt_token[data-commander='true'].bt_selected > .card-sides,
+.bt_token[data-commander='true'].bt_selectable > .card-sides {
+  height: calc(var(--btTokenScale) * 40px);
+  width: calc(var(--btTokenScale) * 40px);
+}
+
+.bt_token.bt_selectable > .card-sides {
+  // background-position-y: 100%;
+  background-position-y: var(--selectableColorPosition);
+}
+
+.bt_token.bt_selected > .card-sides,
+.bt_token.bt_selectable:hover > .card-sides {
+  // background-position-y: math.div((1 * 100%), 7);
+  background-position-y: var(--selectedColorPosition);
+}
+
+.bt_token.bt_spent[data-shape='circle'] > .card-sides,
+.bt_token.bt_selected[data-shape='circle'] > .card-sides,
+.bt_token.bt_selectable[data-shape='circle'] > .card-sides {
+  background-position-x: 0%;
+}
+
+.bt_token.bt_spent[data-shape='square'] > .card-sides,
+.bt_token.bt_selected[data-shape='square'] > .card-sides,
+.bt_token.bt_selectable[data-shape='square'] > .card-sides {
+  background-position-x: math.div((1 * 100%), 3);
+}
+
+.bt_token.bt_spent[data-shape='square'][data-commander='true'] > .card-sides,
+.bt_token.bt_selectable:hover[data-shape='square'][data-commander='true'] > .card-sides,
+.bt_token.bt_selected[data-shape='square'][data-commander='true'] > .card-sides,
+.bt_token.bt_selectable[data-shape='square'][data-commander='true'] > .card-sides {
+  background-position-x: math.div((2 * 100%), 3);
+}
+
+.bt_token.bt_spent[data-shape='triangle'] > .card-sides,
+.bt_token.bt_selected[data-shape='triangle'] > .card-sides,
+.bt_token.bt_selectable[data-shape='triangle'] > .card-sides {
+  background-position-x: 100%;
+}
+
+.bt_marker.bt_selectable {
+  cursor: pointer;
+  box-shadow: 0px 0px 0px calc(var(--btMarkerScale)* 3px) var(--selectableColor) !important;
+  border-radius: 2%;
 }
 
 .bt_marker.bt_selectable:hover > .card-sides > .card-side,
-.bt_marker.bt_selected > .card-sides > .card-side,
-.bt_token.bt_selectable:hover > .card-sides > .card-side,
-.bt_token.bt_selected > .card-sides > .card-side {
+.bt_marker.bt_selected > .card-sides > .card-side {
   cursor: pointer;
-  // box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px)
-  //   base.$selected-color !important;
-  filter: drop-shadow(2px 0px 0px base.$selected-color)
-    drop-shadow(-2px 0px 0px base.$selected-color)
-    drop-shadow(0px 2px 0px base.$selected-color)
-    drop-shadow(0px -2px 0px base.$selected-color);
+  box-shadow: 0px 0px 0px calc(var(--btMarkerScale)* 3px) var(--selectedColor) !important;
+  border-radius: 2%;
 }
-
-// .bt_token.bt_selectable::before {
-//   position: absolute;
-//   content: '';
-//   background-color: yellow;
-//   left: calc(var(--btTokenScale)* -4px);
-//   top: calc(var(--btTokenScale)* -4px);
-//   height: calc(var(--btTokenScale)* 60px);
-//   width: calc(var(--btTokenScale)* 60px);
-//   border-radius: calc(var(--btTokenScale)* 2px);
-//   // cursor: pointer;
-//   // filter: drop-shadow(2px 0px 0px base.$selectable-color)
-//   //   drop-shadow(-2px 0px 0px base.$selectable-color)
-//   //   drop-shadow(0px 2px 0px base.$selectable-color)
-//   //   drop-shadow(0px -2px 0px base.$selectable-color);
-//   // box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px)
-//   //   base.$selectable-color !important;
-// }
 
 .bt_stack.bt_selectable {
   box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) base.$selectable-color !important;
@@ -293,7 +333,10 @@
   height: calc(var(--btMapScale) * 300px);
   display: grid !important;
   grid-template-columns: repeat(auto-fit, calc(var(--btMapScale) * 52px));
-  grid-template-rows: repeat(auto-fit, minmax(calc(var(--btMapScale) * 15px), max-content));
+  grid-template-rows: repeat(
+    auto-fit,
+    minmax(calc(var(--btMapScale) * 15px), max-content)
+  );
   grid-gap: calc(var(--btMapScale) * 4px) !important;
 }
 

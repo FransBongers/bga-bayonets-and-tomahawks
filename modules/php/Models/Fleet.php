@@ -13,6 +13,7 @@ class Fleet extends AbstractUnit
     $this->stackOrder = 1;
     $this->mpLimit = 2;
     $this->connectionTypeAllowed = [ROAD, HIGHWAY, PATH]; // requires coastal
+    $this->shape = CIRCLE;
   }
 
   public function eliminate($player)

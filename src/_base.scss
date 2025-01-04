@@ -2,8 +2,10 @@
  * All base constants to be used in other sass files.
  */
 // $selectable-color: white; //#ffff00; //  yellow;
-$selectable-color: yellow;
-$selected-color: #0000ff; //blue;
+// $selectable-color: yellow;
+// $selected-color: #0000ff; //blue;
+$selectable-color: var(--selectableColor);
+$selected-color: var(--selectedColor);
 
 $british-color: #B73E1F;
 $french-color: #216295;

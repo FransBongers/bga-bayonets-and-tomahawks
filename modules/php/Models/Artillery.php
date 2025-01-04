@@ -10,6 +10,7 @@ class Artillery extends AbstractUnit
     $this->stackOrder = 7;
     $this->mpLimit = 2;
     $this->connectionTypeAllowed = [ROAD, HIGHWAY];
+    $this->shape = CIRCLE;
   }
 
 }

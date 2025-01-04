@@ -13,6 +13,7 @@ class BastionModel extends AbstractUnit
   public function __construct($row)
   {
     $this->type = BASTION_UNIT_TYPE;
+    $this->shape = CIRCLE;
     parent::__construct($row);
   }
 

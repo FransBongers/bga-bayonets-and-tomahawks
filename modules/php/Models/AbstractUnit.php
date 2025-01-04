@@ -42,6 +42,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
   protected $highland = false;
   protected $metropolitan = false;
   protected $villages = null;
+  protected $shape = SQUARE;
 
   /*
    * STATIC DATA
@@ -60,6 +61,7 @@ class AbstractUnit extends \BayonetsAndTomahawks\Helpers\DB_Model implements \Js
     'connectionTypeAllowed',
     'stackOrder',
     'villages',
+    'shape'
   ];
   protected $type = null;
   protected $counterText = null;

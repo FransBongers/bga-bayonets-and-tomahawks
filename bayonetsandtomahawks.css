@@ -349,7 +349,7 @@ body > .card {
 }
 
 .bt_action_point_img[data-reaction=true] {
-  background-image: url("img/markers.webp");
+  background-image: url("img/markers.jpg");
   background-size: 800% 600%;
 }
 
@@ -418,7 +418,7 @@ body > .card {
   height: 150px;
   width: calc(var(--rightColumnScale) * 1500px);
   margin: -16px -8px 0px -8px;
-  background-image: url("img/map.webp");
+  background-image: url("img/map.jpg");
   background-repeat: no-repeat;
   background-size: 1060px 1638.4px;
 }
@@ -645,7 +645,7 @@ body > .card {
 
 .bt_card {
   box-sizing: border-box;
-  background-image: url("img/cards.webp");
+  background-image: url("img/cards.jpg");
   background-size: 700% 900%;
   width: calc(var(--btCardScale) * 250px);
   height: calc(var(--btCardScale) * 179px);
@@ -662,13 +662,13 @@ body > .card {
 
 .bt_card_container.bt_selectable > .card-sides > .card-side {
   cursor: pointer;
-  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) yellow !important;
+  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) var(--selectableColor) !important;
 }
 
 .bt_card_container.bt_selectable:hover > .card-sides > .card-side,
 .bt_card_container.bt_selected > .card-sides > .card-side {
   cursor: pointer;
-  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) #0000ff !important;
+  box-shadow: 0px 0px 0px calc(var(--btCardScale) * 4px) var(--selectedColor) !important;
 }
 
 .bt_card[data-card-id=Card01] {
@@ -1026,7 +1026,7 @@ body > .card {
 }
 
 #map_scrollable {
-  background-image: url("img/map.webp");
+  background-image: url("img/map.jpg");
   background-size: calc(var(--leftColumnScale) * 1500px) calc(var(--leftColumnScale) * 2318px);
   background-repeat: no-repeat;
   position: relative;
@@ -1069,13 +1069,13 @@ body > .card {
 }
 .bt_connection .bt_marker_side.bt_selectable {
   display: initial;
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) yellow !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) var(--selectableColor) !important;
   cursor: pointer;
 }
 .bt_connection .bt_marker_side.bt_selected,
 .bt_connection .bt_marker_side.bt_selectable:hover {
   display: initial;
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #0000ff !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) var(--selectedColor) !important;
   cursor: pointer;
 }
 .bt_connection .bt_connection_limit_counter {
@@ -1116,13 +1116,13 @@ body > .card {
 }
 
 .bt_space.bt_selectable {
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) yellow !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) var(--selectableColor) !important;
   cursor: pointer;
 }
 
 .bt_space.bt_selected,
 .bt_space.bt_selectable:hover {
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #0000ff !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) var(--selectedColor) !important;
   cursor: pointer;
 }
 
@@ -1164,7 +1164,7 @@ body > .card {
 }
 
 .bt_token .bt_spent_marker {
-  background-image: url("img/markers_2.webp");
+  background-image: url("img/markers.jpg");
   background-size: 800% 600%;
   background-position-x: 100%;
   background-position-y: 60%;
@@ -1177,27 +1177,92 @@ body > .card {
   display: none;
 }
 
-.bt_marker.bt_selectable > .card-sides > .card-side,
-.bt_token.bt_selectable > .card-sides > .card-side {
+html[data-show-spent-markers=false] .bt_spent_marker {
+  display: none;
+}
+
+.bt_token.bt_spent > .card-sides {
+  background-image: url("img/backgrounds_tokens.png");
+  background-size: 400% 800%;
+  background-position-y: var(--spentColorPosition);
+  height: calc(var(--btTokenScale) * 52px);
+  width: calc(var(--btTokenScale) * 52px);
+}
+
+html[data-show-spent-markers=true] .bt_token.bt_spent > .card-sides {
+  background-image: none;
+}
+
+.bt_token.bt_selected > .card-sides,
+.bt_token.bt_selectable > .card-sides {
   cursor: pointer;
-  filter: drop-shadow(2px 0px 0px yellow) drop-shadow(-2px 0px 0px yellow) drop-shadow(0px 2px 0px yellow) drop-shadow(0px -2px 0px yellow);
+  background-image: url("img/backgrounds_tokens.png") !important;
+  background-size: 400% 800%;
+  height: calc(var(--btTokenScale) * 52px);
+  width: calc(var(--btTokenScale) * 52px);
+}
+
+.bt_token[data-commander=true].bt_spent > .card-sides,
+.bt_token[data-commander=true].bt_selected > .card-sides,
+.bt_token[data-commander=true].bt_selectable > .card-sides {
+  height: calc(var(--btTokenScale) * 40px);
+  width: calc(var(--btTokenScale) * 40px);
+}
+
+.bt_token.bt_selectable > .card-sides {
+  background-position-y: var(--selectableColorPosition);
+}
+
+.bt_token.bt_selected > .card-sides,
+.bt_token.bt_selectable:hover > .card-sides {
+  background-position-y: var(--selectedColorPosition);
+}
+
+.bt_token.bt_spent[data-shape=circle] > .card-sides,
+.bt_token.bt_selected[data-shape=circle] > .card-sides,
+.bt_token.bt_selectable[data-shape=circle] > .card-sides {
+  background-position-x: 0%;
+}
+
+.bt_token.bt_spent[data-shape=square] > .card-sides,
+.bt_token.bt_selected[data-shape=square] > .card-sides,
+.bt_token.bt_selectable[data-shape=square] > .card-sides {
+  background-position-x: 33.3333333333%;
+}
+
+.bt_token.bt_spent[data-shape=square][data-commander=true] > .card-sides,
+.bt_token.bt_selectable:hover[data-shape=square][data-commander=true] > .card-sides,
+.bt_token.bt_selected[data-shape=square][data-commander=true] > .card-sides,
+.bt_token.bt_selectable[data-shape=square][data-commander=true] > .card-sides {
+  background-position-x: 66.6666666667%;
+}
+
+.bt_token.bt_spent[data-shape=triangle] > .card-sides,
+.bt_token.bt_selected[data-shape=triangle] > .card-sides,
+.bt_token.bt_selectable[data-shape=triangle] > .card-sides {
+  background-position-x: 100%;
+}
+
+.bt_marker.bt_selectable {
+  cursor: pointer;
+  box-shadow: 0px 0px 0px calc(var(--btMarkerScale) * 3px) var(--selectableColor) !important;
+  border-radius: 2%;
 }
 
 .bt_marker.bt_selectable:hover > .card-sides > .card-side,
-.bt_marker.bt_selected > .card-sides > .card-side,
-.bt_token.bt_selectable:hover > .card-sides > .card-side,
-.bt_token.bt_selected > .card-sides > .card-side {
+.bt_marker.bt_selected > .card-sides > .card-side {
   cursor: pointer;
-  filter: drop-shadow(2px 0px 0px #0000ff) drop-shadow(-2px 0px 0px #0000ff) drop-shadow(0px 2px 0px #0000ff) drop-shadow(0px -2px 0px #0000ff);
+  box-shadow: 0px 0px 0px calc(var(--btMarkerScale) * 3px) var(--selectedColor) !important;
+  border-radius: 2%;
 }
 
 .bt_stack.bt_selectable {
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) yellow !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) var(--selectableColor) !important;
   cursor: pointer;
 }
 
 .bt_stack.bt_selected {
-  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) #0000ff !important;
+  box-shadow: 0px 0px 0px calc(var(--btMapScale) * 4px) var(--selectedColor) !important;
   cursor: pointer;
 }
 
@@ -1508,7 +1573,7 @@ body > .card {
 
 /* ------- LOG TOKENS ------- */
 .bt_log_die {
-  background-image: url("img/dice.webp");
+  background-image: url("img/dice.jpg");
   height: calc(var(--btTokenScale) * 40px);
   width: calc(var(--btTokenScale) * 40px);
   background-size: 500% 100%;
@@ -1810,1610 +1875,1610 @@ body > .card {
 .bt_token_side[data-counter-id=Abenaki] {
   background-position-x: 0%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_ind.webp");
+  background-image: url("img/unit_tokens_indian.png");
   background-size: 500% 300%;
 }
 
 .bt_token_side[data-counter-id=Chaouanon] {
   background-position-x: 25%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_ind.webp");
+  background-image: url("img/unit_tokens_indian.png");
   background-size: 500% 300%;
 }
 
 .bt_token_side[data-counter-id=FrenchCherokee] {
   background-position-x: 50%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_ind.webp");
+  background-image: url("img/unit_tokens_indian.png");
   background-size: 500% 300%;
 }
 
 .bt_token_side[data-counter-id=BritishCherokee] {
   background-position-x: 75%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_ind.webp");
+  background-image: url("img/unit_tokens_indian.png");
   background-size: 500% 300%;
 }
 
 .bt_token_side[data-counter-id=Delaware] {
   background-position-x: 100%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_ind.webp");
+  background-image: url("img/unit_tokens_indian.png");
   background-size: 500% 300%;
 }
 
 .bt_token_side[data-counter-id=FrenchIroquois] {
   background-position-x: 0%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_ind.webp");
+  background-image: url("img/unit_tokens_indian.png");
   background-size: 500% 300%;
 }
 
 .bt_token_side[data-counter-id=BritishIroquois] {
   background-position-x: 25%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_ind.webp");
+  background-image: url("img/unit_tokens_indian.png");
   background-size: 500% 300%;
 }
 
 .bt_token_side[data-counter-id=Kahnawake] {
   background-position-x: 50%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_ind.webp");
+  background-image: url("img/unit_tokens_indian.png");
   background-size: 500% 300%;
 }
 
 .bt_token_side[data-counter-id=Malecite] {
   background-position-x: 75%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_ind.webp");
+  background-image: url("img/unit_tokens_indian.png");
   background-size: 500% 300%;
 }
 
 .bt_token_side[data-counter-id=Micmac] {
   background-position-x: 100%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_ind.webp");
+  background-image: url("img/unit_tokens_indian.png");
   background-size: 500% 300%;
 }
 
 .bt_token_side[data-counter-id=Mingo] {
   background-position-x: 0%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_ind.webp");
+  background-image: url("img/unit_tokens_indian.png");
   background-size: 500% 300%;
 }
 
 .bt_token_side[data-counter-id=Mississague] {
   background-position-x: 25%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_ind.webp");
+  background-image: url("img/unit_tokens_indian.png");
   background-size: 500% 300%;
 }
 
 .bt_token_side[data-counter-id=Mohawk] {
   background-position-x: 50%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_ind.webp");
+  background-image: url("img/unit_tokens_indian.png");
   background-size: 500% 300%;
 }
 
 .bt_token_side[data-counter-id=Outaouais] {
   background-position-x: 75%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_ind.webp");
+  background-image: url("img/unit_tokens_indian.png");
   background-size: 500% 300%;
 }
 
 .bt_token_side[data-counter-id=Seneca] {
   background-position-x: 100%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_ind.webp");
+  background-image: url("img/unit_tokens_indian.png");
   background-size: 500% 300%;
 }
 
 .bt_token_side[data-counter-id=B15th58th_reduced] {
   background-position-x: 0%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B15th58th] {
   background-position-x: 9.0909090909%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B22nd28th_reduced] {
   background-position-x: 18.1818181818%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B22nd28th] {
   background-position-x: 27.2727272727%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B27th55th_reduced] {
   background-position-x: 36.3636363636%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B27th55th] {
   background-position-x: 45.4545454545%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B35thNewYorkCompanies_reduced] {
   background-position-x: 54.5454545455%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B35thNewYorkCompanies] {
   background-position-x: 63.6363636364%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B40th45th47th_reduced] {
   background-position-x: 72.7272727273%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B40th45th47th] {
   background-position-x: 81.8181818182%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B43rd46th_reduced] {
   background-position-x: 90.9090909091%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B43rd46th] {
   background-position-x: 100%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B44th48th_reduced] {
   background-position-x: 0%;
   background-position-y: 10%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B44th48th] {
   background-position-x: 9.0909090909%;
   background-position-y: 10%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B50th51st_reduced] {
   background-position-x: 18.1818181818%;
   background-position-y: 10%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B50th51st] {
   background-position-x: 27.2727272727%;
   background-position-y: 10%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B61st63rd_reduced] {
   background-position-x: 36.3636363636%;
   background-position-y: 10%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B61st63rd] {
   background-position-x: 45.4545454545%;
   background-position-y: 10%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B94th95th_reduced] {
   background-position-x: 54.5454545455%;
   background-position-y: 10%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B94th95th] {
   background-position-x: 63.6363636364%;
   background-position-y: 10%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=RoyalArtillery_reduced] {
   background-position-x: 72.7272727273%;
   background-position-y: 10%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=RoyalArtillery] {
   background-position-x: 81.8181818182%;
   background-position-y: 10%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Bradstreet] {
   background-position-x: 90.9090909091%;
   background-position-y: 10%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Forbes] {
   background-position-x: 100%;
   background-position-y: 10%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=CHowe] {
   background-position-x: 0%;
   background-position-y: 20%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=BritishCommander] {
   background-position-x: 9.0909090909%;
   background-position-y: 20%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Wolfe] {
   background-position-x: 18.1818181818%;
   background-position-y: 20%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=NewEngland_reduced] {
   background-position-x: 27.2727272727%;
   background-position-y: 20%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=NewEngland] {
   background-position-x: 36.3636363636%;
   background-position-y: 20%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=NYorkNJ_reduced] {
   background-position-x: 45.4545454545%;
   background-position-y: 20%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=NYorkNJ] {
   background-position-x: 54.5454545455%;
   background-position-y: 20%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=PennDel_reduced] {
   background-position-x: 63.6363636364%;
   background-position-y: 20%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=PennDel] {
   background-position-x: 72.7272727273%;
   background-position-y: 20%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=VirginiaS_reduced] {
   background-position-x: 81.8181818182%;
   background-position-y: 20%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=VirginiaS] {
   background-position-x: 90.9090909091%;
   background-position-y: 20%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Boscawen_reduced] {
   background-position-x: 100%;
   background-position-y: 20%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Boscawen] {
   background-position-x: 0%;
   background-position-y: 30%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Colvill_reduced] {
   background-position-x: 9.0909090909%;
   background-position-y: 30%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Colvill] {
   background-position-x: 18.1818181818%;
   background-position-y: 30%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Durell_reduced] {
   background-position-x: 27.2727272727%;
   background-position-y: 30%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Durell] {
   background-position-x: 36.3636363636%;
   background-position-y: 30%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Hardy_reduced] {
   background-position-x: 45.4545454545%;
   background-position-y: 30%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Hardy] {
   background-position-x: 54.5454545455%;
   background-position-y: 30%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Holburne_reduced] {
   background-position-x: 63.6363636364%;
   background-position-y: 30%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Holburne] {
   background-position-x: 72.7272727273%;
   background-position-y: 30%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Holmes_reduced] {
   background-position-x: 81.8181818182%;
   background-position-y: 30%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Holmes] {
   background-position-x: 90.9090909091%;
   background-position-y: 30%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=RoyalNavy_reduced] {
   background-position-x: 100%;
   background-position-y: 30%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=RoyalNavy] {
   background-position-x: 0%;
   background-position-y: 40%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Saunders_reduced] {
   background-position-x: 9.0909090909%;
   background-position-y: 40%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Saunders] {
   background-position-x: 18.1818181818%;
   background-position-y: 40%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Anne_reduced] {
   background-position-x: 27.2727272727%;
   background-position-y: 40%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Anne] {
   background-position-x: 36.3636363636%;
   background-position-y: 40%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Augusta_reduced] {
   background-position-x: 45.4545454545%;
   background-position-y: 40%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Augusta] {
   background-position-x: 54.5454545455%;
   background-position-y: 40%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Bedford_reduced] {
   background-position-x: 63.6363636364%;
   background-position-y: 40%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Bedford] {
   background-position-x: 72.7272727273%;
   background-position-y: 40%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=CrownPoint_reduced] {
   background-position-x: 81.8181818182%;
   background-position-y: 40%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=CrownPoint] {
   background-position-x: 90.9090909091%;
   background-position-y: 40%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Cumberland_reduced] {
   background-position-x: 100%;
   background-position-y: 40%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Cumberland] {
   background-position-x: 0%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Edward_reduced] {
   background-position-x: 9.0909090909%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Edward] {
   background-position-x: 18.1818181818%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Frederick_reduced] {
   background-position-x: 27.2727272727%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Frederick] {
   background-position-x: 36.3636363636%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Herkimer_reduced] {
   background-position-x: 45.4545454545%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Herkimer] {
   background-position-x: 54.5454545455%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Johnson_reduced] {
   background-position-x: 63.6363636364%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Johnson] {
   background-position-x: 72.7272727273%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Ligonier_reduced] {
   background-position-x: 81.8181818182%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Ligonier] {
   background-position-x: 90.9090909091%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Ontario_reduced] {
   background-position-x: 100%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Ontario] {
   background-position-x: 0%;
   background-position-y: 60%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Pitt_reduced] {
   background-position-x: 9.0909090909%;
   background-position-y: 60%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Pitt] {
   background-position-x: 18.1818181818%;
   background-position-y: 60%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Pownall_reduced] {
   background-position-x: 27.2727272727%;
   background-position-y: 60%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Pownall] {
   background-position-x: 36.3636363636%;
   background-position-y: 60%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Stanwix_reduced] {
   background-position-x: 45.4545454545%;
   background-position-y: 60%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Stanwix] {
   background-position-x: 54.5454545455%;
   background-position-y: 60%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Ticonderoga_reduced] {
   background-position-x: 63.6363636364%;
   background-position-y: 60%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Ticonderoga] {
   background-position-x: 72.7272727273%;
   background-position-y: 60%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=WilliamHenry_reduced] {
   background-position-x: 81.8181818182%;
   background-position-y: 60%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=WilliamHenry] {
   background-position-x: 90.9090909091%;
   background-position-y: 60%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Campbell_reduced] {
   background-position-x: 100%;
   background-position-y: 60%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Campbell] {
   background-position-x: 0%;
   background-position-y: 70%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Fraser_reduced] {
   background-position-x: 9.0909090909%;
   background-position-y: 70%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Fraser] {
   background-position-x: 18.1818181818%;
   background-position-y: 70%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Montgomery_reduced] {
   background-position-x: 27.2727272727%;
   background-position-y: 70%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Montgomery] {
   background-position-x: 36.3636363636%;
   background-position-y: 70%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=RoyalHighland_reduced] {
   background-position-x: 45.4545454545%;
   background-position-y: 70%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=RoyalHighland] {
   background-position-x: 54.5454545455%;
   background-position-y: 70%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=HowardsBuffsKingsOwn_reduced] {
   background-position-x: 63.6363636364%;
   background-position-y: 70%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=HowardsBuffsKingsOwn] {
   background-position-x: 72.7272727273%;
   background-position-y: 70%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Armstrong_reduced] {
   background-position-x: 81.8181818182%;
   background-position-y: 70%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Armstrong] {
   background-position-x: 90.9090909091%;
   background-position-y: 70%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Dunn_reduced] {
   background-position-x: 100%;
   background-position-y: 70%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Dunn] {
   background-position-x: 0%;
   background-position-y: 80%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Goreham_reduced] {
   background-position-x: 9.0909090909%;
   background-position-y: 80%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Goreham] {
   background-position-x: 18.1818181818%;
   background-position-y: 80%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Putnam_reduced] {
   background-position-x: 27.2727272727%;
   background-position-y: 80%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Putnam] {
   background-position-x: 36.3636363636%;
   background-position-y: 80%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Rogers_reduced] {
   background-position-x: 45.4545454545%;
   background-position-y: 80%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Rogers] {
   background-position-x: 54.5454545455%;
   background-position-y: 80%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Washington_reduced] {
   background-position-x: 63.6363636364%;
   background-position-y: 80%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Washington] {
   background-position-x: 72.7272727273%;
   background-position-y: 80%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Gage_reduced] {
   background-position-x: 81.8181818182%;
   background-position-y: 80%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Gage] {
   background-position-x: 90.9090909091%;
   background-position-y: 80%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=LHowe_reduced] {
   background-position-x: 100%;
   background-position-y: 80%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=LHowe] {
   background-position-x: 0%;
   background-position-y: 90%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Morgan_reduced] {
   background-position-x: 9.0909090909%;
   background-position-y: 90%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Morgan] {
   background-position-x: 18.1818181818%;
   background-position-y: 90%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Scott_reduced] {
   background-position-x: 27.2727272727%;
   background-position-y: 90%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=Scott] {
   background-position-x: 36.3636363636%;
   background-position-y: 90%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B2ndRoyalAmerican_reduced] {
   background-position-x: 45.4545454545%;
   background-position-y: 90%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B2ndRoyalAmerican] {
   background-position-x: 54.5454545455%;
   background-position-y: 90%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B1stRoyalAmerican_reduced] {
   background-position-x: 63.6363636364%;
   background-position-y: 90%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=B1stRoyalAmerican] {
   background-position-x: 72.7272727273%;
   background-position-y: 90%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=RoyalScots17th_reduced] {
   background-position-x: 81.8181818182%;
   background-position-y: 90%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=RoyalScots17th] {
   background-position-x: 90.9090909091%;
   background-position-y: 90%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=VOWPickTwoArtilleryBritish] {
   background-position-x: 100%;
   background-position-y: 90%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=VOWPickTwoArtilleryOrLightBritish] {
   background-position-x: 0%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=VOWBackBritish] {
   background-position-x: 9.0909090909%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=VOWPickOneColonialLightPutBack] {
   background-position-x: 18.1818181818%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=VOWPickOneColonialLight] {
   background-position-x: 27.2727272727%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=VOWBackColonial] {
   background-position-x: 36.3636363636%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=VOWFewerTroopsPutBackColonial] {
   background-position-x: 45.4545454545%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=VOWFewerTroopsColonial] {
   background-position-x: 54.5454545455%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=VOWPennsylvaniaMusters] {
   background-position-x: 63.6363636364%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=VOWPittSubsidies] {
   background-position-x: 72.7272727273%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=VOWFewerTroopsPutBackBritish] {
   background-position-x: 81.8181818182%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=VOWFewerTroopsBritish] {
   background-position-x: 90.9090909091%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=VOWPickOneColonialLightPutBack_reduced] {
   background-position-x: 36.3636363636%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_bri.webp");
+  background-image: url("img/unit_tokens_british.png");
   background-size: 1200% 1100%;
 }
 
 .bt_token_side[data-counter-id=CanonniersBombardiers_reduced] {
   background-position-x: 0%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=CanonniersBombardiers] {
   background-position-x: 9.0909090909%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=AngoumoisBeauvoisis_reduced] {
   background-position-x: 18.1818181818%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=AngoumoisBeauvoisis] {
   background-position-x: 27.2727272727%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=ArtoisBourgogne_reduced] {
   background-position-x: 36.3636363636%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=ArtoisBourgogne] {
   background-position-x: 45.4545454545%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Bastion_reduced] {
   background-position-x: 54.5454545455%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Bastion] {
   background-position-x: 63.6363636364%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=BearnGuyenne_reduced] {
   background-position-x: 72.7272727273%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=BearnGuyenne] {
   background-position-x: 81.8181818182%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Berry_reduced] {
   background-position-x: 90.9090909091%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Berry] {
   background-position-x: 100%;
   background-position-y: 0%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=BoulonnoisRoyalBarrois_reduced] {
   background-position-x: 0%;
   background-position-y: 16.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=BoulonnoisRoyalBarrois] {
   background-position-x: 9.0909090909%;
   background-position-y: 16.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=CLevis] {
   background-position-x: 18.1818181818%;
   background-position-y: 16.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Montcalm] {
   background-position-x: 27.2727272727%;
   background-position-y: 16.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=FrenchCommander] {
   background-position-x: 36.3636363636%;
   background-position-y: 16.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Pouchot] {
   background-position-x: 45.4545454545%;
   background-position-y: 16.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Rigaud] {
   background-position-x: 54.5454545455%;
   background-position-y: 16.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=VolontEtrangersCambis_reduced] {
   background-position-x: 63.6363636364%;
   background-position-y: 16.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=VolontEtrangersCambis] {
   background-position-x: 72.7272727273%;
   background-position-y: 16.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Canadiens_reduced] {
   background-position-x: 81.8181818182%;
   background-position-y: 16.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Canadiens] {
   background-position-x: 90.9090909091%;
   background-position-y: 16.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Beauffremont_reduced] {
   background-position-x: 100%;
   background-position-y: 16.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Beauffremont] {
   background-position-x: 0%;
   background-position-y: 33.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=DeLIsle_reduced] {
   background-position-x: 9.0909090909%;
   background-position-y: 33.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=DeLIsle] {
   background-position-x: 18.1818181818%;
   background-position-y: 33.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=DeLaMotte_reduced] {
   background-position-x: 27.2727272727%;
   background-position-y: 33.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=DeLaMotte] {
   background-position-x: 36.3636363636%;
   background-position-y: 33.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=MarineRoyale_reduced] {
   background-position-x: 45.4545454545%;
   background-position-y: 33.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=MarineRoyale] {
   background-position-x: 54.5454545455%;
   background-position-y: 33.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=FoixQuercy_reduced] {
   background-position-x: 63.6363636364%;
   background-position-y: 33.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=FoixQuercy] {
   background-position-x: 72.7272727273%;
   background-position-y: 33.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Beausejour_reduced] {
   background-position-x: 81.8181818182%;
   background-position-y: 33.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Beausejour] {
   background-position-x: 90.9090909091%;
   background-position-y: 33.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Carillon_reduced] {
   background-position-x: 100%;
   background-position-y: 33.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Carillon] {
   background-position-x: 0%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Duquesne_reduced] {
   background-position-x: 9.0909090909%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Duquesne] {
   background-position-x: 18.1818181818%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Frontenac_reduced] {
   background-position-x: 27.2727272727%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Frontenac] {
   background-position-x: 36.3636363636%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=JacquesCartier_reduced] {
   background-position-x: 45.4545454545%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=JacquesCartier] {
   background-position-x: 54.5454545455%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=FLevis_reduced] {
   background-position-x: 63.6363636364%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=FLevis] {
   background-position-x: 72.7272727273%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Massiac_reduced] {
   background-position-x: 81.8181818182%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Massiac] {
   background-position-x: 90.9090909091%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Niagara_reduced] {
   background-position-x: 100%;
   background-position-y: 50%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Niagara] {
   background-position-x: 0%;
   background-position-y: 66.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=SaintFrederic_reduced] {
   background-position-x: 9.0909090909%;
   background-position-y: 66.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=SaintFrederic] {
   background-position-x: 18.1818181818%;
   background-position-y: 66.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Aubry_reduced] {
   background-position-x: 27.2727272727%;
   background-position-y: 66.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Aubry] {
   background-position-x: 36.3636363636%;
   background-position-y: 66.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Beaujeu_reduced] {
   background-position-x: 45.4545454545%;
   background-position-y: 66.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Beaujeu] {
   background-position-x: 54.5454545455%;
   background-position-y: 66.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Belestre_reduced] {
   background-position-x: 63.6363636364%;
   background-position-y: 66.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Belestre] {
   background-position-x: 72.7272727273%;
   background-position-y: 66.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Boishebert_reduced] {
   background-position-x: 81.8181818182%;
   background-position-y: 66.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Boishebert] {
   background-position-x: 90.9090909091%;
   background-position-y: 66.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Lacorne_reduced] {
   background-position-x: 100%;
   background-position-y: 66.6666666667%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Lacorne] {
   background-position-x: 0%;
   background-position-y: 83.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Langis_reduced] {
   background-position-x: 9.0909090909%;
   background-position-y: 83.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Langis] {
   background-position-x: 18.1818181818%;
   background-position-y: 83.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Langlade_reduced] {
   background-position-x: 27.2727272727%;
   background-position-y: 83.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Langlade] {
   background-position-x: 36.3636363636%;
   background-position-y: 83.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Lery_reduced] {
   background-position-x: 45.4545454545%;
   background-position-y: 83.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Lery] {
   background-position-x: 54.5454545455%;
   background-position-y: 83.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Lignery_reduced] {
   background-position-x: 63.6363636364%;
   background-position-y: 83.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Lignery] {
   background-position-x: 72.7272727273%;
   background-position-y: 83.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Villiers_reduced] {
   background-position-x: 81.8181818182%;
   background-position-y: 83.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=Villiers] {
   background-position-x: 90.9090909091%;
   background-position-y: 83.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=LaSarreRoyalRoussillon_reduced] {
   background-position-x: 100%;
   background-position-y: 83.3333333333%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=LaSarreRoyalRoussillon] {
   background-position-x: 0%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=LanguedocLaReine_reduced] {
   background-position-x: 9.0909090909%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=LanguedocLaReine] {
   background-position-x: 18.1818181818%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=DeLaMarine_reduced] {
   background-position-x: 27.2727272727%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=DeLaMarine] {
   background-position-x: 36.3636363636%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=VOWPickOneArtilleryFrench] {
   background-position-x: 45.4545454545%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=VOWBackFrench] {
   background-position-x: 54.5454545455%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=VOWFewerTroopsPutBackFrench] {
   background-position-x: 63.6363636364%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=VOWFewerTroopsFrench] {
   background-position-x: 72.7272727273%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=VOWFrenchNavyLossedPutBack] {
   background-position-x: 81.8181818182%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
 .bt_token_side[data-counter-id=VOWCircleBackFrench] {
   background-position-x: 90.9090909091%;
   background-position-y: 100%;
-  background-image: url("img/unit_tokens_fre.webp");
+  background-image: url("img/unit_tokens_french.png");
   background-size: 1200% 700%;
 }
 
@@ -3425,7 +3490,7 @@ body > .card {
 }
 
 .bt_marker_side {
-  background-image: url("img/markers_2.webp");
+  background-image: url("img/markers.jpg");
   min-height: calc(var(--btMarkerScale) * 44px);
   max-height: calc(var(--btMarkerScale) * 44px);
   min-width: calc(var(--btMarkerScale) * 44px);
@@ -3434,6 +3499,7 @@ body > .card {
   box-sizing: border-box;
   border: calc(var(--btMapScale) * 1px) solid black;
   border-radius: 5%;
+  box-shadow: none !important;
 }
 
 .bt_marker_side[data-type=year_marker][data-side=front] {
@@ -3693,14 +3759,14 @@ body > .card {
   max-height: 60vh;
 }
 .scenario_modal #scenario_modal_content .bt_victory_track_display {
-  background-image: url("img/map.webp");
+  background-image: url("img/map.jpg");
   background-size: 1050px 1622.6px;
   margin: 2px 0px;
 }
 .scenario_modal #scenario_modal_content .bt_victory_track_display .bt_victory_track_display_marker {
   --btMarkerScale: 0.77;
   border: 1px solid black;
-  box-shadow: 0px 0px 0px 2px yellow !important;
+  box-shadow: 0px 0px 0px 2px var(--selectableColor) !important;
   position: relative;
 }
 .scenario_modal #scenario_modal_content .bt_section_title {

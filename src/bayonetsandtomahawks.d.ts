@@ -70,6 +70,7 @@ interface BayonetsAndTomahawksGame extends Game {
     callback: (event: PointerEvent) => void;
   }) => void;
   setUnitSelected: (props: { id: string }) => void;
+  setUnitSpent: (props: { id: string }) => void;
   takeAction: (props: {
     action: string;
     atomicAction?: boolean;
@@ -198,6 +199,7 @@ interface BTUnitStaticData {
   indian: boolean;
   highland: boolean;
   metropolitan: boolean;
+  shape: string;
   type: string;
 }
 

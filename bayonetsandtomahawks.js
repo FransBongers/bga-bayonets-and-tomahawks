@@ -2066,6 +2066,7 @@ var ENABLED = 'enabled';
 var DISABLED = 'disabled';
 var BT_SELECTABLE = 'bt_selectable';
 var BT_SELECTED = 'bt_selected';
+var BT_SPENT = 'bt_spent';
 var DISCARD = 'discard';
 var REMOVE_AP = 'REMOVE_AP';
 var ADD_AP = 'ADD_AP';
@@ -2076,6 +2077,9 @@ var PREF_CARD_INFO_IN_TOOLTIP = 'cardInfoInTooltip';
 var PREF_CARD_SIZE_IN_LOG = 'cardSizeInLog';
 var PREF_DISABLED = 'disabled';
 var PREF_ENABLED = 'enabled';
+var PREF_SELECTABLE_COLOR = 'selectableColor';
+var PREF_SELECTED_COLOR = 'selectedColor';
+var PREF_SPENT_COLOR = 'spentColor';
 var BRITISH = 'british';
 var FRENCH = 'french';
 var INDIAN = 'indian';
@@ -2925,6 +2929,14 @@ var BayonetsAndTomahawks = (function () {
             return;
         }
         node.classList.add(BT_SELECTED);
+    };
+    BayonetsAndTomahawks.prototype.setUnitSpent = function (_a) {
+        var id = _a.id;
+        var node = $(id);
+        if (node === null) {
+            return;
+        }
+        node.classList.add(BT_SPENT);
     };
     BayonetsAndTomahawks.prototype.connect = function (node, action, callback) {
         this._connections.push(dojo.connect($(node), action, callback));
@@ -5991,6 +6003,7 @@ var NotificationManager = (function () {
         if (element) {
             element.setAttribute('data-spent', 'true');
         }
+        this.game.setUnitSpent({ id: unit.id });
     };
     NotificationManager.prototype.notif_log = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
@@ -6529,7 +6542,7 @@ var NotificationManager = (function () {
     };
     NotificationManager.prototype.notif_moveUnit = function (notif) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, unit, destination, faction, destinationId, unitStack, element;
+            var _a, unit, destination, faction, destinationId, unitStack;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -6543,10 +6556,7 @@ var NotificationManager = (function () {
                         _b.label = 2;
                     case 2:
                         if (unit.spent === 1) {
-                            element = document.getElementById("spent_marker_".concat(unit.id));
-                            if (element) {
-                                element.setAttribute('data-spent', 'true');
-                            }
+                            this.setUnitSpent(unit);
                         }
                         return [2];
                 }
@@ -6774,6 +6784,7 @@ var NotificationManager = (function () {
                                 element.setAttribute('data-spent', 'false');
                             }
                         });
+                        dojo.query(".".concat(BT_SPENT)).removeClass(BT_SPENT);
                         this.game.gameMap.resetConnectionLimits();
                         return [4, Promise.all(markers.map(function (marker) { return _this.game.tokenManager.removeCard(marker); }))];
                     case 1:
@@ -7482,36 +7493,56 @@ var tplScenarioModalContent = function (game, scenario) {
     })
         .join(''), "\n      </div>\n    </div>\n  </div>\n</div>");
 };
+var supportedColorHexColorMap = {
+    black: '#000000',
+    blue: '#0000ff',
+    green: '#008000',
+    orange: '#ffa500',
+    purple: '#800080',
+    red: '#ff0000',
+    white: '#ffffff',
+    yellow: '#ffff00',
+};
+var supportedColorBackgroundPositionMap = {
+    black: "0%",
+    blue: "".concat(100 / 7, "%"),
+    green: "".concat(200 / 7, "%"),
+    orange: "".concat(300 / 7, "%"),
+    purple: "".concat(400 / 7, "%"),
+    red: "".concat(500 / 7, "%"),
+    white: "".concat(600 / 7, "%"),
+    yellow: "100%",
+};
 var getSettingsConfig = function () {
-    var _a, _b;
+    var _a, _b, _c;
     return ({
         layout: {
-            id: "layout",
+            id: 'layout',
             config: (_a = {
                     twoColumnsLayout: {
-                        id: "twoColumnsLayout",
+                        id: 'twoColumnsLayout',
                         onChangeInSetup: true,
-                        defaultValue: "enabled",
-                        label: _("Two column layout"),
-                        type: "select",
+                        defaultValue: 'disabled',
+                        label: _('Two column layout'),
+                        type: 'select',
                         options: [
                             {
-                                label: _("Enabled"),
-                                value: "enabled",
+                                label: _('Enabled'),
+                                value: 'enabled',
                             },
                             {
-                                label: _("Disabled (single column)"),
-                                value: "disabled",
+                                label: _('Disabled (single column)'),
+                                value: 'disabled',
                             },
                         ],
                     },
                     columnSizes: {
-                        id: "columnSizes",
+                        id: 'columnSizes',
                         onChangeInSetup: true,
-                        label: _("Column sizes"),
+                        label: _('Column sizes'),
                         defaultValue: 50,
                         visibleCondition: {
-                            id: "twoColumnsLayout",
+                            id: 'twoColumnsLayout',
                             values: [PREF_ENABLED],
                         },
                         sliderConfig: {
@@ -7522,13 +7553,13 @@ var getSettingsConfig = function () {
                                 max: 70,
                             },
                         },
-                        type: "slider",
+                        type: 'slider',
                     }
                 },
                 _a[PREF_CARD_SIZE_IN_LOG] = {
                     id: PREF_CARD_SIZE_IN_LOG,
                     onChangeInSetup: true,
-                    label: _("Size of cards in log"),
+                    label: _('Size of cards in log'),
                     defaultValue: 0,
                     sliderConfig: {
                         step: 5,
@@ -7538,7 +7569,7 @@ var getSettingsConfig = function () {
                             max: 90,
                         },
                     },
-                    type: "slider",
+                    type: 'slider',
                 },
                 _a[PREF_CARD_INFO_IN_TOOLTIP] = {
                     id: PREF_CARD_INFO_IN_TOOLTIP,
@@ -7559,47 +7590,187 @@ var getSettingsConfig = function () {
                 },
                 _a),
         },
-        gameplay: {
-            id: "gameplay",
+        colors: {
+            id: 'colors',
             config: (_b = {},
-                _b[PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY] = {
+                _b[PREF_SELECTABLE_COLOR] = {
+                    id: PREF_SELECTABLE_COLOR,
+                    onChangeInSetup: true,
+                    defaultValue: 'yellow',
+                    label: _('Selectable color'),
+                    type: 'select',
+                    options: [
+                        {
+                            label: _('Black'),
+                            value: 'black',
+                            backgroundColor: supportedColorHexColorMap.black,
+                            textColor: 'white',
+                        },
+                        {
+                            label: _('Blue'),
+                            value: 'blue',
+                            backgroundColor: supportedColorHexColorMap.blue,
+                        },
+                        {
+                            label: _('Green'),
+                            value: 'green',
+                            backgroundColor: supportedColorHexColorMap.green,
+                        },
+                        {
+                            label: _('Orange'),
+                            value: 'orange',
+                            backgroundColor: supportedColorHexColorMap.orange,
+                        },
+                        {
+                            label: _('Purple'),
+                            value: 'purple',
+                            backgroundColor: supportedColorHexColorMap.purple,
+                        },
+                        {
+                            label: _('Red'),
+                            value: 'red',
+                            backgroundColor: supportedColorHexColorMap.red,
+                        },
+                        {
+                            label: _('White'),
+                            value: 'white',
+                        },
+                        {
+                            label: _('Yellow'),
+                            value: 'yellow',
+                            backgroundColor: supportedColorHexColorMap.yellow,
+                        },
+                    ],
+                },
+                _b[PREF_SELECTED_COLOR] = {
+                    id: PREF_SELECTED_COLOR,
+                    onChangeInSetup: true,
+                    defaultValue: 'blue',
+                    label: _('Selected color'),
+                    type: 'select',
+                    options: [
+                        {
+                            label: _('Black'),
+                            value: 'black',
+                        },
+                        {
+                            label: _('Blue'),
+                            value: 'blue',
+                        },
+                        {
+                            label: _('Green'),
+                            value: 'green',
+                        },
+                        {
+                            label: _('Orange'),
+                            value: 'orange',
+                        },
+                        {
+                            label: _('Purple'),
+                            value: 'purple',
+                        },
+                        {
+                            label: _('Red'),
+                            value: 'red',
+                        },
+                        {
+                            label: _('White'),
+                            value: 'white',
+                        },
+                        {
+                            label: _('Yellow'),
+                            value: 'yellow',
+                        },
+                    ],
+                },
+                _b[PREF_SPENT_COLOR] = {
+                    id: PREF_SPENT_COLOR,
+                    onChangeInSetup: true,
+                    defaultValue: 'none',
+                    label: _('Spent color'),
+                    type: 'select',
+                    options: [
+                        {
+                            label: _('Black'),
+                            value: 'black',
+                        },
+                        {
+                            label: _('Blue'),
+                            value: 'blue',
+                        },
+                        {
+                            label: _('Green'),
+                            value: 'green',
+                        },
+                        {
+                            label: _('Orange'),
+                            value: 'orange',
+                        },
+                        {
+                            label: _('Purple'),
+                            value: 'purple',
+                        },
+                        {
+                            label: _('Red'),
+                            value: 'red',
+                        },
+                        {
+                            label: _('White'),
+                            value: 'white',
+                        },
+                        {
+                            label: _('Yellow'),
+                            value: 'yellow',
+                        },
+                        {
+                            label: _('None (show marker)'),
+                            value: 'none',
+                        },
+                    ],
+                },
+                _b),
+        },
+        gameplay: {
+            id: 'gameplay',
+            config: (_c = {},
+                _c[PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY] = {
                     id: PREF_CONFIRM_END_OF_TURN_AND_PLAYER_SWITCH_ONLY,
                     onChangeInSetup: false,
                     defaultValue: DISABLED,
-                    label: _("Confirm end of turn and player switch only"),
-                    type: "select",
+                    label: _('Confirm end of turn and player switch only'),
+                    type: 'select',
                     options: [
                         {
-                            label: _("Enabled"),
+                            label: _('Enabled'),
                             value: PREF_ENABLED,
                         },
                         {
-                            label: _("Disabled (confirm every move)"),
+                            label: _('Disabled (confirm every move)'),
                             value: PREF_DISABLED,
                         },
                     ],
                 },
-                _b[PREF_SHOW_ANIMATIONS] = {
+                _c[PREF_SHOW_ANIMATIONS] = {
                     id: PREF_SHOW_ANIMATIONS,
                     onChangeInSetup: false,
                     defaultValue: PREF_ENABLED,
-                    label: _("Show animations"),
-                    type: "select",
+                    label: _('Show animations'),
+                    type: 'select',
                     options: [
                         {
-                            label: _("Enabled"),
+                            label: _('Enabled'),
                             value: PREF_ENABLED,
                         },
                         {
-                            label: _("Disabled"),
+                            label: _('Disabled'),
                             value: PREF_DISABLED,
                         },
                     ],
                 },
-                _b[PREF_ANIMATION_SPEED] = {
+                _c[PREF_ANIMATION_SPEED] = {
                     id: PREF_ANIMATION_SPEED,
                     onChangeInSetup: false,
-                    label: _("Animation speed"),
+                    label: _('Animation speed'),
                     defaultValue: 1600,
                     visibleCondition: {
                         id: PREF_SHOW_ANIMATIONS,
@@ -7613,20 +7784,25 @@ var getSettingsConfig = function () {
                             max: 2000,
                         },
                     },
-                    type: "slider",
+                    type: 'slider',
                 },
-                _b),
+                _c),
         },
     });
 };
 var Settings = (function () {
     function Settings(game) {
+        this.ROOT = document.documentElement;
         this.settings = {};
         this.selectedTab = 'layout';
         this.tabs = [
             {
                 id: 'layout',
                 name: _('Layout'),
+            },
+            {
+                id: 'colors',
+                name: _('Colors'),
             },
             {
                 id: 'gameplay',
@@ -7698,8 +7874,8 @@ var Settings = (function () {
                 var localValue = localStorage.getItem(_this.getLocalStorageKey({ id: id }));
                 _this.settings[id] = localValue || defaultValue;
                 var methodName = _this.getMethodName({ id: id });
-                if (setting.onChangeInSetup && localValue && _this[methodName]) {
-                    _this[methodName](localValue);
+                if (setting.onChangeInSetup && _this[methodName]) {
+                    _this[methodName](localValue ? localValue : setting.defaultValue);
                 }
                 if (setting.type === 'select') {
                     var visible = !visibleCondition ||
@@ -7775,6 +7951,29 @@ var Settings = (function () {
             this.game.animationManager.getSettings().duration = 0;
         }
         this.checkAnmimationSpeedVisisble();
+    };
+    Settings.prototype.onChangeSelectableColorSetting = function (color) {
+        debug('onChangeSelectableColorSetting', color);
+        this.ROOT.style.setProperty('--selectableColor', supportedColorHexColorMap[color]);
+        this.ROOT.style.setProperty('--selectableColorPosition', supportedColorBackgroundPositionMap[color]);
+    };
+    Settings.prototype.onChangeSelectedColorSetting = function (color) {
+        debug('onChangeSelectedColorSetting', color);
+        this.ROOT.style.setProperty('--selectedColor', supportedColorHexColorMap[color]);
+        this.ROOT.style.setProperty('--selectedColorPosition', supportedColorBackgroundPositionMap[color]);
+    };
+    Settings.prototype.onChangeSpentColorSetting = function (color) {
+        debug('onChangeSpentColorSetting', color);
+        if (color === 'none') {
+            this.ROOT.style.setProperty('--spentColor', '');
+            this.ROOT.setAttribute('data-show-spent-markers', 'true');
+            this.ROOT.style.setProperty('--spentColorPosition', '');
+        }
+        else {
+            this.ROOT.style.setProperty('--spentColor', supportedColorHexColorMap[color]);
+            this.ROOT.setAttribute('data-show-spent-markers', 'false');
+            this.ROOT.style.setProperty('--spentColorPosition', supportedColorBackgroundPositionMap[color]);
+        }
     };
     Settings.prototype.onChangeCardInfoInTooltipSetting = function (value) {
         if (this.game.hand) {
@@ -13494,12 +13693,16 @@ var TokenManager = (function (_super) {
     }
     TokenManager.prototype.clearInterface = function () { };
     TokenManager.prototype.setupDiv = function (token, div) {
-        var _a;
         if (token.manager === UNITS) {
             div.classList.add('bt_token');
-            div.insertAdjacentHTML('beforeend', "<div id=\"spent_marker_".concat(token.id, "\" data-spent=\"").concat(token.spent === 1 ? 'true' : 'false', "\" class=\"bt_spent_marker\"></div>"));
-            var isCommander = ((_a = this.game.gamedatas.staticData.units[token.counterId]) === null || _a === void 0 ? void 0 : _a.type) ===
-                COMMANDER;
+            var unitSpent = token.spent === 1;
+            div.insertAdjacentHTML('beforeend', "<div id=\"spent_marker_".concat(token.id, "\" data-spent=\"").concat(unitSpent ? 'true' : 'false', "\" class=\"bt_spent_marker\"></div>"));
+            if (unitSpent && !token.id.endsWith('_battle')) {
+                div.classList.add(BT_SPENT);
+            }
+            var staticData = this.game.getUnitStaticData(token);
+            div.setAttribute('data-shape', staticData.shape);
+            var isCommander = staticData.type === COMMANDER;
             if (isCommander) {
                 div.setAttribute('data-commander', 'true');
             }

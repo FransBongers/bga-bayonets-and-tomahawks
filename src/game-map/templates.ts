@@ -271,9 +271,3 @@ const tplGameMap = ({
 //   </div>
 //   </div>`;
 // };
-
-// <div class="bt_marker_test" data-marker-type="victory_point"></div>
-
-// <i class="fa-regular fa-magnifying-glass-plus"></i>
-// <div class="bt_token" data-faction="french" data-unit-type="bastion"></div>
-// <div class="bt_token" data-faction="indian" data-unit-type="micmac"></div>

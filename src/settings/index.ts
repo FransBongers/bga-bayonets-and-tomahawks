@@ -2,6 +2,7 @@ class Settings {
   protected game: BayonetsAndTomahawksGame;
 
   private modal: Modal;
+  private ROOT: HTMLElement = document.documentElement;
   public settings: Record<string, string | number> = {};
 
   private selectedTab: SettingsTabId = 'layout';
@@ -9,6 +10,10 @@ class Settings {
     {
       id: 'layout',
       name: _('Layout'),
+    },
+    {
+      id: 'colors',
+      name: _('Colors'),
     },
     {
       id: 'gameplay',
@@ -141,8 +146,8 @@ class Settings {
 
         // Call change method to update interface based on current value
         const methodName = this.getMethodName({ id });
-        if (setting.onChangeInSetup && localValue && this[methodName]) {
-          this[methodName](localValue);
+        if (setting.onChangeInSetup && this[methodName]) {
+          this[methodName](localValue ? localValue : setting.defaultValue);
         }
 
         // Add content to modal
@@ -255,6 +260,31 @@ class Settings {
       this.game.animationManager.getSettings().duration = 0;
     }
     this.checkAnmimationSpeedVisisble();
+  }
+
+  public onChangeSelectableColorSetting(color: SupportedColor) {
+    debug('onChangeSelectableColorSetting', color);
+    this.ROOT.style.setProperty('--selectableColor', supportedColorHexColorMap[color]);
+    this.ROOT.style.setProperty('--selectableColorPosition', supportedColorBackgroundPositionMap[color]);
+  }
+
+  public onChangeSelectedColorSetting(color: SupportedColor) {
+    debug('onChangeSelectedColorSetting', color);
+    this.ROOT.style.setProperty('--selectedColor', supportedColorHexColorMap[color]);
+    this.ROOT.style.setProperty('--selectedColorPosition', supportedColorBackgroundPositionMap[color]);
+  }
+
+  public onChangeSpentColorSetting(color: SupportedColor | 'none') {
+    debug('onChangeSpentColorSetting', color);
+    if (color === 'none') {
+      this.ROOT.style.setProperty('--spentColor', '');
+      this.ROOT.setAttribute('data-show-spent-markers','true');
+      this.ROOT.style.setProperty('--spentColorPosition', '');
+    } else {
+      this.ROOT.style.setProperty('--spentColor', supportedColorHexColorMap[color]);
+      this.ROOT.setAttribute('data-show-spent-markers','false');
+      this.ROOT.style.setProperty('--spentColorPosition', supportedColorBackgroundPositionMap[color]);
+    }
   }
 
   // public onChangeCardInfoInTooltipSetting(value: string) {

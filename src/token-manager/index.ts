@@ -16,15 +16,21 @@ class TokenManager extends CardManager<BTToken> {
     if (token.manager === UNITS) {
       // div.style.position = 'relative';
       div.classList.add('bt_token');
+      const unitSpent = token.spent === 1;
       div.insertAdjacentHTML(
         'beforeend',
         `<div id="spent_marker_${token.id}" data-spent="${
-          token.spent === 1 ? 'true' : 'false'
+          unitSpent ? 'true' : 'false'
         }" class="bt_spent_marker"></div>`
       );
-      const isCommander =
-        this.game.gamedatas.staticData.units[token.counterId]?.type ===
-        COMMANDER;
+      if (unitSpent && !token.id.endsWith('_battle')) {
+        div.classList.add(BT_SPENT);
+      }
+      const staticData = this.game.getUnitStaticData(token);
+      div.setAttribute('data-shape', staticData.shape);
+
+      const isCommander = staticData.type === COMMANDER;
+
       if (isCommander) {
         div.setAttribute('data-commander', 'true');
       }
