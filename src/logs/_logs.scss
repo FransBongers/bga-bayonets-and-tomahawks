@@ -266,3 +266,22 @@
     background-color: base.$indian-color;
   }
 }
+
+.notif_startOfActionRound,
+.notif_rally,
+.notif_supplyCheck {
+  .roundedboxinner,
+  .roundedbox {
+    background-color: rgb(231, 233, 239);
+    // background-color: rgb(1, 97, 140);
+    text-align: center;
+  }
+}
+
+.notif_startOfActionRound {
+  .roundedbox {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+  }
+}
+

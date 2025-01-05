@@ -3319,7 +3319,7 @@ var CardsInPlay = (function () {
     return CardsInPlay;
 }());
 var tplCardsInPlay = function () {
-    return "<div id=\"bt_cards_in_play\">\n            <div class=\"bt_card_in_play_container\">\n              <span>".concat(_('French card'), "</span>\n              <div id=\"french_card_in_play\" class=\"bt_card_in_play\">\n                <div class=\"bt_card_in_play_border\"></div>\n              </div>\n            </div>\n            <div class=\"bt_card_in_play_container\">\n              <span>").concat(_('Indian card'), "</span>\n              <div id=\"indian_card_in_play\" class=\"bt_card_in_play\">\n                <div class=\"bt_card_in_play_border\"></div>\n              </div>\n            </div>\n            <div class=\"bt_card_in_play_container\">\n              <span>").concat(_('British card'), "</span>\n              <div id=\"british_card_in_play\" class=\"bt_card_in_play\">\n                <div class=\"bt_card_in_play_border\"></div>\n              </div>\n            </div>\n          </div\n  ");
+    return "<div id=\"bt_cards_in_play\">\n            <div class=\"bt_card_in_play_container\" data-faction=\"french\">\n              <div class=\"bt_card_in_play_title\">\n                <span>".concat(_('French card'), "</span>\n              </div>\n              <div id=\"french_card_in_play\" class=\"bt_card_in_play\">\n                \n              </div>\n            </div>\n            <div class=\"bt_card_in_play_container\" data-faction=\"indian\">\n              <div class=\"bt_card_in_play_title\">\n                <span>").concat(_('Indian card'), "</span>\n              </div>\n              <div id=\"indian_card_in_play\" class=\"bt_card_in_play\">\n                \n              </div>\n            </div>\n            <div class=\"bt_card_in_play_container\" data-faction=\"british\">\n              <div class=\"bt_card_in_play_title\">\n                <span>").concat(_('British card'), "</span>\n              </div>\n              <div id=\"british_card_in_play\" class=\"bt_card_in_play\">\n                \n              </div>\n            </div>\n          </div\n  ");
 };
 var isDebug = window.location.host == 'studio.boardgamearena.com' ||
     window.location.hash.indexOf('debug') > -1;
@@ -5359,9 +5359,9 @@ var GameMap = (function () {
         this.setupMarkers({ gamedatas: gamedatas });
         this.setupConnections({ gamedatas: gamedatas });
         this.setupWieChits({ gamedatas: gamedatas });
-        var configPanel = document.getElementById('info_panel_buttons');
-        if (configPanel) {
-            configPanel.insertAdjacentHTML('afterbegin', tplUnitVisibilityButton());
+        var adjacentButton = document.querySelector('.info.scrollmap_button_wrapper');
+        if (adjacentButton) {
+            adjacentButton.insertAdjacentHTML('beforebegin', tplUnitVisibilityButton());
             dojo.connect($("bt_unit_visibility_info"), 'onclick', function () {
                 return _this.handleUnitVisibilityChange();
             });
@@ -5478,7 +5478,7 @@ var GameMap = (function () {
     return GameMap;
 }());
 var tplUnitVisibilityButton = function () {
-    return "<div id=\"bt_unit_visibility_info\">\n      <div id=\"eye_button\" data-units-visible=\"true\">\n        <svg  id=\"bt_eye_on_button\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z\" /></svg>\n        <svg id=\"bt_eye_off_button\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M11.83,9L15,12.16C15,12.11 15,12.05 15,12A3,3 0 0,0 12,9C11.94,9 11.89,9 11.83,9M7.53,9.8L9.08,11.35C9.03,11.56 9,11.77 9,12A3,3 0 0,0 12,15C12.22,15 12.44,14.97 12.65,14.92L14.2,16.47C13.53,16.8 12.79,17 12,17A5,5 0 0,1 7,12C7,11.21 7.2,10.47 7.53,9.8M2,4.27L4.28,6.55L4.73,7C3.08,8.3 1.78,10 1,12C2.73,16.39 7,19.5 12,19.5C13.55,19.5 15.03,19.2 16.38,18.66L16.81,19.08L19.73,22L21,20.73L3.27,3M12,7A5,5 0 0,1 17,12C17,12.64 16.87,13.26 16.64,13.82L19.57,16.75C21.07,15.5 22.27,13.86 23,12C21.27,7.61 17,4.5 12,4.5C10.6,4.5 9.26,4.75 8,5.2L10.17,7.35C10.74,7.13 11.35,7 12,7Z\" /></svg>\n      </div>\n    </div>";
+    return "<div id=\"bt_unit_visibility_info\" class=\"scrollmap_button_wrapper\">\n      <div id=\"eye_button\" class=\"scrollmap_icon\" data-units-visible=\"true\">\n        <svg  id=\"bt_eye_on_button\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z\" /></svg>\n        <svg id=\"bt_eye_off_button\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M11.83,9L15,12.16C15,12.11 15,12.05 15,12A3,3 0 0,0 12,9C11.94,9 11.89,9 11.83,9M7.53,9.8L9.08,11.35C9.03,11.56 9,11.77 9,12A3,3 0 0,0 12,15C12.22,15 12.44,14.97 12.65,14.92L14.2,16.47C13.53,16.8 12.79,17 12,17A5,5 0 0,1 7,12C7,11.21 7.2,10.47 7.53,9.8M2,4.27L4.28,6.55L4.73,7C3.08,8.3 1.78,10 1,12C2.73,16.39 7,19.5 12,19.5C13.55,19.5 15.03,19.2 16.38,18.66L16.81,19.08L19.73,22L21,20.73L3.27,3M12,7A5,5 0 0,1 17,12C17,12.64 16.87,13.26 16.64,13.82L19.57,16.75C21.07,15.5 22.27,13.86 23,12C21.27,7.61 17,4.5 12,4.5C10.6,4.5 9.26,4.75 8,5.2L10.17,7.35C10.74,7.13 11.35,7 12,7Z\" /></svg>\n      </div>\n    </div>";
 };
 var tplMarker = function (_a) {
     var id = _a.id;
@@ -5949,6 +5949,7 @@ var NotificationManager = (function () {
             'scoreVictoryPoints',
             'selectReserveCard',
             'selectReserveCardPrivate',
+            'startOfActionRound',
             'takeControl',
             'updateActionPoints',
             'updateCurrentStepOfRound',
@@ -10938,7 +10939,7 @@ var EventWinteringRearAdmiralState = (function () {
         var _this = this;
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _('${you} must select a Fleet to place'),
+            text: _('${you} must select a Fleet from the Fleets Pool to place'),
             args: {
                 you: '${you}',
             },
@@ -11378,7 +11379,7 @@ var VagariesOfWarPickUnitsState = (function () {
         }
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _('${you} must select a unit for ${tkn_unit} (${number} remaining)'),
+            text: _('${you} must select a unit from the Pool for ${tkn_unit} (${number} remaining)'),
             args: {
                 you: '${you}',
                 tkn_unit: this.selectedVoWToken,
@@ -12620,7 +12621,7 @@ var WinterQuartersRemainingColonialBrigadesState = (function () {
         var _this = this;
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _('${you} must select a Space'),
+            text: _('${you} must select a Space with Colonial Brigades'),
             args: {
                 you: '${you}',
             },

@@ -95,6 +95,7 @@ class NotificationManager {
       'scoreVictoryPoints',
       'selectReserveCard',
       'selectReserveCardPrivate',
+      'startOfActionRound',
       'takeControl',
       'updateActionPoints',
       'updateCurrentStepOfRound',

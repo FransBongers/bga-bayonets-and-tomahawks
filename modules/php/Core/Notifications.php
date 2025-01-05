@@ -270,6 +270,55 @@ class Notifications
     }
   }
 
+  public static function getCurrentRoundName($currentRound)
+  {
+    switch ($currentRound) {
+      case ACTION_ROUND_1:
+      case ACTION_ROUND_2:
+      case ACTION_ROUND_3:
+      case ACTION_ROUND_4:
+      case ACTION_ROUND_5:
+      case ACTION_ROUND_6:
+      case ACTION_ROUND_7:
+      case ACTION_ROUND_8:
+      case ACTION_ROUND_9:
+        return [
+          'log' => clienttranslate('${tkn_boldText_ar} ${tkn_boldText_number}'),
+          'args' => [
+            'tkn_boldText_ar' => clienttranslate('Action Round'),
+            'tkn_boldText_number' => substr($currentRound, -1),
+            'i18n' => ['tkn_boldText_ar'],
+          ]
+        ];
+      case FLEETS_ARRIVE:
+        return [
+          'log' => '${tkn_boldText_actionRoundName}',
+          'args' => [
+            'tkn_boldText_actionRoundName' => clienttranslate('Fleets Arrive'),
+            'i18n' => ['tkn_boldText_actionRoundName'],
+          ]
+        ];
+      case COLONIALS_ENLIST:
+        return [
+          'log' => '${tkn_boldText_actionRoundName}',
+          'args' => [
+            'tkn_boldText_actionRoundName' => clienttranslate('Colonials Enlist'),
+            'i18n' => ['tkn_boldText_actionRoundName'],
+          ]
+        ];
+      case WINTER_QUARTERS:
+        return [
+          'log' => '${tkn_boldText_actionRoundName}',
+          'args' => [
+            'tkn_boldText_actionRoundName' => clienttranslate('Winter Quarters'),
+            'i18n' => ['tkn_boldText_actionRoundName'],
+          ]
+        ];
+      default:
+        return '';
+    };
+  }
+
   // ..######......###....##.....##.########
   // .##....##....##.##...###...###.##......
   // .##.........##...##..####.####.##......
@@ -1027,6 +1076,15 @@ class Notifications
     ]);
   }
 
+  public static function startOfActionRound($currentRoundName, $year)
+  {
+    self::notifyAll("startOfActionRound", clienttranslate('${actionRoundLog} - ${tkn_boldText_year}'), [
+      'actionRoundLog' => self::getCurrentRoundName($currentRoundName),
+      'tkn_boldText_year' => $year,
+    ]);
+  }
+
+
   public static function moveYearMarker($marker, $location)
   {
     self::notifyAll("moveYearMarker", '', [
@@ -1134,6 +1192,22 @@ class Notifications
       'player' => $player,
       'faction' => $player->getFaction(),
       // 'preserve' => ['playerId'],
+    ]);
+  }
+
+  public static function rally()
+  {
+    self::notifyAll("rally", '${tkn_boldText}', [
+      'tkn_boldText' => clienttranslate('Rally'),
+      'i18n' => ['tkn_boldText'],
+    ]);
+  }
+
+  public static function supplyCheck()
+  {
+    self::notifyAll("supplyCheck", '${tkn_boldText}', [
+      'tkn_boldText' => clienttranslate('Supply Check'),
+      'i18n' => ['tkn_boldText'],
     ]);
   }
 

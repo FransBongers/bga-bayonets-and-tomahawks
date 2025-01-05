@@ -119,6 +119,8 @@ trait TurnTrait
       $engineCallback = ['method' => 'stSetupYear'];
     }
 
+    Notifications::startOfActionRound($currentRoundStep, Globals::getYear());
+
     // Inserting leaf Action card
     Engine::setup($node, $engineCallback); // End of action round
     Engine::proceed();

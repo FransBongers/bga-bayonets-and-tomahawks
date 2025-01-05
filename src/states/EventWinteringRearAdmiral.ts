@@ -39,7 +39,7 @@ class EventWinteringRearAdmiralState implements State {
     this.game.clearPossible();
 
     this.game.clientUpdatePageTitle({
-      text: _('${you} must select a Fleet to place'),
+      text: _('${you} must select a Fleet from the Fleets Pool to place'),
       args: {
         you: '${you}',
       },

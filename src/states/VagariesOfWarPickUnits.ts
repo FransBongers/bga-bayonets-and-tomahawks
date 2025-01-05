@@ -145,7 +145,7 @@ class VagariesOfWarPickUnitsState implements State {
 
     this.game.clientUpdatePageTitle({
       text: _(
-        '${you} must select a unit for ${tkn_unit} (${number} remaining)'
+        '${you} must select a unit from the Pool for ${tkn_unit} (${number} remaining)'
       ),
       args: {
         you: '${you}',

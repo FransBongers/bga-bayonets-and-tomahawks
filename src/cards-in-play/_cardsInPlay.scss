@@ -1,3 +1,5 @@
+@use '../base';
+
 #bt_cards_in_play {
   min-height: 52px;
   min-width: 100px;
@@ -13,23 +15,34 @@
   gap: 8px;
 
   .bt_card_in_play_container {
+    border-radius: 5px;
+    border: 1px solid black;
+    padding: 4px;
+
+    .bt_card_in_play_title {
+      color: white;
+      font-weight: bold;
+      font-size: small;
+      padding-bottom: 4px;
+    }
 
     .bt_card_in_play {
       position: relative;
       box-sizing: border-box;
       width: calc(var(--btCardScale) * 250px);
       height: calc(var(--btCardScale) * 179px);
-
-      .bt_card_in_play_border {
-        box-sizing: border-box;
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        width: calc(var(--btCardScale) * 250px);
-        height: calc(var(--btCardScale) * 179px);
-        border: calc(var(--btCardScale) * 2px) black dashed;
-        border-radius: calc(var(--btCardScale) * 5px);        
-      }
     }
   }
+}
+
+.bt_card_in_play_container[data-faction='french'] {
+  background-color: base.$french-color;
+}
+
+.bt_card_in_play_container[data-faction='indian'] {
+  background-color: base.$indian-color;
+}
+
+.bt_card_in_play_container[data-faction='british'] {
+  background-color: base.$british-color;
 }

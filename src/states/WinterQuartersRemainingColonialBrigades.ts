@@ -44,7 +44,7 @@ class WinterQuartersRemainingColonialBrigadesState implements State {
     this.game.clearPossible();
 
     this.game.clientUpdatePageTitle({
-      text: _('${you} must select a Space'),
+      text: _('${you} must select a Space with Colonial Brigades'),
       args: {
         you: '${you}',
       },

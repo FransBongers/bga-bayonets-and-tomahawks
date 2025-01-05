@@ -967,21 +967,34 @@ body > .card {
   flex-wrap: wrap;
   gap: 8px;
 }
+#bt_cards_in_play .bt_card_in_play_container {
+  border-radius: 5px;
+  border: 1px solid black;
+  padding: 4px;
+}
+#bt_cards_in_play .bt_card_in_play_container .bt_card_in_play_title {
+  color: white;
+  font-weight: bold;
+  font-size: small;
+  padding-bottom: 4px;
+}
 #bt_cards_in_play .bt_card_in_play_container .bt_card_in_play {
   position: relative;
   box-sizing: border-box;
   width: calc(var(--btCardScale) * 250px);
   height: calc(var(--btCardScale) * 179px);
 }
-#bt_cards_in_play .bt_card_in_play_container .bt_card_in_play .bt_card_in_play_border {
-  box-sizing: border-box;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: calc(var(--btCardScale) * 250px);
-  height: calc(var(--btCardScale) * 179px);
-  border: calc(var(--btCardScale) * 2px) black dashed;
-  border-radius: calc(var(--btCardScale) * 5px);
+
+.bt_card_in_play_container[data-faction=french] {
+  background-color: #216295;
+}
+
+.bt_card_in_play_container[data-faction=indian] {
+  background-color: #9cb049;
+}
+
+.bt_card_in_play_container[data-faction=british] {
+  background-color: #B73E1F;
 }
 
 #map_container {
@@ -998,12 +1011,9 @@ body > .card {
   align-items: center;
   display: flex;
   justify-content: center;
-  padding: 6px;
-  width: 40px;
 }
 #bt_unit_visibility_info #eye_button svg {
   cursor: pointer;
-  width: 80%;
 }
 #bt_unit_visibility_info #eye_button svg:hover {
   fill: white;
@@ -1753,6 +1763,21 @@ html[data-show-spent-markers=true] .bt_token.bt_spent > .card-sides {
 .log > .roundedbox .bt_action_point[data-faction=indian],
 .log > .roundedboxinner .bt_action_point[data-faction=indian] {
   background-color: #9cb049;
+}
+
+.notif_startOfActionRound .roundedboxinner,
+.notif_startOfActionRound .roundedbox,
+.notif_rally .roundedboxinner,
+.notif_rally .roundedbox,
+.notif_supplyCheck .roundedboxinner,
+.notif_supplyCheck .roundedbox {
+  background-color: rgb(231, 233, 239);
+  text-align: center;
+}
+
+.notif_startOfActionRound .roundedbox {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
 }
 
 /* ------- PLAYER BOARD ------- */

@@ -558,9 +558,9 @@ class GameMap {
     this.setupConnections({ gamedatas });
     this.setupWieChits({ gamedatas });
 
-    const configPanel = document.getElementById('info_panel_buttons');
-    if (configPanel) {
-      configPanel.insertAdjacentHTML('afterbegin', tplUnitVisibilityButton());
+    const adjacentButton = document.querySelector('.info.scrollmap_button_wrapper');
+    if (adjacentButton) {
+      adjacentButton.insertAdjacentHTML('beforebegin', tplUnitVisibilityButton());
       dojo.connect($(`bt_unit_visibility_info`), 'onclick', () =>
         this.handleUnitVisibilityChange()
       );

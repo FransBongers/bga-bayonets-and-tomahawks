@@ -49,6 +49,7 @@ class WinterQuartersReturnToColoniesCombineReducedUnits extends \BayonetsAndToma
     $data = $this->getOptions();
 
     if (count($data) === 0) {
+      $this->flipOddReducedColonialBrigadeToFull();
       $this->resolveAction(['automatic' => true]);
     } else if (count($data) === 1 && isset($data[DISBANDED_COLONIAL_BRIGADES])) {
       // Disbanded Colonial Brigades is the only one remaining
@@ -220,5 +221,15 @@ class WinterQuartersReturnToColoniesCombineReducedUnits extends \BayonetsAndToma
     return Utils::array_some(array_values($data), function ($reducedUnitsForType) {
       return count($reducedUnitsForType) >= 2;
     });
+  }
+
+  public function flipOddReducedColonialBrigadeToFull() {
+    $units = Units::getInLocation(DISBANDED_COLONIAL_BRIGADES)->toArray();
+    $reduced = Utils::filter($units, function ($unit) {
+      return $unit->isReduced();
+    });
+    foreach($reduced as $colonialBrigade) {
+      $colonialBrigade->flipToFull(self::getPlayer());
+    }
   }
 }

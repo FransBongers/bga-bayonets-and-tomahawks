@@ -277,6 +277,7 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     ];
     $outOfSupplyMarkers = Markers::getMarkersOfType(OUT_OF_SUPPLY_MARKER);
     $player = Players::getPlayerForFaction($faction);
+    $outOfSupplyMarkersAddedOrRemoved = false;
 
     foreach ($stacks as $spaceId => $stackInSpaceData) {
       $canUsePaths = !Utils::array_some($stackInSpaceData['units'], function ($unit) {
@@ -345,43 +346,49 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
       });
       if (!$inSupply && $marker === null) {
         GameMap::placeMarkerOnStack($player, OUT_OF_SUPPLY_MARKER, $spaces[$spaceId], $faction);
+        $outOfSupplyMarkersAddedOrRemoved = true;
       } else if ($inSupply && $marker !== null) {
         $marker->remove($player);
+        $outOfSupplyMarkersAddedOrRemoved = true;
       }
     }
+    return $outOfSupplyMarkersAddedOrRemoved;
   }
 
   private function performSupplyCheck($stacksAndSupplySources)
   {
-    // TODO: use specific notifId for this to change styling in the logs?
-    Notifications::message('${tkn_boldText}', [
-      'tkn_boldText' => clienttranslate('Supply Check'),
-      'i18n' => ['tkn_boldText'],
-    ]);
+    Notifications::supplyCheck();
+
+    $outOfSupplyMarkersAddedOrRemoved = false;
 
 
     foreach ([BRITISH, FRENCH] as $faction) {
       $otherFaction = BTHelpers::getOtherFaction($faction);
-      $this->checkSupplyForFaction(
+      $outOfSupplyMarkersAddedOrRemoved = $outOfSupplyMarkersAddedOrRemoved || $this->checkSupplyForFaction(
         $faction,
         $stacksAndSupplySources['stacks'][$faction],
         $stacksAndSupplySources['supplySources'][$faction],
         $stacksAndSupplySources['stacks'][$otherFaction]
       );
     }
+
+    if (!$outOfSupplyMarkersAddedOrRemoved) {
+      Notifications::message('No Out of Supply markers added or removed', []);
+    }
   }
 
   private function performRally($stacksAndSupplySources)
   {
-    // TODO: use specific notifId for this to change styling in the logs?
-    Notifications::message('${tkn_boldText}', [
-      'tkn_boldText' => clienttranslate('Rally'),
-      'i18n' => ['tkn_boldText'],
-    ]);
+    Notifications::rally();
 
     $markers = Utils::filter(Markers::getMarkersOfType(ROUT_MARKER), function ($marker) {
       return !Utils::startsWith($marker->getLocation(), 'supply');
     });
+
+    if (count($markers) === 0) {
+      Notifications::message(clienttranslate("No Routed stacks to rally"), []);
+      return;
+    }
 
     $players = Players::getPlayersForFactions();
 
