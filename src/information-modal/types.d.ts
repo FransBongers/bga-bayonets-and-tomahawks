@@ -1,2 +1,2 @@
-type TabId = 'actions' | 'gameMap';
+type TabId = 'gameMap' | 'winterQuarters';
 

@@ -62,7 +62,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public deck: LineStock<BTCard>;
   public gameMap: GameMap;
   public hand: Hand;
-  // public informationModal: InformationModal;
+  public informationModal: InformationModal;
   public pools: Pools;
   public scenarioInfo: ScenarioInfo;
   public stepTracker: StepTracker;
@@ -224,7 +224,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
 
     this.infoPanel = new InfoPanel(this);
     this.scenarioInfo = new ScenarioInfo(this);
-    // this.informationModal = new InformationModal(this);
+    this.informationModal = new InformationModal(this);
     this.settings = new Settings(this);
     
 

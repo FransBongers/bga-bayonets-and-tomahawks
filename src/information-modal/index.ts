@@ -3,14 +3,17 @@ class InformationModal {
 
   private modal: Modal;
 
-  private selectedTab: TabId = 'actions';
+  private selectedTab: TabId = 'gameMap';
   private tabs: Record<TabId, { text: string }> = {
-    actions: {
-      text: _('Actions'),
-    },
+    // actions: {
+    //   text: _('Actions'),
+    // },
     gameMap: {
       text: _('Game Map'),
     },
+    winterQuarters: {
+      text: _('Winter Quarters'),
+    }
   };
 
   constructor(game: BayonetsAndTomahawksGame) {
@@ -53,7 +56,7 @@ class InformationModal {
       closeIcon: 'fa-times',
       // titleTpl:
       //   '<h2 id="popin_${id}_title" class="${class}_title">${title}</h2>',
-      // title: _("Info"),
+      title: _("Player Aid"),
       contents: tplInformationModalContent({
         tabs: this.tabs,
         game: this.game,

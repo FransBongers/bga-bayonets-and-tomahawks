@@ -1,4 +1,5 @@
 @use 'sass:math';
+@use '../base';
 
 #information_button {
   // border: 1px solid #777;
@@ -86,6 +87,10 @@
     margin: 0px;
     padding: 7px 0px;
     border-bottom: 1px solid black;
+    background-color: base.$french-color;
+    color: ivory;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
   }
 
   #information_modal_content {
@@ -99,7 +104,7 @@
       .information_modal_tab {
         flex-grow: 1;
         width: 20%;
-        background-color: rgb(30, 20, 17, 0.5);
+        background-color: base.$light-blue;
         border-bottom: 1px solid black;
         border-left: 1px solid black;
         padding: 4px;
@@ -122,7 +127,10 @@
         border-bottom: none;
         cursor: auto;
       }
+    }
 
+    .information_modal_tab_content {
+      padding: 8px;
     }
 
     .information_modal_tab:first-child {
@@ -133,7 +141,87 @@
       border-right: none;
     }
 
+    #bt_gameMap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
 
+      .bt_space_info_row {
+        display: flex;
+        flex-direction: row;
+        gap: 4px;
+        align-items: center;
+
+        .bt_space_info_images {
+          display: flex;
+          flex-direction: row;
+          gap: 2px;
+        }
+
+        .bt_space_text {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+
+          .title {
+            font-weight: bold;
+          }
+
+          .text {
+            font-size: smaller;
+          }
+        }
+      }
+
+      .bt_space_image {
+        background-image: url(img/map.jpg);
+        background-size: 1050px 1622.6px;
+        margin: 2px 0px;
+      }
+    }
+
+    #bt_winterQuarters {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+
+      .section_title {
+        font-weight: bold;
+      }
+
+      tr {
+        margin-bottom: 2px;
+      }
+
+      th {
+        span {
+          font-size: smaller;
+        }
+      }
+
+      td {
+        font-size: smaller;
+      }
+
+      .bt_winterQuarters_details {
+        display: flex;
+        flex-direction: row;
+
+        .bt_procedure_number {
+          min-width: 20px;
+        }
+      }
+    }
+
+    // #bt_return_to_colonies_procedure_info,
+    // #bt_winter_quarters_procedure_info {
+    //   .section_title {
+    //     font-weight: bold;
+    //   }
+
+    //   li {
+    //     font-size: smaller;
+    //   }
+    // }
   }
 }
-

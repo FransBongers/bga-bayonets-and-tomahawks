@@ -1,3 +1,5 @@
+@use '../base';
+
 #show_settings_menu {
   height: 40px;
   width: 50px;
@@ -32,7 +34,7 @@
 }
 
 .settings_modal {
-  background-color: white;
+  background-color: ivory;
   background-size: cover;
   border-radius: 8px;
   box-shadow: rgb(0, 0, 0) 1px 1px 5px;
@@ -75,9 +77,11 @@
     margin: 0px;
     padding: 7px 0px;
     border-bottom: 1px solid black;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    background-color: rgb(248, 248, 248, 0.5);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    // background-color: rgb(248, 248, 248, 0.5);
+    background-color: base.$french-color;
+    color: ivory;
   }
 
   #setting_modal_content {
@@ -91,7 +95,7 @@
       .settings_modal_tab {
         flex-grow: 1;
         width: 50%;
-        background-color: rgb(30, 20, 17, 0.5);
+        background-color: base.$light-blue;
         border-bottom: 1px solid black;
         border-left: 1px solid black;
         border-radius: 1px solid black;
@@ -117,7 +121,7 @@
       }
 
       .settings_modal_tab[data-state="selected"] {
-        background-color: transparent;
+        background-color: ivory;
         border-bottom: none;
         cursor: auto;
       }

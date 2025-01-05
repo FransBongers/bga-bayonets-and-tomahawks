@@ -973,7 +973,7 @@ body > .card {
   padding: 4px;
 }
 #bt_cards_in_play .bt_card_in_play_container .bt_card_in_play_title {
-  color: white;
+  color: ivory;
   font-weight: bold;
   font-size: small;
   padding-bottom: 4px;
@@ -1482,6 +1482,10 @@ html[data-show-spent-markers=true] .bt_token.bt_spent > .card-sides {
   margin: 0px;
   padding: 7px 0px;
   border-bottom: 1px solid black;
+  background-color: #216295;
+  color: ivory;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
 }
 .information_modal #information_modal_content {
   min-height: 200px;
@@ -1494,7 +1498,7 @@ html[data-show-spent-markers=true] .bt_token.bt_spent > .card-sides {
 .information_modal #information_modal_content .information_modal_tabs .information_modal_tab {
   flex-grow: 1;
   width: 20%;
-  background-color: rgba(30, 20, 17, 0.5);
+  background-color: rgb(231, 233, 239);
   border-bottom: 1px solid black;
   border-left: 1px solid black;
   padding: 4px;
@@ -1513,11 +1517,70 @@ html[data-show-spent-markers=true] .bt_token.bt_spent > .card-sides {
   border-bottom: none;
   cursor: auto;
 }
+.information_modal #information_modal_content .information_modal_tab_content {
+  padding: 8px;
+}
 .information_modal #information_modal_content .information_modal_tab:first-child {
   border-left: none !important;
 }
 .information_modal #information_modal_content .information_modal_tab:last-child {
   border-right: none;
+}
+.information_modal #information_modal_content #bt_gameMap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+.information_modal #information_modal_content #bt_gameMap .bt_space_info_row {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+}
+.information_modal #information_modal_content #bt_gameMap .bt_space_info_row .bt_space_info_images {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+}
+.information_modal #information_modal_content #bt_gameMap .bt_space_info_row .bt_space_text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.information_modal #information_modal_content #bt_gameMap .bt_space_info_row .bt_space_text .title {
+  font-weight: bold;
+}
+.information_modal #information_modal_content #bt_gameMap .bt_space_info_row .bt_space_text .text {
+  font-size: smaller;
+}
+.information_modal #information_modal_content #bt_gameMap .bt_space_image {
+  background-image: url(img/map.jpg);
+  background-size: 1050px 1622.6px;
+  margin: 2px 0px;
+}
+.information_modal #information_modal_content #bt_winterQuarters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.information_modal #information_modal_content #bt_winterQuarters .section_title {
+  font-weight: bold;
+}
+.information_modal #information_modal_content #bt_winterQuarters tr {
+  margin-bottom: 2px;
+}
+.information_modal #information_modal_content #bt_winterQuarters th span {
+  font-size: smaller;
+}
+.information_modal #information_modal_content #bt_winterQuarters td {
+  font-size: smaller;
+}
+.information_modal #information_modal_content #bt_winterQuarters .bt_winterQuarters_details {
+  display: flex;
+  flex-direction: row;
+}
+.information_modal #information_modal_content #bt_winterQuarters .bt_winterQuarters_details .bt_procedure_number {
+  min-width: 20px;
 }
 
 /* ------- UNDO TURN ------- */
@@ -3730,7 +3793,7 @@ html[data-show-spent-markers=true] .bt_token.bt_spent > .card-sides {
 }
 
 .scenario_modal {
-  background-color: white;
+  background-color: ivory;
   border-radius: 8px;
   box-shadow: rgb(0, 0, 0) 1px 1px 5px;
   border: 1px solid black;
@@ -3769,9 +3832,10 @@ html[data-show-spent-markers=true] .bt_token.bt_spent > .card-sides {
   margin: 0px;
   padding: 7px 0px;
   border-bottom: 1px solid black;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  background-color: rgba(248, 248, 248, 0.5);
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  background-color: #216295;
+  color: ivory;
 }
 .scenario_modal #scenario_modal_content {
   min-height: 300px;
@@ -3903,7 +3967,7 @@ html[data-show-spent-markers=true] .bt_token.bt_spent > .card-sides {
 }
 
 .settings_modal {
-  background-color: white;
+  background-color: ivory;
   background-size: cover;
   border-radius: 8px;
   box-shadow: rgb(0, 0, 0) 1px 1px 5px;
@@ -3943,9 +4007,10 @@ html[data-show-spent-markers=true] .bt_token.bt_spent > .card-sides {
   margin: 0px;
   padding: 7px 0px;
   border-bottom: 1px solid black;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  background-color: rgba(248, 248, 248, 0.5);
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  background-color: #216295;
+  color: ivory;
 }
 .settings_modal #setting_modal_content {
   min-height: 300px;
@@ -3958,7 +4023,7 @@ html[data-show-spent-markers=true] .bt_token.bt_spent > .card-sides {
 .settings_modal #setting_modal_content .settings_modal_tabs .settings_modal_tab {
   flex-grow: 1;
   width: 50%;
-  background-color: rgba(30, 20, 17, 0.5);
+  background-color: rgb(231, 233, 239);
   border-bottom: 1px solid black;
   border-left: 1px solid black;
   border-radius: 1px solid black;
@@ -3980,7 +4045,7 @@ html[data-show-spent-markers=true] .bt_token.bt_spent > .card-sides {
   border-right: none;
 }
 .settings_modal #setting_modal_content .settings_modal_tabs .settings_modal_tab[data-state=selected] {
-  background-color: transparent;
+  background-color: ivory;
   border-bottom: none;
   cursor: auto;
 }
@@ -4071,7 +4136,7 @@ html[data-show-spent-markers=true] .bt_token.bt_spent > .card-sides {
   text-align: center;
 }
 #bt_tabbed_column .bt_tabbed_column_tab[data-state=inactive] {
-  background-color: rgba(30, 20, 17, 0.5);
+  background-color: rgb(231, 233, 239);
 }
 #bt_tabbed_column .bt_tabbed_column_tab[data-state=active] {
   border-bottom: none;

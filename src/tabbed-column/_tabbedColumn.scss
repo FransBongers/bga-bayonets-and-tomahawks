@@ -1,3 +1,5 @@
+@use '../base';
+
 #bt_tabbed_column {
   background-color: ivory;
   box-shadow: 1px 1px 5px #000;
@@ -32,7 +34,7 @@
   }
 
   .bt_tabbed_column_tab[data-state='inactive'] {
-    background-color: rgba(30, 20, 17, 0.5);
+    background-color: base.$light-blue;
   }
 
   .bt_tabbed_column_tab[data-state='active'] {
