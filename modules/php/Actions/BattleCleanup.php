@@ -16,6 +16,7 @@ use BayonetsAndTomahawks\Managers\CustomLogManager;
 use BayonetsAndTomahawks\Managers\Markers;
 use BayonetsAndTomahawks\Managers\Players;
 use BayonetsAndTomahawks\Managers\Spaces;
+use BayonetsAndTomahawks\Managers\Units;
 use BayonetsAndTomahawks\Models\Player;
 
 class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
@@ -84,11 +85,8 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
 
     $this->updateLuckyCannonballAndPerfectVolleysEventAbilities();
 
-    // $activeBattleLog = Globals::getActiveBattleLog();
-
-    // CustomLogManager::addRecord(CUSTOM_LOG_BATTLE_RESULT, $activeBattleLog);
-
-    // TODO: write results to log
+    $this->writeResultsToLog();
+    
     Globals::setActiveBattleLog([]);
     Notifications::battleCleanup($space, $attackerMarker, $defenderMarker, $battleContinues);
 
@@ -161,6 +159,42 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  private function writeResultsToLog()
+  {
+
+    $activeBattleLog = Globals::getActiveBattleLog();
+
+    foreach ([BRITISH, FRENCH] as $faction) {
+      $unitsLog = [];
+      $units = Units::getMany($activeBattleLog[$faction]['unitIds'])->toArray();
+
+      usort($units, function ($a, $b) {
+        return $a->getStackOrder() - $b->getStackOrder();
+      });
+
+      foreach ($units as $unit) {
+        $location = $unit->getLocation();
+        $unitState = 'full';
+
+        if (Utils::startsWith($location, 'lossesBox_') || $location === REMOVED_FROM_PLAY || ($unit->isFleet() && $location === POOL_FLEETS)) {
+          $unitState = 'destroyed';
+        } else if ($unit->isReduced()) {
+          $unitState = 'reduced';
+        }
+        $unitsLog[] = [
+          'counterId' => $unit->getCounterId(),
+          'state' => $unitState
+        ];
+      }
+
+      $activeBattleLog[$faction]['unitsAfterBattle'] = $unitsLog;
+    }
+
+    $data = CustomLogManager::addRecord(CUSTOM_LOG_BATTLE_RESULT, $activeBattleLog);
+    Notifications::battleLog($data);
+  }
+
 
   /**
    * These abilities can only be used in one battle so if they have been used

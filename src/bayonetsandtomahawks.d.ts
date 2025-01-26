@@ -40,7 +40,7 @@ interface BayonetsAndTomahawksGame extends Game {
   getPlayerId: () => number;
   getConnectionStaticData: (connection: BTConnection) => BTConnectionStaticData;
   getSpaceStaticData: (space: BTSpace | string) => BTSpaceStaticData;
-  getUnitStaticData: (unit: BTUnit) => BTUnitStaticData;
+  getUnitStaticData: (unit: BTUnit | string) => BTUnitStaticData;
   onCancel: () => void;
   openUnitStack: (unit: BTUnit) => void;
   setCardSelectable: (props: {
@@ -81,6 +81,7 @@ interface BayonetsAndTomahawksGame extends Game {
   _last_tooltip_id: number; // generic
   tooltipsToMap: [tooltipId: number, card_id: string][]; // generic
   animationManager: AnimationManager;
+  battleLog: BattleLog;
   battleTab: BattleTab;
   cardsInPlay: CardsInPlay;
   hand: Hand;
@@ -124,7 +125,7 @@ interface BTCard {
     id: string;
     title: string;
     arStart: true;
-  }
+  };
   faction: string;
   initiativeValue: number;
   location: string;
@@ -260,6 +261,35 @@ interface BTActiveBattleLog {
   french: BTActiveBattleLogFactionData;
 }
 
+interface BTBattleLogFactionData {
+  faction: BRITISH_FACTION | FRENCH_FACTION;
+  militiaIds: string[];
+  penalties: number;
+  rolls: Record<string, string[]>;
+  unitsAfterBattle?: Array<{
+    counterId: string;
+    state: 'reduced' | 'destroyed' | 'full'
+  }>;
+  militia: BTMarker[];
+  result?: number;
+}
+
+interface BTBattleLog {
+  spaceId: string;
+  attacker: BRITISH_FACTION | FRENCH_FACTION;
+  defender: BRITISH_FACTION | FRENCH_FACTION;
+  british: BTBattleLogFactionData;
+  french: BTBattleLogFactionData;
+}
+
+interface BTCustomLog<T = any> {
+  id: number;
+  data: T;
+  round: string;
+  year: number;
+  type: 'battleResult';
+}
+
 interface BayonetsAndTomahawksGamedatas extends Gamedatas {
   canceledNotifIds: string[];
   activeBattleLog: BTActiveBattleLog | null;
@@ -277,7 +307,8 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
     id: string;
     step: string;
     battleOrder: BattleOrderStep[];
-  }
+  };
+  customLogs: BTCustomLog[];
   markers: {
     year_marker: BTMarker;
     round_marker: BTMarker;
@@ -304,7 +335,9 @@ interface BayonetsAndTomahawksGamedatas extends Gamedatas {
 interface BayonetsAndTomahawksPlayerData extends BgaPlayer {
   hand: BTCard[];
   faction: BRITISH_FACTION | FRENCH_FACTION;
-  actionPoints: Record<Faction, BTActionPoint[]> & {reactionActionPointId?: string};
+  actionPoints: Record<Faction, BTActionPoint[]> & {
+    reactionActionPointId?: string;
+  };
   wieChit: {
     chit: BTWIEChit | null;
     hasChit: boolean;

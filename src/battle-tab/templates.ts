@@ -36,7 +36,7 @@ const tplActiveBattleDieResult = (dieResult: string) => `
 
 const tplActiveBattleLog = (game: BayonetsAndTomahawksGame) => `
 <div id="bt_active_battle_log">
-  <div id="bt_active_battle_log_map_detail"></div>
+  <div id="bt_active_battle_log_map_detail" class="bt_battle_log_map_detail"></div>
   <div class="bt_active_battle_title_container"><span id="bt_active_battle_title"></span></div>  
   <div class="bt_active_battle_log_content_container">
   <div id="bt_active_battle_attacker_banner" class="bt_active_battle_faction_header">

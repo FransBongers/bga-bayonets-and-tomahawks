@@ -48,6 +48,8 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
 
     $outcome = $this->determineOutcome($space);
 
+    $this->updateLogWithOutCome($outcome);
+
     $this->returnCommanders();
     $this->checkIndianDesertion($space, $outcome['winner']);
 
@@ -164,6 +166,19 @@ class BattleOutcome extends \BayonetsAndTomahawks\Actions\Battle
   //  .##.....##....##.....##..##........##.....##.......##...
   //  .##.....##....##.....##..##........##.....##.......##...
   //  ..#######.....##....####.########.####....##.......##...
+
+  private function updateLogWithOutCome($outcome) {
+    $activeBattleLog = Globals::getActiveBattleLog();
+
+    foreach([BRITISH, FRENCH] as $faction) {
+      $activeBattleLog[$faction]['winner'] = $faction === $outcome['winner']['faction'];
+      $marker = Markers::get($this->factionBattleMarkerMap[$faction]);
+      $score = $this->getBattleMarkerValue($marker);
+      $activeBattleLog[$faction]['result'] = $score;
+    }
+
+    $activeBattleLog = Globals::setActiveBattleLog($activeBattleLog);
+  }
 
   private function returnCommanders()
   {

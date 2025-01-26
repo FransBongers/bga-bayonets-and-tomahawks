@@ -26,14 +26,14 @@ CREATE TABLE IF NOT EXISTS `log` (
   `affected` JSON,
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
--- CREATE TABLE IF NOT EXISTS `custom_log` (
---   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
---   `type` varchar(32) NOT NULL,
---   `round` varchar(32) NOT NULL,
---   `year` int(10) NOT NULL,
---   `data` JSON,
---   PRIMARY KEY (`id`)
--- ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+CREATE TABLE IF NOT EXISTS `custom_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `type` varchar(32) NOT NULL,
+  `round` varchar(32) NOT NULL,
+  `year` int(10) NOT NULL,
+  `data` JSON,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 CREATE TABLE IF NOT EXISTS `cards` (
   `card_id` varchar(100) NOT NULL,
   `card_location` varchar(32) NOT NULL,

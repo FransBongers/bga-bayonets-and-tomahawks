@@ -11,11 +11,6 @@ use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\PlayersExtra;
 
 
-/*
- * Players manager : allows to easily access players ...
- *  a player is an instance of Player class
- */
-
 class CustomLogManager extends \BayonetsAndTomahawks\Helpers\DB_Manager
 {
   protected static $table = 'custom_log';
@@ -33,17 +28,31 @@ class CustomLogManager extends \BayonetsAndTomahawks\Helpers\DB_Manager
   {
     $round = explode('_',Globals::getActionRound())[3];
     $year = Globals::getYear();
-    self::DB()->insert([
+    $dbData = [
       'type' => $type,
       'round' => $round,
       'year' => $year,
       'data' => json_encode($data),
-    ]);
+    ];
+    self::DB()->insert($dbData);
+    return [
+      'type' => $type,
+      'round' => $round,
+      'year' => $year,
+      'data' => $data,
+    ];
   }
+
+  public static function get($id)
+  {
+    $logs = self::DB()->where('id', $id)->get(true);
+    return $logs;
+  }
+
 
   public static function getAll()
   {
-    $logs = self::DB()->get(false);
+    $logs = self::DB()->get(false)->toArray();
     return $logs;
   }
 

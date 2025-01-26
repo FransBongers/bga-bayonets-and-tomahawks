@@ -50,6 +50,7 @@ class NotificationManager {
       'moveBattleVictoryMarker',
       'battle',
       'battleCleanup',
+      'battleLog',
       'battleOrder',
       'battleRemoveMarker',
       'battleReroll',
@@ -95,7 +96,6 @@ class NotificationManager {
       'scoreVictoryPoints',
       'selectReserveCard',
       'selectReserveCardPrivate',
-      'startOfActionRound',
       'takeControl',
       'updateActionPoints',
       'updateCurrentStepOfRound',
@@ -301,6 +301,10 @@ class NotificationManager {
         type: 'battle_marker',
       });
     }
+  }
+
+  async notif_battleLog(notif: Notif<NotifBattleLogArgs>) {
+    this.game.battleLog.addLogRecord(notif.args.logRecord);
   }
 
   async notif_battleOrder(notif: Notif<NotifBattleOrderArgs>) {

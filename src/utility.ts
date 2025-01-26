@@ -71,7 +71,7 @@ const getBattleRollSequenceName = (stepId: string) => {
     case MILITIA:
       return _('Militia');
     case COMMANDER:
-      return _('Other Commanders')
+      return _('Other Commanders');
     default:
       return _('');
   }
@@ -84,13 +84,29 @@ const getBattleSideFromLocation = (input: BTUnit | string) => {
   } else {
     return DEFENDER;
   }
-}
+};
 
 const getUnitIdForBattleInfo = (unit: BTUnit | BTMarker) => {
   return `${unit.id}_battle`;
-}
+};
 
 const updateUnitIdForBattleInfo = (unit: BTUnit | BTMarker) => {
   unit.id = getUnitIdForBattleInfo(unit);
   return unit;
-}
+};
+
+const getBattleLogMapImageBackgroundPosition = (
+  game: BayonetsAndTomahawksGame,
+  spaceId: string,
+  scale: number,
+  height: number
+): { x: number; y: number } => {
+  const staticData = game.getSpaceStaticData(spaceId);
+
+  const offsetX = Number(scale) * 750; // half of map space width / height
+  const offsetY = height / 2;
+  const positionX = -0.705 * staticData.left + offsetX;
+  const positionY = -0.705 * staticData.top + offsetY;
+
+  return { x: positionX, y: positionY };
+};

@@ -49,6 +49,7 @@ use BayonetsAndTomahawks\Managers\Players;
 // Game specific
 use BayonetsAndTomahawks\Managers\Cards;
 use BayonetsAndTomahawks\Managers\Connections;
+use BayonetsAndTomahawks\Managers\CustomLogManager;
 use BayonetsAndTomahawks\Managers\Scenarios;
 use BayonetsAndTomahawks\Managers\Spaces;
 use BayonetsAndTomahawks\Managers\Markers;
@@ -138,9 +139,8 @@ class bayonetsandtomahawks extends Table
     public function getAllDatas($pId = null)
     {
 
-        // $sql = 'ALTER TABLE `DBPREFIX_gamelog` ADD `cancel` TINYINT(1) NOT NULL DEFAULT 0';
-        // self::applyDbUpgradeToAllDB($sql);
-
+        $sql = 'CREATE TABLE IF NOT EXISTS `DBPREFIX_custom_log` (`id` int(10) unsigned NOT NULL AUTO_INCREMENT, `type` varchar(32) NOT NULL, `round` varchar(32) NOT NULL, `year` int(10) NOT NULL, `data` JSON, PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8';
+        self::applyDbUpgradeToAllDB($sql);
 
 
         $pId = $pId ?? Players::getCurrentId();
@@ -174,6 +174,7 @@ class bayonetsandtomahawks extends Table
                 'step' => Globals::getCurrentStepOfRound(),
                 'battleOrder' => Globals::getBattleOrder(),
             ],
+            'customLogs' => CustomLogManager::getAll(),
             'playerOrder' => Players::getPlayerOrder(),
             'players' => Players::getUiData($pId),
             'staticData' => [

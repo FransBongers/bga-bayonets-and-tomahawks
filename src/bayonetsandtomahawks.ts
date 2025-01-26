@@ -55,6 +55,7 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
   public mobileVersion: boolean = false;
 
   // Game specific
+  public battleLog: BattleLog;
   public battleTab: BattleTab;
   public cardManager: BTCardManager;
   public cardsInPlay: CardsInPlay;
@@ -224,9 +225,9 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
 
     this.infoPanel = new InfoPanel(this);
     this.scenarioInfo = new ScenarioInfo(this);
+    this.battleLog = new BattleLog(this);
     this.informationModal = new InformationModal(this);
     this.settings = new Settings(this);
-    
 
     this.animationManager = new AnimationManager(this, {
       duration:
@@ -384,11 +385,14 @@ class BayonetsAndTomahawks implements BayonetsAndTomahawksGame {
     } else {
       return this.gamedatas.staticData.spaces[space.id];
     }
-    
   }
 
-  getUnitStaticData(unit: BTUnit): BTUnitStaticData {
-    return this.gamedatas.staticData.units[unit.counterId];
+  getUnitStaticData(unit: BTUnit | string): BTUnitStaticData {
+    if (typeof unit === 'string') {
+      return this.gamedatas.staticData.units[unit];
+    } else {
+      return this.gamedatas.staticData.units[unit.counterId];
+    }
   }
 
   ///////////////////////////////////////////////////

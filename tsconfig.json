@@ -43,6 +43,8 @@
     "src/counter.d.ts",
     "src/templates.ts",
     "src/utility.ts",
+    "src/battle-log/index.ts",
+    "src/battle-log/template.ts",
     "src/battle-tab/config.ts",
     "src/battle-tab/index.ts",
     "src/battle-tab/templates.ts",

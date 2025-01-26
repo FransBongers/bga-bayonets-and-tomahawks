@@ -363,6 +363,12 @@ class Notifications
     ]);
   }
 
+  public static function battleLog($logRecord) {
+    self::notifyAll('battleLog', '', [
+      'logRecord' => $logRecord,
+    ]);
+  }
+
   public static function moveBattleVictoryMarker($player, $marker, $numberOfPositions)
   {
     $backward = $numberOfPositions < 0;

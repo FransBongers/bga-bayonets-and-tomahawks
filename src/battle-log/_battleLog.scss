@@ -1,0 +1,192 @@
+@use 'sass:math';
+@use '../base';
+
+#battle_log_button {
+  // border: 1px solid #777;
+  border-radius: 50%;
+  // box-shadow: 2px 2px 5px black;
+  // background-color: gray;
+  background-color: transparent;
+
+  // margin: 0px 5px;
+  // margin-top: -38px;
+  cursor: pointer;
+  // transform: translateY(0);
+  // transition: transform 0.4s, margin 0.4s;
+
+  width: 50px;
+  height: 50px;
+  // margin: 4px;
+  // margin-right: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .battle_log_icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  &:hover {
+    .battle_log_icon {
+      width: 48px;
+      height: 48px;
+      fill: white;
+    }
+  }
+}
+
+#popin_battle_log_modal_underlay {
+  background-color: #000 !important;
+}
+
+.battle_log_modal {
+  // background-image: url("img/background_paper.jpg");
+  background-color: ivory;
+  background-size: cover;
+  border-radius: 8px;
+  box-shadow: rgb(0, 0, 0) 1px 1px 5px;
+  border: 1px solid black;
+  // width: 95%;
+  // max-width: 1200px;
+  // margin: 50px 0px;
+  width: 640px;
+  
+
+  .battle_log_modal_closeicon {
+    background-color: #a47a77;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -18px;
+    right: -18px;
+    font-size: 90%;
+    color: white !important;
+    border: 1px solid #dfbda8;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: none;
+      color: #ccc !important;
+      transform: scale(1.1);
+    }
+
+    i {
+      margin-top: -2px;
+    }
+  }
+
+  h2 {
+    text-align: center;
+    font-size: large;
+    font-weight: bold;
+    margin: 0px;
+    padding: 7px 0px;
+    border-bottom: 1px solid black;
+    background-color: base.$french-color;
+    color: ivory;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+
+  #battle_log_content {
+    min-height: 100px;
+    max-height: 75vh;
+    overflow: scroll;
+    overflow-x: hidden;
+    // scrollbar-gutter: stable both-edges;
+
+    h3 {
+      background-color: rgb(231, 233, 239);
+      border-bottom: 1px solid black;
+      border-top: 1px solid black;
+      padding: 4px 0px;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 0px;
+    }
+
+    .battle_log {
+      border-top: 2px solid black;
+      margin-bottom: 30px;
+    }
+
+    .bt_battle_log_map_detail {
+      height: 100px;
+      background-image: url('img/map.jpg');
+      background-repeat: no-repeat;
+      background-size: 1060px 1638.4px;
+    }
+
+    .bt_log_data_container {
+      padding: 4px;
+    }
+
+    .bt_title {
+      text-align: center;
+    }
+
+    .bt_battle_result_row {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 8px;
+    }
+
+    .bt_faction_banner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 24px;
+      // text-align: center;
+      font-weight: bold;
+      color: ivory;
+      border: 1px solid black;
+      border-radius: 5px;
+      flex-grow: 1;
+    }
+
+    .bt_result {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 24px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .bt_faction_banner[data-faction='british'] {
+      background-color: base.$british-color;
+    }
+
+    .bt_faction_banner[data-faction='french'] {
+      background-color: base.$french-color;
+    }
+
+    .bt_battle_units_row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 8px;
+    }
+
+    .bt_faction_units_container {
+      height: fit-content;
+      position: relative;
+      --btTokenScale: 0.85;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      .bt_token_side {
+        position: relative;
+      }
+    }
+
+    .bt_token_side[data-eliminated="true"] {
+      opacity: 0.6;
+    }
+  }
+}

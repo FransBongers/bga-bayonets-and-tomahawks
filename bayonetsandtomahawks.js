@@ -2591,6 +2591,7 @@ var BayonetsAndTomahawks = (function () {
         };
         this.infoPanel = new InfoPanel(this);
         this.scenarioInfo = new ScenarioInfo(this);
+        this.battleLog = new BattleLog(this);
         this.informationModal = new InformationModal(this);
         this.settings = new Settings(this);
         this.animationManager = new AnimationManager(this, {
@@ -2675,7 +2676,12 @@ var BayonetsAndTomahawks = (function () {
         }
     };
     BayonetsAndTomahawks.prototype.getUnitStaticData = function (unit) {
-        return this.gamedatas.staticData.units[unit.counterId];
+        if (typeof unit === 'string') {
+            return this.gamedatas.staticData.units[unit];
+        }
+        else {
+            return this.gamedatas.staticData.units[unit.counterId];
+        }
     };
     BayonetsAndTomahawks.prototype.addActionButtonClient = function (_a) {
         var id = _a.id, text = _a.text, callback = _a.callback, extraClasses = _a.extraClasses, _b = _a.color, color = _b === void 0 ? 'none' : _b;
@@ -3401,6 +3407,110 @@ var getUnitIdForBattleInfo = function (unit) {
 var updateUnitIdForBattleInfo = function (unit) {
     unit.id = getUnitIdForBattleInfo(unit);
     return unit;
+};
+var getBattleLogMapImageBackgroundPosition = function (game, spaceId, scale, height) {
+    var staticData = game.getSpaceStaticData(spaceId);
+    var offsetX = Number(scale) * 750;
+    var offsetY = height / 2;
+    var positionX = -0.705 * staticData.left + offsetX;
+    var positionY = -0.705 * staticData.top + offsetY;
+    return { x: positionX, y: positionY };
+};
+var BattleLog = (function () {
+    function BattleLog(game) {
+        this.logs = {};
+        this.game = game;
+        var gamedatas = game.gamedatas;
+        this.setup({ gamedatas: gamedatas });
+    }
+    BattleLog.prototype.clearInterface = function () { };
+    BattleLog.prototype.updateInterface = function (_a) {
+        var gamedatas = _a.gamedatas;
+    };
+    BattleLog.prototype.addButton = function (_a) {
+        var gamedatas = _a.gamedatas;
+        var configPanel = document.getElementById('info_panel_buttons');
+        if (configPanel) {
+            configPanel.insertAdjacentHTML('beforeend', tplBattleLogButton());
+        }
+    };
+    BattleLog.prototype.setupModal = function (_a) {
+        var gamedatas = _a.gamedatas;
+        this.modal = new Modal("battle_log_modal", {
+            class: 'battle_log_modal',
+            closeIcon: 'fa-times',
+            title: _('Battle Log'),
+            contents: tplBattleLogModalContent(this.game),
+            closeAction: 'hide',
+            verticalAlign: 'flex-start',
+            breakpoint: 740,
+        });
+        this.battleLogContent = document.getElementById('battle_log_content');
+    };
+    BattleLog.prototype.setup = function (_a) {
+        var _this = this;
+        var gamedatas = _a.gamedatas;
+        this.addButton({ gamedatas: gamedatas });
+        this.setupModal({ gamedatas: gamedatas });
+        dojo.connect($("battle_log_button"), 'onclick', function () { return _this.modal.show(); });
+        gamedatas.customLogs.forEach(function (log) {
+            if (log.type === 'battleResult') {
+                _this.addLogRecord(log);
+            }
+        });
+    };
+    BattleLog.prototype.addLogRecord = function (record) {
+        var year = record.year, round = record.round;
+        var addSectionTitle = false;
+        if (!this.logs[year]) {
+            console.log('set year');
+            this.logs[year] = {};
+            addSectionTitle = true;
+        }
+        if (!this.logs[year][round]) {
+            console.log('set round');
+            this.logs[year][round] = [];
+            addSectionTitle = true;
+        }
+        this.logs[year][round].push(record);
+        if (addSectionTitle) {
+            this.battleLogContent.insertAdjacentHTML('beforeend', tplBattleLogSectionTitle(round, year));
+        }
+        this.battleLogContent.insertAdjacentHTML('beforeend', tplBattleLog(this.game, record));
+    };
+    return BattleLog;
+}());
+var tplBattleLogButton = function () { return "<button id=\"battle_log_button\" type=\"button\">\n<div class=\"battle_log_icon\">\n  <svg width=\"100%\" height=\"100%\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M17.8,20C17.4,21.2 16.3,22 15,22H5C3.3,22 2,20.7 2,19V18H5L14.2,18C14.6,19.2 15.7,20 17,20H17.8M19,2C20.7,2 22,3.3 22,5V6H20V5C20,4.4 19.6,4 19,4C18.4,4 18,4.4 18,5V18H17C16.4,18 16,17.6 16,17V16H5V5C5,3.3 6.3,2 8,2H19M8,6V8H15V6H8M8,10V12H14V10H8Z\" /></svg>\n</div>\n</button>"; };
+var tplBattleLogUnit = function (game, counterId, state) {
+    var isCommander = game.getUnitStaticData(counterId).type === COMMANDER;
+    return "<div class=\"bt_token_side\" data-counter-id=\"".concat(counterId).concat(state === 'reduced' ? '_reduced' : '', "\"").concat(state === 'destroyed' ? 'data-eliminated="true"' : '').concat(isCommander ? 'data-commander="true"' : '', "></div>");
+};
+var tplBattleLog = function (game, log) {
+    var _a, _b;
+    var _c = log.data, spaceId = _c.spaceId, attacker = _c.attacker, defender = _c.defender;
+    var scale = 640 / 1500;
+    var _d = getBattleLogMapImageBackgroundPosition(game, spaceId, scale, 100), x = _d.x, y = _d.y;
+    console.log(log.data[attacker]);
+    return "\n  <div class=\"battle_log\">\n    <div class=\"bt_battle_log_map_detail\" style=\"background-position-x: ".concat(x, "px; background-position-y: ").concat(y, "px; width: ").concat(scale * 1500, "px;\"></div>\n    <div class=\"bt_log_data_container\">\n      <div class=\"bt_title\">\n        <span>").concat(game.format_string_recursive(_('Battle in ${tkn_boldText_spaceName}'), {
+        tkn_boldText_spaceName: _(game.getSpaceStaticData(spaceId).name),
+    }), "<span>\n      </div>\n      <div class=\"bt_result\"><span>").concat(game.format_string_recursive(_('${attackerScore} vs ${defenderScore}'), {
+        attackerScore: (_a = log.data[attacker].result) !== null && _a !== void 0 ? _a : '-',
+        defenderScore: (_b = log.data[defender].result) !== null && _b !== void 0 ? _b : '-',
+    }), "</span></div>\n      <div class=\"bt_battle_units_row\">\n        <div class=\"bt_faction_banner\" data-faction=\"").concat(attacker, "\">\n          <span>").concat(_('Attacker'), "</span>\n        </div>\n\n        <div class=\"bt_faction_banner\" data-faction=\"").concat(defender, "\">\n          <span>").concat(_('Defender'), "</span>\n        </div>\n\n        <div class=\"bt_faction_units_container\">").concat((log.data[attacker].unitsAfterBattle || [])
+        .map(function (_a) {
+        var counterId = _a.counterId, state = _a.state;
+        return tplBattleLogUnit(game, counterId, state);
+    })
+        .join(''), "</div>\n        <div class=\"bt_faction_units_container\">").concat((log.data[defender].unitsAfterBattle || [])
+        .map(function (_a) {
+        var counterId = _a.counterId, state = _a.state;
+        return tplBattleLogUnit(game, counterId, state);
+    })
+        .join(''), "</div>\n      </div>\n    </div>\n  </div>\n");
+};
+var tplBattleLogSectionTitle = function (round, year) { return "\n  <h3>".concat(getCurrentRoundName(round), " - ").concat(year, "</h3>\n"); };
+var tplBattleLogModalContent = function (game) {
+    return "\n  <div id=\"battle_log_content\">\n\n  </div>";
 };
 var getBattleOrderTitle = function (step) {
     var _a;
@@ -4459,7 +4569,7 @@ var BattleTab = (function () {
 var tplActiveBattleCounters = function (side) { return "\n<div class=\"bt_counter_container\">\n  <div class=\"bt_counter\">\n    <div id=\"bt_active_battle_".concat(side, "_battle_victory_marker\" class=\"bt_log_token bt_marker_side\"></div>\n    <span id=\"bt_active_battle_").concat(side, "_score\" class=\"bt_active_battle_score_counter\"></span>\n  </div>\n  <div id=\"bt_active_battle_").concat(side, "_commander_container\" class=\"bt_counter\">\n    <div id=\"bt_active_battle_").concat(side, "_commander\" class=\"bt_active_battle_commander\"></div>\n    <span id=\"bt_active_battle_").concat(side, "_rerolls\"></span>\n  </div>\n</div>\n"); };
 var tplActiveBattleStep = function (stepId, side) { return "\n<div id=\"bt_active_battle_sequence_".concat(stepId, "_").concat(side, "_container\" class=\"bt_active_battle_sequence_container\">\n  <div class=\"bt_active_battle_sequence_title_container\">\n    <span class=\"bt_active_battle_sequence_name\">").concat(getBattleRollSequenceName(stepId), "</span>\n  </div>\n  <div class=\"bt_active_battle_sequence_inner_container\">\n    <div id=\"bt_active_battle_sequence_").concat(stepId, "_").concat(side, "_units\" class=\"bt_active_battle_sequence_units\">\n    </div>\n    <div id=\"bt_active_battle_sequence_").concat(stepId, "_").concat(side, "_rolls\" class=\"bt_active_battle_sequence_rolls\">\n    </div>\n  </div>\n</div>\n"); };
 var tplActiveBattleDieResult = function (dieResult) { return "\n<div class=\"bt_die_result_container\">\n  ".concat(tplLogDieResult(dieResult), "\n</div>\n"); };
-var tplActiveBattleLog = function (game) { return "\n<div id=\"bt_active_battle_log\">\n  <div id=\"bt_active_battle_log_map_detail\"></div>\n  <div class=\"bt_active_battle_title_container\"><span id=\"bt_active_battle_title\"></span></div>  \n  <div class=\"bt_active_battle_log_content_container\">\n  <div id=\"bt_active_battle_attacker_banner\" class=\"bt_active_battle_faction_header\">\n    <div class=\"bt_active_battle_faction_banner\" data-faction=\"\">\n      ".concat(_('Attacker'), "\n    </div>\n    ").concat(tplActiveBattleCounters(ATTACKER), "\n  </div>\n  <div id=\"bt_active_battle_defender_banner\" class=\"bt_active_battle_faction_header\">\n    <div class=\"bt_active_battle_faction_banner\" data-faction=\"\">\n    ").concat(_('Defender'), "\n    </div>\n    ").concat(tplActiveBattleCounters(DEFENDER), "\n  </div>\n    <div id=\"bt_active_battle_attacker_faction_container\" class=\"bt_active_battle_faction_container\" data-faction=\"british\">\n          ").concat(BATTLE_ROLL_SEQUENCE.map(function (stepId) {
+var tplActiveBattleLog = function (game) { return "\n<div id=\"bt_active_battle_log\">\n  <div id=\"bt_active_battle_log_map_detail\" class=\"bt_battle_log_map_detail\"></div>\n  <div class=\"bt_active_battle_title_container\"><span id=\"bt_active_battle_title\"></span></div>  \n  <div class=\"bt_active_battle_log_content_container\">\n  <div id=\"bt_active_battle_attacker_banner\" class=\"bt_active_battle_faction_header\">\n    <div class=\"bt_active_battle_faction_banner\" data-faction=\"\">\n      ".concat(_('Attacker'), "\n    </div>\n    ").concat(tplActiveBattleCounters(ATTACKER), "\n  </div>\n  <div id=\"bt_active_battle_defender_banner\" class=\"bt_active_battle_faction_header\">\n    <div class=\"bt_active_battle_faction_banner\" data-faction=\"\">\n    ").concat(_('Defender'), "\n    </div>\n    ").concat(tplActiveBattleCounters(DEFENDER), "\n  </div>\n    <div id=\"bt_active_battle_attacker_faction_container\" class=\"bt_active_battle_faction_container\" data-faction=\"british\">\n          ").concat(BATTLE_ROLL_SEQUENCE.map(function (stepId) {
     return tplActiveBattleStep(stepId, 'attacker');
 }).join(''), "\n      ").concat([MILITIA, COMMANDER]
     .map(function (stepId) { return tplActiveBattleStep(stepId, 'attacker'); })
@@ -6105,6 +6215,7 @@ var NotificationManager = (function () {
             'moveBattleVictoryMarker',
             'battle',
             'battleCleanup',
+            'battleLog',
             'battleOrder',
             'battleRemoveMarker',
             'battleReroll',
@@ -6148,7 +6259,6 @@ var NotificationManager = (function () {
             'scoreVictoryPoints',
             'selectReserveCard',
             'selectReserveCardPrivate',
-            'startOfActionRound',
             'takeControl',
             'updateActionPoints',
             'updateCurrentStepOfRound',
@@ -6325,6 +6435,14 @@ var NotificationManager = (function () {
                         }
                         return [2];
                 }
+            });
+        });
+    };
+    NotificationManager.prototype.notif_battleLog = function (notif) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.game.battleLog.addLogRecord(notif.args.logRecord);
+                return [2];
             });
         });
     };
@@ -13643,6 +13761,15 @@ var getCurrentRoundName = function (currentRound) {
         case ACTION_ROUND_7:
         case ACTION_ROUND_8:
         case ACTION_ROUND_9:
+        case 'ar1':
+        case 'ar2':
+        case 'ar3':
+        case 'ar4':
+        case 'ar5':
+        case 'ar6':
+        case 'ar7':
+        case 'ar8':
+        case 'ar9':
             return _('Action Round ${number}').replace('${number}', currentRound.slice(-1));
         case FLEETS_ARRIVE:
             return _('Fleets Arrive');

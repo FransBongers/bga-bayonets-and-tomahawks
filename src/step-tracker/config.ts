@@ -56,6 +56,15 @@ const getCurrentRoundName = (currentRound: string) => {
     case ACTION_ROUND_7:
     case ACTION_ROUND_8:
     case ACTION_ROUND_9:
+    case 'ar1':
+    case 'ar2':
+    case 'ar3':
+    case 'ar4':
+    case 'ar5':
+    case 'ar6':
+    case 'ar7':
+    case 'ar8':
+    case 'ar9':
       return _('Action Round ${number}').replace(
         '${number}',
         currentRound.slice(-1)

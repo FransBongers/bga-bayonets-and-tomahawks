@@ -52,6 +52,10 @@ interface NotifBattleCleanupArgs {
   battleContinues: boolean;
 }
 
+interface NotifBattleLogArgs {
+  logRecord: BTCustomLog<BTBattleLog>;
+}
+
 interface NotifBattleStartArgs {
   space: BTSpace;
   attackerMarker: BTMarker;

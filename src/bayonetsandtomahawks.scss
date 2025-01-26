@@ -17,6 +17,7 @@
 @use 'sass:math';
 @use 'base';
 @use 'actionPoints';
+@use 'battle-log/battleLog';
 @use 'battle-tab/battleTab';
 @use 'card-managers/cards';
 @use 'cards-in-play/cardsInPlay';

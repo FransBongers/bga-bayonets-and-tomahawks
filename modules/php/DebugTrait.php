@@ -55,6 +55,8 @@ trait DebugTrait
 
   function debug_test()
   {
+    Notifications::log('log', CustomLogManager::get(1));
+
     // CustomLogManager::addRecord('battle', [
     //   'attacker' => BRITISH,
     //   'defender' => FRENCH,
@@ -96,7 +98,7 @@ trait DebugTrait
     // Cards::get('Card25')->insertOnTop(Locations::buildUpDeck(FRENCH));
     // Cards::get('Card21')->insertOnTop(Locations::buildUpDeck(BRITISH));
     // Cards::get('Card06')->insertOnTop(Locations::campaignDeck(FRENCH));
-    Cards::get('Card21')->insertOnTop(Locations::campaignDeck(BRITISH));
+    // Cards::get('Card21')->insertOnTop(Locations::campaignDeck(BRITISH));
     // Cards::get('Card54')->insertOnTop(Locations::campaignDeck(INDIAN));
 
   }
