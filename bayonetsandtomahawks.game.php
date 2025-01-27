@@ -139,10 +139,6 @@ class bayonetsandtomahawks extends Table
     public function getAllDatas($pId = null)
     {
 
-        $sql = 'CREATE TABLE IF NOT EXISTS `DBPREFIX_custom_log` (`id` int(10) unsigned NOT NULL AUTO_INCREMENT, `type` varchar(32) NOT NULL, `round` varchar(32) NOT NULL, `year` int(10) NOT NULL, `data` JSON, PRIMARY KEY (`id`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8';
-        self::applyDbUpgradeToAllDB($sql);
-
-
         $pId = $pId ?? Players::getCurrentId();
 
         $activeBattleLog = Globals::getActiveBattleLog();
