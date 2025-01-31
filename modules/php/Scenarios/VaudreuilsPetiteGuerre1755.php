@@ -12,7 +12,7 @@ class VaudreuilsPetiteGuerre1755 extends \BayonetsAndTomahawks\Models\Scenario
   {
     parent::__construct();
     $this->id = VaudreuilsPetiteGuerre1755;
-    $this->name = clienttranslate("Vaudreil's Petite Guerre 1755");
+    $this->name = clienttranslate("Vaudreuil's Petite Guerre 1755");
     $this->number = 1;
     $this->startYear = 1755;
     $this->duration = 1;

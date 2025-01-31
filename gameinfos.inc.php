@@ -13,16 +13,7 @@
 $gameinfos = array( 
 
 // Name of the game in English (will serve as the basis for translation) 
-'game_name' => "Bayonets & Tomahawks",
-
-// Game designer (or game designers, separated by commas)
-'designer' => 'Marc Rodrigue',       
-
-// Game artist (or game artists, separated by commas)
-'artist' => 'Marc Rodrigue',         
-
-// Year of FIRST publication of this game. Can be negative.
-'year' => 2021,                 
+'game_name' => "Bayonets & Tomahawks",        
 
 // Game publisher (use empty string if there is no publisher)
 'publisher' => 'GMT Games',                     
@@ -85,19 +76,7 @@ $gameinfos = array(
 // Language dependency. If false or not set, there is no language dependency. If true, all players at the table must speak the same language.
 // If an array of shortcode languages such as array( 1 => 'en', 2 => 'fr', 3 => 'it' ) then all players at the table must speak the same language, and this language must be one of the listed languages.
 // NB: the default will be the first language in this list spoken by the player, so you should list them by popularity/preference.
-'language_dependency' => false,
-
-// Complexity of the game, from 0 (extremely simple) to 5 (extremely complex)
-'complexity' => 3,    
-
-// Luck of the game, from 0 (absolutely no luck in this game) to 5 (totally luck driven)
-'luck' => 2,    
-
-// Strategy of the game, from 0 (no strategy can be setup) to 5 (totally based on strategy)
-'strategy' => 4,    
-
-// Diplomacy of the game, from 0 (no interaction in this game) to 5 (totally based on interaction and discussion between players)
-'diplomacy' => 1,    
+'language_dependency' => false,   
 
 // Colors attributed to players
 'player_colors' => array( "B73E1F", "216295"),
@@ -127,23 +106,8 @@ $gameinfos = array(
     'max' => null
 ),
 
-// Game presentation
-// Short game presentation text that will appear on the game description page, structured as an array of paragraphs.
-// Each paragraph must be wrapped with totranslate() for translation and should not contain html (plain text without formatting).
-// A good length for this text is between 100 and 150 words (about 6 to 9 lines on a standard display)
-'presentation' => array(
-   totranslate("\"Bayonets & Tomahawks\" is a 2-player card-driven strategic wargame focusing on the \"French & Indian War\", 1755-1760. Its fluid yet rich system ensures fun for players of all levels. One player controls the British and the other controls the French and most Indians. Indian diplomacy, raids, constructions, naval operations, sieges: nothing is left out in order to immerse players in the fascinating military asymmetries of the 18th-Century colonial frontier."),
-//    totranslate("It was awarded best triangle game of the year in 2005 and nominated for the Spiel des Jahres."),
-//    ...
-),
 
-//////// BGA SANDBOX ONLY PARAMETERS (DO NOT MODIFY)
 
-// simple : A plays, B plays, C plays, A plays, B plays, ...
-// circuit : A plays and choose the next player C, C plays and choose the next player D, ...
-// complex : A+B+C plays and says that the next player is A+B
-'is_sandbox' => false,
-'turnControl' => 'simple'
 
 ////////
 );

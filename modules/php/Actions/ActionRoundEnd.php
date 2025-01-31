@@ -130,6 +130,7 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
     Globals::setNoIndianUnitMayBeActivated(false);
     Globals::setHighwayUnusableForBritish('');
     Globals::setBattleOrder([]);
+    Globals::setUnitsThatCannotFight([]);
 
     Markers::move(ROUND_MARKER, $nextActionRound);
     Notifications::moveRoundMarker(Markers::get(ROUND_MARKER), $nextActionRound);

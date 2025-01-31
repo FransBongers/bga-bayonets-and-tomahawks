@@ -55,7 +55,7 @@ trait DebugTrait
 
   function debug_test()
   {
-    Notifications::log('log', CustomLogManager::get(1));
+    Notifications::log('log', Globals::getUnitsThatCannotFight());
 
     // CustomLogManager::addRecord('battle', [
     //   'attacker' => BRITISH,

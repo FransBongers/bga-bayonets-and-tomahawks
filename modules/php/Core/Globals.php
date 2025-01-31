@@ -51,7 +51,8 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'winteringRearAdmiralPlayed' => 'bool',
     'highwayUnusableForBritish' => 'str',
     'battleOrder' => 'obj',
-    'gameOptionFactions' => 'int'
+    'gameOptionFactions' => 'int',
+    'unitsThatCannotFight' => 'obj',
   ];
 
   protected static $table = 'global_variables';
@@ -190,6 +191,7 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     self::setNoIndianUnitMayBeActivated(false);
     self::setWinteringRearAdmiralPlayed(false);
     self::setHighwayUnusableForBritish('');
+    self::setUnitsThatCannotFight([]);
 
     // Game options
     self::setGameOptionFactions($options[\BayonetsAndTomahawks\OPTION_FACTIONS]);

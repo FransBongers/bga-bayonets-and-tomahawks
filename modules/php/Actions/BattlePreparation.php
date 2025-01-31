@@ -184,7 +184,7 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
 
     $resolvedBattlePreparation = Engine::getResolvedActions([BATTLE_PREPARATION]);
 
-    $unitIdsThatAlreadyFought = [];
+    $unitIdsThatAlreadyFought = Globals::getUnitsThatCannotFight([]);;
 
     foreach ($resolvedBattlePreparation as $node) {
       $resArgs = $node->getActionResolutionArgs();

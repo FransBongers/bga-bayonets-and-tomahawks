@@ -316,7 +316,8 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
 
   private function getStep5RetreatPriorities($spaces, $faction, $spaceOfBattle)
   {
-    $friendlyUnitCount = count(Utils::filter($spaceOfBattle->getUnits($faction), function ($unit) {
+    $friendlyUnits = $spaceOfBattle->getUnits($faction);
+    $friendlyUnitCount = count(Utils::filter($friendlyUnits, function ($unit) {
       return !$unit->isCommander();
     }));
 
@@ -372,9 +373,9 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
         continue;
       }
       $unitsOnSpace = $space->getUnits();
-      $enemyUnits = Utils::filter($unitsOnSpace, function ($unit) use ($faction) {
+      $enemyUnits = count(Utils::filter($unitsOnSpace, function ($unit) use ($faction) {
         return !$unit->isCommander() && $unit->getFaction() !== $faction;
-      }) + $space->getMilitiaForFaction(BTHelpers::getOtherFaction($faction));
+      })) + $space->getMilitiaForFaction(BTHelpers::getOtherFaction($faction));
 
       $spacesWithUnresolvedBattle[] = [
         'space' => $space,
@@ -386,10 +387,14 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
       usort($spacesWithUnresolvedBattle, function ($a, $b) {
         return count($a['enemyUnits']) - count($b['enemyUnits']);
       });
-      $fewestEnemyUnitCount = count($spacesWithUnresolvedBattle[0]['enemyUnits']);
+      $fewestEnemyUnitCount = $spacesWithUnresolvedBattle[0]['enemyUnits'];
       $spacesWithUnresolvedBattle = Utils::filter($spacesWithUnresolvedBattle, function ($data) use ($fewestEnemyUnitCount) {
-        return count($data['enemyUnits']) === $fewestEnemyUnitCount;
+        return $data['enemyUnits'] === $fewestEnemyUnitCount;
       });
+
+      // Set here because this can be triggered by overwhelm
+      $unitsThatCannotFight = Globals::getUnitsThatCannotFight();
+      Globals::setUnitsThatCannotFight(array_merge($unitsThatCannotFight, BTHelpers::returnIds($friendlyUnits)));
 
       return [
         'spaceIds' => array_map(function ($data) {
