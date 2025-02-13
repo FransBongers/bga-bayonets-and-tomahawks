@@ -46,17 +46,24 @@ class BattleFortElimination extends \BayonetsAndTomahawks\Actions\Battle
     $faction = $info['faction'];
     $isRouted = $info['isRouted'];
     $space = Spaces::get($spaceId);
+    $player = self::getPlayer();
+
+    $enemyFort = Units::getTopOf($faction === BRITISH ? POOL_FRENCH_FORTS : POOL_BRITISH_FORTS);
+    $fort = Utils::array_find($space->getUnits($faction), function ($unit) {
+      return $unit->isFort();
+    });
+
+    if ($fort !== null && $enemyFort === null) {
+      $fort->eliminate($player);
+      $this->resolveAction(['automatic' => true]);
+    }
 
     if (!$isRouted) {
       return;
     }
 
-    $fort = Utils::array_find($space->getUnits($faction), function ($unit) {
-      return $unit->isFort();
-    });
-
     if ($fort !== null) {
-      $this->replaceFort($space, $fort, self::getPlayer());
+      $this->replaceFort($space, $fort, $player);
     }
 
     $this->resolveAction(['automatic' => true]);
@@ -70,9 +77,7 @@ class BattleFortElimination extends \BayonetsAndTomahawks\Actions\Battle
   // .##........##....##..##..........##.....##.##....##....##.....##..##.....##.##...###
   // .##........##.....##.########....##.....##..######.....##....####..#######..##....##
 
-  public function stPreBattleFortElimination()
-  {
-  }
+  public function stPreBattleFortElimination() {}
 
 
   // ....###....########...######....######.

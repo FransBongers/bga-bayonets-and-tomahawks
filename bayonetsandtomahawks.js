@@ -9065,13 +9065,16 @@ var BattleFortEliminationState = (function () {
     BattleFortEliminationState.prototype.setDescription = function (activePlayerId) { };
     BattleFortEliminationState.prototype.updateInterfaceInitialStep = function () {
         var _this = this;
+        var _a;
         this.game.clearPossible();
         this.game.clientUpdatePageTitle({
-            text: _('${you} must eliminate ${tkn_unit_fort} in ${spaceName} or replace with ${tkn_unit_enemyFort}?'),
+            text: this.args.enemyFort
+                ? _('${you} must eliminate ${tkn_unit_fort} in ${spaceName} or replace with ${tkn_unit_enemyFort}')
+                : _('${you} must eliminate ${tkn_unit_fort} in ${spaceName}?'),
             args: {
                 you: '${you}',
                 tkn_unit_fort: "".concat(this.args.fort.counterId, ":").concat(this.args.fort.reduced ? 'reduced' : 'full'),
-                tkn_unit_enemyFort: "".concat(this.args.enemyFort.counterId, ":").concat(this.args.fort.reduced ? 'reduced' : 'full'),
+                tkn_unit_enemyFort: "".concat((_a = this.args.enemyFort) === null || _a === void 0 ? void 0 : _a.counterId, ":").concat(this.args.fort.reduced ? 'reduced' : 'full'),
                 spaceName: _(this.args.space.name),
             },
         });
@@ -9083,11 +9086,13 @@ var BattleFortEliminationState = (function () {
             id: 'eliminate_btn',
             callback: function () { return _this.updateInterfaceConfirm('eliminate'); },
         });
-        this.game.addPrimaryActionButton({
-            text: _('Replace'),
-            id: 'replace_btn',
-            callback: function () { return _this.updateInterfaceConfirm('replace'); },
-        });
+        if (this.args.enemyFort) {
+            this.game.addPrimaryActionButton({
+                text: _('Replace'),
+                id: 'replace_btn',
+                callback: function () { return _this.updateInterfaceConfirm('replace'); },
+            });
+        }
         this.game.addPassButton({
             optionalAction: this.args.optionalAction,
         });

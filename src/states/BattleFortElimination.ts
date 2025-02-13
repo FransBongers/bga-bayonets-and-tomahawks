@@ -39,15 +39,17 @@ class BattleFortEliminationState implements State {
     this.game.clearPossible();
 
     this.game.clientUpdatePageTitle({
-      text: _(
-        '${you} must eliminate ${tkn_unit_fort} in ${spaceName} or replace with ${tkn_unit_enemyFort}?'
-      ),
+      text: this.args.enemyFort
+        ? _(
+            '${you} must eliminate ${tkn_unit_fort} in ${spaceName} or replace with ${tkn_unit_enemyFort}'
+          )
+        : _('${you} must eliminate ${tkn_unit_fort} in ${spaceName}?'),
       args: {
         you: '${you}',
         tkn_unit_fort: `${this.args.fort.counterId}:${
           this.args.fort.reduced ? 'reduced' : 'full'
         }`,
-        tkn_unit_enemyFort: `${this.args.enemyFort.counterId}:${
+        tkn_unit_enemyFort: `${this.args.enemyFort?.counterId}:${
           this.args.fort.reduced ? 'reduced' : 'full'
         }`,
         spaceName: _(this.args.space.name),
@@ -64,11 +66,13 @@ class BattleFortEliminationState implements State {
       id: 'eliminate_btn',
       callback: () => this.updateInterfaceConfirm('eliminate'),
     });
-    this.game.addPrimaryActionButton({
-      text: _('Replace'),
-      id: 'replace_btn',
-      callback: () => this.updateInterfaceConfirm('replace'),
-    });
+    if (this.args.enemyFort) {
+      this.game.addPrimaryActionButton({
+        text: _('Replace'),
+        id: 'replace_btn',
+        callback: () => this.updateInterfaceConfirm('replace'),
+      });
+    }
 
     this.game.addPassButton({
       optionalAction: this.args.optionalAction,
