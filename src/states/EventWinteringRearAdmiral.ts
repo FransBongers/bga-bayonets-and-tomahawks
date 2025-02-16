@@ -52,6 +52,18 @@ class EventWinteringRearAdmiralState implements State {
       })
     );
 
+    // if(this.args.fleets.length === 0) {
+    //   this.game.addSecondaryActionButton({id: 'skip_btn', text: 'Skip', callback: () => {
+    //     this.game.takeAction({
+    //       action: 'actEventWinteringRearAdmiral',
+    //       args: {
+    //         skip: true,
+    //         unitId: null,
+    //         spaceId: null,
+    //       },
+    //     });
+    //   }})
+    // }
     this.game.addPassButton({
       optionalAction: this.args.optionalAction,
       text: _('Do not use'),

@@ -55,7 +55,8 @@ trait DebugTrait
 
   function debug_test()
   {
-    Units::moveAllInLocation(POOL_BRITISH_FORTS, REMOVED_FROM_PLAY);
+    Units::move('unit_126', POOL_FLEETS);
+    // Units::moveAllInLocation(POOL_BRITISH_FORTS, REMOVED_FROM_PLAY);
     // Notifications::log('log', Globals::getUnitsThatCannotFight());
 
     // CustomLogManager::addRecord('battle', [

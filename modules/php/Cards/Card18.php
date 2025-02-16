@@ -3,7 +3,10 @@
 namespace BayonetsAndTomahawks\Cards;
 
 use BayonetsAndTomahawks\Core\Engine\LeafNode;
+use BayonetsAndTomahawks\Core\Notifications;
+use BayonetsAndTomahawks\Helpers\Utils;
 use BayonetsAndTomahawks\Managers\Players;
+use BayonetsAndTomahawks\Managers\Units;
 
 class Card18 extends \BayonetsAndTomahawks\Models\Card
 {
@@ -38,10 +41,17 @@ class Card18 extends \BayonetsAndTomahawks\Models\Card
 
   public function resolveARStart($ctx)
   {
-    $ctx->insertAsBrother(new LeafNode([
-      'action' => EVENT_WINTERING_REAR_ADMIRAL,
-      'cardId' => $this->getId(),
-      'playerId' => Players::getPlayerForFaction(BRITISH)->getId(),
-    ]));
+    $fleets = Utils::filter(Units::getInLocation(POOL_FLEETS)->toArray(), function ($unit) {
+      return $unit->getFaction() === BRITISH;
+    });
+    if (count($fleets) > 0) {
+      $ctx->insertAsBrother(new LeafNode([
+        'action' => EVENT_WINTERING_REAR_ADMIRAL,
+        'cardId' => $this->getId(),
+        'playerId' => Players::getPlayerForFaction(BRITISH)->getId(),
+      ]));
+    } else {
+      Notifications::message(clienttranslate('No British Fleet in the Fleets Pool to place'), []);
+    }
   }
 }

@@ -49,7 +49,14 @@ class EventWinteringRearAdmiral extends \BayonetsAndTomahawks\Actions\Battle
   // .##.....##.##....##....##.....##..##.....##.##...###
   // .##.....##..######.....##....####..#######..##....##
 
-  public function stEventWinteringRearAdmiral() {}
+  public function stEventWinteringRearAdmiral() {
+    $fleets = Utils::filter(Units::getInLocation(POOL_FLEETS)->toArray(), function ($unit) {
+      return $unit->getFaction() === BRITISH;
+    });
+    if (count($fleets) === 0) {
+      $this->resolveAction(['automatic' => true]);
+    }
+  }
 
 
   // ....###....########...######....######.
@@ -109,6 +116,11 @@ class EventWinteringRearAdmiral extends \BayonetsAndTomahawks\Actions\Battle
     $unitId = $args['unitId'];
 
     $stateArgs = $this->argsEventWinteringRearAdmiral();
+
+    // if($args['skip'] && count($stateArgs['fleets']) === 0) {
+    //   $this->resolveAction($args);
+    //   return;
+    // }
 
     $unit = Utils::array_find($stateArgs['fleets'], function ($unit) use ($unitId) {
       return $unitId === $unit->getId();
