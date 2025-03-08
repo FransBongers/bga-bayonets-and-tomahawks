@@ -31,8 +31,6 @@ const tplBattleLog = (
     100
   );
 
-  console.log(log.data[attacker]);
-
   return `
   <div class="battle_log">
     <div class="bt_battle_log_map_detail" style="background-position-x: ${x}px; background-position-y: ${y}px; width: ${

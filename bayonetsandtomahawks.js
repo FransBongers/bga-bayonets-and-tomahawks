@@ -3463,12 +3463,10 @@ var BattleLog = (function () {
         var year = record.year, round = record.round;
         var addSectionTitle = false;
         if (!this.logs[year]) {
-            console.log('set year');
             this.logs[year] = {};
             addSectionTitle = true;
         }
         if (!this.logs[year][round]) {
-            console.log('set round');
             this.logs[year][round] = [];
             addSectionTitle = true;
         }
@@ -3490,7 +3488,6 @@ var tplBattleLog = function (game, log) {
     var _c = log.data, spaceId = _c.spaceId, attacker = _c.attacker, defender = _c.defender;
     var scale = 640 / 1500;
     var _d = getBattleLogMapImageBackgroundPosition(game, spaceId, scale, 100), x = _d.x, y = _d.y;
-    console.log(log.data[attacker]);
     return "\n  <div class=\"battle_log\">\n    <div class=\"bt_battle_log_map_detail\" style=\"background-position-x: ".concat(x, "px; background-position-y: ").concat(y, "px; width: ").concat(scale * 1500, "px;\"></div>\n    <div class=\"bt_log_data_container\">\n      <div class=\"bt_title\">\n        <span>").concat(game.format_string_recursive(_('Battle in ${tkn_boldText_spaceName}'), {
         tkn_boldText_spaceName: _(game.getSpaceStaticData(spaceId).name),
     }), "<span>\n      </div>\n      <div class=\"bt_result\"><span>").concat(game.format_string_recursive(_('${attackerScore} vs ${defenderScore}'), {
@@ -4324,7 +4321,6 @@ var BattleTab = (function () {
                             return [2];
                         }
                         node = document.getElementById(getUnitIdForBattleInfo(unit));
-                        console.log(unit.id, node);
                         if (node) {
                             node.setAttribute('data-eliminated', 'true');
                         }
@@ -8160,7 +8156,6 @@ var Settings = (function () {
     Settings.prototype.setup = function (_a) {
         var _this = this;
         var gamedatas = _a.gamedatas;
-        console.log('setup settings');
         this.addButton({ gamedatas: gamedatas });
         this.setupModal({ gamedatas: gamedatas });
         this.setupModalContent();

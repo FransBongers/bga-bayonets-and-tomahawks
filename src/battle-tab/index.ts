@@ -230,7 +230,7 @@ class BattleTab {
       return;
     }
     const node = document.getElementById(getUnitIdForBattleInfo(unit));
-    console.log(unit.id, node);
+
     if (node) {
       node.setAttribute('data-eliminated', 'true');
     }

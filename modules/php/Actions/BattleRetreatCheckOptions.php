@@ -196,7 +196,7 @@ class BattleRetreatCheckOptions extends \BayonetsAndTomahawks\Actions\Battle
       return $unit->isFleet();
     });
 
-    $adjacentConnectionsAndSpaces = $space->getAdjacentConnectionsAndSpaces();
+    $adjacentConnectionsAndSpaces = $space->getAdjacentConnectionsAndSpaces($faction);
 
     if ($hasFleets) {
       // Fleet retreat priorities

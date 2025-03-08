@@ -89,7 +89,8 @@ class BTHelpers extends \APP_DbObject
     return $value;
   }
 
-  public static function isSpace($spaceId) {
+  public static function isSpace($spaceId)
+  {
     return in_array($spaceId, SPACES) && !in_array($spaceId, BASTIONS);
   }
 
@@ -113,7 +114,7 @@ class BTHelpers extends \APP_DbObject
     $units = Units::getAll()->toArray();
 
     $coastalSpacesFreeOfEnemyUnits = Utils::filter($spaces, function ($space) use ($units, $faction) {
-      if (!$space->isCoastal() || $space->getControl() === BTHelpers::getOtherFaction($faction)) {
+      if (!$space->isCoastal() || $space->getControl() === BTHelpers::getOtherFaction($faction) || ($faction === FRENCH && in_array($space->getId(), BRITISH_BASES))) {
         return false;
       }
       $spaceId = $space->getId();

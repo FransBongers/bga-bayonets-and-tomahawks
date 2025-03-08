@@ -85,7 +85,6 @@ class Settings {
 
   // Setup functions
   setup({ gamedatas }: { gamedatas: BayonetsAndTomahawksGamedatas }) {
-    console.log('setup settings');
     this.addButton({ gamedatas });
     this.setupModal({ gamedatas });
     this.setupModalContent();

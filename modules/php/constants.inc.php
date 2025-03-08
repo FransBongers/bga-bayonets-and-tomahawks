@@ -639,6 +639,14 @@ const WOLASTOKUK = 'Wolastokuk';
 const YORK = 'York';
 const ZAWAKWTEGOK = 'Zawakwtegok';
 
+const BRITISH_BASES = [
+  BOSTON,
+  NEW_LONDON,
+  NEW_YORK,
+  PHILADELPHIA,
+  ALEXANDRIA
+];
+
 const BASTIONS = [
   LOUISBOURG_BASTION_1,
   LOUISBOURG_BASTION_2,

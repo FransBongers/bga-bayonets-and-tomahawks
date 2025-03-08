@@ -108,12 +108,10 @@ class BattleLog {
     const { year, round } = record;
     let addSectionTitle = false;
     if (!this.logs[year]) {
-      console.log('set year');
       this.logs[year] = {};
       addSectionTitle = true;
     }
     if (!this.logs[year][round]) {
-      console.log('set round');
       this.logs[year][round] = [];
       addSectionTitle = true;
     }

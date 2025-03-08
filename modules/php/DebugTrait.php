@@ -55,8 +55,21 @@ trait DebugTrait
 
   function debug_test()
   {
-    Units::move('unit_126', POOL_FLEETS);
-    // Units::moveAllInLocation(POOL_BRITISH_FORTS, REMOVED_FROM_PLAY);
+
+    
+    // Units::moveAllInLocation(MONTREAL, LAKE_GEORGE);
+    // Units::moveAllInLocation(NEW_LONDON, MONTREAL);
+    // Units::moveAllInLocation(ALBANY, OSWEGO);
+    // Units::moveAllInLocation(LE_DETROIT, ONEIDA_LAKE);
+    // Spaces::get(MONTREAL)->setControl(BRITISH);
+    // Spaces::get(LAKE_GEORGE)->setControl(FRENCH);
+    // Spaces::get(ONEIDA_LAKE)->setControl(FRENCH);
+
+
+    // Notifications::log('data', $data);
+
+    // Units::move('unit_44', RUMFORD);
+    
     // Notifications::log('log', Globals::getUnitsThatCannotFight());
 
     // CustomLogManager::addRecord('battle', [

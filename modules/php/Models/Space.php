@@ -89,7 +89,7 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   //   }
   // }
 
-  public function jsonSerialize()
+  public function jsonSerialize(): array
   {
     return [
       'id' => $this->id,
@@ -126,12 +126,15 @@ class Space extends \BayonetsAndTomahawks\Helpers\DB_Model
   }
 
   // TODO: refactor to use this and above unit everywhere
-  public function getAdjacentConnectionsAndSpaces()
+  public function getAdjacentConnectionsAndSpaces($faction = null)
   {
     $result = [];
     $spaces = Spaces::getMany($this->getAdjacentSpacesIds());
 
     foreach ($this->adjacentSpaces as $spaceId => $connectionId) {
+      if ($faction !== null && $faction === FRENCH && in_array($spaceId, BRITISH_BASES)) {
+        continue;
+      }
       // TODO: query all connections in one go?
       $result[] = [
         'space' => $spaces[$spaceId],

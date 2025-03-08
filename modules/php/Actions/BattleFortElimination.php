@@ -56,6 +56,7 @@ class BattleFortElimination extends \BayonetsAndTomahawks\Actions\Battle
     if ($fort !== null && $enemyFort === null) {
       $fort->eliminate($player);
       $this->resolveAction(['automatic' => true]);
+      return;
     }
 
     if (!$isRouted) {

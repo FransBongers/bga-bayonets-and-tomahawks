@@ -365,12 +365,13 @@ class ActionRoundEnd extends \BayonetsAndTomahawks\Models\AtomicAction
 
     foreach ([BRITISH, FRENCH] as $faction) {
       $otherFaction = BTHelpers::getOtherFaction($faction);
-      $outOfSupplyMarkersAddedOrRemoved = $outOfSupplyMarkersAddedOrRemoved || $this->checkSupplyForFaction(
+      $supplyResultForFaction = $this->checkSupplyForFaction(
         $faction,
         $stacksAndSupplySources['stacks'][$faction],
         $stacksAndSupplySources['supplySources'][$faction],
         $stacksAndSupplySources['stacks'][$otherFaction]
       );
+      $outOfSupplyMarkersAddedOrRemoved = $outOfSupplyMarkersAddedOrRemoved || $supplyResultForFaction;
     }
 
     if (!$outOfSupplyMarkersAddedOrRemoved) {
