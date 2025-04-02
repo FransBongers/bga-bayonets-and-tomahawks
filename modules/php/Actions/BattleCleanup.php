@@ -229,7 +229,7 @@ class BattleCleanup extends \BayonetsAndTomahawks\Actions\Battle
   private function updateControl($space, $winningFaction, $playersPerFaction, $battleContinues)
   {
     $control = $space->getControl();
-    if ($control === $winningFaction || $control === NEUTRAL || $battleContinues) {
+    if ($control === $winningFaction || $control === NEUTRAL || $battleContinues || count($space->getUnits($winningFaction)) === 0) {
       return;
     }
     GameMap::updateControl($playersPerFaction[$winningFaction], $space);

@@ -68,9 +68,9 @@ trait DebugTrait
 
     // Notifications::log('data', $data);
 
-    Units::move('unit_60', CHIGNECTOU);
-    Units::move('unit_66', HALIFAX);
-    Units::move('unit_1', MIRAMICHY);
+    Units::move('unit_30', MONTREAL);
+    // Units::move('unit_66', HALIFAX);
+    // Units::move('unit_1', MIRAMICHY);
     
     
     // Notifications::log('log', Globals::getUnitsThatCannotFight());
