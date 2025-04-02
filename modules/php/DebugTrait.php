@@ -68,7 +68,10 @@ trait DebugTrait
 
     // Notifications::log('data', $data);
 
-    Units::move('unit_30', MONTREAL);
+    // Units::move('unit_30', BAYE_DE_CATARACOUY);
+    // Units::moveAllInLocation(OSWEGO,ALBANY);
+    // Spaces::get(OSWEGO)->setControl(FRENCH);
+    Spaces::get(BAYE_DE_CATARACOUY)->setControl(BRITISH);
     // Units::move('unit_66', HALIFAX);
     // Units::move('unit_1', MIRAMICHY);
     

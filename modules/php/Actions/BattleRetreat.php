@@ -173,6 +173,13 @@ class BattleRetreat extends \BayonetsAndTomahawks\Actions\Battle
       ]));
     }
 
+    // Insert in reverse order to we check control after movement
+    $this->ctx->insertAsBrother(Engine::buildTree([
+      'action' => MOVEMENT_BATTLE_AND_TAKE_CONTROL_CHECK,
+      'playerId' => $playerId,
+      'spaceId' => $toSpaceId,
+      'source' => BATTLE_RETREAT,
+    ]));
     $this->ctx->insertAsBrother(Engine::buildTree([
       'action' => MOVE_STACK,
       'playerId' => $playerId,

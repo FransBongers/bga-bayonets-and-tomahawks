@@ -50,8 +50,9 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
     $spaceId = $info['spaceId'];
 
     $space = Spaces::get($spaceId);
+    $source = isset($info['source']) ? $info['source'] : null; // Should always be set
 
-    $battleOccurs = $this->checkBattle($player, $space, $playerFaction);
+    $battleOccurs = $source !== BATTLE_RETREAT && $this->checkBattle($player, $space, $playerFaction);
 
     if ($battleOccurs) {
       $this->resolveAction(['automatic' => true]);
@@ -60,7 +61,7 @@ class MovementBattleTakeControlCheck extends \BayonetsAndTomahawks\Actions\UnitM
 
     $this->checkTakeControl($player, $space, $playerFaction);
 
-    if (!in_array($info['source'], [CONSTRUCTION, ACTION_ROUND_SAIL_BOX_LANDING])) {
+    if (!in_array($source, [CONSTRUCTION, ACTION_ROUND_SAIL_BOX_LANDING, BATTLE_RETREAT])) {
       $this->checkAdditionalMovement($space, $playerFaction, $player, $info);
     }
 
