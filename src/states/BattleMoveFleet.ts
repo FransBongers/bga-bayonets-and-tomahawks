@@ -45,7 +45,9 @@ class BattleMoveFleetState implements State {
       },
     });
 
-    this.game.openUnitStack(this.args.units[0]);
+    if (this.args.units.length > 0) {
+      this.game.openUnitStack(this.args.units[0]);
+    }
 
     this.args.units.forEach((unit) =>
       this.game.setUnitSelectable({

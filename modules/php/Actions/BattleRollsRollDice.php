@@ -51,7 +51,14 @@ class BattleRollsRollDice extends \BayonetsAndTomahawks\Actions\Battle
     $diceResults = [];
 
     for ($i = 0; $i < count($unitIds); $i++) {
-      $diceResults[] = BTDice::roll();
+      $diceResult = BTDice::roll();
+      // if ($battleRollsSequenceStep === ARTILLERY) {
+      //   $diceResult = HIT_SQUARE_CIRCLE;
+      // }
+      // if ($battleRollsSequenceStep === FLEETS) {
+      //   $diceResult = B_AND_T;
+      // }
+      $diceResults[] = $diceResult;
     }
 
     Notifications::battleRolls($player, $battleRollsSequenceStep, $diceResults, $faction);
