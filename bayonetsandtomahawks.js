@@ -8412,6 +8412,14 @@ var ActionActivateStackState = (function () {
                 you: '${you}',
             },
         });
+        if (Object.keys(this.args.stacks).length === 0) {
+            this.game.clientUpdatePageTitle({
+                text: _('No stack to activate. ${you} must undo last step and pass'),
+                args: {
+                    you: '${you}',
+                },
+            });
+        }
         this.setStacksSelectable();
         this.game.addPassButton({
             optionalAction: this.args.optionalAction,

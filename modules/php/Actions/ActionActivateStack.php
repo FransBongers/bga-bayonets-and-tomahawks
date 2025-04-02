@@ -41,6 +41,9 @@ class ActionActivateStack extends \BayonetsAndTomahawks\Models\AtomicAction
     $spaces = Spaces::getAll();
     $stacks = [];
     foreach ($spaces as $space) {
+      if (in_array($space->getId(), [LOSSES_BOX_FRENCH, LOSSES_BOX_BRITISH])) {
+        continue;
+      }
       $actions = $actionPoint->canActivateStackInSpace($space, $player);
 
       if (count($actions) > 0) {
