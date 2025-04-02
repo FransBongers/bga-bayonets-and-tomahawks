@@ -20,6 +20,7 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     'customTurnOrders' => 'obj', // DO NOT MODIFY, USED FOR CUSTOM TURN ORDER FEATURE
     'logState' => 'int', // Used to store state id when enabling the log
     'firstPlayer' => 'int',
+    'checkpoint' => 'bool',
     // 'activePlayerId' => 'int',
     'scenarioId' => 'str',
     'test' => 'obj',
@@ -192,6 +193,7 @@ class Globals extends \BayonetsAndTomahawks\Helpers\DB_Manager
     self::setWinteringRearAdmiralPlayed(false);
     self::setHighwayUnusableForBritish('');
     self::setUnitsThatCannotFight([]);
+    self::setCheckpoint(false);
 
     // Game options
     self::setGameOptionFactions($options[\BayonetsAndTomahawks\OPTION_FACTIONS]);

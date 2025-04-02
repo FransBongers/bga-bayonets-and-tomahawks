@@ -39,6 +39,8 @@ class Brigade extends AbstractUnit
     parent::eliminate($player);
     if ($this->metropolitan) {
       WarInEuropeChits::drawChit(BTHelpers::getOtherFaction($this->getFaction()));
+      // Disable undo when a chit is drawn
+      Globals::setCheckpoint(true);
     }
   }
 }

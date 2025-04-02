@@ -42,6 +42,8 @@ class AtomicAction
 
   public function resolveAction($args = [], $checkpoint = false)
   {
+    $checkpoint = $checkpoint || Globals::getCheckpoint();
+    Globals::setCheckpoint(false);
     Engine::resolveAction($args, $checkpoint, $this->ctx);
     Engine::proceed();
   }
