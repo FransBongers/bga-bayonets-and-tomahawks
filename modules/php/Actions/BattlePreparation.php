@@ -49,9 +49,24 @@ class BattlePreparation extends \BayonetsAndTomahawks\Actions\Battle
 
   public function stBattlePreparation()
   {
-    $parentInfo = $this->ctx->getParent()->getInfo();
+    $parent = $this->ctx->getParent();
+    $parentInfo = $parent->getInfo();
     $spaceId = $parentInfo['spaceId'];
     $space = Spaces::get($spaceId);
+
+    /**
+     * There can be cases where we have added the battle to the engine but
+     * the battle marker has been removed in the meantime.
+     * Ie, overwhelm during retreat has triggered and killed all units of one side,
+     * so we need to skip the battle.
+     */
+    if ($space->getBattle() === 0) {
+      $this->ctx->updateInfo('resolveParent', true);
+      $this->resolveAction([
+        'automatic' => true,
+      ]);
+      return;
+    }
 
 
     $defendingFaction = $space->getDefender();
