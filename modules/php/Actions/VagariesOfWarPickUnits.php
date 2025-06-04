@@ -145,38 +145,37 @@ class VagariesOfWarPickUnits extends \BayonetsAndTomahawks\Actions\LogisticsRoun
       if (count($selectedUnitIds) !== $requiredNumberToSelect) {
         throw new \feException("ERROR 017");
       }
-  
+
       $selectedUnits = Utils::filter($units, function ($unit) use ($selectedUnitIds) {
         return in_array($unit->getId(), $selectedUnitIds);
       });
-  
+
       if (count($selectedUnits) !== count($selectedUnitIds)) {
         throw new \feException("ERROR 019");
       }
-  
+
       $location = $this->poolReinforcementsMap[$pool];
-  
+
       Units::move($selectedUnitIds, $location);
 
-      if ($vowToken->getPutTokenBackInPool()) {
-        // $vowToken->returnToPool($pool);
-        $vowToken->setReduced(1);
-      }
-  
+
+
       Notifications::vagariesOfWarPickUnits($player, $vowToken, $selectedUnits, $location);
     } else if (count($units) === 0) {
       // No units to pick, draw additional token
-      if(!$drawToken) {
+      if (!$drawToken) {
         throw new \feException("ERROR 100");
       }
-      Notifications::message(clienttranslate('${player_name} uses ${tkn_unit_vowToken} draw one additional VoW token'),[
+      Notifications::message(clienttranslate('${player_name} uses ${tkn_unit_vowToken} draw one additional VoW token'), [
         'player' => $player,
         'tkn_unit_vowToken' => $vowToken->getCounterId(),
       ]);
       AtomicActions::get(DRAW_REINFORCEMENTS)->drawReinforcement($player, $pool, 1, true);
     }
 
-    if (!$vowToken->getPutTokenBackInPool()) {
+    if ($vowToken->getPutTokenBackInPool()) {
+      $vowToken->setReduced(1);
+    } else {
       $vowToken->removeFromPlay();
     }
 
