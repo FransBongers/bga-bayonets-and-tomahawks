@@ -63,10 +63,10 @@ class Connections extends \BayonetsAndTomahawks\Helpers\Pieces
     foreach ($connectionIds as $cId) {
       // $card = self::getCardInstance($cId);
 
-      $extraData = [
-        'britishLimitUsed' => 0,
-        'frenchLimitUsed' => 0,
-      ];
+      // $extraData = [
+      //   'british_limit_used' => 0,
+      //   'french_limit_used' => 0,
+      // ];
       // // $location = 'deck';
 
 
@@ -75,10 +75,10 @@ class Connections extends \BayonetsAndTomahawks\Helpers\Pieces
         'id' => $cId,
         'location' => null,
         'state' => 0,
-        'britishLimit' => 0,
-        'frenchLimit' => 0,
-        'britishRoadUsed' => 0,
-        'frenchRoadUsed' => 0,
+        'british_limit' => 0,
+        'french_limit' => 0,
+        'british_road_used' => 0,
+        'french_road_used' => 0,
         'road' => 0,
         // 'extra_data' => json_encode($extraData)
       ];

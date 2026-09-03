@@ -279,15 +279,18 @@ body > .card {
 }
 
 .bgabutton.bt_british {
-  background-color: #B73E1F;
+  background: none;
+  background-color: #B73E1F !important;
 }
 
 .bgabutton.bt_french {
-  background-color: #216295;
+  background: none;
+  background-color: #216295 !important;
 }
 
 .bgabutton.bt_indian {
-  background-color: #9cb049;
+  background: none;
+  background-color: #9cb049 !important;
 }
 
 .bgabutton.bt_british:hover,
@@ -4718,6 +4721,27 @@ html[data-show-spent-markers=true] .bt_token.bt_spent > .card-sides {
   transform: translate(0, -18px);
   top: auto;
   right: 28px;
+}
+
+html[data-theme=dark] #bt_tabbed_column .bt_tabbed_column_tab {
+  color: black;
+}
+html[data-theme=dark] #bt_tabbed_column .bt_section {
+  color: black;
+}
+html[data-theme=dark] .bt_battle_info_container {
+  color: black;
+}
+html[data-theme=dark] #step_tracker li[data-active=true] {
+  color: black;
+}
+html[data-theme=dark] #info_panel_buttons #battle_log_button svg,
+html[data-theme=dark] #info_panel_buttons #information_button svg,
+html[data-theme=dark] #info_panel_buttons #clipboard_button svg {
+  fill: #e5e7eb;
+}
+html[data-theme=dark] .notif_newUndoableStep .roundedbox {
+  color: black;
 }
 
 html {

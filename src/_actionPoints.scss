@@ -3,15 +3,18 @@
 @use './base';
 
 .bgabutton.bt_british {
-  background-color: base.$british-color;
+  background: none;
+  background-color: base.$british-color !important;
 }
 
 .bgabutton.bt_french {
-  background-color: base.$french-color;
+  background: none;
+  background-color: base.$french-color !important;
 }
 
 .bgabutton.bt_indian {
-  background-color: base.$indian-color;
+  background: none;
+  background-color: base.$indian-color !important;
 }
 
 .bgabutton.bt_british:hover,
@@ -39,61 +42,59 @@ $action-points: (
   9: 'SAIL_ARMY_AP_2X',
 );
 
-
 @for $i from 1 through 9 {
   .bt_action_point_img[data-ap-id='#{map.get($action-points,$i)}'] {
     background-position-x: math.div((($i - 1) % 3 * 100%), 2);
     background-position-y: math.div(math.floor(calc(($i - 1) / 3)) * 100%, 2);
-
   }
 }
 
-.bt_action_point_img[data-reaction=true] {
+.bt_action_point_img[data-reaction='true'] {
   background-image: url('img/markers.jpg');
   background-size: 800% 600%;
 }
 
-.bt_action_point_img[data-ap-id=ARMY_AP][data-reaction=true] {
+.bt_action_point_img[data-ap-id='ARMY_AP'][data-reaction='true'] {
   background-position-x: math.div((3 * 100%), 7);
   background-position-y: 80%;
 }
 
-.bt_action_point_img[data-ap-id=ARMY_AP_2X][data-reaction=true] {
+.bt_action_point_img[data-ap-id='ARMY_AP_2X'][data-reaction='true'] {
   background-position-x: 0%;
   background-position-y: 80%;
 }
 
-.bt_action_point_img[data-ap-id=FRENCH_LIGHT_ARMY_AP][data-reaction=true] {
+.bt_action_point_img[data-ap-id='FRENCH_LIGHT_ARMY_AP'][data-reaction='true'] {
   background-position-x: math.div((4 * 100%), 7);
   background-position-y: 80%;
 }
 
-.bt_action_point_img[data-ap-id=INDIAN_AP][data-reaction=true] {
+.bt_action_point_img[data-ap-id='INDIAN_AP'][data-reaction='true'] {
   background-position-x: math.div((5 * 100%), 7);
   background-position-y: 80%;
 }
 
-.bt_action_point_img[data-ap-id=INDIAN_AP_2X][data-reaction=true] {
+.bt_action_point_img[data-ap-id='INDIAN_AP_2X'][data-reaction='true'] {
   background-position-x: math.div((1 * 100%), 7);
   background-position-y: 80%;
 }
 
-.bt_action_point_img[data-ap-id=LIGHT_AP][data-reaction=true] {
+.bt_action_point_img[data-ap-id='LIGHT_AP'][data-reaction='true'] {
   background-position-x: math.div((5 * 100%), 7);
   background-position-y: 80%;
 }
 
-.bt_action_point_img[data-ap-id=LIGHT_AP_2X][data-reaction=true] {
+.bt_action_point_img[data-ap-id='LIGHT_AP_2X'][data-reaction='true'] {
   background-position-x: math.div((1 * 100%), 7);
   background-position-y: 80%;
 }
 
-.bt_action_point_img[data-ap-id=SAIL_ARMY_AP][data-reaction=true] {
+.bt_action_point_img[data-ap-id='SAIL_ARMY_AP'][data-reaction='true'] {
   background-position-x: math.div((6 * 100%), 7);
   background-position-y: 80%;
 }
 
-.bt_action_point_img[data-ap-id=SAIL_ARMY_AP_2X][data-reaction=true] {
+.bt_action_point_img[data-ap-id='SAIL_ARMY_AP_2X'][data-reaction='true'] {
   background-position-x: math.div((2 * 100%), 7);
   background-position-y: 80%;
 }

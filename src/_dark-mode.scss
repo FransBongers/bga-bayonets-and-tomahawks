@@ -1,0 +1,37 @@
+html[data-theme='dark'] {
+  #bt_tabbed_column {
+    .bt_tabbed_column_tab {
+      color: black;
+    }
+
+    .bt_section {
+      color: black;
+    }
+  }
+
+  .bt_battle_info_container {
+    color: black;
+  }
+
+  #step_tracker {
+    li[data-active='true'] {
+      color: black;
+    }
+  }
+
+  #info_panel_buttons {
+    #battle_log_button,
+    #information_button,
+    #clipboard_button {
+      svg {
+        fill: #e5e7eb;
+      }
+    }
+  }
+
+  .notif_newUndoableStep {
+    .roundedbox {
+      color: black;
+    }
+  }
+}
